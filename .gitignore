@@ -1,0 +1,12 @@
+.buildpath
+.project
+.settings/
+.zfproject.xml
+.vimrc
+.cache
+nbproject
+*~
+.projectOptions
+.DS_Store
+Thumbs.db
+Desktop.ini
