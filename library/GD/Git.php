@@ -21,18 +21,12 @@
  * @author James Titcumb, Simon Wade
  * @link http://www.godeploy.com/
  */
-class IndexController extends Zend_Controller_Action
+class GD_Git
 {
+	private $_url;
 
-    public function init()
-    {
-        /* Initialize action controller here */
-    }
+	public function __construct($url)
+	{
 
-    public function indexAction()
-    {
-    }
-
-
+	}
 }
-

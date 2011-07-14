@@ -21,18 +21,9 @@
  * @author James Titcumb, Simon Wade
  * @link http://www.godeploy.com/
  */
-class IndexController extends Zend_Controller_Action
+class HomeController extends Zend_Controller_Action
 {
-
-    public function init()
-    {
-        /* Initialize action controller here */
-    }
-
     public function indexAction()
     {
     }
-
-
 }
-

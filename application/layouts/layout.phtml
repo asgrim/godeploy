@@ -1,0 +1,22 @@
+<?php echo $this->doctype() . "\n"; ?>
+<html lang="en">
+<head>
+<?php echo $this->headTitle() . "\n"; ?>
+
+<!-- Javascript -->
+<?php echo $this->headScript() . "\n"; ?>
+
+<!-- Stylesheets -->
+<?php echo $this->headLink() . "\n"; ?>
+
+<!-- Shortcut icon -->
+<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+
+<!-- Meta tags -->
+<?php echo $this->headMeta() . "\n"; ?>
+</head>
+<body>
+	<?php echo $this->render('header.phtml'); ?>
+	<?php echo $this->layout()->content; ?>
+</body>
+</html>
