@@ -23,6 +23,13 @@
  */
 class ErrorController extends Zend_Controller_Action
 {
+	public function privilegeAction()
+	{
+		header('HTTP/1.1 403 Forbidden');
+		echo "<h1>Access denied.</h1>";
+		echo "<p>Might need adding to ACL?</p>";
+		die();
+	}
 
     public function errorAction()
     {

@@ -21,18 +21,43 @@
  * @author James Titcumb, Simon Wade
  * @link http://www.godeploy.com/
  */
-
-/**
- * Git wrapper, unwritten yet...
- * @author james
- *
- */
-class GD_Git
+class GD_Model_Users
 {
-	private $_url;
+	protected $_id;
+	protected $_name;
+	protected $_password;
 
-	public function __construct($url)
+	public function setId($id)
 	{
-
+		$this->_id = (int)$id;
+		return $this;
 	}
+
+	public function getId()
+	{
+		return $this->_id;
+	}
+
+	public function setName($value)
+	{
+		$this->_name = (string)$value;
+		return $this;
+	}
+
+	public function getName()
+	{
+		return $this->_name;
+	}
+
+	public function setPassword($value)
+	{
+		$this->_password = (string)$value;
+		return $this;
+	}
+
+	public function getPassword()
+	{
+		return $this->_password;
+	}
+
 }

@@ -1,4 +1,10 @@
 <h1>GoDeploy</h1>
-<span>Logged in as [todo]</span>
+
+<?php if($this->logged_in): ?>
+<span>Logged in as <?php echo Zend_Auth::getInstance()->getIdentity(); ?></span>
+<?php else: ?>
+<span>Not logged in.</span>
+<?php endif; ?>
+
 <?php echo $this->navigation()->menu(); ?>
 <hr />

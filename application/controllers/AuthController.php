@@ -25,9 +25,47 @@ class AuthController extends Zend_Controller_Action
 {
     public function loginAction()
     {
+    	if($this->_request->isPost())
+		{
+			$credentials = array();
+			$credentials['username'] = $this->_request->getPost('username');
+			$credentials['password'] = $this->_request->getPost('password');
+
+			$adapter = $this->getAuthAdapter($credentials);
+
+			$auth = Zend_Auth::getInstance();
+			$result = $auth->authenticate($adapter);
+
+			if($result->isValid())
+			{
+				$this->_redirect("/home");
+			}
+			else
+			{
+				$this->executeLogout();
+				$this->_redirect("/");
+			}
+		}
+		else
+		{
+			$this->_redirect("/");
+		}
+    }
+
+    private function executeLogout()
+    {
+    	$auth = Zend_Auth::getInstance();
+		$auth->clearIdentity();
     }
 
     public function logoutAction()
     {
+    	$this->executeLogout();
+		$this->_redirect("/");
+    }
+
+    public function getAuthAdapter(array $credentials)
+    {
+    	return new GD_Auth_Database($credentials['username'], $credentials['password']);
     }
 }

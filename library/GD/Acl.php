@@ -23,16 +23,34 @@
  */
 
 /**
- * Git wrapper, unwritten yet...
+ * Allow/deny things using Zend_Acl and GD_Plugin_Auth
  * @author james
  *
  */
-class GD_Git
+class GD_Acl extends Zend_Acl
 {
-	private $_url;
-
-	public function __construct($url)
+	public function __construct(Zend_Auth $auth)
 	{
+		#parent::__construct();
 
+		// Add resources
+		$this->add(new Zend_Acl_Resource('index'));
+		$this->add(new Zend_Acl_Resource('error'));
+		$this->add(new Zend_Acl_Resource('auth'));
+		$this->add(new Zend_Acl_Resource('profile'));
+		$this->add(new Zend_Acl_Resource('home'));
+
+		// Add roles
+		$this->addRole(new Zend_Acl_Role('guest'));
+		$this->addRole(new Zend_Acl_Role('member'), 'guest');
+		$this->addRole(new Zend_Acl_Role('admin'), 'member');
+
+		// Allow/deny roles to resources
+		$this->allow('guest', 'index');
+		$this->allow('guest', 'error');
+		$this->allow('guest', 'auth');
+		$this->allow('member', 'profile');
+		$this->allow('member', 'home');
+		$this->allow('admin');
 	}
 }

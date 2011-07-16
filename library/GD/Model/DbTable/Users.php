@@ -21,18 +21,7 @@
  * @author James Titcumb, Simon Wade
  * @link http://www.godeploy.com/
  */
-
-/**
- * Git wrapper, unwritten yet...
- * @author james
- *
- */
-class GD_Git
+class GD_Model_DbTable_Users extends Zend_Db_Table_Abstract
 {
-	private $_url;
-
-	public function __construct($url)
-	{
-
-	}
+	protected $_name = "users";
 }
