@@ -21,20 +21,37 @@
  * @author James Titcumb, Simon Wade
  * @link http://www.godeploy.com/
  */
-class IndexController extends Zend_Controller_Action
+class GDApp_Form_Login extends Zend_Form
 {
+	public function __construct($options = null)
+	{
+		parent::__construct($options);
 
-    public function init()
-    {
-        /* Initialize action controller here */
-    }
+		$this->setName('login')
+			->setAction('/auth/login')
+			->setMethod('post');
 
-    public function indexAction()
-    {
-    	$form = new GDApp_Form_Login();
-    	$this->view->form = $form;
-    }
+		$username = new Zend_Form_Element_Text('username');
+		$username->setLabel('Username')
+			->setRequired(true)
+			->addFilter('StripTags')
+			->addFilter('StringTrim')
+			->addValidator('NotEmpty');
 
+		$password = new Zend_Form_Element_Password('password');
+		$password->setLabel('Password')
+			->setRequired(true)
+			->addFilter('StripTags')
+			->addValidator('NotEmpty');
 
+		$submit = new Zend_Form_Element_Submit('submit');
+		$submit->setLabel('Login');
+
+		$this->addElements(array(
+			$username,
+			$password,
+			$submit,
+		));
+	}
 }
-
+?>

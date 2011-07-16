@@ -59,9 +59,38 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 		$auth = Zend_Auth::getInstance();
 		$acl = new GD_Acl($auth);
 
-		$this->bootstrap('frontcontroller');
-		$frontController = $this->frontController;
+		$frontController = $this->getResource('frontcontroller');
 		$frontController->registerPlugin(new GD_Plugin_Auth($auth, $acl));
+	}
+
+	protected function _initRoutes()
+	{
+		$frontController = $this->getResource('frontcontroller');
+		$router = $frontController->getRouter();
+
+		$defaultRoute = new Zend_Controller_Router_Route(
+			':controller/:action',
+			array(
+				'module'=>'default',
+				'controller'=>'index',
+				'action'=>'index',
+			)
+		);
+		$projectRoute = new Zend_Controller_Router_Route(
+			'project/:project/:controller/:action',
+			array(
+				'module'=>'default',
+				'controller'=>'index',
+				'action'=>'index',
+				'project'=>'',
+			),
+			array(
+				'project' => '[a-z-]+',
+			)
+		);
+
+		$router->addRoute('default', $defaultRoute);
+		$router->addRoute('project', $projectRoute);
 	}
 }
 

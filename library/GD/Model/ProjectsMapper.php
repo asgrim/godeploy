@@ -80,4 +80,27 @@ class GD_Model_ProjectsMapper extends MAL_Model_MapperAbstract
 			->setDeploymentBranch($row->deployment_branch)
 			->setPublicKeysId($row->public_keys_id);
 	}
+
+	/**
+	 * Search for a user by it's name
+	 * @param string $name username to find
+	 * @return GD_Model_Users
+	 */
+	public function getProjectBySlug($slug)
+	{
+		$obj = new GD_Model_Projects();
+
+		$select = $this->getDbTable()
+			->select()
+			->where("slug = ?", $slug);
+
+		$row = $this->getDbTable()->fetchRow($select);
+
+		if(is_null($row))
+		{
+			return null;
+		}
+		$this->populateObjectFromRow($obj, $row);
+		return $obj;
+	}
 }

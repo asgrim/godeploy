@@ -21,7 +21,7 @@
  * @author James Titcumb, Simon Wade
  * @link http://www.godeploy.com/
  */
-class IndexController extends Zend_Controller_Action
+class SettingsController extends Zend_Controller_Action
 {
 
     public function init()
@@ -31,8 +31,32 @@ class IndexController extends Zend_Controller_Action
 
     public function indexAction()
     {
-    	$form = new GDApp_Form_Login();
+    	$form = new GDApp_Form_ProjectSettings();
     	$this->view->form = $form;
+
+    	if($this->getRequest()->isPost())
+    	{
+    		// save it
+    	}
+    	else
+    	{
+    		$project_slug = $this->_getParam("project");
+
+    		if($project_slug != "")
+    		{
+    			$projects = new GD_Model_ProjectsMapper();
+    			$project = $projects->getProjectBySlug($project_slug);
+
+    			$data = array(
+    				'name' => $project->getName(),
+    				'repositoryUrl' => $project->getRepositoryUrl(),
+    				'deploymentBranch' => $project->getDeploymentBranch(),
+    				'publicKey' => $project->getPublicKeysId(),
+    			);
+
+    			$form->populate($data);
+    		}
+    	}
     }
 
 

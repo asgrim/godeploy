@@ -21,7 +21,7 @@
  * @author James Titcumb, Simon Wade
  * @link http://www.godeploy.com/
  */
-class IndexController extends Zend_Controller_Action
+class HistoryController extends Zend_Controller_Action
 {
 
     public function init()
@@ -31,8 +31,6 @@ class IndexController extends Zend_Controller_Action
 
     public function indexAction()
     {
-    	$form = new GDApp_Form_Login();
-    	$this->view->form = $form;
     }
 
 

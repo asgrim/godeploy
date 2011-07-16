@@ -4,10 +4,10 @@
 	<li>
 		<h4><?php echo $project->getName(); ?></h4>
 		<ul>
-			<li><a href="/history/<?php echo $project->getSlug(); ?>">Deployments</a></li>
-			<li><a href="/settings/<?php echo $project->getSlug(); ?>">Settings</a></li>
+			<li><a href="/project/<?php echo $project->getSlug(); ?>/history">Deployments</a></li>
+			<li><a href="/project/<?php echo $project->getSlug(); ?>/settings">Settings</a></li>
 		</ul>
-		<a href="/deploy/<?php echo $project->getSlug(); ?>">GoDeploy &raquo;</a>
+		<a href="/project/<?php echo $project->getSlug(); ?>/deploy">GoDeploy &raquo;</a>
 	</li>
 <?php endforeach; ?>
 </ul>

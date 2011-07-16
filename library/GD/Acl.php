@@ -39,6 +39,8 @@ class GD_Acl extends Zend_Acl
 		$this->add(new Zend_Acl_Resource('auth'));
 		$this->add(new Zend_Acl_Resource('profile'));
 		$this->add(new Zend_Acl_Resource('home'));
+		$this->add(new Zend_Acl_Resource('history'));
+		$this->add(new Zend_Acl_Resource('settings'));
 
 		// Add roles
 		$this->addRole(new Zend_Acl_Role('guest'));
@@ -51,6 +53,8 @@ class GD_Acl extends Zend_Acl
 		$this->allow('guest', 'auth');
 		$this->allow('member', 'profile');
 		$this->allow('member', 'home');
+		$this->allow('member', 'history');
+		$this->allow('member', 'settings');
 		$this->allow('admin');
 	}
 }
