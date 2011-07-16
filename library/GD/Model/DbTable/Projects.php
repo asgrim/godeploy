@@ -21,14 +21,7 @@
  * @author James Titcumb, Simon Wade
  * @link http://www.godeploy.com/
  */
-class HomeController extends Zend_Controller_Action
+class GD_Model_DbTable_Projects extends Zend_Db_Table_Abstract
 {
-    public function indexAction()
-    {
-    	$mprojects = new GD_Model_ProjectsMapper();
-
-    	$projects = $mprojects->fetchAll();
-
-    	$this->view->projects = $projects;
-    }
+	protected $_name = "projects";
 }

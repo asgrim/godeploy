@@ -1,1 +1,16 @@
-Home
+<?php if(is_array($this->projects) && count($this->projects) > 0): ?>
+<ul>
+<?php foreach($this->projects as $project): ?>
+	<li>
+		<h4><?php echo $project->getName(); ?></h4>
+		<ul>
+			<li><a href="/history/<?php echo $project->getSlug(); ?>">Deployments</a></li>
+			<li><a href="/settings/<?php echo $project->getSlug(); ?>">Settings</a></li>
+		</ul>
+		<a href="/deploy/<?php echo $project->getSlug(); ?>">GoDeploy &raquo;</a>
+	</li>
+<?php endforeach; ?>
+</ul>
+<?php else: ?>
+No projects set up yet.
+<?php endif; ?>
