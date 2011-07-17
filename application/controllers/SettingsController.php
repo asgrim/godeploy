@@ -51,7 +51,7 @@ class SettingsController extends Zend_Controller_Action
     				'name' => $project->getName(),
     				'repositoryUrl' => $project->getRepositoryUrl(),
     				'deploymentBranch' => $project->getDeploymentBranch(),
-    				'publicKey' => $project->getPublicKeysId(),
+    				'publicKey' => $project->getPublicKey()->getData(),
     			);
 
     			$form->populate($data);

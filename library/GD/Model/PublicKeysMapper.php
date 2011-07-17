@@ -23,11 +23,11 @@
  */
 
 /**
- * Map the projects table
+ * Map the public keys table
  * @author james
  *
  */
-class GD_Model_ProjectsMapper extends MAL_Model_MapperAbstract
+class GD_Model_PublicKeysMapper extends MAL_Model_MapperAbstract
 {
 
 	/**
@@ -36,7 +36,7 @@ class GD_Model_ProjectsMapper extends MAL_Model_MapperAbstract
 	 */
 	protected function getDbTableName()
 	{
-		return "GD_Model_DbTable_Projects";
+		return "GD_Model_DbTable_PublicKeys";
 	}
 
 	/**
@@ -45,67 +45,34 @@ class GD_Model_ProjectsMapper extends MAL_Model_MapperAbstract
 	 */
 	protected function getObjectName()
 	{
-		return "GD_Model_Projects";
+		return "GD_Model_PublicKeys";
 	}
 
 	/**
 	 * Should return an array of mapped fields to use in the MAL_Model_MapperAbstract::Save function
-	 * @param GD_Model_Projects $obj
+	 * @param GD_Model_PublicKeys $obj
 	 */
 	protected function getSaveData($obj)
 	{
 		$data = array(
-			'name' => $obj->getName(),
-			'slug' => $obj->getSlug(),
-			'repository_types_id' => $obj->getRepositoryTypesId(),
-			'repository_url' => $obj->getRepositoryUrl(),
-			'deployment_branch' => $obj->getDeploymentBranch(),
-			'public_keys_id' => $obj->getPublicKeysId(),
+			'public_key_types_id' => $obj->getPublicKeyTypesId(),
+			'data' => $obj->getData(),
+			'comment' => $obj->getComment(),
 		);
 		return $data;
 	}
 
 	/**
 	 * Implement this by setting $obj values (e.g. $obj->setId($row->Id) from a DB row
-	 * @param GD_Model_Projects $obj
+	 * @param GD_Model_PublicKeys $obj
 	 * @param Zend_Db_Table_Row_Abstract $row
 	 */
-	protected function populateObjectFromRow(&$obj, Zend_Db_Table_Row_Abstract $row)
+	public function populateObjectFromRow(&$obj, Zend_Db_Table_Row_Abstract $row)
 	{
 		$obj->setId($row->id)
-			->setName($row->name)
-			->setSlug($row->slug)
-			->setRepositoryTypesId($row->repository_types_id)
-			->setRepositoryUrl($row->repository_url)
-			->setDeploymentBranch($row->deployment_branch)
-			->setPublicKeysId($row->public_keys_id);
-
-		$pk_map = new GD_Model_PublicKeysMapper();
-		$public_key = new GD_Model_PublicKeys();
-		$pk_map->populateObjectFromRow($public_key, $row->findParentRow('GD_Model_DbTable_PublicKeys'));
-		$obj->setPublicKey($public_key);
+			->setPublicKeyTypesId($row->public_key_types_id)
+			->setData($row->data)
+			->setComment($row->comment);
 	}
 
-	/**
-	 * Search for a user by it's name
-	 * @param string $name username to find
-	 * @return GD_Model_Users
-	 */
-	public function getProjectBySlug($slug)
-	{
-		$obj = new GD_Model_Projects();
-
-		$select = $this->getDbTable()
-			->select()
-			->where("slug = ?", $slug);
-
-		$row = $this->getDbTable()->fetchRow($select);
-
-		if(is_null($row))
-		{
-			return null;
-		}
-		$this->populateObjectFromRow($obj, $row);
-		return $obj;
-	}
 }

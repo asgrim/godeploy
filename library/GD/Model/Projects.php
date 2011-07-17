@@ -31,6 +31,8 @@ class GD_Model_Projects
 	protected $_deployment_branch;
 	protected $_public_keys_id;
 
+	protected $_public_key;
+
 	public function setId($id)
 	{
 		$this->_id = (int)$id;
@@ -106,6 +108,20 @@ class GD_Model_Projects
 	public function getPublicKeysId()
 	{
 		return $this->_public_keys_id;
+	}
+
+	public function setPublicKey(GD_Model_PublicKeys $obj)
+	{
+		$this->_public_key = $obj;
+		return $this;
+	}
+
+	/**
+	 * @return GD_Model_PublicKeys
+	 */
+	public function getPublicKey()
+	{
+		return $this->_public_key;
 	}
 
 }

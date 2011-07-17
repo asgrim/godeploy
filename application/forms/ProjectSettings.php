@@ -50,7 +50,7 @@ class GDApp_Form_ProjectSettings extends Zend_Form
 			->addFilter('StringTrim')
 			->addValidator('NotEmpty');
 
-		$public_key = new Zend_Form_Element_Text('publicKey');
+		$public_key = new Zend_Form_Element_Textarea('publicKey');
 		$public_key->setLabel('Public Key')
 			->setRequired(true)
 			->addFilter('StripTags')
