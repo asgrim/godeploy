@@ -84,4 +84,18 @@ class GD_Model_ServersMapper extends MAL_Model_MapperAbstract
 			->setRemotePath($row->remote_path)
 			->setProjectsId($row->projects_id);
 	}
+
+	/**
+	 * Get a list of the servers for a project
+	 * @param int $project_id
+	 * @return array of GD_Model_Server objects
+	 */
+	public function getServersByProject($project_id)
+	{
+		$select = $this->getDbTable()
+			->select()
+			->where("projects_id = ?", $project_id);
+
+		return $this->fetchAll($select);
+	}
 }

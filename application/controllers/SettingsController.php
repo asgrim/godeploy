@@ -73,6 +73,13 @@ class SettingsController extends Zend_Controller_Action
 			);
 
     		$form->populate($data);
+
+    		// Populate list of servers for this project
+    		if($project->getId() > 0)
+    		{
+	    		$servers = new GD_Model_ServersMapper();
+	    		$this->view->servers = $servers->getServersByProject($project->getId());
+    		}
     	}
     }
 
