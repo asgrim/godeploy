@@ -58,7 +58,7 @@ class GDApp_Form_ProjectSettings extends Zend_Form
 			->addValidator('NotEmpty');
 
 		$submit = new Zend_Form_Element_Submit('submit');
-		$submit->setLabel('Save');
+		$submit->setLabel('Save Changes');
 
 		$this->addElements(array(
 			$project_name,
