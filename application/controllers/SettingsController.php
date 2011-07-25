@@ -42,7 +42,7 @@ class SettingsController extends Zend_Controller_Action
     	}
     	else
     	{
-    		$project = new GD_Model_Projects();
+    		$project = new GD_Model_Project();
     		$project->setName("New Project");
     	}
     	$this->view->project = $project;

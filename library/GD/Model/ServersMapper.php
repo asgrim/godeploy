@@ -23,11 +23,11 @@
  */
 
 /**
- * Map the users table
+ * Map the projects table
  * @author james
  *
  */
-class GD_Model_UsersMapper extends MAL_Model_MapperAbstract
+class GD_Model_ServersMapper extends MAL_Model_MapperAbstract
 {
 
 	/**
@@ -36,7 +36,7 @@ class GD_Model_UsersMapper extends MAL_Model_MapperAbstract
 	 */
 	protected function getDbTableName()
 	{
-		return "GD_Model_DbTable_Users";
+		return "GD_Model_DbTable_Servers";
 	}
 
 	/**
@@ -45,54 +45,43 @@ class GD_Model_UsersMapper extends MAL_Model_MapperAbstract
 	 */
 	protected function getObjectName()
 	{
-		return "GD_Model_User";
+		return "GD_Model_Server";
 	}
 
 	/**
 	 * Should return an array of mapped fields to use in the MAL_Model_MapperAbstract::Save function
-	 * @param GD_Model_User $obj
+	 * @param GD_Model_Server $obj
 	 */
 	protected function getSaveData($obj)
 	{
 		$data = array(
 			'name' => $obj->getName(),
+			'hostname' => $obj->getHostname(),
+			'connection_types_id' => $obj->getConnectionTypesId(),
+			'port' => $obj->getPort(),
+			'username' => $obj->getUsername(),
 			'password' => $obj->getPassword(),
+			'remote_path' => $obj->getRemotePath(),
+			'projects_id' => $obj->getProjectsId(),
 		);
 		return $data;
 	}
 
 	/**
 	 * Implement this by setting $obj values (e.g. $obj->setId($row->Id) from a DB row
-	 * @param GD_Model_User $obj
+	 * @param GD_Model_Server $obj
 	 * @param Zend_Db_Table_Row_Abstract $row
 	 */
 	protected function populateObjectFromRow(&$obj, Zend_Db_Table_Row_Abstract $row)
 	{
 		$obj->setId($row->id)
 			->setName($row->name)
-			->setPassword($row->password);
-	}
-
-	/**
-	 * Search for a user by it's name
-	 * @param string $name username to find
-	 * @return GD_Model_User
-	 */
-	public function getUserByName($name)
-	{
-		$obj = new GD_Model_User();
-
-		$select = $this->getDbTable()
-			->select()
-			->where("name = ?", $name);
-
-		$row = $this->getDbTable()->fetchRow($select);
-
-		if(is_null($row))
-		{
-			return null;
-		}
-		$this->populateObjectFromRow($obj, $row);
-		return $obj;
+			->setHostname($row->hostname)
+			->setConnectionTypesId($row->connection_types_id)
+			->setPort($row->port)
+			->setUsername($row->username)
+			->setPassword($row->password)
+			->setRemotePath($row->remote_path)
+			->setProjectsId($row->projects_id);
 	}
 }

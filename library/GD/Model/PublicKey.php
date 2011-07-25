@@ -21,7 +21,7 @@
  * @author James Titcumb, Simon Wade
  * @link http://www.godeploy.com/
  */
-class GD_Model_PublicKeys
+class GD_Model_PublicKey
 {
 	protected $_id;
 	protected $_public_key_types_id;

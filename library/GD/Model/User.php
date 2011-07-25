@@ -21,7 +21,7 @@
  * @author James Titcumb, Simon Wade
  * @link http://www.godeploy.com/
  */
-class GD_Model_Users
+class GD_Model_User
 {
 	protected $_id;
 	protected $_name;

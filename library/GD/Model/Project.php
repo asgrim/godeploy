@@ -21,7 +21,7 @@
  * @author James Titcumb, Simon Wade
  * @link http://www.godeploy.com/
  */
-class GD_Model_Projects
+class GD_Model_Project
 {
 	protected $_id;
 	protected $_name;
@@ -115,7 +115,7 @@ class GD_Model_Projects
 		return $this->_public_keys_id;
 	}
 
-	public function setPublicKey(GD_Model_PublicKeys $obj)
+	public function setPublicKey(GD_Model_PublicKey $obj)
 	{
 		$this->_public_key = $obj;
 		return $this;

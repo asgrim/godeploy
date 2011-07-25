@@ -45,12 +45,12 @@ class GD_Model_ProjectsMapper extends MAL_Model_MapperAbstract
 	 */
 	protected function getObjectName()
 	{
-		return "GD_Model_Projects";
+		return "GD_Model_Project";
 	}
 
 	/**
 	 * Should return an array of mapped fields to use in the MAL_Model_MapperAbstract::Save function
-	 * @param GD_Model_Projects $obj
+	 * @param GD_Model_Project $obj
 	 */
 	protected function getSaveData($obj)
 	{
@@ -67,7 +67,7 @@ class GD_Model_ProjectsMapper extends MAL_Model_MapperAbstract
 
 	/**
 	 * Implement this by setting $obj values (e.g. $obj->setId($row->Id) from a DB row
-	 * @param GD_Model_Projects $obj
+	 * @param GD_Model_Project $obj
 	 * @param Zend_Db_Table_Row_Abstract $row
 	 */
 	protected function populateObjectFromRow(&$obj, Zend_Db_Table_Row_Abstract $row)
@@ -81,7 +81,7 @@ class GD_Model_ProjectsMapper extends MAL_Model_MapperAbstract
 			->setPublicKeysId($row->public_keys_id);
 
 		$pk_map = new GD_Model_PublicKeysMapper();
-		$public_key = new GD_Model_PublicKeys();
+		$public_key = new GD_Model_PublicKey();
 		$pk_map->populateObjectFromRow($public_key, $row->findParentRow('GD_Model_DbTable_PublicKeys'));
 		$obj->setPublicKey($public_key);
 	}
@@ -93,7 +93,7 @@ class GD_Model_ProjectsMapper extends MAL_Model_MapperAbstract
 	 */
 	public function getProjectBySlug($slug)
 	{
-		$obj = new GD_Model_Projects();
+		$obj = new GD_Model_Project();
 
 		$select = $this->getDbTable()
 			->select()

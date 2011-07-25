@@ -45,12 +45,12 @@ class GD_Model_PublicKeysMapper extends MAL_Model_MapperAbstract
 	 */
 	protected function getObjectName()
 	{
-		return "GD_Model_PublicKeys";
+		return "GD_Model_PublicKey";
 	}
 
 	/**
 	 * Should return an array of mapped fields to use in the MAL_Model_MapperAbstract::Save function
-	 * @param GD_Model_PublicKeys $obj
+	 * @param GD_Model_PublicKey $obj
 	 */
 	protected function getSaveData($obj)
 	{
@@ -64,7 +64,7 @@ class GD_Model_PublicKeysMapper extends MAL_Model_MapperAbstract
 
 	/**
 	 * Implement this by setting $obj values (e.g. $obj->setId($row->Id) from a DB row
-	 * @param GD_Model_PublicKeys $obj
+	 * @param GD_Model_PublicKey $obj
 	 * @param Zend_Db_Table_Row_Abstract $row
 	 */
 	public function populateObjectFromRow(&$obj, Zend_Db_Table_Row_Abstract $row)
