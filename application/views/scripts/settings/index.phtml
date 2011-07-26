@@ -17,7 +17,7 @@
 		<tr>
 			<td><?php echo $this->escape($server->getName()); ?></td>
 			<td><?php echo $this->escape($server->getHostname()); ?></td>
-			<td><?php echo $this->escape($server->getConnectionTypesId()); ?></td>
+			<td><?php echo $this->escape($server->getConnectionType()->getName()); ?></td>
 			<td>Edit | Delete</td>
 		</tr>
 	<?php endforeach; ?>

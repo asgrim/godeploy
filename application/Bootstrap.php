@@ -88,6 +88,20 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 				'project' => '[a-z-]+',
 			)
 		);
+		$projectRoute = new Zend_Controller_Router_Route(
+			'project/:project/:controller/:action/:id',
+			array(
+				'module'=>'default',
+				'controller'=>'index',
+				'action'=>'index',
+				'project'=>'',
+				'id' => 0,
+			),
+			array(
+				'project' => '[a-z-]+',
+				'id' => '\d+',
+			)
+		);
 
 		$router->addRoute('default', $defaultRoute);
 		$router->addRoute('project', $projectRoute);
