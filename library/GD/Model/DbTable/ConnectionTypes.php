@@ -21,15 +21,9 @@
  * @author James Titcumb, Simon Wade
  * @link http://www.godeploy.com/
  */
-class GD_Model_DbTable_Servers extends Zend_Db_Table_Abstract
+class GD_Model_DbTable_ConnectionTypes extends Zend_Db_Table_Abstract
 {
-	protected $_name = "servers";
+	protected $_name = "connection_types";
 
-	protected $_referenceMap = array(
-		'GD_Model_DbTable_ConnectionTypes' => array(
-			'columns' => 'connection_types_id',  // the column in the 'servers' table which is used for the join
-			'refTableClass' => 'GD_Model_DbTable_ConnectionTypes',  // the public_keys table name
-			'refColumns' => 'id' // the primary key of the foreign table
-		)
-	);
+	protected $_dependentTables = array('GD_Model_DbTable_Servers');
 }

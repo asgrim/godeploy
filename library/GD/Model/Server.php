@@ -33,6 +33,8 @@ class GD_Model_Server
 	protected $_remote_path;
 	protected $_projects_id;
 
+	protected $_connection_type;
+
 	public function setId($id)
 	{
 		$this->_id = (int)$id;
@@ -130,5 +132,19 @@ class GD_Model_Server
 	public function getProjectsId()
 	{
 		return $this->_projects_id;
+	}
+
+	public function setConnectionType(GD_Model_ConnectionType $obj)
+	{
+		$this->_connection_type = $obj;
+		return $this;
+	}
+
+	/**
+	 * @return GD_Model_ConnectionType
+	 */
+	public function getConnectionType()
+	{
+		return $this->_connection_type;
 	}
 }

@@ -23,11 +23,11 @@
  */
 
 /**
- * Map the projects table
+ * Map the connection types table
  * @author james
  *
  */
-class GD_Model_ServersMapper extends MAL_Model_MapperAbstract
+class GD_Model_ConnectionTypesMapper extends MAL_Model_MapperAbstract
 {
 
 	/**
@@ -36,7 +36,7 @@ class GD_Model_ServersMapper extends MAL_Model_MapperAbstract
 	 */
 	protected function getDbTableName()
 	{
-		return "GD_Model_DbTable_Servers";
+		return "GD_Model_DbTable_ConnectionTypes";
 	}
 
 	/**
@@ -45,62 +45,31 @@ class GD_Model_ServersMapper extends MAL_Model_MapperAbstract
 	 */
 	protected function getObjectName()
 	{
-		return "GD_Model_Server";
+		return "GD_Model_ConnectionType";
 	}
 
 	/**
 	 * Should return an array of mapped fields to use in the MAL_Model_MapperAbstract::Save function
-	 * @param GD_Model_Server $obj
+	 * @param GD_Model_ConnectionType $obj
 	 */
 	protected function getSaveData($obj)
 	{
 		$data = array(
 			'name' => $obj->getName(),
-			'hostname' => $obj->getHostname(),
-			'connection_types_id' => $obj->getConnectionTypesId(),
-			'port' => $obj->getPort(),
-			'username' => $obj->getUsername(),
-			'password' => $obj->getPassword(),
-			'remote_path' => $obj->getRemotePath(),
-			'projects_id' => $obj->getProjectsId(),
+			'default_port' => $obj->getDefaultPort(),
 		);
 		return $data;
 	}
 
 	/**
 	 * Implement this by setting $obj values (e.g. $obj->setId($row->Id) from a DB row
-	 * @param GD_Model_Server $obj
+	 * @param GD_Model_ConnectionType $obj
 	 * @param Zend_Db_Table_Row_Abstract $row
 	 */
 	protected function populateObjectFromRow(&$obj, Zend_Db_Table_Row_Abstract $row)
 	{
 		$obj->setId($row->id)
 			->setName($row->name)
-			->setHostname($row->hostname)
-			->setConnectionTypesId($row->connection_types_id)
-			->setPort($row->port)
-			->setUsername($row->username)
-			->setPassword($row->password)
-			->setRemotePath($row->remote_path)
-			->setProjectsId($row->projects_id);
-
-		$ct_map = new GD_Model_ConnectionTypesMapper();
-		$connection_type = new GD_Model_ConnectionType();
-		$ct_map->populateObjectFromRow($connection_type, $row->findParentRow('GD_Model_DbTable_ConnectionTypes'));
-		$obj->setConnectionType($connection_type);
-	}
-
-	/**
-	 * Get a list of the servers for a project
-	 * @param int $project_id
-	 * @return array of GD_Model_Server objects
-	 */
-	public function getServersByProject($project_id)
-	{
-		$select = $this->getDbTable()
-			->select()
-			->where("projects_id = ?", $project_id);
-
-		return $this->fetchAll($select);
+			->setDefaultPort($row->default_port);
 	}
 }

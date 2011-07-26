@@ -21,15 +21,42 @@
  * @author James Titcumb, Simon Wade
  * @link http://www.godeploy.com/
  */
-class GD_Model_DbTable_Servers extends Zend_Db_Table_Abstract
+class GD_Model_ConnectionType
 {
-	protected $_name = "servers";
+	protected $_id;
+	protected $_name;
+	protected $_default_port;
 
-	protected $_referenceMap = array(
-		'GD_Model_DbTable_ConnectionTypes' => array(
-			'columns' => 'connection_types_id',  // the column in the 'servers' table which is used for the join
-			'refTableClass' => 'GD_Model_DbTable_ConnectionTypes',  // the public_keys table name
-			'refColumns' => 'id' // the primary key of the foreign table
-		)
-	);
+	public function setId($id)
+	{
+		$this->_id = (int)$id;
+		return $this;
+	}
+
+	public function getId()
+	{
+		return $this->_id;
+	}
+
+	public function setName($value)
+	{
+		$this->_name = (string)$value;
+		return $this;
+	}
+
+	public function getName()
+	{
+		return $this->_name;
+	}
+
+	public function setDefaultPort($value)
+	{
+		$this->_default_port = (int)$value;
+		return $this;
+	}
+
+	public function getDefaultPort()
+	{
+		return $this->_default_port;
+	}
 }
