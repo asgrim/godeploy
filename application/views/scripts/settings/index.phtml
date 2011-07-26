@@ -18,7 +18,7 @@
 			<td><?php echo $this->escape($server->getName()); ?></td>
 			<td><?php echo $this->escape($server->getHostname()); ?></td>
 			<td><?php echo $this->escape($server->getConnectionType()->getName()); ?></td>
-			<td>Edit | Delete</td>
+			<td><a href="/project/<?php echo $this->project->getSlug(); ?>/servers/edit/<?php echo $server->getId(); ?>">Edit</a> | Delete</td>
 		</tr>
 	<?php endforeach; ?>
 	</tbody>
@@ -26,4 +26,4 @@
 <?php else: $another = "the first"; ?>
 <p><strong>There are no servers currently configured for this project!</strong></p>
 <?php endif; ?>
-<a href="#">Add <?php echo $another; ?> server to this project.</a>
+<a href="/project/<?php echo $this->project->getSlug(); ?>/servers/add">Add <?php echo $another; ?> server to this project.</a>
