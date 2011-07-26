@@ -1,0 +1,29 @@
+CONTRIBUTION NOTES
+------------------
+GoDeploy requirements:
+ * MAL (https://github.com/Asgrim/MAL)
+ * Zend Framework (http://framework.zend.com)
+ * PHP 5.3.2 (not tested with other versions)
+ * MySQL 5.1.41 (not tested with other versions)
+
+Not extensively tested in various environments yet, so YMMV.
+
+SETTING UP ENVIRONMENT FOR GITHUB PULL REQUESTS
+-----------------------------------------------
+1. Fork https://github.com/Asgrim/GoDeploy on GitHub
+2. git clone git@github.com:[YOURUSER]/GoDeploy.git
+2. cd library
+3. git clone git://github.com/Asgrim/MAL.git MAL
+4. svn co http://framework.zend.com/svn/framework/standard/tags/release-1.10.8/library/Zend Zend
+5. Run latest db/db_create_v?.sql script on your DB
+6. Run db/test_data.sql
+7. Set up DB settings in application/configs/application.ini
+
+SETTING UP ENVIRONMENT (READ-ONLY - FOR TESTING ETC.)
+-----------------------------------------------------
+1. git clone git://github.com/Asgrim/GoDeploy.git
+2. cd library
+3. git clone git://github.com/Asgrim/MAL.git MAL
+4. svn co http://framework.zend.com/svn/framework/standard/tags/release-1.10.8/library/Zend Zend
+5. Run latest db/db_create_v?.sql script
+6. Set up DB settings in application/configs/application.ini
