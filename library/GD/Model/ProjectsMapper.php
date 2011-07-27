@@ -89,7 +89,7 @@ class GD_Model_ProjectsMapper extends MAL_Model_MapperAbstract
 	/**
 	 * Search for a user by it's name
 	 * @param string $name username to find
-	 * @return GD_Model_Users
+	 * @return GD_Model_Project
 	 */
 	public function getProjectBySlug($slug)
 	{
