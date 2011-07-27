@@ -18,7 +18,11 @@
 			<td><?php echo $this->escape($server->getName()); ?></td>
 			<td><?php echo $this->escape($server->getHostname()); ?></td>
 			<td><?php echo $this->escape($server->getConnectionType()->getName()); ?></td>
-			<td><a href="/project/<?php echo $this->project->getSlug(); ?>/servers/edit/<?php echo $server->getId(); ?>">Edit</a> | Delete</td>
+			<td>
+				<a href="/project/<?php echo $this->project->getSlug(); ?>/servers/edit/<?php echo $server->getId(); ?>">Edit</a>
+				|
+				<a href="/project/<?php echo $this->project->getSlug(); ?>/servers/delete/<?php echo $server->getId(); ?>">Delete</a>
+			</td>
 		</tr>
 	<?php endforeach; ?>
 	</tbody>

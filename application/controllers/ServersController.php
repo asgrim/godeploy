@@ -27,7 +27,7 @@ class ServersController extends Zend_Controller_Action
 
 	public function init()
 	{
-		if($this->_request->getActionName() != "index")
+		if(!in_array($this->_request->getActionName() . "Action", get_class_methods($this)))
 		{
 			if($this->_request->getActionName() == "add")
 			{
@@ -44,8 +44,61 @@ class ServersController extends Zend_Controller_Action
 
 	public function indexAction()
 	{
+		$project_slug = $this->_getParam("project");
+
     	$form = new GDApp_Form_ServerSettings();
     	$this->view->form = $form;
+
+		$servers = new GD_Model_ServersMapper();
+		$server = new GD_Model_Server();
+
+		$server_id = $this->_request->getParam('id', 0);
+
+		if($server_id > 0 && $this->_method == "edit")
+		{
+			$servers->find($server_id, $server);
+		}
+		else if($this->_method == "add")
+		{
+			$projects = new GD_Model_ProjectsMapper();
+			$project = $projects->getProjectBySlug($project_slug);
+			$server->setProjectsId($project->getId());
+		}
+		$this->view->server = $server;
+
+		if($this->getRequest()->isPost())
+		{
+			$server->setName($this->_request->getParam('name', false));
+			$server->setHostname($this->_request->getParam('hostname', false));
+			$server->setConnectionTypesId($this->_request->getParam('connectionTypeId', false));
+			$server->setPort($this->_request->getParam('port', false));
+			$server->setUsername($this->_request->getParam('username', false));
+			$server->setPassword($this->_request->getParam('password', false));
+			$server->setRemotePath($this->_request->getParam('remotePath', false));
+
+			$servers->save($server);
+
+			$this->_redirect("/project/" . $this->_getParam("project") . "/settings");
+		}
+		else
+		{
+			$data = array(
+				'name' => $server->getName(),
+				'hostname' => $server->getHostname(),
+				'connectionTypeId' => $server->getConnectionTypesId(),
+				'port' => $server->getPort(),
+				'username' => $server->getUsername(),
+				'password' => $server->getPassword(),
+				'remotePath' => $server->getRemotePath(),
+			);
+
+    		$form->populate($data);
+		}
+	}
+
+	public function deleteAction()
+	{
+		$project_slug = $this->_getParam("project");
 
 		$servers = new GD_Model_ServersMapper();
 		$server = new GD_Model_Server();
@@ -55,26 +108,12 @@ class ServersController extends Zend_Controller_Action
 		if($server_id > 0)
 		{
 			$servers->find($server_id, $server);
+			$servers->delete($server);
+			$this->_redirect("/project/" . $this->_getParam("project") . "/settings");
 		}
 		else
 		{
-			// new server...
-		}
-		$this->view->server = $server;
-
-		if($this->getRequest()->isPost())
-		{
-			// do post stuff
-		}
-		else
-		{
-			$data = array(
-				'name' => $server->getName(),
-				'hostname' => $server->getHostname(),
-				'connectionTypeId' => $server->getConnectionTypesId(),
-			);
-
-    		$form->populate($data);
+			throw new Zend_Exception("Server id was not specified");
 		}
 	}
 }

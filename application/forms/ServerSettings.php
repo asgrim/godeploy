@@ -58,6 +58,36 @@ class GDApp_Form_ServerSettings extends Zend_Form
 			$connection_type_id->addMultiOption($connection_type->getId(), $connection_type->getName());
 		}
 
+		$port = new Zend_Form_Element_Text('port');
+		$port->setLabel('Port')
+			->setRequired(false)
+			->addFilter('StripTags')
+			->addFilter('StringTrim')
+			->addValidator('NotEmpty');
+
+		$username = new Zend_Form_Element_Text('username');
+		$username->setLabel('Username')
+			->setRequired(true)
+			->addFilter('StripTags')
+			->addFilter('StringTrim')
+			->addValidator('NotEmpty')
+			->setAttrib('autocomplete', 'off');
+
+		$password = new Zend_Form_Element_Password('password');
+		$password->setLabel('Password')
+			->setRequired(true)
+			->addFilter('StripTags')
+			->addFilter('StringTrim')
+			->addValidator('NotEmpty')
+			->setAttrib('autocomplete', 'off')
+			->setAttrib('renderPassword', true);
+
+		$report_path = new Zend_Form_Element_Text('remotePath');
+		$report_path->setLabel('Remote Path')
+			->setRequired(false)
+			->addFilter('StripTags')
+			->addFilter('StringTrim');
+
 		$submit = new Zend_Form_Element_Submit('submit');
 		$submit->setLabel('Save Changes');
 
@@ -65,6 +95,10 @@ class GDApp_Form_ServerSettings extends Zend_Form
 			$server_name,
 			$hostname,
 			$connection_type_id,
+			$port,
+			$username,
+			$password,
+			$report_path,
 			$submit,
 		));
 	}
