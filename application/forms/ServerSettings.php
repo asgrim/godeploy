@@ -21,7 +21,7 @@
  * @author James Titcumb, Simon Wade
  * @link http://www.godeploy.com/
  */
-class GDApp_Form_ServerSettings extends Zend_Form
+class GDApp_Form_ServerSettings extends GD_Form_Abstract
 {
 	public function __construct($options = null)
 	{

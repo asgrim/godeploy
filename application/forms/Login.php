@@ -21,7 +21,7 @@
  * @author James Titcumb, Simon Wade
  * @link http://www.godeploy.com/
  */
-class GDApp_Form_Login extends Zend_Form
+class GDApp_Form_Login extends GD_Form_Abstract
 {
 	public function __construct($options = null)
 	{
