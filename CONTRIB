@@ -27,3 +27,10 @@ SETTING UP ENVIRONMENT (READ-ONLY - FOR TESTING ETC.)
 4. svn co http://framework.zend.com/svn/framework/standard/tags/release-1.10.8/library/Zend Zend
 5. Run latest db/db_create_v?.sql script
 6. Set up DB settings in application/configs/application.ini
+
+UPDATING IN THE FUTURE (FOR ALL DEVELOPERS)
+-------------------------------------------
+1. git remote add upstream git://github.com/Asgrim/GoDeploy.git
+2. git fetch upstream
+3. git merge upstream/master
+(alternatively if you are daring/careless, you can `git pull upstream` to combine fetch and merge)
