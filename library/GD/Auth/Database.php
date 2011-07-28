@@ -40,6 +40,13 @@ class GD_Auth_Database implements Zend_Auth_Adapter_Interface
 	protected $_password;
 
 	/**
+	 * The currently logged in user object - used to cache for
+	 * GD_Auth_Database::GetLoggedInUser()
+	 * @var GD_Model_User
+	 */
+	private static $_currentUser;
+
+	/**
 	 * Constructor for GD_Auth_Database, simply sets username and password
 	 *
 	 * @param $username string The username provided by the user in the login form
@@ -86,5 +93,31 @@ class GD_Auth_Database implements Zend_Auth_Adapter_Interface
 		{
 			return new Zend_Auth_Result(Zend_Auth_Result::FAILURE_CREDENTIAL_INVALID,$this->_username);
 		}
+	}
+
+	/**
+	 * Handy dandy function to get the GD_Model_User object from the currently
+	 * logged in Zend_Auth identity. Returns null on failure.
+	 *
+	 * @return GD_Model_User|null
+	 */
+	public static function GetLoggedInUser()
+	{
+		if(!isset(self::$_currentUser) || is_null(self::$_currentUser) || !(self::$_currentUser instanceof GD_Model_User))
+		{
+			$auth = Zend_Auth::getInstance();
+			$username = $auth->getIdentity();
+
+			if(is_null($username))
+			{
+				return null;
+			}
+
+			$users = new GD_Model_UsersMapper();
+			self::$_currentUser = $users->getUserByName($username);
+
+			return self::$_currentUser;
+		}
+		else return self::$_currentUser;
 	}
 }
