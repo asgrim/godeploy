@@ -29,6 +29,12 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 		$autoloader->registerNamespace('GD_');
 	}
 
+	protected function _initConfig()
+	{
+		$db_conf = new Zend_Config_Ini(APPLICATION_PATH . '/configs/db.ini', 'database');
+		Zend_Db_Table::setDefaultAdapter(Zend_Db::factory($db_conf->adapter, $db_conf->toArray()));
+	}
+
 	protected function _initNavigation()
 	{
 		$auth = Zend_Auth::getInstance();
