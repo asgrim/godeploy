@@ -82,4 +82,28 @@ class GD_Model_DeploymentsMapper extends MAL_Model_MapperAbstract
 			->setToRevision($row->to_revision)
 			->setDeploymentStatusesId($row->deployment_statuses_id);
 	}
+
+	/**
+	 * Find the last successful deployment object
+	 * @return GD_Model_Deployment
+	 */
+	public function getLastSuccessfulDeployment()
+	{
+		$obj = new GD_Model_Deployment();
+
+		$select = $this->getDbTable()
+			->select()
+			->where("deployment_statuses_id = ?", 3)
+			->order('when DESC')
+			->limit(1);
+
+		$row = $this->getDbTable()->fetchRow($select);
+
+		if(is_null($row))
+		{
+			return null;
+		}
+		$this->populateObjectFromRow($obj, $row);
+		return $obj;
+	}
 }

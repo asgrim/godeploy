@@ -68,7 +68,16 @@ class DeployController extends Zend_Controller_Action
     	}
     	else
     	{
-    		// TODO - populate with default fromRevision
+    		$last_deployment = $deployments->getLastSuccessfulDeployment();
+
+    		if(!is_null($last_deployment))
+    		{
+				$data = array(
+					'fromRevision' => $last_deployment->getToRevision(),
+				);
+
+	    		$form->populate($data);
+    		}
     	}
     }
 
