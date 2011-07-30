@@ -64,7 +64,16 @@ class DeployController extends Zend_Controller_Action
     		$deployments->save($deployment);
 
     		// Forward to either run or preview page...
-    		die("Not done yet... forward to either run or preview page...");
+    		if(!is_null($this->_request->getParam('submitRun')))
+    		{
+    			// go to run
+    			$this->_redirect($this->getFrontController()->getBaseUrl() . "/project/" . $this->_getParam("project") . "/deploy/run/" . $deployment->getId());
+    		}
+    		else if(!is_null($this->_request->getParam('submitPreview')))
+    		{
+    			// go to preview
+    			$this->_redirect($this->getFrontController()->getBaseUrl() . "/project/" . $this->_getParam("project") . "/deploy/preview/" . $deployment->getId());
+    		}
     	}
     	else
     	{
