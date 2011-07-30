@@ -78,7 +78,7 @@ class ServersController extends Zend_Controller_Action
 
 			$servers->save($server);
 
-			$this->_redirect("/project/" . $this->_getParam("project") . "/settings");
+			$this->_redirect($this->getFrontController()->getBaseUrl() . "/project/" . $this->_getParam("project") . "/settings");
 		}
 		else
 		{
@@ -109,7 +109,7 @@ class ServersController extends Zend_Controller_Action
 		{
 			$servers->find($server_id, $server);
 			$servers->delete($server);
-			$this->_redirect("/project/" . $this->_getParam("project") . "/settings");
+			$this->_redirect($this->getFrontController()->getBaseUrl() . "/project/" . $this->_getParam("project") . "/settings");
 		}
 		else
 		{

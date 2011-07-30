@@ -61,7 +61,7 @@ class SettingsController extends Zend_Controller_Action
     		$public_keys = new GD_Model_PublicKeysMapper();
     		$public_keys->save($public_key);
 
-    		$this->_redirect("/home");
+    		$this->_redirect($this->getFrontController()->getBaseUrl() . "/home");
     	}
     	else
     	{

@@ -38,17 +38,17 @@ class AuthController extends Zend_Controller_Action
 
 			if($result->isValid())
 			{
-				$this->_redirect("/home");
+				$this->_redirect($this->getFrontController()->getBaseUrl() . "/home");
 			}
 			else
 			{
 				$this->executeLogout();
-				$this->_redirect("/");
+				$this->_redirect($this->getFrontController()->getBaseUrl() . "/");
 			}
 		}
 		else
 		{
-			$this->_redirect("/");
+			$this->_redirect($this->getFrontController()->getBaseUrl() . "/");
 		}
     }
 
@@ -61,7 +61,7 @@ class AuthController extends Zend_Controller_Action
     public function logoutAction()
     {
     	$this->executeLogout();
-		$this->_redirect("/");
+		$this->_redirect($this->getFrontController()->getBaseUrl() . "/");
     }
 
     public function getAuthAdapter(array $credentials)
