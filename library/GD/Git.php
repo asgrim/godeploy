@@ -95,22 +95,37 @@ class GD_Git
 		}
 	}
 
-	public function getLastCommit()
+	private function parsePrettyOneline($line)
 	{
-		$this->runShell('git log -n1 --pretty=oneline');
+		$raw_commit_info = explode(" ", $line, 2);
+		$commit_info = array();
+		$commit_info["HASH"] = $raw_commit_info[0];
+		$commit_info["MESSAGE"] = $raw_commit_info[1];
+		return $commit_info;
+	}
+
+	private function getSingleLog($cmd)
+	{
+		$this->runShell($cmd);
 
 		if($this->_last_errno == 0)
 		{
-			$raw_commit_info = explode(" ", $this->_last_output[0], 2);
-			$commit_info = array();
-			$commit_info["HASH"] = $raw_commit_info[0];
-			$commit_info["MESSAGE"] = $raw_commit_info[1];
-			return $commit_info;
+			return $this->parsePrettyOneline($this->_last_output[0]);
 		}
 		else
 		{
 			return self::GIT_GENERAL_ERROR;
 		}
+	}
+
+	public function getLastCommit()
+	{
+		return $this->getSingleLog('git log -n1 --pretty=oneline');
+	}
+
+	public function getFirstCommit()
+	{
+		return $this->getSingleLog('git log --pretty=oneline | tail -1');
 	}
 
 	public function gitPull($branch = "master", $remote = "origin")
