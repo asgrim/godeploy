@@ -77,7 +77,7 @@ class DeployController extends Zend_Controller_Action
     	}
     	else
     	{
-    		$last_deployment = $deployments->getLastSuccessfulDeployment();
+    		//$last_deployment = $deployments->getLastSuccessfulDeployment();
 
     		if(!is_null($last_deployment))
     		{

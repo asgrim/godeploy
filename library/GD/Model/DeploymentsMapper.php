@@ -85,15 +85,19 @@ class GD_Model_DeploymentsMapper extends MAL_Model_MapperAbstract
 
 	/**
 	 * Find the last successful deployment object
+	 * @param int $project_id
+	 * @param int $server_id
 	 * @return GD_Model_Deployment
 	 */
-	public function getLastSuccessfulDeployment()
+	public function getLastSuccessfulDeployment($project_id, $server_id)
 	{
 		$obj = new GD_Model_Deployment();
 
 		$select = $this->getDbTable()
 			->select()
 			->where("deployment_statuses_id = ?", 3)
+			->where("projects_id = ?", $project_id)
+			->where("servers_id = ?", $server_id)
 			->order('when DESC')
 			->limit(1);
 
