@@ -1,0 +1,24 @@
+/* CSS Document */
+
+#twitter .content {
+	padding-bottom: 0;
+	text-align: center;
+	}
+
+#intro .c_12 .content {
+	padding-left: 40px;
+	padding-right: 0;
+	}
+
+	#intro ul.bullets.large li.item_1 { background-image: url("/images/icons/bullets/36x36/1.gif"); }
+	#intro ul.bullets.large li.item_2 { background-image: url("/images/icons/bullets/36x36/2.gif"); }
+	#intro ul.bullets.large li.item_3 { background-image: url("/images/icons/bullets/36x36/3.gif"); }
+
+#intro .cta {
+	padding-left: 50px;
+	}
+
+#intro .c_34 .content {
+	padding-bottom: 0;
+	text-align: center;
+	}

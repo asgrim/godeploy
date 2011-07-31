@@ -1,0 +1,16 @@
+/* CSS Document */
+
+.wrapper {
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+	}
+
+	.wrapper .content {
+		padding: 0 15px 15px 15px;
+		}
+
+.w_ededed {
+	background-color: #ededed;
+	border: 1px solid #bdbdbd;
+	}

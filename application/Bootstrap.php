@@ -165,5 +165,28 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 		$router->addRoute('default', $defaultRoute);
 		$router->addRoute('project', $projectRoute);
 	}
+
+	protected function _initViewHelpers()
+	{
+		$this->bootstrap('layout');
+		$layout = $this->getResource('layout');
+		$view = $layout->getView();
+
+		$view->doctype('HTML5');
+
+		// Meta tags
+		$view->headMeta()->appendHttpEquiv('Content-Type', 'text/html;charset=utf-8');
+
+		// Add default css file
+		$view->headLink()->appendStylesheet("/css/template/common.css");
+		$view->headLink()->appendStylesheet("/css/template/main.css");
+		$view->headLink()->appendStylesheet("/css/template/header.css");
+		$view->headLink()->appendStylesheet("/css/template/footer.css");
+		$view->headLink()->appendStylesheet("/css/template/wrappers.css");
+
+		$view->headScript()->appendFile("/js/prototype/1.7.js");
+		$view->headScript()->appendFile("/js/scriptaculous/1.9.0.js");
+		$view->headScript()->appendFile("/js/common.js");
+	}
 }
 

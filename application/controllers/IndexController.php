@@ -33,6 +33,8 @@ class IndexController extends Zend_Controller_Action
     {
     	$form = new GDApp_Form_Login();
     	$this->view->form = $form;
+
+		$this->view->headLink()->appendStylesheet("/css/pages/index.css");
     }
 
 

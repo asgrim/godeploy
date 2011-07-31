@@ -1,0 +1,158 @@
+/* CSS Document */
+
+img {
+	border: 0;
+	vertical-align: bottom;
+	}
+
+p, ul, ol {
+	margin: 0;
+	padding: 0 0 15px 0;
+	}
+
+	ul, ol {
+		list-style-type: none;
+		}
+
+.last {
+	padding-bottom: 0;
+	}
+
+
+h1, h2, h3, h4, h5, h6, h7 {
+	font-family: arial;
+	margin: 0;
+	}
+
+	h1 {
+		font-size: 36px;
+		color: #348e1c;
+		font-weight: normal;
+		padding: 0 0 5px 0;
+		}
+	h2 {
+		font-size: 20px;
+		font-weight: normal;
+		padding: 0 0 15px 0;
+		}
+	h3 {
+		font-size: 16px;
+		font-weight: bold;
+		padding: 0 0 15px 0;
+		}
+	h4 {
+		font-size: 16px;
+		font-weight: normal;
+		padding: 0 0 15px 0;
+		}
+
+
+input, select {
+	margin: 0;
+	padding: 0;
+	}
+
+div.clear {
+	clear: both;
+	}
+
+div.spacer {
+	height: 4px;
+	line-height: 4px;
+	font-size: 4px;
+	}
+
+div.padding {}
+
+	div.padding_5 {
+		height: 5px;
+		line-height: 5px;
+		font-size: 5px;
+		}
+
+	div.padding_10 {
+		height: 10px;
+		line-height: 10px;
+		font-size: 10px;
+		}
+
+	div.padding_15 {
+		height: 15px;
+		line-height: 15px;
+		font-size: 15px;
+		}
+
+	div.padding_20 {
+		height: 20px;
+		line-height: 20px;
+		font-size: 20px;
+		}
+
+	div.padding_25 {
+		height: 25px;
+		line-height: 25px;
+		font-size: 25px;
+		}
+
+	div.padding_30 {
+		height: 30px;
+		line-height: 30px;
+		font-size: 30px;
+		}
+
+.hidden {
+	display: none;
+	}
+
+.inline {
+	display: inline;
+	}
+
+.block {
+	display: block;
+	}
+
+.invisible {
+	visibility: hidden;
+	}
+
+.visible {
+	visibility: visible;
+	}
+
+hr {
+	display: none;
+	}
+
+.align_left {
+	text-align: left;
+	}
+
+.align_right {
+	text-align: right;
+	}
+
+.align_center {
+	text-align: center;
+	}
+
+.nowrap {
+	white-space: nowrap;
+	}
+
+ul.bullets {
+	margin: 0;
+	padding: 0;
+	}
+
+	ul.bullets.large li {
+		padding: 7px 10px 10px 47px;
+		margin-bottom: 10px;
+		background-position: 0 0;
+		background-repeat: no-repeat;
+		font-size: 18px;
+		}
+
+	ul.bullets li.last {
+		margin-bottom: 0;
+		}
