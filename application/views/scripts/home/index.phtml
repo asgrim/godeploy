@@ -1,13 +1,16 @@
 <?php if(is_array($this->projects) && count($this->projects) > 0): ?>
-<ul>
+<ul id="projects">
 <?php foreach($this->projects as $project): ?>
 	<li>
+		<a href="/project/<?php echo $project->getSlug(); ?>/deploy">
+			<img src="/images/buttons/deploy.png" alt="Deploy" title="Deploy this project now" />
+		</a>
 		<h4><?php echo $project->getName(); ?></h4>
-		<ul>
+		<ul class="links">
 			<li><a href="/project/<?php echo $project->getSlug(); ?>/history">Deployments</a></li>
 			<li><a href="/project/<?php echo $project->getSlug(); ?>/settings">Settings</a></li>
 		</ul>
-		<a href="/project/<?php echo $project->getSlug(); ?>/deploy">GoDeploy &raquo;</a>
+		<div class="clear"></div>
 	</li>
 <?php endforeach; ?>
 </ul>

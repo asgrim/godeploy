@@ -30,5 +30,7 @@ class HomeController extends Zend_Controller_Action
     	$projects = $mprojects->fetchAll();
 
     	$this->view->projects = $projects;
+
+		$this->view->headLink()->appendStylesheet("/css/pages/home.css");
     }
 }
