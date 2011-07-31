@@ -77,14 +77,27 @@ class DeployController extends Zend_Controller_Action
     	}
     	else
     	{
-    		//$last_deployment = $deployments->getLastSuccessfulDeployment();
+    		$data = array();
 
+    		// Git pull before anything
+    		$git = new GD_Git($project);
+    		$git->gitPull();
+
+    		$last_commit = $git->getLastCommit();
+    		if(is_array($last_commit))
+    		{
+    			$to_revision = $last_commit['HASH'];
+    			$data['toRevision'] = $to_revision;
+    		}
+
+    		//$last_deployment = $deployments->getLastSuccessfulDeployment();
     		if(!is_null($last_deployment))
     		{
-				$data = array(
-					'fromRevision' => $last_deployment->getToRevision(),
-				);
+				$data['fromRevision'] = $last_deployment->getToRevision();
+    		}
 
+    		if(count($data) > 0)
+    		{
 	    		$form->populate($data);
     		}
     	}

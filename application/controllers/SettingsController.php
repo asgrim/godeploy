@@ -44,6 +44,7 @@ class SettingsController extends Zend_Controller_Action
     	{
     		$project = new GD_Model_Project();
     		$project->setName("New Project");
+    		$project->setDeploymentBranch('master'); // Usually default for git
     	}
     	$this->view->project = $project;
 
@@ -63,6 +64,14 @@ class SettingsController extends Zend_Controller_Action
     		$project->setPublicKeysId($public_key->getId());
 
     		$projects->save($project);
+
+    		// Update repository
+    		$git = new GD_Git($project);
+    		$result = $git->gitCloneOrPull();
+    		if($result !== true)
+    		{
+    			throw new GD_Exception("Git clone or pull failed: {$result}");
+    		}
 
     		$this->_redirect($this->getFrontController()->getBaseUrl() . "/home");
     	}
