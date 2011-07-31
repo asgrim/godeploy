@@ -59,3 +59,10 @@ a {
 	a:hover {
 		text-decoration: none;
 		}
+
+.add_icon {
+	background-image: url('/images/buttons/add.png');
+	background-repeat: no-repeat;
+	background-position: left center;
+	padding-left: 21px;
+	}

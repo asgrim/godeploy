@@ -36,7 +36,7 @@ class SettingsController extends Zend_Controller_Action
 
     	$projects = new GD_Model_ProjectsMapper();
     	$project_slug = $this->_getParam("project");
-    	if($project_slug != "")
+    	if($project_slug != "new")
     	{
     		$project = $projects->getProjectBySlug($project_slug);
     	}
@@ -52,14 +52,17 @@ class SettingsController extends Zend_Controller_Action
     		$project->setName($this->_request->getParam('name', false));
     		$project->setRepositoryUrl($this->_request->getParam('repositoryUrl', false));
     		$project->setDeploymentBranch($this->_request->getParam('deploymentBranch', false));
-
-    		$projects->save($project);
+    		$project->setRepositoryTypesId(1);
 
     		// Save public key
     		$public_key = $project->getPublicKey();
     		$public_key->setData($this->_request->getParam('publicKey', false));
     		$public_keys = new GD_Model_PublicKeysMapper();
     		$public_keys->save($public_key);
+
+    		$project->setPublicKeysId($public_key->getId());
+
+    		$projects->save($project);
 
     		$this->_redirect($this->getFrontController()->getBaseUrl() . "/home");
     	}
@@ -81,6 +84,24 @@ class SettingsController extends Zend_Controller_Action
 	    		$this->view->servers = $servers->getServersByProject($project->getId());
     		}
     	}
+    }
+
+    public function deleteAction()
+    {
+    	$projects = new GD_Model_ProjectsMapper();
+    	$project_slug = $this->_getParam("project");
+
+    	$project = $projects->getProjectBySlug($project_slug);
+
+    	// Delete the public key
+    	$public_key = $project->getPublicKey();
+    	$public_keys = new GD_Model_PublicKeysMapper();
+    	$public_keys->delete($public_key);
+
+    	// Delete the project
+    	$projects->delete($project);
+
+    	$this->_redirect($this->getFrontController()->getBaseUrl() . "/home");
     }
 
 
