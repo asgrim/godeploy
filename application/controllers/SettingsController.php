@@ -102,6 +102,10 @@ class SettingsController extends Zend_Controller_Action
 
     	$project = $projects->getProjectBySlug($project_slug);
 
+    	// TODO - Delete the deployments for the project
+    	// And the deployment_files
+    	// And the servers
+
     	// Delete the public key
     	$public_key = $project->getPublicKey();
     	$public_keys = new GD_Model_PublicKeysMapper();
