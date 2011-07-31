@@ -1,0 +1,61 @@
+/* CSS Document */
+
+body {
+	font-family: arial;
+	font-weight: normal;
+	font-size: 14px;
+	margin: 0;
+	padding: 0;
+	}
+
+.container {
+	width: 1004px;
+	margin: 0 auto;
+	}
+
+	#container {
+		margin: 0 auto;
+		}
+	
+	#header .container,
+	#footer .container {
+		width: 1000px;
+		}
+
+#main {
+	position: relative;
+	background-color: #ffffff;
+	}
+
+	#main .content {
+		padding: 0 15px 15px 15px;
+		}
+
+.column {
+	float: left;
+	width: 250px;
+	}
+
+	.c_12, .c_23, .c_34 { width: 500px; }	
+	.c_123, .c_234 { width: 750px; }
+
+	.c_12 .spacing { padding-right: 12px; }
+	.c_34 .spacing { padding-left: 12px; }
+	.c_123 .spacing { padding-right: 12px; }
+	.c_234 .spacing { padding-left: 12px; }
+
+	.column .border_left { border-left: 4px solid #d3d3d3; }
+	.column .border_left_narrow { border-left: 2px solid #d3d3d3; }
+	.column .border_right { border-right: 4px solid #d3d3d3; }
+	.column .border_right_narrow { border-right: 2px solid #d3d3d3; }
+
+a {
+	color: #348e1c;
+	font-weight: bold;
+	text-decoration: underline;
+	outline: none;
+	}
+
+	a:hover {
+		text-decoration: none;
+		}
