@@ -1,5 +1,5 @@
 <?php echo $this->doctype() . "\n"; ?>
-<html lang="en">
+<html>
 <head>
 <?php echo $this->headTitle() . "\n"; ?>
 
@@ -16,7 +16,16 @@
 <?php echo $this->headMeta() . "\n"; ?>
 </head>
 <body>
-	<?php echo $this->render('header.phtml'); ?>
-	<?php echo $this->layout()->content; ?>
+
+<div id="container">
+	<div id="header"><?php echo $this->render('header.phtml'); ?></div>
+	<hr />
+	<div id="main"><div class="container">
+		<?php echo $this->layout()->content; ?>
+	</div></div>
+	<hr />
+	<div id="footer"><?php echo $this->render('footer.phtml'); ?></div>
+</div>
+
 </body>
 </html>

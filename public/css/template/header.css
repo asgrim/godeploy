@@ -1,0 +1,80 @@
+/* CSS Document */
+
+#header {
+	background: transparent url("/images/header/bg.jpg") repeat-x top left;
+	}
+
+	#header_border {
+		background: transparent url("/images/header/border.png") repeat-x bottom left;
+		}
+
+	#header .content {
+		padding: 0 15px;
+		}
+
+#header #logo {
+	float: left;
+	width: 400px;
+	}
+
+	#header #logo a {
+		margin-left: 40px;
+		}
+
+#login {
+	float: right;
+	background-color: #abd2a0;
+	padding: 10px;
+	}
+
+	#login form ul {
+		padding: 0;
+		}
+
+#menu {
+	float: right;
+	width: 540px;
+	}
+
+#menu.logged_in {
+	margin-top: 73px;
+	}
+
+	#menu #logged_in_status {
+		float: right;
+		color: #ffffff;
+		padding: 10px 10px 0 0;
+		}
+
+	#menu ul {
+		margin: 0;
+		padding: 0;
+		float: right;
+		}
+
+		#menu ul li {
+			float: left;
+			padding: 10px 10px 15px 10px;
+			margin-left: 10px;
+			background: #ededed url("/images/header/border.png") repeat-x bottom left;
+			
+		
+			-webkit-border-top-left-radius: 5px;
+			-moz-border-top-left-radius: 5px;
+			border-top-left-radius: 5px;
+			
+			-webkit-border-top-right-radius: 5px;
+			-moz-border-top-right-radius: 5px;
+			border-top-right-radius: 5px;
+			
+			-moz-box-shadow: 3px 3px 3px rgba(0,0,0,0.5);
+			-webkit-box-shadow: 3px 3px 3px rgba(0,0,0,0.5);
+			box-shadow: 3px 3px 3px rgba(0,0,0,0.5);
+			}
+
+			#menu ul li.active {
+				border: 1px solid #bdbdbd;
+				border-bottom: none;
+				background-image: none;
+				background-color: #ffffff;
+				}

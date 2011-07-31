@@ -27,7 +27,7 @@ class GDApp_Form_Login extends GD_Form_Abstract
 	{
 		parent::__construct($options);
 
-		$this->setName('login')
+		$this->setName('login_form')
 			->setAction('/auth/login')
 			->setMethod('post');
 

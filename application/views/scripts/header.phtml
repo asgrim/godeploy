@@ -1,10 +1,31 @@
-<h1>GoDeploy</h1>
 
-<?php if($this->logged_in): ?>
-<span>Logged in as <?php echo Zend_Auth::getInstance()->getIdentity(); ?></span>
-<?php else: ?>
-<span>Not logged in.</span>
-<?php endif; ?>
+<div id="header_border"><div class="content">
+	<div class="container">
 
-<?php echo $this->navigation()->menu(); ?>
-<hr />
+		<div id="logo">
+			<a href="<?php echo $this->baseUrl(); ?>/" title="GoDrploy - Easy Code Deployment"><img src="<?php echo $this->baseUrl(); ?>/images/header/godeploy.png" alt="GoDeploy - Easy Code Deployment" /></a>
+			<h2 class="hidden">GoDeploy - Easy Code Deployment</h2>
+		</div>
+
+		<?php if (!$this->logged_in): ?>
+		<div id="login">
+			<?php echo $this->form; ?>
+		</div>
+		<?php endif; ?>
+		<div id="menu" class="<?php if ($this->logged_in) echo "logged_in"; ?>">
+			<?php echo $this->navigation()->menu(); ?>
+
+			<span id="logged_in_status">
+			<?php if ($this->logged_in): ?>
+				Logged in as <?php echo Zend_Auth::getInstance()->getIdentity(); ?>
+			<?php else: ?>
+				Not logged in.
+			<?php endif; ?>
+			</span>
+
+			<div class="clear"></div>
+		</div>
+		<div class="clear"></div>
+
+	</div>
+</div></div>
