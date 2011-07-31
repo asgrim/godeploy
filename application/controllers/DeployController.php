@@ -31,6 +31,8 @@ class DeployController extends Zend_Controller_Action
 
     public function indexAction()
     {
+    	$this->view->headScript()->appendFile("/js/pages/deploy_setup.js");
+
     	$projects = new GD_Model_ProjectsMapper();
     	$project_slug = $this->_getParam("project");
     	if($project_slug != "")
@@ -90,12 +92,6 @@ class DeployController extends Zend_Controller_Action
     			$data['toRevision'] = $to_revision;
     		}
 
-    		//$last_deployment = $deployments->getLastSuccessfulDeployment();
-    		if(!is_null($last_deployment))
-    		{
-				$data['fromRevision'] = $last_deployment->getToRevision();
-    		}
-
     		if(count($data) > 0)
     		{
 	    		$form->populate($data);
@@ -116,6 +112,42 @@ class DeployController extends Zend_Controller_Action
     public function resultAction()
     {
     	die("Not done yet...");
+    }
+
+    public function getLastDeploymentRevisionAction()
+    {
+    	// Get server ID from url
+    	$server_id = $this->_getParam("server_id");
+
+    	// Get project ID from url
+    	$projects = new GD_Model_ProjectsMapper();
+    	$project_slug = $this->_getParam("project");
+    	if($project_slug != "")
+    	{
+    		$project = $projects->getProjectBySlug($project_slug);
+    	}
+
+    	$deployments = new GD_Model_DeploymentsMapper();
+    	$last_deployment = $deployments->getLastSuccessfulDeployment($project->getId(), $server_id);
+    	if(!is_null($last_deployment))
+    	{
+    		$from_rev = $last_deployment->getToRevision();
+    	}
+    	else
+    	{
+    		$from_rev = "";
+    	}
+
+		$this->_response->setHeader('Content-type','text/plain');
+		$this->_helper->viewRenderer->setNoRender();
+		$this->_helper->layout->disableLayout();
+
+		$data = array(
+			'fromRevision' => $from_rev,
+		);
+
+		$jsonData = Zend_Json::encode($data);
+		$this->_response->appendBody($jsonData);
     }
 }
 
