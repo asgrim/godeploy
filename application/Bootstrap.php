@@ -31,14 +31,19 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 
 	protected function _initConfig()
 	{
+		// Set default database adapter
 		$db_conf = new Zend_Config_Ini(APPLICATION_PATH . '/configs/db.ini', 'database');
 		Zend_Db_Table::setDefaultAdapter(Zend_Db::factory($db_conf->adapter, $db_conf->toArray()));
+
+		// Load version
+		$version_conf = new Zend_Config_Ini(APPLICATION_PATH . '/configs/version.ini', 'version');
+		Zend_Registry::set("gd.version", $version_conf->gd->version);
 	}
 
 	protected function _initDatabaseVersion()
 	{
-		$conf = new Zend_Config_Ini(APPLICATION_PATH . '/configs/application.ini', APPLICATION_ENV);
-		$expected_db_version = (int)$conf->gd->db->version;
+		$version_conf = new Zend_Config_Ini(APPLICATION_PATH . '/configs/version.ini', 'version');
+		$expected_db_version = (int)$version_conf->gd->expect_db_version;
 
 		$db = Zend_Db_Table::getDefaultAdapter();
 

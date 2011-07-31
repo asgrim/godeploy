@@ -14,9 +14,8 @@ ul#projects {
 		-moz-border-radius: 5px;
 		}
 		ul#projects li h4 {
-			font-size: 18px;
-			font-weight: bold;
-			padding: 15px 0 0 0;
+			font-size: 24px;
+			padding: 5px 0 0 0;
 			}
 		ul#projects li a {
 			display: block;
@@ -33,6 +32,7 @@ ul#projects {
 				-moz-border-radius: 0;
 				float: left;
 				padding: 0 10px;
+				margin: 0;
 				}
 			ul#projects ul.links li:first-child {
 				border: 0;
