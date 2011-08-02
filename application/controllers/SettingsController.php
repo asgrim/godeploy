@@ -50,10 +50,12 @@ class SettingsController extends Zend_Controller_Action
 
     	if($this->getRequest()->isPost())
     	{
+    		$repo_before = $project->getRepositoryUrl();
     		$project->setName($this->_request->getParam('name', false));
     		$project->setRepositoryUrl($this->_request->getParam('repositoryUrl', false));
     		$project->setDeploymentBranch($this->_request->getParam('deploymentBranch', false));
     		$project->setRepositoryTypesId(1);
+    		$repo_after = $project->getRepositoryUrl();
 
     		// Save public key
     		$public_key = $project->getPublicKey();
@@ -65,8 +67,15 @@ class SettingsController extends Zend_Controller_Action
 
     		$projects->save($project);
 
-    		// Update repository
     		$git = new GD_Git($project);
+
+    		// If repo URL changed, delete and re-clone
+    		if($repo_before != $repo_after)
+    		{
+    			$git->deleteRepository();
+    		}
+
+    		// Update repository
     		$result = $git->gitCloneOrPull();
     		if($result !== true)
     		{
