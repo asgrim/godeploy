@@ -31,7 +31,7 @@ class DeployController extends Zend_Controller_Action
 
     public function indexAction()
     {
-    	$this->view->headScript()->appendFile("/js/pages/deploy_setup.js");
+    	$this->view->headScript()->appendFile($this->getFrontController()->getBaseUrl() . "/js/pages/deploy_setup.js");
 
     	$projects = new GD_Model_ProjectsMapper();
     	$project_slug = $this->_getParam("project");
