@@ -129,6 +129,20 @@ class GD_Git
 		}
 	}
 
+	public function gitCheckout($ref)
+	{
+		$this->runShell('git checkout ' . $this->sanitizeRef($ref));
+
+		if($this->_last_errno == 0)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+
 	private function parsePrettyOneline($line)
 	{
 		$raw_commit_info = explode(" ", $line, 2);
@@ -160,6 +174,60 @@ class GD_Git
 	public function getFirstCommit()
 	{
 		return $this->getSingleLog('git log --pretty=oneline | tail -1');
+	}
+
+	public function getFilesChangedList($from_rev, $to_rev)
+	{
+		if($from_rev == "")
+		{
+			// File list is EVERY file at the $to_rev, so we have to be a bit dirty here :(
+
+			// Get the current branch and store it
+			$previous_ref = $this->getCurrentBranch(true);
+
+			// Checkout the $to_rev
+			$this->gitCheckout($to_rev);
+
+			// Get a list of all the files recursively
+			$this->runShell('git ls-tree --full-tree -r --name-status ' . $to_rev);
+			$files = array();
+			foreach($this->_last_output as $f)
+			{
+				if(strpos($f, '.gitignore') === false)
+				{
+					$files[] = "A\t" . $f;
+				}
+			}
+
+			// Go back to previous branch
+			$this->gitCheckout($previous_ref);
+		}
+		else
+		{
+			$this->runShell('git diff --name-status ' . $this->sanitizeRef($from_rev) . '..' . $this->sanitizeRef($to_rev));
+			$files = array();
+			foreach($this->_last_output as $f)
+			{
+				if(strpos($f, '.gitignore') === false)
+				{
+					$files[] = $f;
+				}
+			}
+		}
+
+		if(!is_array($files) || count($files) <= 0)
+		{
+			throw new GD_Exception("Could not get file list...");
+		}
+
+		// Now parse the file list into something sensible
+		$file_list = array();
+		foreach($files as &$f)
+		{
+			$stuff = explode("\t", $f, 2);
+			$file_list[] = array("action" => $stuff[0], "file" => $stuff[1]);
+		}
+		return $file_list;
 	}
 
 	public function gitPull($branch = "master", $remote = "origin")
@@ -232,5 +300,12 @@ class GD_Git
 			echo "</pre>";
 			echo "<hr />";
 		}
+	}
+
+	private function sanitizeRef($ref)
+	{
+		$new_ref = $ref;
+		$new_ref = preg_replace("/[^-\/a-zA-Z0-9_-]/", "", $new_ref);
+		return $new_ref;
 	}
 }

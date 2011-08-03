@@ -1,0 +1,46 @@
+<h2>Summary</h2>
+<ul>
+	<li>
+		<label>Deploy to<label>
+		<span class="value"><?php echo $this->deployment->getServersId(); ?></span>
+	</li>
+	<li>
+		<label>Repository URL<label>
+		<span class="value"><?php echo $this->project->getRepositoryUrl(); ?></span>
+	</li>
+	<?php if($this->deployment->getFromRevision() != ""): ?>
+	<li>
+		<label>From<label>
+		<span class="value"><?php echo $this->deployment->getFromRevision(); ?></span>
+	</li>
+	<?php endif; ?>
+	<li>
+		<label>To<label>
+		<span class="value"><?php echo $this->deployment->getToRevision(); ?></span>
+	</li>
+	<li>
+		<label>Status<label>
+		<span class="value"><?php echo $this->deployment->getDeploymentStatusesId(); ?></span>
+	</li>
+</ul>
+
+<h2>Deployment Details</h2>
+
+<table>
+	<thead>
+		<tr>
+			<th>File</th>
+			<th>Action</th>
+			<th>Status</th>
+		</tr>
+	</thead>
+	<tbody>
+		<?php foreach($this->files_changed as $file_changed): ?>
+		<tr>
+			<td><?php echo $file_changed['file']; ?></td>
+			<td><?php echo $file_changed['action']; ?></td>
+			<td>?</td>
+		</tr>
+		<?php endforeach; ?>
+	</tbody>
+</table>
