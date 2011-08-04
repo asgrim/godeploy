@@ -26,6 +26,7 @@
 
 <h2>Deployment Details</h2>
 
+<?php if(is_array($this->file_list) && count($this->file_list) > 0): ?>
 <table>
 	<thead>
 		<tr>
@@ -35,12 +36,15 @@
 		</tr>
 	</thead>
 	<tbody>
-		<?php foreach($this->files_changed as $file_changed): ?>
+		<?php foreach($this->file_list as $file): ?>
 		<tr>
-			<td><?php echo $file_changed['file']; ?></td>
-			<td><?php echo $file_changed['action']; ?></td>
-			<td>?</td>
+			<td><?php echo $file->getDetails(); ?></td>
+			<td><?php echo $file->getDeploymentFileAction()->getName(); ?></td>
+			<td><?php echo $file->getDeploymentFileStatus()->getName(); ?></td>
 		</tr>
 		<?php endforeach; ?>
 	</tbody>
 </table>
+<?php else: ?>
+<h3>Looks like there are no files to deploy...?!</h3>
+<?php endif; ?>

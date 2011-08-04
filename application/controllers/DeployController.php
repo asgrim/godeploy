@@ -65,6 +65,24 @@ class DeployController extends Zend_Controller_Action
 
 			$deployments->save($deployment);
 
+			// Generate the list of files to deploy and save in deployment_files table
+			$git = new GD_Git($project);
+			$files_changed = $git->getFilesChangedList($deployment->getFromRevision(), $deployment->getToRevision());
+
+			$deployment_files = new GD_Model_DeploymentFilesMapper();
+			$deployment_file_statuses = new GD_Model_DeploymentFileStatusesMapper();
+			$deployment_file_actions = new GD_Model_DeploymentFileActionsMapper();
+			foreach($files_changed as $fc)
+			{
+				$deployment_file = new GD_Model_DeploymentFile();
+				$deployment_file->setDeploymentsId($deployment->getId());
+				$deployment_file->setDeploymentFileActionsId($deployment_file_actions->getDeploymentFileActionByGitStatus($fc['action'])->getId());
+				$deployment_file->setDeploymentFileStatusesId($deployment_file_statuses->getDeploymentFileStatusByName('Not started')->getId());
+				$deployment_file->setDetails($fc['file']);
+
+				$deployment_files->save($deployment_file);
+			}
+
 			// Forward to either run or preview page...
 			if(!is_null($this->_request->getParam('submitRun')))
 			{
@@ -119,11 +137,9 @@ class DeployController extends Zend_Controller_Action
 		$deployments->find($this->_getParam('id'), $deployment);
 		$this->view->deployment = $deployment;
 
-		// TODO - This needs to be moved to the index action after form is submitted to populate the deployment_files table
-		// Then this action needs to just pull data from that table.
-		$git = new GD_Git($project);
-		$files_changed = $git->getFilesChangedList($deployment->getFromRevision(), $deployment->getToRevision());
-		$this->view->files_changed = $files_changed;
+		$deployment_files = new GD_Model_DeploymentFilesMapper();
+		$file_list = $deployment_files->getDeploymentFilesByDeployment($deployment->getId());
+		$this->view->file_list = $file_list;
 	}
 
 	public function runAction()
