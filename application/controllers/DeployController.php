@@ -77,7 +77,7 @@ class DeployController extends Zend_Controller_Action
 				$deployment_file = new GD_Model_DeploymentFile();
 				$deployment_file->setDeploymentsId($deployment->getId());
 				$deployment_file->setDeploymentFileActionsId($deployment_file_actions->getDeploymentFileActionByGitStatus($fc['action'])->getId());
-				$deployment_file->setDeploymentFileStatusesId($deployment_file_statuses->getDeploymentFileStatusByName('Not started')->getId());
+				$deployment_file->setDeploymentFileStatusesId($deployment_file_statuses->getDeploymentFileStatusByCode('NEW')->getId());
 				$deployment_file->setDetails($fc['file']);
 
 				$deployment_files->save($deployment_file);

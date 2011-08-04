@@ -25,6 +25,7 @@ class GD_Model_DeploymentFileStatus
 {
 	protected $_id;
 	protected $_name;
+	protected $_code;
 
 	public function setId($id)
 	{
@@ -46,5 +47,16 @@ class GD_Model_DeploymentFileStatus
 	public function getName()
 	{
 		return $this->_name;
+	}
+
+	public function setCode($value)
+	{
+		$this->_code = (string)$value;
+		return $this;
+	}
+
+	public function getCode()
+	{
+		return $this->_code;
 	}
 }

@@ -56,6 +56,7 @@ class GD_Model_DeploymentFileStatusesMapper extends MAL_Model_MapperAbstract
 	{
 		$data = array(
 			'name' => $obj->getName(),
+			'code' => $obj->getCode(),
 		);
 		return $data;
 	}
@@ -68,7 +69,8 @@ class GD_Model_DeploymentFileStatusesMapper extends MAL_Model_MapperAbstract
 	protected function populateObjectFromRow(&$obj, Zend_Db_Table_Row_Abstract $row)
 	{
 		$obj->setId($row->id)
-			->setName($row->name);
+			->setName($row->name)
+			->setCode($row->code);
 	}
 
 	/**
@@ -83,6 +85,29 @@ class GD_Model_DeploymentFileStatusesMapper extends MAL_Model_MapperAbstract
 		$select = $this->getDbTable()
 			->select()
 			->where("name = ?", $name);
+
+		$row = $this->getDbTable()->fetchRow($select);
+
+		if(is_null($row))
+		{
+			return null;
+		}
+		$this->populateObjectFromRow($obj, $row);
+		return $obj;
+	}
+
+	/**
+	 * Search for a file status by it's code
+	 * @param string $name status code to find
+	 * @return GD_Model_DeploymentFileStatus
+	 */
+	public function getDeploymentFileStatusByCode($code)
+	{
+		$obj = new GD_Model_DeploymentFileStatus();
+
+		$select = $this->getDbTable()
+			->select()
+			->where("code = ?", $code);
 
 		$row = $this->getDbTable()->fetchRow($select);
 
