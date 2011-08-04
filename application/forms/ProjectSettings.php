@@ -69,4 +69,3 @@ class GDApp_Form_ProjectSettings extends GD_Form_Abstract
 		));
 	}
 }
-?>

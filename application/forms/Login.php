@@ -54,4 +54,3 @@ class GDApp_Form_Login extends GD_Form_Abstract
 		));
 	}
 }
-?>
