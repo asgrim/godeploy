@@ -64,6 +64,11 @@ class GD_Git
 		$this->_current_branch = $this->getCurrentBranch(true);
 	}
 
+	public function getGitDir()
+	{
+		return $this->_gitdir . "/";
+	}
+
 	private function deleteFolderRecursively($path)
 	{
 		if(is_dir($path))

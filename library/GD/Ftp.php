@@ -117,6 +117,8 @@ class GD_Ftp
 			$this->upload($test_file, $remote_test_file);
 			$this->delete($remote_test_file);
 
+			$this->disconnect();
+
 			unlink($test_file);
 
 			return true;
@@ -129,7 +131,7 @@ class GD_Ftp
 
 	private function ftpChangeOrMakeDirectory($dir)
 	{
-		if(@ftp_chdir($this->_handle, $dir) || @ftp_mkdir($this->_handle, $dir))
+		if($dir == "" || @ftp_chdir($this->_handle, $dir) || @ftp_mkdir($this->_handle, $dir))
 		{
 			return true;
 		}
@@ -145,14 +147,13 @@ class GD_Ftp
 		$remote_dir = str_replace(basename($remote_file), "", $remote_file);
 		$this->ftpChangeOrMakeDirectory($remote_dir);
 
-		echo "Pwd: " . ftp_pwd($this->_handle) . "\n";
-
+		echo "Uploading '{$local_file}' to {$remote_file}<br />";
 		if(!ftp_put($this->_handle, $remote_file, $local_file, FTP_BINARY))
 		{
 			throw new GD_Exception("Failed to upload '{$local_file}'");
 		}
 
-		@ftp_chmod($this->_handle, 0777, $remote_file);
+		//@ftp_chmod($this->_handle, 0777, $remote_file);
 
 		$this->resetPwd();
 	}

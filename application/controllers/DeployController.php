@@ -144,7 +144,55 @@ class DeployController extends Zend_Controller_Action
 
 	public function runAction()
 	{
-		die("Not done yet...");
+		// Project information
+		$projects = new GD_Model_ProjectsMapper();
+		$project_slug = $this->_getParam("project");
+		if($project_slug != "")
+		{
+			$project = $projects->getProjectBySlug($project_slug);
+		}
+
+		if(is_null($project))
+		{
+			throw new GD_Exception("Project '{$project_slug}' was not set up.");
+		}
+
+		// Deployment information
+		$deployments = new GD_Model_DeploymentsMapper();
+		$deployment = new GD_Model_Deployment();
+		$deployments->find($this->_getParam('id'), $deployment);
+
+		// Server information
+		$servers = new GD_Model_ServersMapper();
+		$server = new GD_Model_Server();
+		$servers->find($deployment->getServersId(), $server);
+
+		// File list to action
+		$deployment_files = new GD_Model_DeploymentFilesMapper();
+		$file_list = $deployment_files->getDeploymentFilesByDeployment($deployment->getId());
+
+		// Check out the revision we want to upload from
+		$git = new GD_Git($project);
+		$previous_ref = $git->getCurrentBranch(true);
+		$git->gitCheckout($deployment->getToRevision());
+
+		// Do the upload
+		$ftp = new GD_Ftp($server);
+		$ftp->connect();
+		foreach($file_list as $file)
+		{
+			switch($file->getDeploymentFileAction()->getGitStatus())
+			{
+				case 'A':
+					echo "Going to upload {$file->getDetails()}<br />";
+					$ftp->upload($git->getGitDir() . $file->getDetails(), $file->getDetails());
+					break;
+			}
+		}
+
+		// Revert to previous revision
+		$git->gitCheckout($previous_ref);
+		die();
 	}
 
 	public function resultAction()
