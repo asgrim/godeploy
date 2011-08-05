@@ -126,6 +126,11 @@ class GD_Model_Project
 	 */
 	public function getPublicKey()
 	{
+		if(is_null($this->_public_key))
+		{
+			$this->_public_key = new GD_Model_PublicKey();
+			$this->_public_key->setPublicKeyTypesId(1);
+		}
 		return $this->_public_key;
 	}
 

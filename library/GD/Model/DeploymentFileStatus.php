@@ -21,16 +21,42 @@
  * @author James Titcumb, Simon Wade
  * @link http://www.godeploy.com/
  */
-class HomeController extends Zend_Controller_Action
+class GD_Model_DeploymentFileStatus
 {
-    public function indexAction()
-    {
-    	$mprojects = new GD_Model_ProjectsMapper();
+	protected $_id;
+	protected $_name;
+	protected $_code;
 
-    	$projects = $mprojects->fetchAll();
+	public function setId($id)
+	{
+		$this->_id = (int)$id;
+		return $this;
+	}
 
-    	$this->view->projects = $projects;
+	public function getId()
+	{
+		return $this->_id;
+	}
 
-		$this->view->headLink()->appendStylesheet("/css/pages/home.css");
-    }
+	public function setName($value)
+	{
+		$this->_name = (string)$value;
+		return $this;
+	}
+
+	public function getName()
+	{
+		return $this->_name;
+	}
+
+	public function setCode($value)
+	{
+		$this->_code = (string)$value;
+		return $this;
+	}
+
+	public function getCode()
+	{
+		return $this->_code;
+	}
 }

@@ -103,4 +103,3 @@ class GDApp_Form_ServerSettings extends GD_Form_Abstract
 		));
 	}
 }
-?>

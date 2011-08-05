@@ -21,16 +21,9 @@
  * @author James Titcumb, Simon Wade
  * @link http://www.godeploy.com/
  */
-class HomeController extends Zend_Controller_Action
+class GD_Model_DbTable_DeploymentFileStatuses extends Zend_Db_Table_Abstract
 {
-    public function indexAction()
-    {
-    	$mprojects = new GD_Model_ProjectsMapper();
+	protected $_name = "deployment_file_statuses";
 
-    	$projects = $mprojects->fetchAll();
-
-    	$this->view->projects = $projects;
-
-		$this->view->headLink()->appendStylesheet("/css/pages/home.css");
-    }
+	protected $_dependentTables = array('GD_Model_DbTable_DeploymentFiles');
 }

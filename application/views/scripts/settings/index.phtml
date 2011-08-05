@@ -2,32 +2,36 @@
 <?php echo $this->form; ?>
 
 <h2>Servers</h2>
-<?php if(is_array($this->servers) && count($this->servers) > 0): $another = "another"; ?>
-<table>
-	<thead>
-		<tr>
-			<th>Name</th>
-			<th>Hostname</th>
-			<th>Type</th>
-			<th>&nbsp;</th>
-		</tr>
-	</thead>
-	<tbody>
-	<?php foreach($this->servers as $server): ?>
-		<tr>
-			<td><?php echo $this->escape($server->getName()); ?></td>
-			<td><?php echo $this->escape($server->getHostname()); ?></td>
-			<td><?php echo $this->escape($server->getConnectionType()->getName()); ?></td>
-			<td>
-				<a href="<?php echo $this->baseUrl(); ?>/project/<?php echo $this->project->getSlug(); ?>/servers/edit/<?php echo $server->getId(); ?>">Edit</a>
-				|
-				<a href="<?php echo $this->baseUrl(); ?>/project/<?php echo $this->project->getSlug(); ?>/servers/delete/<?php echo $server->getId(); ?>">Delete</a>
-			</td>
-		</tr>
-	<?php endforeach; ?>
-	</tbody>
-</table>
-<?php else: $another = "the first"; ?>
-<p><strong>There are no servers currently configured for this project!</strong></p>
+<?php if(!is_null($this->project->getId())): ?>
+	<?php if(is_array($this->servers) && count($this->servers) > 0): $another = "another"; ?>
+	<table>
+		<thead>
+			<tr>
+				<th>Name</th>
+				<th>Hostname</th>
+				<th>Type</th>
+				<th>&nbsp;</th>
+			</tr>
+		</thead>
+		<tbody>
+		<?php foreach($this->servers as $server): ?>
+			<tr>
+				<td><?php echo $this->escape($server->getName()); ?></td>
+				<td><?php echo $this->escape($server->getHostname()); ?></td>
+				<td><?php echo $this->escape($server->getConnectionType()->getName()); ?></td>
+				<td>
+					<a href="<?php echo $this->baseUrl(); ?>/project/<?php echo $this->project->getSlug(); ?>/servers/edit/<?php echo $server->getId(); ?>">Edit</a>
+					|
+					<a href="<?php echo $this->baseUrl(); ?>/project/<?php echo $this->project->getSlug(); ?>/servers/delete/<?php echo $server->getId(); ?>">Delete</a>
+				</td>
+			</tr>
+		<?php endforeach; ?>
+		</tbody>
+	</table>
+	<?php else: $another = "the first"; ?>
+	<p><strong>There are no servers currently configured for this project!</strong></p>
+	<?php endif; ?>
+	<a href="<?php echo $this->baseUrl(); ?>/project/<?php echo $this->project->getSlug(); ?>/servers/add">Add <?php echo $another; ?> server to this project.</a>
+<?php else: ?>
+	<p><strong>You must save changes to the project before adding servers to it.</strong></p>
 <?php endif; ?>
-<a href="<?php echo $this->baseUrl(); ?>/project/<?php echo $this->project->getSlug(); ?>/servers/add">Add <?php echo $another; ?> server to this project.</a>

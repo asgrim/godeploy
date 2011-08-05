@@ -1,0 +1,40 @@
+/* CSS Document */
+
+ul#projects {
+	padding-top: 1px;
+	}
+	ul#projects li {
+		width: 460px;
+		background-color: #ededed;
+		border: 1px solid #bdbdbd;
+		padding: 20px 40px;
+		margin: 20px auto 0;
+		border-radius: 5px;
+		-webkit-border-radius: 5px;
+		-moz-border-radius: 5px;
+		}
+		ul#projects li h4 {
+			font-size: 24px;
+			padding: 5px 0 0 0;
+			}
+		ul#projects li a {
+			display: block;
+			float: right;
+			}
+		ul#projects ul.links {
+			}
+			ul#projects ul.links li {
+				width: auto;
+				border: 0;
+				border-left: 1px solid black;
+				border-radius: 0;
+				-webkit-border-radius: 0;
+				-moz-border-radius: 0;
+				float: left;
+				padding: 0 10px;
+				margin: 0;
+				}
+			ul#projects ul.links li:first-child {
+				border: 0;
+				padding-left: 0;
+				}

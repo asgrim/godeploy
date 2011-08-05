@@ -24,85 +24,345 @@
 class DeployController extends Zend_Controller_Action
 {
 
-    public function init()
-    {
-        /* Initialize action controller here */
-    }
+	public function init()
+	{
+		/* Initialize action controller here */
+	}
 
-    public function indexAction()
-    {
-    	$projects = new GD_Model_ProjectsMapper();
-    	$project_slug = $this->_getParam("project");
-    	if($project_slug != "")
-    	{
-    		$project = $projects->getProjectBySlug($project_slug);
-    	}
+	public function indexAction()
+	{
+		$this->view->headScript()->appendFile($this->getFrontController()->getBaseUrl() . "/js/pages/deploy_setup.js");
 
-    	if(is_null($project))
-    	{
-    		throw new GD_Exception("Project '{$project_slug}' was not set up.");
-    	}
+		$projects = new GD_Model_ProjectsMapper();
+		$project_slug = $this->_getParam("project");
+		if($project_slug != "")
+		{
+			$project = $projects->getProjectBySlug($project_slug);
+		}
 
-    	$form = new GDApp_Form_DeploymentSetup($project->getId());
-    	$this->view->form = $form;
+		if(is_null($project))
+		{
+			throw new GD_Exception("Project '{$project_slug}' was not set up.");
+		}
 
-    	$deployments = new GD_Model_DeploymentsMapper();
+		$form = new GDApp_Form_DeploymentSetup($project->getId());
+		$this->view->form = $form;
 
-    	if($this->getRequest()->isPost())
-    	{
-    		$user = GD_Auth_Database::GetLoggedInUser();
+		$deployments = new GD_Model_DeploymentsMapper();
 
-    		$deployment = new GD_Model_Deployment();
-    		$deployment->setUsersId($user->getId())
-    				->setProjectsId($project->getId())
-    				->setWhen(date("Y-m-d H:i:s"))
-    				->setServersId($this->_request->getParam('serverId', false))
-    				->setFromRevision($this->_request->getParam('fromRevision', false))
-    				->setToRevision($this->_request->getParam('toRevision', false))
-    				->setDeploymentStatusesId(1);
+		if($this->getRequest()->isPost())
+		{
+			$user = GD_Auth_Database::GetLoggedInUser();
 
-    		$deployments->save($deployment);
+			$deployment = new GD_Model_Deployment();
+			$deployment->setUsersId($user->getId())
+					->setProjectsId($project->getId())
+					->setWhen(date("Y-m-d H:i:s"))
+					->setServersId($this->_request->getParam('serverId', false))
+					->setFromRevision($this->_request->getParam('fromRevision', false))
+					->setToRevision($this->_request->getParam('toRevision', false))
+					->setDeploymentStatusesId(1);
 
-    		// Forward to either run or preview page...
-    		if(!is_null($this->_request->getParam('submitRun')))
-    		{
-    			// go to run
-    			$this->_redirect($this->getFrontController()->getBaseUrl() . "/project/" . $this->_getParam("project") . "/deploy/run/" . $deployment->getId());
-    		}
-    		else if(!is_null($this->_request->getParam('submitPreview')))
-    		{
-    			// go to preview
-    			$this->_redirect($this->getFrontController()->getBaseUrl() . "/project/" . $this->_getParam("project") . "/deploy/preview/" . $deployment->getId());
-    		}
-    	}
-    	else
-    	{
-    		$last_deployment = $deployments->getLastSuccessfulDeployment();
+			$deployments->save($deployment);
 
-    		if(!is_null($last_deployment))
-    		{
-				$data = array(
-					'fromRevision' => $last_deployment->getToRevision(),
-				);
+			// Generate the list of files to deploy and save in deployment_files table
+			$git = new GD_Git($project);
+			$files_changed = $git->getFilesChangedList($deployment->getFromRevision(), $deployment->getToRevision());
 
-	    		$form->populate($data);
-    		}
-    	}
-    }
+			$deployment_files = new GD_Model_DeploymentFilesMapper();
+			$deployment_file_statuses = new GD_Model_DeploymentFileStatusesMapper();
+			$deployment_file_actions = new GD_Model_DeploymentFileActionsMapper();
+			foreach($files_changed as $fc)
+			{
+				$deployment_file = new GD_Model_DeploymentFile();
+				$deployment_file->setDeploymentsId($deployment->getId());
+				$deployment_file->setDeploymentFileActionsId($deployment_file_actions->getDeploymentFileActionByGitStatus($fc['action'])->getId());
+				$deployment_file->setDeploymentFileStatusesId($deployment_file_statuses->getDeploymentFileStatusByCode('NEW')->getId());
+				$deployment_file->setDetails($fc['file']);
 
-    public function previewAction()
-    {
-    	die("Not done yet...");
-    }
+				$deployment_files->save($deployment_file);
+			}
 
-    public function runAction()
-    {
-    	die("Not done yet...");
-    }
+			// Forward to either run or preview page...
+			if(!is_null($this->_request->getParam('submitRun')))
+			{
+				// go to run
+				$this->_redirect($this->getFrontController()->getBaseUrl() . "/project/" . $this->_getParam("project") . "/deploy/run/" . $deployment->getId());
+			}
+			else if(!is_null($this->_request->getParam('submitPreview')))
+			{
+				// go to preview
+				$this->_redirect($this->getFrontController()->getBaseUrl() . "/project/" . $this->_getParam("project") . "/deploy/preview/" . $deployment->getId());
+			}
+		}
+		else
+		{
+			$data = array();
 
-    public function resultAction()
-    {
-    	die("Not done yet...");
-    }
+			// Git pull before anything
+			$git = new GD_Git($project);
+			$git->gitPull();
+
+			$last_commit = $git->getLastCommit();
+			if(is_array($last_commit))
+			{
+				$to_revision = $last_commit['HASH'];
+				$data['toRevision'] = $to_revision;
+			}
+
+			if(count($data) > 0)
+			{
+				$form->populate($data);
+			}
+		}
+	}
+
+	public function previewAction()
+	{
+		$this->_helper->viewRenderer('main');
+
+		$projects = new GD_Model_ProjectsMapper();
+		$project_slug = $this->_getParam("project");
+		if($project_slug != "")
+		{
+			$project = $projects->getProjectBySlug($project_slug);
+		}
+
+		if(is_null($project))
+		{
+			throw new GD_Exception("Project '{$project_slug}' was not set up.");
+		}
+		$this->view->project = $project;
+
+		$deployments = new GD_Model_DeploymentsMapper();
+		$deployment = new GD_Model_Deployment();
+		$deployments->find($this->_getParam('id'), $deployment);
+		$this->view->deployment = $deployment;
+
+		$deployment_files = new GD_Model_DeploymentFilesMapper();
+		$file_list = $deployment_files->getDeploymentFilesByDeployment($deployment->getId());
+		$this->view->file_list = $file_list;
+	}
+
+	public function runAction()
+	{
+		$this->_helper->viewRenderer('main');
+
+		$projects = new GD_Model_ProjectsMapper();
+		$project_slug = $this->_getParam("project");
+		if($project_slug != "")
+		{
+			$project = $projects->getProjectBySlug($project_slug);
+		}
+
+		if(is_null($project))
+		{
+			throw new GD_Exception("Project '{$project_slug}' was not set up.");
+		}
+		$this->view->project = $project;
+
+		$deployments = new GD_Model_DeploymentsMapper();
+		$deployment = new GD_Model_Deployment();
+		$deployments->find($this->_getParam('id'), $deployment);
+		$this->view->deployment = $deployment;
+
+		$deployment_files = new GD_Model_DeploymentFilesMapper();
+		$file_list = $deployment_files->getDeploymentFilesByDeployment($deployment->getId());
+		$this->view->file_list = $file_list;
+
+		if($this->view->deployment->getDeploymentStatusesId() == 1)
+		{
+			$this->view->headScript()->appendFile("/js/pages/deploy_run.js");
+			$this->view->run_deployment = true;
+		}
+	}
+
+	public function executeDeploymentStatusAction()
+	{
+		// Project information
+		$projects = new GD_Model_ProjectsMapper();
+		$project_slug = $this->_getParam("project");
+		if($project_slug != "")
+		{
+			$project = $projects->getProjectBySlug($project_slug);
+		}
+
+		if(is_null($project))
+		{
+			throw new GD_Exception("Project '{$project_slug}' was not set up.");
+		}
+
+		$deployments = new GD_Model_DeploymentsMapper();
+		$deployment = new GD_Model_Deployment();
+		$deployments->find($this->_getParam('id'), $deployment);
+
+		$deployment_files = new GD_Model_DeploymentFilesMapper();
+		$file_list = $deployment_files->getDeploymentFilesByDeployment($deployment->getId());
+
+		$file_statuses = array();
+
+		foreach($file_list as $file)
+		{
+			if($file->getDeploymentFileStatus()->getCode() == "IN_PROGRESS")
+			{
+				$file_statuses[$file->getId()] = $file->getDeploymentFileAction()->getVerb();
+			}
+			else
+			{
+				$file_statuses[$file->getId()] = $file->getDeploymentFileStatus()->getName();
+			}
+		}
+
+		$deployment_status = $deployment->getDeploymentStatusesId();
+
+		$data = array(
+			"FILES" => $file_statuses,
+			"OVERALL" => $deployment_status,
+		);
+
+		// Output stuff
+		$this->_response->setHeader('Content-type','text/plain');
+		$this->_helper->viewRenderer->setNoRender();
+		$this->_helper->layout->disableLayout();
+
+		$jsonData = Zend_Json::encode($data);
+		$this->_response->appendBody($jsonData);
+	}
+
+	public function executeDeploymentStartAction()
+	{
+		set_time_limit(0);
+		// Project information
+		$projects = new GD_Model_ProjectsMapper();
+		$project_slug = $this->_getParam("project");
+		if($project_slug != "")
+		{
+			$project = $projects->getProjectBySlug($project_slug);
+		}
+
+		if(is_null($project))
+		{
+			throw new GD_Exception("Project '{$project_slug}' was not set up.");
+		}
+
+		// Deployment information
+		$deployments = new GD_Model_DeploymentsMapper();
+		$deployment = new GD_Model_Deployment();
+		$deployments->find($this->_getParam('id'), $deployment);
+
+		// Server information
+		$servers = new GD_Model_ServersMapper();
+		$server = new GD_Model_Server();
+		$servers->find($deployment->getServersId(), $server);
+
+		// File list to action
+		$deployment_files = new GD_Model_DeploymentFilesMapper();
+		$deployment_files_statuses = new GD_Model_DeploymentFileStatusesMapper();
+		$file_list = $deployment_files->getDeploymentFilesByDeployment($deployment->getId());
+
+		// Check out the revision we want to upload from
+		$git = new GD_Git($project);
+		$previous_ref = $git->getCurrentBranch(true);
+		$git->gitCheckout($deployment->getToRevision());
+
+		$deployment->setDeploymentStatusesId(2); // Running
+		$deployments->save($deployment);
+
+		$errors = false;
+
+		sleep(5);
+
+		// Do the upload
+		$ftp = new GD_Ftp($server);
+		$ftp->connect();
+		foreach($file_list as $file)
+		{
+			$file->setDeploymentFileStatusesId($deployment_files_statuses->getDeploymentFileStatusByCode('IN_PROGRESS')->getId());
+			$deployment_files->save($file);
+
+			try
+			{
+				switch($file->getDeploymentFileAction()->getGitStatus())
+				{
+					case 'A':
+					case 'M':
+						$ftp->upload($git->getGitDir() . $file->getDetails(), $file->getDetails());
+						break;
+					case 'D':
+						$ftp->delete($file->getDetails());
+						break;
+					default:
+						throw GD_Exception("Warning, unhandled action: '" . $file->getDeploymentFileAction()->getGitStatus() . "' ({$file->getDetails()}");
+						break;
+				}
+				$file->setDeploymentFileStatusesId($deployment_files_statuses->getDeploymentFileStatusByCode('COMPLETE')->getId());
+			}
+			catch(GD_Exception $ex)
+			{
+				$errors = true;
+				$file->setDeploymentFileStatusesId($deployment_files_statuses->getDeploymentFileStatusByCode('FAILED')->getId());
+			}
+			$deployment_files->save($file);
+			sleep(2);
+		}
+
+		// Revert to previous revision
+		$git->gitCheckout($previous_ref);
+
+		if($errors)
+		{
+			$deployment->setDeploymentStatusesId(4); // Failed
+			$deployments->save($deployment);
+		}
+		else
+		{
+			$deployment->setDeploymentStatusesId(3); // Complete
+			$deployments->save($deployment);
+		}
+
+		flush();
+		die();
+	}
+
+	public function resultAction()
+	{
+		die("Not done yet...");
+	}
+
+	public function getLastDeploymentRevisionAction()
+	{
+		// Get server ID from url
+		$server_id = $this->_getParam("server_id");
+
+		// Get project ID from url
+		$projects = new GD_Model_ProjectsMapper();
+		$project_slug = $this->_getParam("project");
+		if($project_slug != "")
+		{
+			$project = $projects->getProjectBySlug($project_slug);
+		}
+
+		$deployments = new GD_Model_DeploymentsMapper();
+		$last_deployment = $deployments->getLastSuccessfulDeployment($project->getId(), $server_id);
+		if(!is_null($last_deployment))
+		{
+			$from_rev = $last_deployment->getToRevision();
+		}
+		else
+		{
+			$from_rev = "";
+		}
+
+		$this->_response->setHeader('Content-type','text/plain');
+		$this->_helper->viewRenderer->setNoRender();
+		$this->_helper->layout->disableLayout();
+
+		$data = array(
+			'fromRevision' => $from_rev,
+		);
+
+		$jsonData = Zend_Json::encode($data);
+		$this->_response->appendBody($jsonData);
+	}
 }
 

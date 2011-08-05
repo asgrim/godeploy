@@ -23,11 +23,11 @@
  */
 
 /**
- * Map the connection types table
+ * Map the deployment files table
  * @author james
  *
  */
-class GD_Model_DeploymentsMapper extends MAL_Model_MapperAbstract
+class GD_Model_DeploymentFilesMapper extends MAL_Model_MapperAbstract
 {
 
 	/**
@@ -36,7 +36,7 @@ class GD_Model_DeploymentsMapper extends MAL_Model_MapperAbstract
 	 */
 	protected function getDbTableName()
 	{
-		return "GD_Model_DbTable_Deployments";
+		return "GD_Model_DbTable_DeploymentFiles";
 	}
 
 	/**
@@ -45,69 +45,59 @@ class GD_Model_DeploymentsMapper extends MAL_Model_MapperAbstract
 	 */
 	protected function getObjectName()
 	{
-		return "GD_Model_Deployment";
+		return "GD_Model_DeploymentFile";
 	}
 
 	/**
 	 * Should return an array of mapped fields to use in the MAL_Model_MapperAbstract::Save function
-	 * @param GD_Model_Deployment $obj
+	 * @param GD_Model_DeploymentFile $obj
 	 */
 	protected function getSaveData($obj)
 	{
 		$data = array(
-			'users_id' => $obj->getUsersId(),
-			'projects_id' => $obj->getProjectsId(),
-			'when' => $obj->getWhen(),
-			'servers_id' => $obj->getServersId(),
-			'from_revision' => $obj->getFromRevision(),
-			'to_revision' => $obj->getToRevision(),
-			'deployment_statuses_id' => $obj->getDeploymentStatusesId(),
+			'deployments_id' => $obj->getDeploymentsId(),
+			'deployment_file_actions_id' => $obj->getDeploymentFileActionsId(),
+			'deployment_file_statuses_id' => $obj->getDeploymentFileStatusesId(),
+			'details' => $obj->getDetails(),
 		);
 		return $data;
 	}
 
 	/**
 	 * Implement this by setting $obj values (e.g. $obj->setId($row->Id) from a DB row
-	 * @param GD_Model_Deployment $obj
+	 * @param GD_Model_DeploymentFile $obj
 	 * @param Zend_Db_Table_Row_Abstract $row
 	 */
 	protected function populateObjectFromRow(&$obj, Zend_Db_Table_Row_Abstract $row)
 	{
 		$obj->setId($row->id)
-			->setUsersId($row->users_id)
-			->setProjectsId($row->projects_id)
-			->setWhen($row->when)
-			->setServersId($row->servers_id)
-			->setFromRevision($row->from_revision)
-			->setToRevision($row->to_revision)
-			->setDeploymentStatusesId($row->deployment_statuses_id);
+			->setDeploymentsId($row->deployments_id)
+			->setDeploymentFileActionsId($row->deployment_file_actions_id)
+			->setDeploymentFileStatusesId($row->deployment_file_statuses_id)
+			->setDetails($row->details);
+
+		$dfa_map = new GD_Model_DeploymentFileActionsMapper();
+		$deployment_file_action = new GD_Model_DeploymentFileAction();
+		$dfa_map->populateObjectFromRow($deployment_file_action, $row->findParentRow('GD_Model_DbTable_DeploymentFileActions'));
+		$obj->setDeploymentFileAction($deployment_file_action);
+
+		$dfs_map = new GD_Model_DeploymentFileStatusesMapper();
+		$deployment_file_status = new GD_Model_DeploymentFileStatus();
+		$dfs_map->populateObjectFromRow($deployment_file_status, $row->findParentRow('GD_Model_DbTable_DeploymentFileStatuses'));
+		$obj->setDeploymentFileStatus($deployment_file_status);
 	}
 
 	/**
-	 * Find the last successful deployment object
-	 * @param int $project_id
-	 * @param int $server_id
-	 * @return GD_Model_Deployment
+	 * Get a list of the files for a deployment
+	 * @param int $deployment_id
+	 * @return array of GD_Model_DeploymentFile objects
 	 */
-	public function getLastSuccessfulDeployment($project_id, $server_id)
+	public function getDeploymentFilesByDeployment($deployment_id)
 	{
-		$obj = new GD_Model_Deployment();
-
 		$select = $this->getDbTable()
 			->select()
-			->where("deployment_statuses_id = ?", 3)
-			->where("projects_id = ?", $project_id)
-			->where("servers_id = ?", $server_id)
-			->order('when DESC')
-			->limit(1);
+			->where("deployments_id = ?", $deployment_id);
 
-		$row = $this->getDbTable()->fetchRow($select);
-
-		if(is_null($row))
-		{
-			return null;
-		}
-		$this->populateObjectFromRow($obj, $row);
-		return $obj;
+		return $this->fetchAll($select);
 	}
 }

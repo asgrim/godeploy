@@ -1,16 +1,21 @@
-<?php if(is_array($this->projects) && count($this->projects) > 0): ?>
-<ul>
+<?php if(is_array($this->projects) && count($this->projects) > 0): $another = "another"; ?>
+<ul id="projects">
 <?php foreach($this->projects as $project): ?>
 	<li>
+		<a href="<?php echo $this->baseUrl(); ?>/project/<?php echo $project->getSlug(); ?>/deploy">
+			<img src="<?php echo $this->baseUrl(); ?>/images/buttons/deploy.png" alt="Deploy" title="Deploy this project now" />
+		</a>
 		<h4><?php echo $project->getName(); ?></h4>
-		<ul>
-			<li><a href="/project/<?php echo $project->getSlug(); ?>/history">Deployments</a></li>
-			<li><a href="/project/<?php echo $project->getSlug(); ?>/settings">Settings</a></li>
+		<ul class="links">
+			<li><a href="<?php echo $this->baseUrl(); ?>/project/<?php echo $project->getSlug(); ?>/history">Deployments</a></li>
+			<li><a href="<?php echo $this->baseUrl(); ?>/project/<?php echo $project->getSlug(); ?>/settings">Settings</a></li>
+			<li><a href="<?php echo $this->baseUrl(); ?>/project/<?php echo $project->getSlug(); ?>/settings/delete">Delete</a></li>
 		</ul>
-		<a href="/project/<?php echo $project->getSlug(); ?>/deploy">GoDeploy &raquo;</a>
+		<div class="clear"></div>
 	</li>
 <?php endforeach; ?>
 </ul>
-<?php else: ?>
+<?php else: $another = "the first"; ?>
 No projects set up yet.
 <?php endif; ?>
+<p class="align_center"><a href="<?php echo $this->baseUrl(); ?>/project/new/settings" class="add_icon">Add <?php echo $another; ?> project</a></p>

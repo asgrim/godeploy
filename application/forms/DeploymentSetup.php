@@ -73,4 +73,3 @@ class GDApp_Form_DeploymentSetup extends GD_Form_Abstract
 		));
 	}
 }
-?>

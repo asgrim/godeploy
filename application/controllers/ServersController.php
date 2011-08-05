@@ -76,6 +76,15 @@ class ServersController extends Zend_Controller_Action
 			$server->setPassword($this->_request->getParam('password', false));
 			$server->setRemotePath($this->_request->getParam('remotePath', false));
 
+			// Test the connection first
+			$ftp = new GD_Ftp($server);
+			$result = $ftp->testConnection();
+
+			if(!$result)
+			{
+				throw new GD_Exception("Failed to test connection to FTP server.");
+			}
+
 			$servers->save($server);
 
 			$this->_redirect($this->getFrontController()->getBaseUrl() . "/project/" . $this->_getParam("project") . "/settings");

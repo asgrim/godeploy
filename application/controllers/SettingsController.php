@@ -36,7 +36,7 @@ class SettingsController extends Zend_Controller_Action
 
     	$projects = new GD_Model_ProjectsMapper();
     	$project_slug = $this->_getParam("project");
-    	if($project_slug != "")
+    	if($project_slug != "new")
     	{
     		$project = $projects->getProjectBySlug($project_slug);
     	}
@@ -44,22 +44,43 @@ class SettingsController extends Zend_Controller_Action
     	{
     		$project = new GD_Model_Project();
     		$project->setName("New Project");
+    		$project->setDeploymentBranch('master'); // Usually default for git
     	}
     	$this->view->project = $project;
 
     	if($this->getRequest()->isPost())
     	{
+    		$repo_before = $project->getRepositoryUrl();
     		$project->setName($this->_request->getParam('name', false));
     		$project->setRepositoryUrl($this->_request->getParam('repositoryUrl', false));
     		$project->setDeploymentBranch($this->_request->getParam('deploymentBranch', false));
-
-    		$projects->save($project);
+    		$project->setRepositoryTypesId(1);
+    		$repo_after = $project->getRepositoryUrl();
 
     		// Save public key
     		$public_key = $project->getPublicKey();
     		$public_key->setData($this->_request->getParam('publicKey', false));
     		$public_keys = new GD_Model_PublicKeysMapper();
     		$public_keys->save($public_key);
+
+    		$project->setPublicKeysId($public_key->getId());
+
+    		$projects->save($project);
+
+    		$git = new GD_Git($project);
+
+    		// If repo URL changed, delete and re-clone
+    		if($repo_before != $repo_after)
+    		{
+    			$git->deleteRepository();
+    		}
+
+    		// Update repository
+    		$result = $git->gitCloneOrPull();
+    		if($result !== true)
+    		{
+    			throw new GD_Exception("Git clone or pull failed: {$result}");
+    		}
 
     		$this->_redirect($this->getFrontController()->getBaseUrl() . "/home");
     	}
@@ -81,6 +102,28 @@ class SettingsController extends Zend_Controller_Action
 	    		$this->view->servers = $servers->getServersByProject($project->getId());
     		}
     	}
+    }
+
+    public function deleteAction()
+    {
+    	$projects = new GD_Model_ProjectsMapper();
+    	$project_slug = $this->_getParam("project");
+
+    	$project = $projects->getProjectBySlug($project_slug);
+
+    	// TODO - Delete the deployments for the project
+    	// And the deployment_files
+    	// And the servers
+
+    	// Delete the public key
+    	$public_key = $project->getPublicKey();
+    	$public_keys = new GD_Model_PublicKeysMapper();
+    	$public_keys->delete($public_key);
+
+    	// Delete the project
+    	$projects->delete($project);
+
+    	$this->_redirect($this->getFrontController()->getBaseUrl() . "/home");
     }
 
 

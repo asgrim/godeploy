@@ -27,7 +27,7 @@
  * @author james
  *
  */
-class GD_Model_DeploymentsMapper extends MAL_Model_MapperAbstract
+class GD_Model_DeploymentFileStatusesMapper extends MAL_Model_MapperAbstract
 {
 
 	/**
@@ -36,7 +36,7 @@ class GD_Model_DeploymentsMapper extends MAL_Model_MapperAbstract
 	 */
 	protected function getDbTableName()
 	{
-		return "GD_Model_DbTable_Deployments";
+		return "GD_Model_DbTable_DeploymentFileStatuses";
 	}
 
 	/**
@@ -45,61 +45,69 @@ class GD_Model_DeploymentsMapper extends MAL_Model_MapperAbstract
 	 */
 	protected function getObjectName()
 	{
-		return "GD_Model_Deployment";
+		return "GD_Model_DeploymentFileStatus";
 	}
 
 	/**
 	 * Should return an array of mapped fields to use in the MAL_Model_MapperAbstract::Save function
-	 * @param GD_Model_Deployment $obj
+	 * @param GD_Model_DeploymentFileStatus $obj
 	 */
 	protected function getSaveData($obj)
 	{
 		$data = array(
-			'users_id' => $obj->getUsersId(),
-			'projects_id' => $obj->getProjectsId(),
-			'when' => $obj->getWhen(),
-			'servers_id' => $obj->getServersId(),
-			'from_revision' => $obj->getFromRevision(),
-			'to_revision' => $obj->getToRevision(),
-			'deployment_statuses_id' => $obj->getDeploymentStatusesId(),
+			'name' => $obj->getName(),
+			'code' => $obj->getCode(),
 		);
 		return $data;
 	}
 
 	/**
 	 * Implement this by setting $obj values (e.g. $obj->setId($row->Id) from a DB row
-	 * @param GD_Model_Deployment $obj
+	 * @param GD_Model_DeploymentFileStatus $obj
 	 * @param Zend_Db_Table_Row_Abstract $row
 	 */
 	protected function populateObjectFromRow(&$obj, Zend_Db_Table_Row_Abstract $row)
 	{
 		$obj->setId($row->id)
-			->setUsersId($row->users_id)
-			->setProjectsId($row->projects_id)
-			->setWhen($row->when)
-			->setServersId($row->servers_id)
-			->setFromRevision($row->from_revision)
-			->setToRevision($row->to_revision)
-			->setDeploymentStatusesId($row->deployment_statuses_id);
+			->setName($row->name)
+			->setCode($row->code);
 	}
 
 	/**
-	 * Find the last successful deployment object
-	 * @param int $project_id
-	 * @param int $server_id
-	 * @return GD_Model_Deployment
+	 * Search for a file status by it's name
+	 * @param string $name status name to find
+	 * @return GD_Model_DeploymentFileStatus
 	 */
-	public function getLastSuccessfulDeployment($project_id, $server_id)
+	public function getDeploymentFileStatusByName($name)
 	{
-		$obj = new GD_Model_Deployment();
+		$obj = new GD_Model_DeploymentFileStatus();
 
 		$select = $this->getDbTable()
 			->select()
-			->where("deployment_statuses_id = ?", 3)
-			->where("projects_id = ?", $project_id)
-			->where("servers_id = ?", $server_id)
-			->order('when DESC')
-			->limit(1);
+			->where("name = ?", $name);
+
+		$row = $this->getDbTable()->fetchRow($select);
+
+		if(is_null($row))
+		{
+			return null;
+		}
+		$this->populateObjectFromRow($obj, $row);
+		return $obj;
+	}
+
+	/**
+	 * Search for a file status by it's code
+	 * @param string $name status code to find
+	 * @return GD_Model_DeploymentFileStatus
+	 */
+	public function getDeploymentFileStatusByCode($code)
+	{
+		$obj = new GD_Model_DeploymentFileStatus();
+
+		$select = $this->getDbTable()
+			->select()
+			->where("code = ?", $code);
 
 		$row = $this->getDbTable()->fetchRow($select);
 
