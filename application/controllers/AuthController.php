@@ -23,33 +23,44 @@
  */
 class AuthController extends Zend_Controller_Action
 {
+	public function getForm()
+	{
+		return new GDApp_Form_Login();
+	}
+
+
     public function loginAction()
     {
-    	if($this->_request->isPost())
+		$form = $this->getForm();
+    	if ($this->_request->isPost())
 		{
-			$credentials = array();
-			$credentials['username'] = $this->_request->getPost('username');
-			$credentials['password'] = $this->_request->getPost('password');
-
-			$adapter = $this->getAuthAdapter($credentials);
-
-			$auth = Zend_Auth::getInstance();
-			$result = $auth->authenticate($adapter);
-
-			if($result->isValid())
+			if ($form->isValid($this->getRequest()->getParams()))
 			{
-				$this->_redirect($this->getFrontController()->getBaseUrl() . "/home");
-			}
-			else
-			{
-				$this->executeLogout();
-				$this->_redirect($this->getFrontController()->getBaseUrl() . "/");
+				$credentials = array();
+				$credentials['username'] = $this->_request->getPost('username');
+				$credentials['password'] = $this->_request->getPost('password');
+
+				$adapter = $this->getAuthAdapter($credentials);
+
+				$auth = Zend_Auth::getInstance();
+				$result = $auth->authenticate($adapter);
+
+				if ($result->isValid())
+				{
+					$this->_redirect($this->getFrontController()->getBaseUrl() . "/home");
+				}
+				else
+				{
+					$form->setErrors(array("Sorry, but we couldn't find your login details in the system.<br />Please check them and try again."));
+					$this->view->unknownCredentials = true;
+				}
 			}
 		}
-		else
-		{
-			$this->_redirect($this->getFrontController()->getBaseUrl() . "/");
-		}
+
+    	$this->view->form = $form;
+
+		$this->view->headLink()->appendStylesheet("/css/template/form.css");
+		$this->view->headLink()->appendStylesheet("/css/pages/login.css");
     }
 
     private function executeLogout()
@@ -61,7 +72,7 @@ class AuthController extends Zend_Controller_Action
     public function logoutAction()
     {
     	$this->executeLogout();
-		$this->_redirect($this->getFrontController()->getBaseUrl() . "/");
+		$this->_redirect($this->getFrontController()->getBaseUrl() . "/auth/login");
     }
 
     public function getAuthAdapter(array $credentials)

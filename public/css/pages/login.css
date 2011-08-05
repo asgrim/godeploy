@@ -1,0 +1,11 @@
+/* CSS Document */
+
+
+#form label {
+	width: 120px;
+	}
+
+#form li.submit {
+	padding-top: 10px;
+	padding-left: 120px;
+	}

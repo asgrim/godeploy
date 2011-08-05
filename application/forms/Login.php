@@ -35,17 +35,25 @@ class GDApp_Form_Login extends GD_Form_Abstract
 		$username->setLabel('Username')
 			->setRequired(true)
 			->addFilter('StripTags')
-			->addFilter('StringTrim')
-			->addValidator('NotEmpty');
+			->addFilter('StringTrim');
+
+		$not_empty = new Zend_Validate_NotEmpty();
+		$not_empty->setMessage('Please enter your username.');
+		$username->addValidators(array($not_empty));
+
 
 		$password = new Zend_Form_Element_Password('password');
 		$password->setLabel('Password')
 			->setRequired(true)
-			->addFilter('StripTags')
-			->addValidator('NotEmpty');
+			->addFilter('StripTags');
 
-		$submit = new Zend_Form_Element_Submit('submit');
-		$submit->setLabel('Login');
+		$not_empty = new Zend_Validate_NotEmpty();
+		$not_empty->setMessage('Please enter your password.');
+		$password->addValidators(array($not_empty));
+
+
+		$submit = new Zend_Form_Element_Image('btn_submit');
+		$submit->setImage('/images/buttons/small/login.png');
 
 		$this->addElements(array(
 			$username,

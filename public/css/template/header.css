@@ -34,9 +34,6 @@
 #menu {
 	float: right;
 	width: 540px;
-	}
-
-#menu.logged_in {
 	margin-top: 73px;
 	}
 
