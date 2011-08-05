@@ -20,7 +20,7 @@
 	</li>
 	<li>
 		<label>Status<label>
-		<span class="value"><?php echo $this->deployment->getDeploymentStatusesId(); ?></span>
+		<span class="value" id="deployment_status"><?php echo $this->deployment->getDeploymentStatusesId(); ?></span>
 	</li>
 </ul>
 
@@ -40,11 +40,22 @@
 		<tr>
 			<td><?php echo $file->getDetails(); ?></td>
 			<td><?php echo $file->getDeploymentFileAction()->getName(); ?></td>
-			<td><?php echo $file->getDeploymentFileStatus()->getName(); ?></td>
+			<td id="file_<?php echo $file->getId(); ?>_status"><?php echo $file->getDeploymentFileStatus()->getName(); ?></td>
 		</tr>
 		<?php endforeach; ?>
 	</tbody>
 </table>
 <?php else: ?>
 <h3>Looks like there are no files to deploy...?!</h3>
+<?php endif; ?>
+
+Status Requests: <span id="lol">0</span>
+
+<?php if($this->run_deployment): ?>
+<script type="text/javascript">
+//<![CDATA[
+
+$(document).observe("dom:loaded", bootstrapDeployment);
+//]]>
+</script>
 <?php endif; ?>

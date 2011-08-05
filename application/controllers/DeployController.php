@@ -119,6 +119,8 @@ class DeployController extends Zend_Controller_Action
 
 	public function previewAction()
 	{
+		$this->_helper->viewRenderer('main');
+
 		$projects = new GD_Model_ProjectsMapper();
 		$project_slug = $this->_getParam("project");
 		if($project_slug != "")
@@ -144,6 +146,92 @@ class DeployController extends Zend_Controller_Action
 
 	public function runAction()
 	{
+		$this->_helper->viewRenderer('main');
+
+		$projects = new GD_Model_ProjectsMapper();
+		$project_slug = $this->_getParam("project");
+		if($project_slug != "")
+		{
+			$project = $projects->getProjectBySlug($project_slug);
+		}
+
+		if(is_null($project))
+		{
+			throw new GD_Exception("Project '{$project_slug}' was not set up.");
+		}
+		$this->view->project = $project;
+
+		$deployments = new GD_Model_DeploymentsMapper();
+		$deployment = new GD_Model_Deployment();
+		$deployments->find($this->_getParam('id'), $deployment);
+		$this->view->deployment = $deployment;
+
+		$deployment_files = new GD_Model_DeploymentFilesMapper();
+		$file_list = $deployment_files->getDeploymentFilesByDeployment($deployment->getId());
+		$this->view->file_list = $file_list;
+
+		if($this->view->deployment->getDeploymentStatusesId() == 1)
+		{
+			$this->view->headScript()->appendFile("/js/pages/deploy_run.js");
+			$this->view->run_deployment = true;
+		}
+	}
+
+	public function executeDeploymentStatusAction()
+	{
+		// Project information
+		$projects = new GD_Model_ProjectsMapper();
+		$project_slug = $this->_getParam("project");
+		if($project_slug != "")
+		{
+			$project = $projects->getProjectBySlug($project_slug);
+		}
+
+		if(is_null($project))
+		{
+			throw new GD_Exception("Project '{$project_slug}' was not set up.");
+		}
+
+		$deployments = new GD_Model_DeploymentsMapper();
+		$deployment = new GD_Model_Deployment();
+		$deployments->find($this->_getParam('id'), $deployment);
+
+		$deployment_files = new GD_Model_DeploymentFilesMapper();
+		$file_list = $deployment_files->getDeploymentFilesByDeployment($deployment->getId());
+
+		$file_statuses = array();
+
+		foreach($file_list as $file)
+		{
+			if($file->getDeploymentFileStatus()->getCode() == "IN_PROGRESS")
+			{
+				$file_statuses[$file->getId()] = $file->getDeploymentFileAction()->getVerb();
+			}
+			else
+			{
+				$file_statuses[$file->getId()] = $file->getDeploymentFileStatus()->getName();
+			}
+		}
+
+		$deployment_status = $deployment->getDeploymentStatusesId();
+
+		$data = array(
+			"FILES" => $file_statuses,
+			"OVERALL" => $deployment_status,
+		);
+
+		// Output stuff
+		$this->_response->setHeader('Content-type','text/plain');
+		$this->_helper->viewRenderer->setNoRender();
+		$this->_helper->layout->disableLayout();
+
+		$jsonData = Zend_Json::encode($data);
+		$this->_response->appendBody($jsonData);
+	}
+
+	public function executeDeploymentStartAction()
+	{
+		set_time_limit(0);
 		// Project information
 		$projects = new GD_Model_ProjectsMapper();
 		$project_slug = $this->_getParam("project");
@@ -169,6 +257,7 @@ class DeployController extends Zend_Controller_Action
 
 		// File list to action
 		$deployment_files = new GD_Model_DeploymentFilesMapper();
+		$deployment_files_statuses = new GD_Model_DeploymentFileStatusesMapper();
 		$file_list = $deployment_files->getDeploymentFilesByDeployment($deployment->getId());
 
 		// Check out the revision we want to upload from
@@ -176,30 +265,62 @@ class DeployController extends Zend_Controller_Action
 		$previous_ref = $git->getCurrentBranch(true);
 		$git->gitCheckout($deployment->getToRevision());
 
+		$deployment->setDeploymentStatusesId(2); // Running
+		$deployments->save($deployment);
+
+		$errors = false;
+
+		sleep(5);
+
 		// Do the upload
 		$ftp = new GD_Ftp($server);
 		$ftp->connect();
 		foreach($file_list as $file)
 		{
-			switch($file->getDeploymentFileAction()->getGitStatus())
+			$file->setDeploymentFileStatusesId($deployment_files_statuses->getDeploymentFileStatusByCode('IN_PROGRESS')->getId());
+			$deployment_files->save($file);
+
+			try
 			{
-				case 'A':
-				case 'M':
-					echo "Going to upload {$file->getDetails()}<br />";
-					$ftp->upload($git->getGitDir() . $file->getDetails(), $file->getDetails());
-					break;
-				case 'D':
-					echo "Goint to delete {$file->getDetails()}<br />";
-					$ftp->delete($file->getDetails());
-					break;
-				default:
-					echo "Warning, unhandled action: '" . $file->getDeploymentFileAction()->getGitStatus() . "' ({$file->getDetails()}<br />";
-					break;
+				switch($file->getDeploymentFileAction()->getGitStatus())
+				{
+					case 'A':
+					case 'M':
+						$ftp->upload($git->getGitDir() . $file->getDetails(), $file->getDetails());
+						break;
+					case 'D':
+						$ftp->delete($file->getDetails());
+						break;
+					default:
+						throw GD_Exception("Warning, unhandled action: '" . $file->getDeploymentFileAction()->getGitStatus() . "' ({$file->getDetails()}");
+						break;
+				}
+				$file->setDeploymentFileStatusesId($deployment_files_statuses->getDeploymentFileStatusByCode('COMPLETE')->getId());
 			}
+			catch(GD_Exception $ex)
+			{
+				$errors = true;
+				$file->setDeploymentFileStatusesId($deployment_files_statuses->getDeploymentFileStatusByCode('FAILED')->getId());
+			}
+			$deployment_files->save($file);
+			sleep(2);
 		}
 
 		// Revert to previous revision
 		$git->gitCheckout($previous_ref);
+
+		if($errors)
+		{
+			$deployment->setDeploymentStatusesId(4); // Failed
+			$deployments->save($deployment);
+		}
+		else
+		{
+			$deployment->setDeploymentStatusesId(3); // Complete
+			$deployments->save($deployment);
+		}
+
+		flush();
 		die();
 	}
 

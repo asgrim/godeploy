@@ -147,12 +147,9 @@ class GD_Ftp
 		$remote_dir = str_replace(basename($remote_file), "", $remote_file);
 		$this->ftpChangeOrMakeDirectory($remote_dir);
 
-		echo "..." . ftp_pwd($this->_handle) . "<br />";
-
 		if(!ftp_put($this->_handle, basename($remote_file), $local_file, FTP_BINARY))
 		{
-			//throw new GD_Exception("Failed to upload '{$local_file}'");
-			echo "Failed to upload '{$local_file}'";
+			throw new GD_Exception("Failed to upload '{$local_file}'");
 		}
 
 		$this->resetPwd();
