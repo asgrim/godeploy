@@ -184,8 +184,16 @@ class DeployController extends Zend_Controller_Action
 			switch($file->getDeploymentFileAction()->getGitStatus())
 			{
 				case 'A':
+				case 'M':
 					echo "Going to upload {$file->getDetails()}<br />";
 					$ftp->upload($git->getGitDir() . $file->getDetails(), $file->getDetails());
+					break;
+				case 'D':
+					echo "Goint to delete {$file->getDetails()}<br />";
+					$ftp->delete($file->getDetails());
+					break;
+				default:
+					echo "Warning, unhandled action: '" . $file->getDeploymentFileAction()->getGitStatus() . "' ({$file->getDetails()}<br />";
 					break;
 			}
 		}
