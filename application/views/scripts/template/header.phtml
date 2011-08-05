@@ -7,12 +7,7 @@
 			<h2 class="hidden">GoDeploy - Easy Code Deployment</h2>
 		</div>
 
-		<?php if (!$this->logged_in): ?>
-		<div id="login">
-			<?php echo $this->form; ?>
-		</div>
-		<?php endif; ?>
-		<div id="menu" class="<?php if ($this->logged_in) echo "logged_in"; ?>">
+		<div id="menu">
 			<?php echo $this->navigation()->menu(); ?>
 
 			<span id="logged_in_status">

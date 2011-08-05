@@ -1,0 +1,88 @@
+/* CSS Document */
+
+/*form span		 {	background: #ffff00; }
+form span.field {	background: #add8e6; }
+form span.extras {	background: #90ee90; }*/
+
+#form {}
+
+	#form fieldset {
+		border: 0;
+		padding: 0;
+		}
+
+		#form fieldset legend {
+			display: none;
+			}
+
+		#form fieldset ol {
+			list-style-type: none;
+			padding: 0;
+			margin: 0;
+			}
+
+	#form form {
+		margin: 0;
+		padding: 0;
+		}
+
+	#form ol {
+		margin: 0;
+		padding: 0;
+		}
+
+		#form label, #form span.field, #form span.extras {
+			float: left;
+			}
+
+		#form label {
+			margin: 1px;
+			width: 200px;
+			margin-right: 5px;
+			}
+
+			#form label span {
+				display: block;
+				padding: 2px 0;
+				}
+
+				#form ol label span span {
+					display: none;
+					width: 18px;
+					height: 18px;
+					float: right;
+					padding: 0;
+					}
+
+					#form ol li.error label span span {
+						display: block;
+						background: transparent url("/images/icons/warning/16x16.png") no-repeat 1px 1px;
+						}
+	
+		#form span.field {
+			width: 200px;
+			padding-top: 1px;
+			}
+
+			#form span.field input, #form span.field textarea, #form span.field select  {
+				margin: 0;
+				}
+
+			#form span.field input.checkbox, #form span.field input.radio  {
+				margin-top: 3px;
+				width: 15px;
+				border: none;
+				}
+
+#errors {
+	background-color: #e13838;
+	border: 1px solid #a62222;
+	color: #ffffff;
+	font-weight: bold;
+	font-size: 12px;
+	}
+
+	#errors .content {
+		padding: 10px 10px 10px 35px;
+		background: transparent url("/images/icons/warning/20x20.png") no-repeat 10px 8px;
+		}

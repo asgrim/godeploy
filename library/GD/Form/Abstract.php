@@ -28,9 +28,9 @@
  *
  * @example
  *   <form ...>
- *     <ul>
+ *     <ol>
  *       <li>
- *         <label>...</label>
+ *         <label><span>...</span></label>
  *         <span class="element">
  *           <input ...>
  *         </span>
@@ -40,7 +40,7 @@
  *           <input type="submit" ...>
  *         </span>
  *       </li>
- *     </ul>
+ *     </ol>
  *   </form>
  *
  * @author james
@@ -54,11 +54,7 @@ abstract class GD_Form_Abstract extends Zend_Form
 	 * @var array
 	 */
 	public $elementDecorators = array(
-		'ViewHelper',
-		'Errors',
-		array(array('data' => 'HtmlTag'), array('tag' => 'span', 'class' => 'element')),
-		array('Label'),
-		array(array('row' => 'HtmlTag'), array('tag' => 'li')),
+		array('ViewScript', array('viewScript' => 'template/form_field.phtml'))
 	);
 
 	/**
@@ -71,8 +67,7 @@ abstract class GD_Form_Abstract extends Zend_Form
 	public $submitDecorators = array(
 		'ViewHelper',
 		'Errors',
-		array(array('data' => 'HtmlTag'), array('tag' => 'span', 'class' => 'element submit')),
-		array(array('row' => 'HtmlTag'), array('tag' => 'li')),
+		array(array('row' => 'HtmlTag'), array('tag' => 'li', 'class' => 'submit')),
 	);
 
 	/**
@@ -84,7 +79,8 @@ abstract class GD_Form_Abstract extends Zend_Form
 	{
 		$this->setDecorators(array(
 			'FormElements',
-			array('HtmlTag', array('tag' => 'ul')),
+			array('Fieldset', array('')),
+			array('HtmlTag', array('tag' => 'ol')),
 			'Form',
 		));
 	}
@@ -102,9 +98,9 @@ abstract class GD_Form_Abstract extends Zend_Form
 	 */
 	public function render(Zend_View_Interface $view = null)
 	{
-		foreach($this->_elements as $element)
+		foreach ($this->_elements as $element)
 		{
-			if($element instanceof Zend_Form_Element_Submit)
+			if ($element instanceof Zend_Form_Element_Image)
 			{
 				$element->setDecorators($this->submitDecorators);
 			}
