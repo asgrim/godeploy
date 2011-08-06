@@ -31,6 +31,10 @@ form span.extras {	background: #90ee90; }*/
 		padding: 0;
 		}
 
+		#form ol li {
+			padding: 3px 0;
+			}
+
 		#form label, #form span.field, #form span.extras {
 			float: left;
 			}

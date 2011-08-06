@@ -149,7 +149,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 				'project'=>'',
 			),
 			array(
-				'project' => '[a-z-]+',
+				'project' => '[a-z0-9-]+',
 			)
 		);
 		$projectRoute = new Zend_Controller_Router_Route(
@@ -162,7 +162,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 				'id' => 0,
 			),
 			array(
-				'project' => '[a-z-]+',
+				'project' => '[a-z0-9-]+',
 				'id' => '\d+',
 			)
 		);

@@ -23,28 +23,17 @@
  */
 class IndexController extends Zend_Controller_Action
 {
-
-    public function init()
-    {
-        /* Initialize action controller here */
-    }
-
     public function indexAction()
     {
     	// Check to see if they're logged in first...
 		$auth = Zend_Auth::getInstance();
-		if($auth->hasIdentity())
+		if ($auth->hasIdentity())
 		{
 			$this->_redirect($this->getFrontController()->getBaseUrl() . "/home");
 		}
-
-		// If not, present the login form
-    	$form = new GDApp_Form_Login();
-    	$this->view->form = $form;
-
-		$this->view->headLink()->appendStylesheet("/css/pages/index.css");
+		else
+		{
+			$this->_redirect($this->getFrontController()->getBaseUrl() . "/auth/login");
+		}
     }
-
-
 }
-

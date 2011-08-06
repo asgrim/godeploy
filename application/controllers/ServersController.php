@@ -44,10 +44,17 @@ class ServersController extends Zend_Controller_Action
 
 	public function indexAction()
 	{
-		$project_slug = $this->_getParam("project");
-
     	$form = new GDApp_Form_ServerSettings();
     	$this->view->form = $form;
+
+		$this->view->headLink()->appendStylesheet("/css/template/form.css");
+		$this->view->headLink()->appendStylesheet("/css/pages/project_servers.css");
+
+		// Grab the project so we can add it to the title
+    	$project_slug = $this->_getParam("project");
+    	$projects = new GD_Model_ProjectsMapper();
+   		$project = $projects->getProjectBySlug($project_slug);
+    	$this->view->project = $project;
 
 		$servers = new GD_Model_ServersMapper();
 		$server = new GD_Model_Server();
@@ -60,9 +67,8 @@ class ServersController extends Zend_Controller_Action
 		}
 		else if($this->_method == "add")
 		{
-			$projects = new GD_Model_ProjectsMapper();
-			$project = $projects->getProjectBySlug($project_slug);
 			$server->setProjectsId($project->getId());
+    		$server->setName("New Server");
 		}
 		$this->view->server = $server;
 

@@ -2,13 +2,14 @@
 
 #footer {
 	background: transparent url("/images/footer/bg.jpg") repeat-x top left;
+	font-size: 12px;
 	}
 
 	#footer .content {
-		padding: 15px 15px 0 15px;
+		padding: 15px 30px;
 		}
 
 	#footer ul li {
 		float: left;
-		margin-right: 20px;
+		margin-right: 10px;
 		}

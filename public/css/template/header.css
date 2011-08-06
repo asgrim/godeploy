@@ -18,7 +18,7 @@
 	}
 
 	#header #logo a {
-		margin-left: 40px;
+		margin-left: 20px;
 		}
 
 #login {
@@ -35,6 +35,7 @@
 	float: right;
 	width: 540px;
 	margin-top: 73px;
+	margin-right: 20px;
 	}
 
 	#menu #logged_in_status {
