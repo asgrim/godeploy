@@ -54,6 +54,10 @@ class GD_Ftp
 
 	private function resetPwd()
 	{
+		if(!$this->_handle)
+		{
+			throw new GD_Exception("Not connected (resetPwd).");
+		}
 		ftp_chdir($this->_handle, $this->_pwd);
 	}
 
@@ -131,6 +135,11 @@ class GD_Ftp
 
 	private function ftpChangeOrMakeDirectory($dir)
 	{
+		if(!$this->_handle)
+		{
+			throw new GD_Exception("Not connected (ftpChangeOrMakeDirectory).");
+		}
+
 		if($dir == "" || @ftp_chdir($this->_handle, $dir) || @ftp_mkdir($this->_handle, $dir))
 		{
 			return true;
@@ -144,6 +153,11 @@ class GD_Ftp
 
 	public function upload($local_file, $remote_file)
 	{
+		if(!$this->_handle)
+		{
+			throw new GD_Exception("Not connected (upload).");
+		}
+
 		$remote_dir = str_replace(basename($remote_file), "", $remote_file);
 		$this->ftpChangeOrMakeDirectory($remote_dir);
 
@@ -157,6 +171,11 @@ class GD_Ftp
 
 	public function delete($remote_file)
 	{
+		if(!$this->_handle)
+		{
+			throw new GD_Exception("Not connected (delete).");
+		}
+
 		$remote_dir = str_replace(basename($remote_file), "", $remote_file);
 		$this->ftpChangeOrMakeDirectory($remote_dir);
 
