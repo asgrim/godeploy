@@ -65,7 +65,7 @@ INSERT INTO  `godeploy`.`servers` (
 `projects_id`
 )
 VALUES (
-1 ,  'Development server',  'dev.somesite.com',  '1',  '21',  'testusr',  'testpwd',  'public_html/',  '1'
+1 ,  'Development server',  'dev.somesite.com',  '1',  '21',  'testusr',  'thiswontworkanymore',  'public_html/',  '1'
 );
 
 INSERT INTO  `godeploy`.`servers` (
@@ -80,5 +80,5 @@ INSERT INTO  `godeploy`.`servers` (
 `projects_id`
 )
 VALUES (
-2 ,  'Live server',  'www.somesite.com',  '1',  '21',  'testusr',  'testpwd',  'public_html/',  '1'
+2 ,  'Live server',  'www.somesite.com',  '1',  '21',  'testusr',  'thiswontworkanymore',  'public_html/',  '1'
 );
