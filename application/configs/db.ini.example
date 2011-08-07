@@ -4,3 +4,4 @@ host = localhost
 username = godeploy
 password = testing
 dbname = godeploy
+cryptkey = set this to your encryption key
