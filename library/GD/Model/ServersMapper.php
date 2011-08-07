@@ -54,13 +54,16 @@ class GD_Model_ServersMapper extends MAL_Model_MapperAbstract
 	 */
 	protected function getSaveData($obj)
 	{
+		$crypt = new GD_Crypt();
+		$encrypted_pwd = $crypt->doEncrypt($obj->getPassword());
+
 		$data = array(
 			'name' => $obj->getName(),
 			'hostname' => $obj->getHostname(),
 			'connection_types_id' => $obj->getConnectionTypesId(),
 			'port' => $obj->getPort(),
 			'username' => $obj->getUsername(),
-			'password' => $obj->getPassword(),
+			'password' => $encrypted_pwd,
 			'remote_path' => $obj->getRemotePath(),
 			'projects_id' => $obj->getProjectsId(),
 		);
@@ -74,13 +77,16 @@ class GD_Model_ServersMapper extends MAL_Model_MapperAbstract
 	 */
 	protected function populateObjectFromRow(&$obj, Zend_Db_Table_Row_Abstract $row)
 	{
+		$crypt = new GD_Crypt();
+		$decrypted_pwd = $crypt->doDecrypt($row->password);
+
 		$obj->setId($row->id)
 			->setName($row->name)
 			->setHostname($row->hostname)
 			->setConnectionTypesId($row->connection_types_id)
 			->setPort($row->port)
 			->setUsername($row->username)
-			->setPassword($row->password)
+			->setPassword($decrypted_pwd)
 			->setRemotePath($row->remote_path)
 			->setProjectsId($row->projects_id);
 

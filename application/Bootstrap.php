@@ -34,6 +34,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 		// Set default database adapter
 		$db_conf = new Zend_Config_Ini(APPLICATION_PATH . '/configs/db.ini', 'database');
 		Zend_Db_Table::setDefaultAdapter(Zend_Db::factory($db_conf->adapter, $db_conf->toArray()));
+		Zend_Registry::set("db", $db_conf);
 
 		// Load version
 		$version_conf = new Zend_Config_Ini(APPLICATION_PATH . '/configs/version.ini', 'version');
