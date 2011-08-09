@@ -74,26 +74,29 @@ class ServersController extends Zend_Controller_Action
 
 		if($this->getRequest()->isPost())
 		{
-			$server->setName($this->_request->getParam('name', false));
-			$server->setHostname($this->_request->getParam('hostname', false));
-			$server->setConnectionTypesId($this->_request->getParam('connectionTypeId', false));
-			$server->setPort($this->_request->getParam('port', false));
-			$server->setUsername($this->_request->getParam('username', false));
-			$server->setPassword($this->_request->getParam('password', false));
-			$server->setRemotePath($this->_request->getParam('remotePath', false));
-
-			// Test the connection first
-			$ftp = new GD_Ftp($server);
-			$result = $ftp->testConnection();
-
-			if(!$result)
+			if ($form->isValid($this->getRequest()->getParams()))
 			{
-				throw new GD_Exception("Failed to test connection to FTP server.");
+				$server->setName($this->_request->getParam('name', false));
+				$server->setHostname($this->_request->getParam('hostname', false));
+				$server->setConnectionTypesId($this->_request->getParam('connectionTypeId', false));
+				$server->setPort($this->_request->getParam('port', false));
+				$server->setUsername($this->_request->getParam('username', false));
+				$server->setPassword($this->_request->getParam('password', false));
+				$server->setRemotePath($this->_request->getParam('remotePath', false));
+
+				// Test the connection first
+				$ftp = new GD_Ftp($server);
+				$result = $ftp->testConnection();
+
+				if(!$result)
+				{
+					throw new GD_Exception("Failed to test connection to FTP server.");
+				}
+
+				$servers->save($server);
+
+				$this->_redirect($this->getFrontController()->getBaseUrl() . "/project/" . $this->_getParam("project") . "/settings");
 			}
-
-			$servers->save($server);
-
-			$this->_redirect($this->getFrontController()->getBaseUrl() . "/project/" . $this->_getParam("project") . "/settings");
 		}
 		else
 		{

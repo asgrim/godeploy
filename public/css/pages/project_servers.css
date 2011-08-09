@@ -13,11 +13,10 @@
 		padding-top: 1px;
 		}
 
-	#form li#item_repositoryUrl input {
-		width: 400px;
+	#form li#item_hostname input {
+		width: 300px;
 		}
 
-	#form li#item_publicKey textarea {
-		width: 650px;
-		height: 100px;
+	#form li#item_port input {
+		width: 30px;
 		}

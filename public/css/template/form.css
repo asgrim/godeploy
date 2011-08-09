@@ -33,7 +33,14 @@ form span.extras {	background: #90ee90; }*/
 
 		#form ol li {
 			padding: 3px 0;
+			border-bottom: 1px dashed #ffffff;
+			margin-bottom: 2px;
 			}
+
+			#form ol li.submit {
+				border-bottom: 0;
+				margin-bottom: 0;
+				}
 
 		#form label, #form span.field, #form span.extras {
 			float: left;
@@ -76,6 +83,16 @@ form span.extras {	background: #90ee90; }*/
 				margin-top: 3px;
 				width: 15px;
 				border: none;
+				}
+
+		#form span.slug {
+			padding: 0 5px;
+			font-size: 12px;
+			font-style: italic;
+			}
+
+			#form span.slug span {
+				font-weight: bold;
 				}
 
 #errors {
