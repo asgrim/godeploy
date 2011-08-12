@@ -1,1 +1,51 @@
-History
+<?php if(is_array($this->deployments) && count($this->deployments) > 0): ?>
+<h2>Project <?php echo $this->project; ?> Deployments</h2>
+<?php $deployment_count = 1; foreach($this->deployments as $deployment): ?>
+<div class="deployments">
+    <h3>Deployment <?php echo $deployment_count; ?></h3>
+    <div>
+        <ul>
+            <li>Deployed When: <?php echo $deployment['when']; ?></li>
+            <li>Revision: <strong><?php echo $deployment['from_revision']; ?></strong> 
+                to <strong><?php echo $deployment['to_revision']; ?></strong>
+            </li>
+            <li>Deployment Status: <?php echo $deployment['deployment_status']; ?></li>
+        </ul>
+    </div>
+    <div>
+        <h4>Server Details</h4>
+        <ul>        
+            <li>Server Name: <?php echo $deployment['server_name']; ?></li>
+            <li>Hostname: <?php echo $deployment['hostname']; ?></li>   
+            <li>Connection Type: <?php echo $deployment['connection_type']; ?></li>
+            <li>Port: <?php echo $deployment['port']; ?></li>
+            <li>Remote Path: <?php echo $deployment['remote_path']; ?></li>
+        </ul>
+    </div>
+    <div>
+        <h4>Deployment Files: </h4>
+        <?php if(empty($deployment['files'])): ?>
+        <p>There are no files associated with this deployment.</p>        
+        <?php else: ?>
+        <?php $count = 1; foreach($deployment['files'] as $file): ?>        
+        <p>File <?php echo $count; ?></p>
+        <ul>            
+            <li>File action: <?php echo $file['file_action']; ?></li>            
+            <li>File status: <?php echo $file['file_status']; ?></li>
+            <li>
+                <strong>Details: </strong>
+                <?php if(empty($file['details'])): ?>
+                No details.
+                <?php else:
+                    echo $file['details'];
+                endif; ?>
+            </li>
+        </ul>
+        <?php $count++; endforeach; ?>
+        <?php endif; ?>
+    </div>
+</div>
+<?php $deployment_count++; endforeach; ?>
+<?php else: ?>
+<p id="no-deployments">There are no deployments.</p>
+<?php endif; ?>
