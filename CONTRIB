@@ -8,6 +8,25 @@ GoDeploy requirements:
 
 Not extensively tested in various environments yet, so YMMV.
 
+GIT-FLOW RECOMMENDATION
+-----------------------
+See: https://github.com/nvie/gitflow
+
+It is recommended to use git-flow to manage your repository.
+All pull requests will be merged into the develop branch.
+
+To add a feature:
+1. git flow feature start <feature-name>
+2. Make changes
+3. Make pull request from branch feature/<feature-name>
+4. When pull request complete: git flow feature finish <feature-name>
+
+This is new so we might find a better way of working on it, please leave
+feedback on how this could be improved. Read up on git-flow as well!
+
+http://nvie.com/posts/a-successful-git-branching-model/
+http://vimeo.com/16018419
+
 SETTING UP ENVIRONMENT FOR GITHUB PULL REQUESTS
 -----------------------------------------------
 1. Fork https://github.com/Asgrim/GoDeploy on GitHub
