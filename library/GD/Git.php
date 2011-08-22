@@ -222,7 +222,7 @@ class GD_Git
 
 		if(!is_array($files) || count($files) <= 0)
 		{
-			throw new GD_Exception("Could not get file list...");
+			throw new GD_Exception("Could not get file list... could be that there was no changes.");
 		}
 
 		// Now parse the file list into something sensible

@@ -43,7 +43,7 @@ class HistoryController extends Zend_Controller_Action
 
         $this->view->project = $project;
 
-        $this->view->headLink()->appendStylesheet("/css/pages/history.css");
+        $this->view->headLink()->appendStylesheet("/css/template/table.css");
     }
 }
 
