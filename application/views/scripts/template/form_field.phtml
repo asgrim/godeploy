@@ -6,7 +6,8 @@
 	if ($this->element->hasErrors())
 	{
 		$class_name .= " error";
-		$error_message = reset($this->element->getMessages());
+		$messages = $this->element->getMessages();
+		$error_message = reset($messages);
 	}
 
 ?>
