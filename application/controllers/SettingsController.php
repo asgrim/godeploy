@@ -23,114 +23,122 @@
  */
 class SettingsController extends Zend_Controller_Action
 {
-    public function indexAction()
-    {
+	public function indexAction()
+	{
 		$this->view->headLink()->appendStylesheet("/css/template/form.css");
 		$this->view->headLink()->appendStylesheet("/css/template/table.css");
 		$this->view->headLink()->appendStylesheet("/css/pages/project_settings.css");
 
-    	$projects = new GD_Model_ProjectsMapper();
-    	$project_slug = $this->_getParam("project");
-    	if ($project_slug != "new")
-    	{
-    		$project = $projects->getProjectBySlug($project_slug);
+		$projects = new GD_Model_ProjectsMapper();
+		$project_slug = $this->_getParam("project");
+		if ($project_slug != "new")
+		{
+			$project = $projects->getProjectBySlug($project_slug);
 			$new_project = false;
-    	}
-    	else
-    	{
-    		$project = new GD_Model_Project();
-    		$project->setName("New Project");
-    		$project->setDeploymentBranch('master'); // Usually default for git
-    		$new_project = true;
-    	}
-    	$this->view->project = $project;
+		}
+		else
+		{
+			$project = new GD_Model_Project();
+			$project->setName("New Project");
+			$project->setDeploymentBranch('master'); // Usually default for git
+			$new_project = true;
+		}
+		$this->view->project = $project;
 
-    	$form = new GDApp_Form_ProjectSettings(null, $new_project);
-    	$this->view->form = $form;
+		$form = new GDApp_Form_ProjectSettings(null, $new_project);
+		$this->view->form = $form;
 
-    	if ($this->getRequest()->isPost())
-    	{
+		if ($this->getRequest()->isPost())
+		{
 			if ($form->isValid($this->getRequest()->getParams()))
 			{
-	    		$this->cloneGitRepository($projects, $project);
-	    		$this->_redirect($this->getFrontController()->getBaseUrl() . "/home");
+				$result = $this->saveProject($projects, $project);
+				if($result !== true)
+				{
+					$form->repositoryUrl->addError("Could not clone the git repository [" . $result . "]. Please check the URL is correct and try again.");
+				}
+				else
+				{
+					$this->_redirect($this->getFrontController()->getBaseUrl() . "/home");
+				}
 			}
-    	}
-    	else
-    	{
-    		$data = array(
+		}
+		else
+		{
+			$data = array(
 				'name' => $project->getName(),
 				'repositoryUrl' => $project->getRepositoryUrl(),
 				'deploymentBranch' => $project->getDeploymentBranch(),
 				'publicKey' => $project->getPublicKey()->getData(),
 			);
 
-    		$form->populate($data);
+			$form->populate($data);
 
-    		// Populate list of servers for this project
-    		if ($project->getId() > 0)
-    		{
-	    		$servers = new GD_Model_ServersMapper();
-	    		$this->view->servers = $servers->getServersByProject($project->getId());
-    		}
-    	}
-    }
+			// Populate list of servers for this project
+			if ($project->getId() > 0)
+			{
+				$servers = new GD_Model_ServersMapper();
+				$this->view->servers = $servers->getServersByProject($project->getId());
+			}
+		}
+	}
 
-    public function deleteAction()
-    {
-    	$projects = new GD_Model_ProjectsMapper();
-    	$project_slug = $this->_getParam("project");
+	public function deleteAction()
+	{
+		$projects = new GD_Model_ProjectsMapper();
+		$project_slug = $this->_getParam("project");
 
-    	$project = $projects->getProjectBySlug($project_slug);
+		$project = $projects->getProjectBySlug($project_slug);
 
-    	// TODO - Delete the deployments for the project
-    	// And the deployment_files
-    	// And the servers
+		// TODO - Delete the deployments for the project
+		// And the deployment_files
+		// And the servers
 
-    	// Delete the public key
-    	$public_key = $project->getPublicKey();
-    	$public_keys = new GD_Model_PublicKeysMapper();
-    	$public_keys->delete($public_key);
+		// Delete the public key
+		$public_key = $project->getPublicKey();
+		$public_keys = new GD_Model_PublicKeysMapper();
+		$public_keys->delete($public_key);
 
-    	// Delete the project
-    	$projects->delete($project);
+		// Delete the project
+		$projects->delete($project);
 
-    	$this->_redirect($this->getFrontController()->getBaseUrl() . "/home");
-    }
+		$this->_redirect($this->getFrontController()->getBaseUrl() . "/home");
+	}
 
 
-    public function cloneGitRepository($projects, $project)
-    {
-    	$repo_before = $project->getRepositoryUrl();
-    	$project->setName($this->_request->getParam('name', false));
-    	$project->setRepositoryUrl($this->_request->getParam('repositoryUrl', false));
-    	$project->setDeploymentBranch($this->_request->getParam('deploymentBranch', false));
-    	$project->setRepositoryTypesId(1);
-    	$repo_after = $project->getRepositoryUrl();
+	public function saveProject($projects, $project)
+	{
+		$repo_before = $project->getRepositoryUrl();
+		$project->setName($this->_request->getParam('name', false));
+		$project->setRepositoryUrl($this->_request->getParam('repositoryUrl', false));
+		$project->setDeploymentBranch($this->_request->getParam('deploymentBranch', false));
+		$project->setRepositoryTypesId(1);
+		$repo_after = $project->getRepositoryUrl();
 
-    	// Save public key
-    	$public_key = $project->getPublicKey();
-    	$public_key->setData($this->_request->getParam('publicKey', false));
-    	$public_keys = new GD_Model_PublicKeysMapper();
-    	$public_keys->save($public_key);
+		// Save public key
+		$public_key = $project->getPublicKey();
+		$public_key->setData($this->_request->getParam('publicKey', false));
+		$public_keys = new GD_Model_PublicKeysMapper();
+		$public_keys->save($public_key);
 
-    	$project->setPublicKeysId($public_key->getId());
+		$project->setPublicKeysId($public_key->getId());
 
-    	$projects->save($project);
+		$git = new GD_Git($project);
 
-    	$git = new GD_Git($project);
+		// If repo URL changed, delete and re-clone
+		if($repo_before != $repo_after)
+		{
+			$git->deleteRepository();
+		}
 
-    	// If repo URL changed, delete and re-clone
-    	if($repo_before != $repo_after)
-    	{
-    		$git->deleteRepository();
-    	}
+		// Update repository
+		$result = $git->gitCloneOrPull();
+		if($result !== true)
+		{
+			return $result;
+		}
 
-    	// Update repository
-    	$result = $git->gitCloneOrPull();
-    	if($result !== true)
-    	{
-    		throw new GD_Exception("Git clone or pull failed: {$result}");
-    	}
-    }
+		$projects->save($project);
+		return true;
+	}
 }

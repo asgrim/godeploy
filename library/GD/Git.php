@@ -64,6 +64,11 @@ class GD_Git
 		$this->_current_branch = $this->getCurrentBranch(true);
 	}
 
+	public function getLastError()
+	{
+		return $this->_last_errno;
+	}
+
 	public function getGitDir()
 	{
 		return $this->_gitdir . "/";
