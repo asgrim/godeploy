@@ -24,4 +24,27 @@
 class GD_Model_DbTable_Deployments extends Zend_Db_Table_Abstract
 {
 	protected $_name = "deployments";
+
+	protected $_referenceMap = array(
+		'GD_Model_DbTable_Users' => array(
+			'columns' => 'users_id',  // the column in the 'deployments' table which is used for the join
+			'refTableClass' => 'GD_Model_DbTable_Users',  // the users table name
+			'refColumns' => 'id' // the primary key of the foreign table
+		),
+		'GD_Model_DbTable_Projects' => array(
+			'columns' => 'projects_id',  // the column in the 'deployments' table which is used for the join
+			'refTableClass' => 'GD_Model_DbTable_Projects',  // the users table name
+			'refColumns' => 'id' // the primary key of the foreign table
+		),
+		'GD_Model_DbTable_Servers' => array(
+			'columns' => 'servers_id',  // the column in the 'deployments' table which is used for the join
+			'refTableClass' => 'GD_Model_DbTable_Servers',  // the users table name
+			'refColumns' => 'id' // the primary key of the foreign table
+		),
+		'GD_Model_DbTable_DeploymentStatuses' => array(
+			'columns' => 'deployment_statuses_id',  // the column in the 'deployments' table which is used for the join
+			'refTableClass' => 'GD_Model_DbTable_DeploymentStatuses',  // the users table name
+			'refColumns' => 'id' // the primary key of the foreign table
+		),
+	);
 }

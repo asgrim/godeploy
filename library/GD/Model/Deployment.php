@@ -32,6 +32,11 @@ class GD_Model_Deployment
 	protected $_to_revision;
 	protected $_deployment_statuses_id;
 
+	protected $_user;
+	protected $_project;
+	protected $_server;
+	protected $_deployment_status;
+
 	public function setId($id)
 	{
 		$this->_id = (int)$id;
@@ -73,7 +78,6 @@ class GD_Model_Deployment
 
 	public function getWhen($format = 'Y-m-d H:i:s')
 	{
-
 		return date($format, $this->_when);
 	}
 
@@ -119,5 +123,49 @@ class GD_Model_Deployment
 	public function getDeploymentStatusesId()
 	{
 		return $this->_deployment_statuses_id;
+	}
+
+	public function setUser(GD_Model_User $obj)
+	{
+		$this->_user = $obj;
+		return $this;
+	}
+
+	public function getUser()
+	{
+		return $this->_user;
+	}
+
+	public function setProject(GD_Model_Project $obj)
+	{
+		$this->_project = $obj;
+		return $this;
+	}
+
+	public function getProject()
+	{
+		return $this->_project;
+	}
+
+	public function setServer(GD_Model_Server $obj)
+	{
+		$this->_server = $obj;
+		return $this;
+	}
+
+	public function getServer()
+	{
+		return $this->_server;
+	}
+
+	public function setDeploymentStatus(GD_Model_DeploymentStatus $obj)
+	{
+		$this->_deployment_status = $obj;
+		return $this;
+	}
+
+	public function getDeploymentStatus()
+	{
+		return $this->_deployment_status;
 	}
 }

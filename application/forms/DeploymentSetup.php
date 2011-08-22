@@ -41,7 +41,7 @@ class GDApp_Form_DeploymentSetup extends GD_Form_Abstract
 
 		foreach($servers as $server)
 		{
-			$server_id->addMultiOption($server->getId(), $server->getName());
+			$server_id->addMultiOption($server->getId(), $server->getDisplayName());
 		}
 
 		$from_revision = new Zend_Form_Element_Text('fromRevision');
