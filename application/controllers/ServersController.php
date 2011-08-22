@@ -27,18 +27,24 @@ class ServersController extends Zend_Controller_Action
 
 	public function init()
 	{
-		if(!in_array($this->_request->getActionName() . "Action", get_class_methods($this)))
+		$action = $this->_request->getActionName();
+
+		if (!in_array($action . "Action", get_class_methods($this)))
 		{
-			if($this->_request->getActionName() == "add")
+			if ($action == "add")
 			{
 				$this->_method = "add";
+				$this->_forward("index");
 			}
-			else if($this->_request->getActionName() == "edit")
+			else if ($action == "edit")
 			{
 				$this->_method = "edit";
+				$this->_forward("index");
 			}
-
-			$this->_forward("index");
+			else if ($action == "confirm-delete")
+			{
+				$this->_method = "confirm-delete";
+			}
 		}
 	}
 
@@ -114,6 +120,24 @@ class ServersController extends Zend_Controller_Action
 		}
 	}
 
+    public function confirmDeleteAction()
+    {
+    	$projects = new GD_Model_ProjectsMapper();
+    	$project_slug = $this->_getParam("project");
+    	$project = $projects->getProjectBySlug($project_slug);
+
+		$servers = new GD_Model_ServersMapper();
+		$server = new GD_Model_Server();
+		$server_id = $this->_request->getParam('id', 0);
+		$servers->find($server_id, $server);
+
+    	$this->view->project = $project;
+    	$this->view->server = $server;
+
+		$this->view->headLink()->appendStylesheet("/css/template/table.css");
+		$this->view->headLink()->appendStylesheet("/css/pages/confirm_delete.css");
+    }
+
 	public function deleteAction()
 	{
 		$project_slug = $this->_getParam("project");
@@ -127,7 +151,7 @@ class ServersController extends Zend_Controller_Action
 		{
 			$servers->find($server_id, $server);
 			$servers->delete($server);
-			$this->_redirect($this->getFrontController()->getBaseUrl() . "/project/" . $this->_getParam("project") . "/settings");
+			$this->_redirect($this->getFrontController()->getBaseUrl() . "/project/" . $project_slug . "/settings");
 		}
 		else
 		{

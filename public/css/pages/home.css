@@ -4,10 +4,10 @@ ul#projects {
 	padding-top: 1px;
 	}
 	ul#projects li {
-		width: 460px;
+		width: 500px;
 		background-color: #ededed;
 		border: 1px solid #bdbdbd;
-		padding: 20px 40px;
+		padding: 20px;
 		margin: 20px auto 0;
 		border-radius: 5px;
 		-webkit-border-radius: 5px;
