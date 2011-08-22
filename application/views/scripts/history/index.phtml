@@ -1,27 +1,44 @@
 
-<h2><?php echo $this->project->getName(); ?> Deployment History</h2>
+<div class="padding_20"></div>
+<h1><?php echo $this->project->getName(); ?> &raquo; Deployment History</h1>
 
-<?php if(is_array($this->deployments) && count($this->deployments) > 0): ?>
-<table border="1">
-	<thead>
-		<tr>
-			<th>Date/Time</th>
-			<th>Server</th>
-			<th>Status</th>
-			<th>&nbsp;</th>
-		</tr>
-	</thead>
-	<tbody>
-	<?php foreach($this->deployments as $deployment): ?>
-		<tr>
-			<td><?php echo $deployment->getWhen("d/m/Y H:i:s"); ?></td>
-			<td><?php echo $deployment->getServer()->getDisplayName(); ?></td>
-			<td><?php echo $deployment->getDeploymentStatus()->getName(); ?></td>
-			<td>View</td>
-		</tr>
-	<?php endforeach; ?>
-	</tbody>
-</table>
-<?php else: ?>
-<p id="no-deployments">There are no deployments.</p>
-<?php endif; ?>
+<?php
+if(is_array($this->deployments) && count($this->deployments) > 0)
+{
+	$count = count($this->deployments);
+	$ess = $count == "1" ? "" : "s";
+	?>
+	<div class="wrapper w_ededed"><div class="content">
+		<div class="padding_15"></div>
+		<p>This is a list of the deployments that have been run on this project.
+		There are <?php echo $count; ?> deployment<?php echo $ess; ?> shown,
+		with the most recent at the top.</p>
+		<table>
+			<thead>
+				<tr>
+					<th>Date/Time</th>
+					<th>Server</th>
+					<th>Status</th>
+					<th class="empty">&nbsp;</th>
+				</tr>
+			</thead>
+			<tbody>
+			<?php foreach($this->deployments as $deployment): ?>
+				<tr>
+					<td><?php echo $deployment->getWhen("d/m/Y H:i:s"); ?></td>
+					<td><?php echo $deployment->getServer()->getDisplayName(); ?></td>
+					<td><?php echo $deployment->getDeploymentStatus()->getName(); ?></td>
+					<td class="icon">
+						<a href="<?php echo $this->baseUrl(); ?>/project/<?php echo $this->project->getSlug(); ?>/deploy/result/<?php echo $deployment->getId(); ?>">
+							<img src="/images/icons/edit/16x16.png" alt="View &raquo;" title="Click to view this deployment" />
+						</a>
+					</td>
+				</tr>
+			<?php endforeach; ?>
+			</tbody>
+		</table>
+	</div></div>
+	<div class="padding_15"></div>
+<?php } else { ?>
+<p>This project has not yet been deployed.</p>
+<?php } ?>
