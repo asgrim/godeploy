@@ -2,7 +2,7 @@
 <ul>
 	<li>
 		<label>Deploy to<label>
-		<span class="value"><?php echo $this->deployment->getServersId(); ?></span>
+		<span class="value"><?php echo $this->deployment->getServer()->getDisplayName(); ?></span>
 	</li>
 	<li>
 		<label>Repository URL<label>
@@ -20,7 +20,7 @@
 	</li>
 	<li>
 		<label>Status<label>
-		<span class="value" id="deployment_status"><?php echo $this->deployment->getDeploymentStatusesId(); ?></span>
+		<span class="value" id="deployment_status"><?php echo $this->deployment->getDeploymentStatus()->getName(); ?></span>
 	</li>
 </ul>
 
