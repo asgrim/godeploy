@@ -32,4 +32,6 @@ class GD_Model_DbTable_Servers extends Zend_Db_Table_Abstract
 			'refColumns' => 'id' // the primary key of the foreign table
 		)
 	);
+
+	protected $_dependentTables = array('GD_Model_DbTable_Deployments');
 }

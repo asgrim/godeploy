@@ -18,20 +18,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @copyright 2011 GoDeploy
- * @author James Titcumb, Simon Wade
+ * @author James Titcumb, Simon Wade, Jon Wigham
  * @link http://www.godeploy.com/
  */
-class GD_Model_DbTable_Projects extends Zend_Db_Table_Abstract
+class GD_Model_DbTable_DeploymentStatuses extends Zend_Db_Table_Abstract
 {
-	protected $_name = "projects";
-
-	protected $_referenceMap = array(
-		'GD_Model_DbTable_PublicKeys' => array(
-			'columns' => 'public_keys_id',  // the column in the 'projects' table which is used for the join
-			'refTableClass' => 'GD_Model_DbTable_PublicKeys',  // the public_keys table name
-			'refColumns' => 'id' // the primary key of the public_keys table
-		)
-	);
+	protected $_name = "deployment_statuses";
 
 	protected $_dependentTables = array('GD_Model_DbTable_Deployments');
 }

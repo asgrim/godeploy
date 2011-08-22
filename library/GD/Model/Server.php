@@ -57,6 +57,11 @@ class GD_Model_Server
 		return $this->_name;
 	}
 
+	public function getDisplayName()
+	{
+		return $this->getName() . " (" . $this->getConnectionType()->getName() . ", " . $this->getHostname() . ")";
+	}
+
 	public function setHostname($value)
 	{
 		$this->_hostname = (string)$value;
