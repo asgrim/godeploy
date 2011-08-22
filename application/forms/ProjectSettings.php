@@ -23,7 +23,7 @@
  */
 class GDApp_Form_ProjectSettings extends GD_Form_Abstract
 {
-	public function __construct($options = null)
+	public function __construct($options = null, $new_project = false)
 	{
 		parent::__construct($options);
 
@@ -38,6 +38,14 @@ class GDApp_Form_ProjectSettings extends GD_Form_Abstract
 		$not_empty->setMessage('Please enter the project name');
 		$project_name->addValidators(array($not_empty));
 
+		// if we're adding a new project, we need to make sure it's unique
+		if ($new_project)
+		{
+			$unique_name = new GD_Validate_UniqueName();
+			$project_name->addValidators(array($unique_name));
+		}
+
+
 		$repository_url = new Zend_Form_Element_Text('repositoryUrl');
 		$repository_url->setLabel('Repository URL')
 			->setRequired(true)
@@ -48,6 +56,7 @@ class GDApp_Form_ProjectSettings extends GD_Form_Abstract
 		$not_empty->setMessage('Please enter the Repository URL');
 		$repository_url->addValidators(array($not_empty));
 
+
 		$deployment_branch = new Zend_Form_Element_Text('deploymentBranch');
 		$deployment_branch->setLabel('Deployment Branch')
 			->setRequired(true)
@@ -57,6 +66,7 @@ class GDApp_Form_ProjectSettings extends GD_Form_Abstract
 		$not_empty = new Zend_Validate_NotEmpty();
 		$not_empty->setMessage('Please enter the name of the Deployment Branch');
 		$deployment_branch->addValidators(array($not_empty));
+
 
 		$public_key = new Zend_Form_Element_Textarea('publicKey');
 		$public_key->setLabel('Public Key')

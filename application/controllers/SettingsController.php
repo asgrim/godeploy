@@ -25,9 +25,6 @@ class SettingsController extends Zend_Controller_Action
 {
     public function indexAction()
     {
-    	$form = new GDApp_Form_ProjectSettings();
-    	$this->view->form = $form;
-
 		$this->view->headLink()->appendStylesheet("/css/template/form.css");
 		$this->view->headLink()->appendStylesheet("/css/template/table.css");
 		$this->view->headLink()->appendStylesheet("/css/pages/project_settings.css");
@@ -37,51 +34,25 @@ class SettingsController extends Zend_Controller_Action
     	if ($project_slug != "new")
     	{
     		$project = $projects->getProjectBySlug($project_slug);
+			$new_project = false;
     	}
     	else
     	{
     		$project = new GD_Model_Project();
     		$project->setName("New Project");
     		$project->setDeploymentBranch('master'); // Usually default for git
+    		$new_project = true;
     	}
     	$this->view->project = $project;
+
+    	$form = new GDApp_Form_ProjectSettings(null, $new_project);
+    	$this->view->form = $form;
 
     	if ($this->getRequest()->isPost())
     	{
 			if ($form->isValid($this->getRequest()->getParams()))
 			{
-	    		$repo_before = $project->getRepositoryUrl();
-	    		$project->setName($this->_request->getParam('name', false));
-	    		$project->setRepositoryUrl($this->_request->getParam('repositoryUrl', false));
-	    		$project->setDeploymentBranch($this->_request->getParam('deploymentBranch', false));
-	    		$project->setRepositoryTypesId(1);
-	    		$repo_after = $project->getRepositoryUrl();
-
-	    		// Save public key
-	    		$public_key = $project->getPublicKey();
-	    		$public_key->setData($this->_request->getParam('publicKey', false));
-	    		$public_keys = new GD_Model_PublicKeysMapper();
-	    		$public_keys->save($public_key);
-
-	    		$project->setPublicKeysId($public_key->getId());
-
-	    		$projects->save($project);
-
-	    		$git = new GD_Git($project);
-
-	    		// If repo URL changed, delete and re-clone
-	    		if($repo_before != $repo_after)
-	    		{
-	    			$git->deleteRepository();
-	    		}
-
-	    		// Update repository
-	    		$result = $git->gitCloneOrPull();
-	    		if($result !== true)
-	    		{
-	    			throw new GD_Exception("Git clone or pull failed: {$result}");
-	    		}
-
+	    		$this->cloneGitRepository($projects, $project);
 	    		$this->_redirect($this->getFrontController()->getBaseUrl() . "/home");
 			}
     	}
@@ -125,5 +96,41 @@ class SettingsController extends Zend_Controller_Action
     	$projects->delete($project);
 
     	$this->_redirect($this->getFrontController()->getBaseUrl() . "/home");
+    }
+
+
+    public function cloneGitRepository($projects, $project)
+    {
+    	$repo_before = $project->getRepositoryUrl();
+    	$project->setName($this->_request->getParam('name', false));
+    	$project->setRepositoryUrl($this->_request->getParam('repositoryUrl', false));
+    	$project->setDeploymentBranch($this->_request->getParam('deploymentBranch', false));
+    	$project->setRepositoryTypesId(1);
+    	$repo_after = $project->getRepositoryUrl();
+
+    	// Save public key
+    	$public_key = $project->getPublicKey();
+    	$public_key->setData($this->_request->getParam('publicKey', false));
+    	$public_keys = new GD_Model_PublicKeysMapper();
+    	$public_keys->save($public_key);
+
+    	$project->setPublicKeysId($public_key->getId());
+
+    	$projects->save($project);
+
+    	$git = new GD_Git($project);
+
+    	// If repo URL changed, delete and re-clone
+    	if($repo_before != $repo_after)
+    	{
+    		$git->deleteRepository();
+    	}
+
+    	// Update repository
+    	$result = $git->gitCloneOrPull();
+    	if($result !== true)
+    	{
+    		throw new GD_Exception("Git clone or pull failed: {$result}");
+    	}
     }
 }
