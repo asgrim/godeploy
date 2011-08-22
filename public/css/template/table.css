@@ -1,0 +1,34 @@
+/* CSS Document */
+
+table {
+	width: 100%;
+	border-collapse: collapse;
+	}
+
+	table thead th {
+		text-align: left;
+		}
+
+	table th, table td {
+		padding: 5px 10px;
+		border: 1px solid #bdbdbd;
+		}
+
+	table th {
+		background-color: #d0d0d0;
+		font-weight: bold;
+		}
+
+		table th.empty {
+			background-color: transparent;
+			border: 0;
+			}
+
+	table td {
+		background-color: #ffffff;
+		}
+
+	table td.icon {
+		padding: 5px;
+		width: 16px;
+		}

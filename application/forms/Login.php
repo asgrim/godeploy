@@ -36,9 +36,8 @@ class GDApp_Form_Login extends GD_Form_Abstract
 			->setRequired(true)
 			->addFilter('StripTags')
 			->addFilter('StringTrim');
-
 		$not_empty = new Zend_Validate_NotEmpty();
-		$not_empty->setMessage('Please enter your username.');
+		$not_empty->setMessage('Please enter your User Name');
 		$username->addValidators(array($not_empty));
 
 
@@ -46,9 +45,8 @@ class GDApp_Form_Login extends GD_Form_Abstract
 		$password->setLabel('Password')
 			->setRequired(true)
 			->addFilter('StripTags');
-
 		$not_empty = new Zend_Validate_NotEmpty();
-		$not_empty->setMessage('Please enter your password.');
+		$not_empty->setMessage('Please enter your Password');
 		$password->addValidators(array($not_empty));
 
 
