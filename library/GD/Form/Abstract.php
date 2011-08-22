@@ -70,6 +70,13 @@ abstract class GD_Form_Abstract extends Zend_Form
 		array(array('row' => 'HtmlTag'), array('tag' => 'li', 'class' => 'submit')),
 	);
 
+	public function __construct($options = null)
+	{
+		parent::__construct($options);
+
+		$this->addElementPrefixPath('GD_Validate_', '../library/GD/Validate', 'validate');
+	}
+
 	/**
 	 * Sets the default decorator for the form automagically (called by
 	 * Zend_Form). This basically adds the ul tag on.

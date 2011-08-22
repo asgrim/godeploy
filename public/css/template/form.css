@@ -31,6 +31,17 @@ form span.extras {	background: #90ee90; }*/
 		padding: 0;
 		}
 
+		#form ol li {
+			padding: 3px 0;
+			border-bottom: 1px dashed #ffffff;
+			margin-bottom: 2px;
+			}
+
+			#form ol li.submit {
+				border-bottom: 0;
+				margin-bottom: 0;
+				}
+
 		#form label, #form span.field, #form span.extras {
 			float: left;
 			}
@@ -66,12 +77,27 @@ form span.extras {	background: #90ee90; }*/
 
 			#form span.field input, #form span.field textarea, #form span.field select  {
 				margin: 0;
+				padding: 3px;
+				display: block;
+				float: left;
 				}
 
 			#form span.field input.checkbox, #form span.field input.radio  {
 				margin-top: 3px;
 				width: 15px;
 				border: none;
+				}
+
+		#form span.slug {
+			margin-top: 5px;
+			padding: 0 5px;
+			font-size: 12px;
+			font-style: italic;
+			float: left;
+			}
+
+			#form span.slug span {
+				font-weight: bold;
 				}
 
 #errors {
@@ -86,3 +112,14 @@ form span.extras {	background: #90ee90; }*/
 		padding: 10px 10px 10px 35px;
 		background: transparent url("/images/icons/warning/20x20.png") no-repeat 10px 8px;
 		}
+
+	form span.extras {
+		font-size: 12px;
+		display: block;
+		clear: left;
+		}
+
+		form span.extras span.errors {
+			font-weight: bold;
+			color: #a62222;
+			}

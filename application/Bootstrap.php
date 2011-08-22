@@ -150,7 +150,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 				'project'=>'',
 			),
 			array(
-				'project' => '[a-z-]+',
+				'project' => '[a-z0-9-]+',
 			)
 		);
 		$projectRoute = new Zend_Controller_Router_Route(
@@ -163,7 +163,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 				'id' => 0,
 			),
 			array(
-				'project' => '[a-z-]+',
+				'project' => '[a-z0-9-]+',
 				'id' => '\d+',
 			)
 		);
@@ -193,6 +193,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 		$view->headScript()->appendFile("/js/prototype/1.7.js");
 		$view->headScript()->appendFile("/js/scriptaculous/1.9.0.js");
 		$view->headScript()->appendFile("/js/common.js");
+		$view->headScript()->appendFile("/js/generate_slug.js");
 	}
 }
 

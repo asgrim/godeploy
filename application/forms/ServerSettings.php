@@ -33,15 +33,19 @@ class GDApp_Form_ServerSettings extends GD_Form_Abstract
 		$server_name->setLabel('Name')
 			->setRequired(true)
 			->addFilter('StripTags')
-			->addFilter('StringTrim')
-			->addValidator('NotEmpty');
+			->addFilter('StringTrim');
+		$not_empty = new Zend_Validate_NotEmpty();
+		$not_empty->setMessage('Please enter the Server Name');
+		$server_name->addValidators(array($not_empty));
 
 		$hostname = new Zend_Form_Element_Text('hostname');
 		$hostname->setLabel('Hostname')
 			->setRequired(true)
 			->addFilter('StripTags')
-			->addFilter('StringTrim')
-			->addValidator('NotEmpty');
+			->addFilter('StringTrim');
+		$not_empty = new Zend_Validate_NotEmpty();
+		$not_empty->setMessage('Please enter the Hostname');
+		$hostname->addValidators(array($not_empty));
 
 		$ct_map = new GD_Model_ConnectionTypesMapper();
 		$connection_types = $ct_map->fetchAll();
@@ -50,10 +54,12 @@ class GDApp_Form_ServerSettings extends GD_Form_Abstract
 		$connection_type_id->setLabel('Connection Type')
 			->setRequired(true)
 			->addFilter('StripTags')
-			->addFilter('StringTrim')
-			->addValidator('NotEmpty');
+			->addFilter('StringTrim');
+		$not_empty = new Zend_Validate_NotEmpty();
+		$not_empty->setMessage('Please choose a Connection Type');
+		$connection_type_id->addValidators(array($not_empty));
 
-		foreach($connection_types as $connection_type)
+		foreach ($connection_types as $connection_type)
 		{
 			$connection_type_id->addMultiOption($connection_type->getId(), $connection_type->getName());
 		}
@@ -62,25 +68,31 @@ class GDApp_Form_ServerSettings extends GD_Form_Abstract
 		$port->setLabel('Port')
 			->setRequired(false)
 			->addFilter('StripTags')
-			->addFilter('StringTrim')
-			->addValidator('NotEmpty');
+			->addFilter('StringTrim');
+		$not_empty = new Zend_Validate_NotEmpty();
+		$not_empty->setMessage('Please enter the Port Number');
+		$port->addValidators(array($not_empty));
 
 		$username = new Zend_Form_Element_Text('username');
 		$username->setLabel('Username')
 			->setRequired(true)
 			->addFilter('StripTags')
 			->addFilter('StringTrim')
-			->addValidator('NotEmpty')
 			->setAttrib('autocomplete', 'off');
+		$not_empty = new Zend_Validate_NotEmpty();
+		$not_empty->setMessage('Please enter the Username');
+		$username->addValidators(array($not_empty));
 
 		$password = new Zend_Form_Element_Password('password');
 		$password->setLabel('Password')
 			->setRequired(true)
 			->addFilter('StripTags')
 			->addFilter('StringTrim')
-			->addValidator('NotEmpty')
 			->setAttrib('autocomplete', 'off')
 			->setAttrib('renderPassword', true);
+		$not_empty = new Zend_Validate_NotEmpty();
+		$not_empty->setMessage('Please enter the Password');
+		$password->addValidators(array($not_empty));
 
 		$report_path = new Zend_Form_Element_Text('remotePath');
 		$report_path->setLabel('Remote Path')
@@ -88,8 +100,9 @@ class GDApp_Form_ServerSettings extends GD_Form_Abstract
 			->addFilter('StripTags')
 			->addFilter('StringTrim');
 
-		$submit = new Zend_Form_Element_Submit('submit');
-		$submit->setLabel('Save Changes');
+
+		$submit = new Zend_Form_Element_Image('btn_submit');
+		$submit->setImage('/images/buttons/small/save-changes.png');
 
 		$this->addElements(array(
 			$server_name,

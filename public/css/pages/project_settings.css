@@ -1,0 +1,23 @@
+/* CSS Document */
+
+#form label {
+	width: 200px;
+	}
+
+#form li.submit {
+	padding: 10px 0 0 205px;
+	}
+
+	#form span.field {
+		width: 730px;
+		padding-top: 1px;
+		}
+
+	#form li#item_repositoryUrl input {
+		width: 400px;
+		}
+
+	#form li#item_publicKey textarea {
+		width: 650px;
+		height: 100px;
+		}

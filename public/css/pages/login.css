@@ -1,11 +1,15 @@
 /* CSS Document */
 
-
 #form label {
 	width: 120px;
 	}
 
 #form li.submit {
-	padding-top: 10px;
-	padding-left: 120px;
+	padding: 10px 0 0 125px;
+	}
+
+
+.c_12 .content {
+	padding-right: 30px;
+	padding-bottom: 0;
 	}

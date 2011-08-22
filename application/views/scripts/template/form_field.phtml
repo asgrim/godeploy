@@ -13,17 +13,21 @@
 <li id="item_<?php echo $this->element->getId(); ?>" class="<?php echo $class_name; ?>">
 	<label>
 		<span>
-			<span title="<?php if ($this->element->hasErrors()) echo $error_message; ?>"></span>
+			<span title="<?php if ($this->element->hasErrors()) echo 'This field has an error'; ?>"></span>
 			<?php echo $this->element->getLabel(); ?>
 		</span>
 	</label>
-	<span class="field"><?php
+	<span class="field">
+	<?php
 		echo $this->{$this->element->helper}(
 			$this->element->getName(),
 			$this->element->getValue(),
 			$this->element->getAttribs(),
 			$this->element->options
 		);
-	?></span>
+
+		if ($this->element->hasErrors()) echo '<span class="extras"><span class="errors">' . $error_message . '</span></span>';
+	?>
+	</span>
 	<div class="clear"></div>
 </li>
