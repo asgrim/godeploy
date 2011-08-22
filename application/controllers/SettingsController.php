@@ -45,9 +45,15 @@ class SettingsController extends Zend_Controller_Action
 		}
 		$this->view->project = $project;
 
+		// Populate list of servers for this project
+		if ($project->getId() > 0)
+		{
+			$servers = new GD_Model_ServersMapper();
+			$this->view->servers = $servers->getServersByProject($project->getId());
+		}
+
 		$form = new GDApp_Form_ProjectSettings(null, $new_project);
 		$this->view->form = $form;
-
 		if ($this->getRequest()->isPost())
 		{
 			if ($form->isValid($this->getRequest()->getParams()))
@@ -73,13 +79,6 @@ class SettingsController extends Zend_Controller_Action
 			);
 
 			$form->populate($data);
-
-			// Populate list of servers for this project
-			if ($project->getId() > 0)
-			{
-				$servers = new GD_Model_ServersMapper();
-				$this->view->servers = $servers->getServersByProject($project->getId());
-			}
 		}
 	}
 
