@@ -1,0 +1,38 @@
+
+<div class="content">
+	<div class="padding_20"></div>
+
+	<h1>Delete server from the "<?php echo $this->project->getName(); ?>" project?</h1>
+	<div class="padding_15"></div>
+
+	<div class="wrapper w_ededed"><div class="content">
+		<div class="padding_15"></div>
+
+		<h2>This cannot be undone. Are you sure you want to continue?</h2>
+
+		<table>
+			<thead>
+				<tr>
+					<th>Name</th>
+					<th>Hostname</th>
+					<th>Type</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td><?php echo $this->escape($this->server->getName()); ?></td>
+					<td><?php echo $this->escape($this->server->getHostname()); ?></td>
+					<td><?php echo $this->escape($this->server->getConnectionType()->getName()); ?></td>
+				</tr>
+			</tbody>
+		</table>
+		<div class="padding_15"></div>
+
+		<p class="options last">
+			<a href="<?php echo $this->baseUrl(); ?>/project/<?php echo $this->project->getSlug(); ?>/settings" title="No" class="no">No, get me out of here!</a>
+			<a href="<?php echo $this->baseUrl(); ?>/project/<?php echo $this->project->getSlug(); ?>/servers/delete/<?php echo $this->server->getId(); ?>" title="Yes, delete it" class="yes"><img src="/images/buttons/small/delete-server.png" alt="Yes, delete it" /></a>
+		</p>
+	</div></div>
+
+</div>
+<div class="clear"></div>

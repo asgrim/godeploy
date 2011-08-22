@@ -1,3 +1,4 @@
+
 <?php if(is_array($this->projects) && count($this->projects) > 0): $another = "another"; ?>
 <ul id="projects">
 <?php foreach($this->projects as $project): ?>
@@ -9,7 +10,7 @@
 		<ul class="links">
 			<li><a href="<?php echo $this->baseUrl(); ?>/project/<?php echo $project->getSlug(); ?>/history">Deployments</a></li>
 			<li><a href="<?php echo $this->baseUrl(); ?>/project/<?php echo $project->getSlug(); ?>/settings">Settings</a></li>
-			<li><a href="<?php echo $this->baseUrl(); ?>/project/<?php echo $project->getSlug(); ?>/settings/delete">Delete</a></li>
+			<li><a href="<?php echo $this->baseUrl(); ?>/project/<?php echo $project->getSlug(); ?>/settings/confirm-delete">Delete</a></li>
 		</ul>
 		<div class="clear"></div>
 	</li>

@@ -76,6 +76,17 @@ class SettingsController extends Zend_Controller_Action
     	}
     }
 
+    public function confirmDeleteAction()
+    {
+    	$projects = new GD_Model_ProjectsMapper();
+    	$project_slug = $this->_getParam("project");
+    	$project = $projects->getProjectBySlug($project_slug);
+
+    	$this->view->project = $project;
+
+		$this->view->headLink()->appendStylesheet("/css/pages/confirm_delete.css");
+    }
+
     public function deleteAction()
     {
     	$projects = new GD_Model_ProjectsMapper();
@@ -94,7 +105,6 @@ class SettingsController extends Zend_Controller_Action
 
     	// Delete the project
     	$projects->delete($project);
-
     	$this->_redirect($this->getFrontController()->getBaseUrl() . "/home");
     }
 
