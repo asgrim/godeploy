@@ -53,6 +53,29 @@ class GD_Model_PublicKey
 	public function setData($value)
 	{
 		$this->_data = (string)$value;
+
+		// Parse the public key type and comment
+		$len = strlen($value);
+		if(stripos($value, "ssh-dss") !== false)
+		{
+			$this->setPublicKeyTypesId(2);
+			$type = "ssh-dss";
+		}
+		else if(stripos($value, "ssh-rsa") !== false)
+		{
+			$this->setPublicKeyTypesId(1);
+			$type = "ssh-rsa";
+		}
+		else
+		{
+			return $this;
+		}
+		$dpos = stripos($value, $type) + 1;
+		$dataandcomment = substr($value, $dpos + strlen($type), $len - $dpos + strlen($type));
+		$spacepos = strpos($dataandcomment, " ") + 1;
+		$comment = substr($dataandcomment, $spacepos, strlen($dataandcomment) - $spacepos);
+		$this->setComment($comment);
+
 		return $this;
 	}
 
