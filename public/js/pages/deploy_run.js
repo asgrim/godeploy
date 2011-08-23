@@ -12,17 +12,6 @@ function bootstrapDeployment()
 			asynchronous: true,
 			onSuccess: function(transport){
 				var response = transport.responseText;
-				alert(response);
-				/*var data = response.evalJSON();
-				
-				if(data.started)
-				{
-					alert(response);
-				}
-				else
-				{
-					alert('An error happened - couldn\'t start deployment...');
-				}*/
 			},
 			onFailure: function(){ alert('Something went wrong...') }
 		});
@@ -37,8 +26,6 @@ function fireStatusRequest()
 		onSuccess: function(transport){
 			var response = transport.responseText;
 			var data = response.evalJSON();
-	
-			$('lol').innerHTML = parseInt($('lol').innerHTML) + 1;
 			
 			// Set overall status
 			$('deployment_status').innerHTML = data.OVERALL;
@@ -52,7 +39,6 @@ function fireStatusRequest()
 			// Set that we are complete or not
 			if(data.COMPLETE)
 			{
-				alert("Deployment finished.");
 				deployment_complete = true;
 			}
 			

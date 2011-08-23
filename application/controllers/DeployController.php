@@ -23,6 +23,7 @@
  */
 class DeployController extends Zend_Controller_Action
 {
+	private $_enable_debug = false;
 	private $_debug_fh;
 
 	public function init()
@@ -214,9 +215,9 @@ class DeployController extends Zend_Controller_Action
 			}
 		}
 
-		$deployment_status = $deployment->getDeploymentStatusesId();
+		$deployment_status = $deployment->getDeploymentStatus()->getName();
 
-		if(in_array($deployment_status, array(3, 4)))
+		if(in_array($deployment->getDeploymentStatusesId(), array(3, 4)))
 		{
 			$complete = true;
 		}
@@ -240,196 +241,152 @@ class DeployController extends Zend_Controller_Action
 		$this->_response->appendBody($jsonData);
 	}
 
-	private function curlBackgroundRequest($url)
-	{
-		$errno = 0;
-		$errstr = "";
-
-		$parts = parse_url($url);
-
-		$fp = @fsockopen($parts['host'], isset($parts['port']) ? $parts['port'] : 80, $errno, $errstr, 30);
-
-		if(!$fp)
-		{
-			return false;
-		}
-
-		$out = "GET " . $parts['path'] . (isset($parts['query']) ? "?" . $parts['query'] : "") . " HTTP/1.1\r\n";
-		$out .= "Host: " . $parts['host'] . "\r\n";
-		$out .= "Cookie: PHPSESSID=" . session_id() . "\r\n";
-		$out .= "Connection: Close\r\n\r\n";
-
-		if(fwrite($fp, $out) === false)
-		{
-			return false;
-		}
-
-		fclose($fp);
-
-		return true;
-	}
-
 	public function executeDeploymentStartAction()
 	{
-		// This is some code I wrote to try and force the request into the
-		// background. It just ain't playing cricket so I'm leaving it here
-		// for now as it might end up being useful...
-		/*if($this->_getParam("background", false) != "true")
+		// session_start blocks other requests, so close the session for the
+		// status AJAX request to work
+		Zend_Session::writeClose();
+
+		ob_start();
+		$this->writeDebug("Setting time limit... ");
+		set_time_limit(0);
+		$this->writeDebug("done.\n");
+
+		// Project information
+		$this->writeDebug("Loading project... ");
+		$projects = new GD_Model_ProjectsMapper();
+		$project_slug = $this->_getParam("project");
+		if($project_slug != "")
 		{
-			$url = $_SERVER['SCRIPT_URI'] . "?background=true";
-
-			$result = $this->curlBackgroundRequest($url);
-
-			$this->_response->setHeader('Content-type','text/plain');
-			$this->_helper->viewRenderer->setNoRender();
-			$this->_helper->layout->disableLayout();
-
-			$data = array(
-				'started' => $result,
-			);
-
-			$jsonData = Zend_Json::encode($data);
-			$this->_response->appendBody($jsonData);
+			$project = $projects->getProjectBySlug($project_slug);
 		}
-		else
-		{*/
-			ob_start();
-			$this->writeDebug("Setting time limit... ");
-			set_time_limit(0);
-			$this->writeDebug("done.\n");
 
-			// Project information
-			$this->writeDebug("Loading project... ");
-			$projects = new GD_Model_ProjectsMapper();
-			$project_slug = $this->_getParam("project");
-			if($project_slug != "")
-			{
-				$project = $projects->getProjectBySlug($project_slug);
-			}
+		if(is_null($project))
+		{
+			throw new GD_Exception("Project '{$project_slug}' was not set up.");
+		}
+		$this->writeDebug("done.\n");
 
-			if(is_null($project))
-			{
-				throw new GD_Exception("Project '{$project_slug}' was not set up.");
-			}
-			$this->writeDebug("done.\n");
+		// Deployment information
+		$this->writeDebug("Loading deployment information... ");
+		$deployments = new GD_Model_DeploymentsMapper();
+		$deployment = new GD_Model_Deployment();
+		$deployments->find($this->_getParam('id'), $deployment);
+		$this->writeDebug("done.\n");
 
-			// Deployment information
-			$this->writeDebug("Loading deployment information... ");
-			$deployments = new GD_Model_DeploymentsMapper();
-			$deployment = new GD_Model_Deployment();
-			$deployments->find($this->_getParam('id'), $deployment);
-			$this->writeDebug("done.\n");
+		// Server information
+		$this->writeDebug("Loading server information... ");
+		$servers = new GD_Model_ServersMapper();
+		$server = new GD_Model_Server();
+		$servers->find($deployment->getServersId(), $server);
+		$this->writeDebug("done.\n");
 
-			// Server information
-			$this->writeDebug("Loading server information... ");
-			$servers = new GD_Model_ServersMapper();
-			$server = new GD_Model_Server();
-			$servers->find($deployment->getServersId(), $server);
-			$this->writeDebug("done.\n");
+		// File list to action
+		$this->writeDebug("Getting file list... ");
+		$deployment_files = new GD_Model_DeploymentFilesMapper();
+		$deployment_files_statuses = new GD_Model_DeploymentFileStatusesMapper();
+		$file_list = $deployment_files->getDeploymentFilesByDeployment($deployment->getId());
+		$this->writeDebug("done.\n");
 
-			// File list to action
-			$this->writeDebug("Getting file list... ");
-			$deployment_files = new GD_Model_DeploymentFilesMapper();
-			$deployment_files_statuses = new GD_Model_DeploymentFileStatusesMapper();
-			$file_list = $deployment_files->getDeploymentFilesByDeployment($deployment->getId());
-			$this->writeDebug("done.\n");
+		// Check out the revision we want to upload from
+		$this->writeDebug("Checking out revision {$deployment->getToRevision()}... ");
+		$git = new GD_Git($project);
+		$previous_ref = $git->getCurrentBranch(true);
+		$res = $git->gitCheckout($deployment->getToRevision());
+		if(!$res) $this->writeDebug("FAILED.\n");
+		else $this->writeDebug("done.\n");
 
-			// Check out the revision we want to upload from
-			$this->writeDebug("Checking out revision {$deployment->getToRevision()}... ");
-			$git = new GD_Git($project);
-			$previous_ref = $git->getCurrentBranch(true);
-			$res = $git->gitCheckout($deployment->getToRevision());
-			if(!$res) $this->writeDebug("FAILED.\n");
-			else $this->writeDebug("done.\n");
+		$this->writeDebug("Updating deployment status to running... ");
+		$deployment->setDeploymentStatusesId(2); // Running
+		$deployments->save($deployment);
+		$this->writeDebug("done.\n");
 
-			$this->writeDebug("Updating deployment status to running... ");
-			$deployment->setDeploymentStatusesId(2); // Running
-			$deployments->save($deployment);
-			$this->writeDebug("done.\n");
+		sleep(2);
 
-			$errors = false;
+		$errors = false;
 
-			sleep(5);
+		// Do the upload
+		$this->writeDebug("Actioning files now.\n");
+		$ftp = new GD_Ftp($server);
+		try
+		{
+			$ftp->connect();
+		}
+		catch(GD_Exception $ex)
+		{
+			$this->writeDebug("FTP Connect failed: {$ex->getMessage()}\n");
+		}
+		foreach($file_list as $file)
+		{
+			$this->writeDebug("Actioning '{$file->getDetails()}'... ");
+			$file->setDeploymentFileStatusesId($deployment_files_statuses->getDeploymentFileStatusByCode('IN_PROGRESS')->getId());
+			$deployment_files->save($file);
 
-			// Do the upload
-			$this->writeDebug("Actioning files now.\n");
-			$ftp = new GD_Ftp($server);
+			sleep(2);
+
 			try
 			{
-				$ftp->connect();
+				switch($file->getDeploymentFileAction()->getGitStatus())
+				{
+					case 'A':
+					case 'M':
+						$ftp->upload($git->getGitDir() . $file->getDetails(), $file->getDetails());
+						break;
+					case 'D':
+						$ftp->delete($file->getDetails());
+						break;
+					default:
+						throw GD_Exception("Warning, unhandled action: '" . $file->getDeploymentFileAction()->getGitStatus() . "' ({$file->getDetails()}");
+						break;
+				}
+				$file->setDeploymentFileStatusesId($deployment_files_statuses->getDeploymentFileStatusByCode('COMPLETE')->getId());
+				$this->writeDebug("done.\n");
 			}
 			catch(GD_Exception $ex)
 			{
-				$this->writeDebug("FTP Connect failed: {$ex->getMessage()}\n");
+				$errors = true;
+				$file->setDeploymentFileStatusesId($deployment_files_statuses->getDeploymentFileStatusByCode('FAILED')->getId());
+				$this->writeDebug("FAILED.\n");
 			}
-			foreach($file_list as $file)
-			{
-				$this->writeDebug("Actioning '{$file->getDetails()}'... ");
-				$file->setDeploymentFileStatusesId($deployment_files_statuses->getDeploymentFileStatusByCode('IN_PROGRESS')->getId());
-				$deployment_files->save($file);
+			$deployment_files->save($file);
+			sleep(1);
+		}
 
-				try
-				{
-					switch($file->getDeploymentFileAction()->getGitStatus())
-					{
-						case 'A':
-						case 'M':
-							$ftp->upload($git->getGitDir() . $file->getDetails(), $file->getDetails());
-							break;
-						case 'D':
-							$ftp->delete($file->getDetails());
-							break;
-						default:
-							throw GD_Exception("Warning, unhandled action: '" . $file->getDeploymentFileAction()->getGitStatus() . "' ({$file->getDetails()}");
-							break;
-					}
-					$file->setDeploymentFileStatusesId($deployment_files_statuses->getDeploymentFileStatusByCode('COMPLETE')->getId());
-					$this->writeDebug("done.\n");
-				}
-				catch(GD_Exception $ex)
-				{
-					$errors = true;
-					$file->setDeploymentFileStatusesId($deployment_files_statuses->getDeploymentFileStatusByCode('FAILED')->getId());
-					$this->writeDebug("FAILED.\n");
-				}
-				$deployment_files->save($file);
-				sleep(5);
-			}
+		// Revert to previous revision
+		$this->writeDebug("Checking out revision {$previous_ref}... ");
+		$res = $git->gitCheckout($previous_ref);
+		if(!$res) $this->writeDebug("FAILED.\n");
+		else $this->writeDebug("done.\n");
 
-			// Revert to previous revision
-			$this->writeDebug("Checking out revision {$previous_ref}... ");
-			$res = $git->gitCheckout($previous_ref);
-			if(!$res) $this->writeDebug("FAILED.\n");
-			else $this->writeDebug("done.\n");
+		$this->writeDebug("Setting deployment status " . ($errors ? "[errors]" : "[success]") . "... ");
+		if($errors)
+		{
+			$deployment->setDeploymentStatusesId(4); // Failed
+			$deployments->save($deployment);
+		}
+		else
+		{
+			$deployment->setDeploymentStatusesId(3); // Complete
+			$deployments->save($deployment);
+		}
+		$this->writeDebug("done.\n");
 
-			$this->writeDebug("Setting deployment status " . ($errors ? "[errors]" : "[success]") . "... ");
-			if($errors)
-			{
-				$deployment->setDeploymentStatusesId(4); // Failed
-				$deployments->save($deployment);
-			}
-			else
-			{
-				$deployment->setDeploymentStatusesId(3); // Complete
-				$deployments->save($deployment);
-			}
-			$this->writeDebug("done.\n");
+		$this->writeDebug("All finished.\n");
 
-			$this->writeDebug("All finished.\n");
-
-			$buf = ob_get_contents();
-			if($buf)
-			{
-				$this->writeDebug("Extra content:\n\n{$buf}");
-			}
-			ob_end_clean();
-			flush();
-			die();
-		//}
+		$buf = ob_get_contents();
+		if($buf)
+		{
+			$this->writeDebug("Extra content:\n\n{$buf}");
+		}
+		ob_end_clean();
+		flush();
+		die();
 	}
 
 	private function writeDebug($debug)
 	{
+		if(!$this->_enable_debug) return;
+
 		if(!$this->_debug_fh)
 		{
 			$logfile = sys_get_temp_dir() . "/gd_deploy_log";
