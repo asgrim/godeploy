@@ -21,11 +21,12 @@
  * @author James Titcumb, Simon Wade
  * @link http://www.godeploy.com/
  */
-class GD_Model_PublicKey
+class GD_Model_SSHKey
 {
 	protected $_id;
-	protected $_public_key_types_id;
-	protected $_data;
+	protected $_ssh_key_types_id;
+	protected $_private_key;
+	protected $_public_key;
 	protected $_comment;
 
 	public function setId($id)
@@ -39,49 +40,37 @@ class GD_Model_PublicKey
 		return $this->_id;
 	}
 
-	public function setPublicKeyTypesId($id)
+	public function setSSHKeyTypesId($id)
 	{
-		$this->_public_key_types_id = (int)$id;
+		$this->_ssh_key_types_id = (int)$id;
 		return $this;
 	}
 
-	public function getPublicKeyTypesId()
+	public function getSSHKeyTypesId()
 	{
-		return $this->_public_key_types_id;
+		return $this->_ssh_key_types_id;
 	}
 
-	public function setData($value)
+	public function setPrivateKey($value)
 	{
-		$this->_data = (string)$value;
-
-		// Parse the public key type and comment
-		$len = strlen($value);
-		if(stripos($value, "ssh-dss") !== false)
-		{
-			$this->setPublicKeyTypesId(2);
-			$type = "ssh-dss";
-		}
-		else if(stripos($value, "ssh-rsa") !== false)
-		{
-			$this->setPublicKeyTypesId(1);
-			$type = "ssh-rsa";
-		}
-		else
-		{
-			return $this;
-		}
-		$dpos = stripos($value, $type) + 1;
-		$dataandcomment = substr($value, $dpos + strlen($type), $len - $dpos + strlen($type));
-		$spacepos = strpos($dataandcomment, " ") + 1;
-		$comment = substr($dataandcomment, $spacepos, strlen($dataandcomment) - $spacepos);
-		$this->setComment($comment);
-
+		$this->_private_key = (string)$value;
 		return $this;
 	}
 
-	public function getData()
+	public function getPrivateKey()
 	{
-		return $this->_data;
+		return $this->_private_key;
+	}
+
+	public function setPublicKey($value)
+	{
+		$this->_public_key = (string)$value;
+		return $this;
+	}
+
+	public function getPublicKey()
+	{
+		return $this->_public_key;
 	}
 
 	public function setComment($value)

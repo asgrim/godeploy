@@ -21,9 +21,9 @@
  * @author James Titcumb, Simon Wade
  * @link http://www.godeploy.com/
  */
-class GD_Model_DbTable_PublicKeys extends Zend_Db_Table_Abstract
+class GD_Model_DbTable_SSHKeys extends Zend_Db_Table_Abstract
 {
-	protected $_name = "public_keys";
+	protected $_name = "ssh_keys";
 
 	protected $_dependentTables = array('GD_Model_DbTable_Projects');
 }

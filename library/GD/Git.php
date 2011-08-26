@@ -33,11 +33,17 @@ class GD_Git
 	private $_project;
 	private $_gitdir;
 	private $_current_branch;
+	private $_repotype;
+	private $_apache_home;
 
 	private $_last_output;
 	private $_last_errno;
 
 	private $_base_gitdir;
+
+	const GIT_REPOTYPE_SSH = 'ssh'; // SSH (read/write)
+	const GIT_REPOTYPE_HTTP = 'http'; // HTTP (read/write)
+	const GIT_REPOTYPE_GIT = 'git'; // Git Read-Only
 
 	const GIT_CLONE_ERROR_ALREADY_CLONED = "CLONE_ALREADY_CLONED";
 	const GIT_CLONE_ERROR_HOST_KEY_FAILURE = "CLONE_HOST_KEY_FAILURE";
@@ -55,6 +61,23 @@ class GD_Git
 		$this->_project = $project;
 		$this->_base_gitdir = APPLICATION_PATH . "/../gitcache/";;
 		$this->_gitdir = $this->_base_gitdir . $this->_project->getId();
+		$this->_url = $this->_project->getRepositoryUrl();
+		$this->_repotype = $this->parseRepoType($this->_url);
+		$this->_apache_home = getenv('HOME');
+
+		if($this->_apache_home == "")
+		{
+			throw new GD_Exception("Apache user '" . getenv('APACHE_RUN_USER') . "' directory not exported. Try export HOME=???");
+		}
+
+		if($this->_repotype == self::GIT_REPOTYPE_HTTP)
+		{
+			throw new GD_Exception("Repository type HTTP/HTTPS not supported yet.");
+		}
+		if($this->_repotype == self::GIT_REPOTYPE_SSH)
+		{
+			throw new GD_Exception("Repository type Git (read+write via SSH) not supported yet.");
+		}
 
 		if(!file_exists($this->_base_gitdir))
 		{
@@ -62,6 +85,31 @@ class GD_Git
 		}
 
 		$this->_current_branch = $this->getCurrentBranch(true);
+	}
+
+	private function sshKeys()
+	{
+		if($this->_repotype == self::GIT_REPOTYPE_SSH)
+		{
+			// setup ssh keys
+			#echo "SSH keys need setting up in {$this->_apache_home}/.ssh/.";
+		}
+	}
+
+	private function parseRepoType($url)
+	{
+		if(substr($url, 0, 6) == "git://")
+		{
+			return self::GIT_REPOTYPE_GIT;
+		}
+		else if(substr($url, 0, 8) == "https://")
+		{
+			return self::GIT_REPOTYPE_HTTP;
+		}
+		else
+		{
+			return self::GIT_REPOTYPE_SSH;
+		}
 	}
 
 	public function getLastError()
@@ -243,6 +291,7 @@ class GD_Git
 	public function gitPull($branch = "master", $remote = "origin")
 	{
 		// TODO - Clean arguments (only accept valid branch/remote characters)
+		$this->sshKeys();
 		$this->runShell('git pull ' . $remote . ' ' . $branch);
 
 		if($this->_last_errno == 0)
@@ -270,7 +319,8 @@ class GD_Git
 
 	public function gitClone()
 	{
-		$this->runShell('git clone ' . $this->_project->getRepositoryUrl() . ' "' . $this->_gitdir . '"', false);
+		$this->sshKeys();
+		$this->runShell('git clone ' . $this->_url . ' "' . $this->_gitdir . '"', false);
 
 		if($this->_last_errno == 0)
 		{
@@ -295,6 +345,10 @@ class GD_Git
 	{
 		if($chdir)
 		{
+			if(!file_exists($this->_gitdir))
+			{
+				mkdir($this->_gitdir, 0700, true);
+			}
 			chdir($this->_gitdir);
 		}
 

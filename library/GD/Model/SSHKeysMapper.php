@@ -27,7 +27,7 @@
  * @author james
  *
  */
-class GD_Model_PublicKeysMapper extends MAL_Model_MapperAbstract
+class GD_Model_SSHKeysMapper extends MAL_Model_MapperAbstract
 {
 
 	/**
@@ -36,7 +36,7 @@ class GD_Model_PublicKeysMapper extends MAL_Model_MapperAbstract
 	 */
 	protected function getDbTableName()
 	{
-		return "GD_Model_DbTable_PublicKeys";
+		return "GD_Model_DbTable_SSHKeys";
 	}
 
 	/**
@@ -45,18 +45,19 @@ class GD_Model_PublicKeysMapper extends MAL_Model_MapperAbstract
 	 */
 	protected function getObjectName()
 	{
-		return "GD_Model_PublicKey";
+		return "GD_Model_SSHKey";
 	}
 
 	/**
 	 * Should return an array of mapped fields to use in the MAL_Model_MapperAbstract::Save function
-	 * @param GD_Model_PublicKey $obj
+	 * @param GD_Model_SSHKey $obj
 	 */
 	protected function getSaveData($obj)
 	{
 		$data = array(
-			'public_key_types_id' => $obj->getPublicKeyTypesId(),
-			'data' => $obj->getData(),
+			'ssh_key_types_id' => $obj->getSSHKeyTypesId(),
+			'private_key' => $obj->getPrivateKey(),
+			'public_key' => $obj->getPublicKey(),
 			'comment' => $obj->getComment(),
 		);
 		return $data;
@@ -64,14 +65,15 @@ class GD_Model_PublicKeysMapper extends MAL_Model_MapperAbstract
 
 	/**
 	 * Implement this by setting $obj values (e.g. $obj->setId($row->Id) from a DB row
-	 * @param GD_Model_PublicKey $obj
+	 * @param GD_Model_SSHKey $obj
 	 * @param Zend_Db_Table_Row_Abstract $row
 	 */
 	public function populateObjectFromRow(&$obj, Zend_Db_Table_Row_Abstract $row)
 	{
 		$obj->setId($row->id)
-			->setPublicKeyTypesId($row->public_key_types_id)
-			->setData($row->data)
+			->setSSHKeyTypesId($row->ssh_key_types_id)
+			->setPrivateKey($row->private_key)
+			->setPublicKey($row->public_key)
 			->setComment($row->comment);
 	}
 
