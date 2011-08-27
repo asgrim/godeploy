@@ -119,7 +119,23 @@ class DeployController extends Zend_Controller_Action
 		}
 	}
 
-	public function previewAction()
+	private function writeDebug($debug)
+	{
+		if(!$this->_enable_debug) return;
+
+		if(!$this->_debug_fh)
+		{
+			$logfile = sys_get_temp_dir() . "/gd_deploy_log";
+			$this->_debug_fh = fopen($logfile, "a");
+			chmod($logfile, 0755);
+			fwrite($this->_debug_fh, "===============================================================================\n");
+			fwrite($this->_debug_fh, "Deployment ID " . $this->_getParam("id") . " started " . date("Y-m-d H:i:s") . "\n");
+			fwrite($this->_debug_fh, "===============================================================================\n");
+		}
+		fwrite($this->_debug_fh, $debug);
+	}
+
+	private function prepareStandardDeployInformation()
 	{
 		$this->_helper->viewRenderer('main');
 
@@ -146,37 +162,29 @@ class DeployController extends Zend_Controller_Action
 		$this->view->file_list = $file_list;
 	}
 
+	public function previewAction()
+	{
+		$this->prepareStandardDeployInformation();
+
+		$this->view->preview_deployment = true;
+	}
+
 	public function runAction()
 	{
-		$this->_helper->viewRenderer('main');
-
-		$projects = new GD_Model_ProjectsMapper();
-		$project_slug = $this->_getParam("project");
-		if($project_slug != "")
-		{
-			$project = $projects->getProjectBySlug($project_slug);
-		}
-
-		if(is_null($project))
-		{
-			throw new GD_Exception("Project '{$project_slug}' was not set up.");
-		}
-		$this->view->project = $project;
-
-		$deployments = new GD_Model_DeploymentsMapper();
-		$deployment = new GD_Model_Deployment();
-		$deployments->find($this->_getParam('id'), $deployment);
-		$this->view->deployment = $deployment;
-
-		$deployment_files = new GD_Model_DeploymentFilesMapper();
-		$file_list = $deployment_files->getDeploymentFilesByDeployment($deployment->getId());
-		$this->view->file_list = $file_list;
+		$this->prepareStandardDeployInformation();
 
 		if($this->view->deployment->getDeploymentStatusesId() == 1)
 		{
 			$this->view->headScript()->appendFile("/js/pages/deploy_run.js");
 			$this->view->run_deployment = true;
 		}
+	}
+
+	public function resultAction()
+	{
+		$this->prepareStandardDeployInformation();
+
+		$this->view->results_only = true;
 	}
 
 	public function executeDeploymentStatusAction()
@@ -376,27 +384,6 @@ class DeployController extends Zend_Controller_Action
 		ob_end_clean();
 		flush();
 		die();
-	}
-
-	private function writeDebug($debug)
-	{
-		if(!$this->_enable_debug) return;
-
-		if(!$this->_debug_fh)
-		{
-			$logfile = sys_get_temp_dir() . "/gd_deploy_log";
-			$this->_debug_fh = fopen($logfile, "a");
-			chmod($logfile, 0755);
-			fwrite($this->_debug_fh, "===============================================================================\n");
-			fwrite($this->_debug_fh, "Deployment ID " . $this->_getParam("id") . " started " . date("Y-m-d H:i:s") . "\n");
-			fwrite($this->_debug_fh, "===============================================================================\n");
-		}
-		fwrite($this->_debug_fh, $debug);
-	}
-
-	public function resultAction()
-	{
-		die("Not done yet...");
 	}
 
 	public function getLastDeploymentRevisionAction()
