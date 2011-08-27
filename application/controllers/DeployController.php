@@ -301,8 +301,6 @@ class DeployController extends Zend_Controller_Action
 		$deployments->save($deployment);
 		$this->writeDebug("done.\n");
 
-		sleep(2);
-
 		$errors = false;
 
 		// Do the upload
@@ -321,8 +319,6 @@ class DeployController extends Zend_Controller_Action
 			$this->writeDebug("Actioning '{$file->getDetails()}'... ");
 			$file->setDeploymentFileStatusesId($deployment_files_statuses->getDeploymentFileStatusByCode('IN_PROGRESS')->getId());
 			$deployment_files->save($file);
-
-			sleep(2);
 
 			try
 			{
@@ -349,7 +345,6 @@ class DeployController extends Zend_Controller_Action
 				$this->writeDebug("FAILED.\n");
 			}
 			$deployment_files->save($file);
-			sleep(1);
 		}
 
 		// Revert to previous revision
