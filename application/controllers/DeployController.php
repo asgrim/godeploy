@@ -34,6 +34,8 @@ class DeployController extends Zend_Controller_Action
 	public function indexAction()
 	{
 		$this->view->headScript()->appendFile($this->getFrontController()->getBaseUrl() . "/js/pages/deploy_setup.js");
+		$this->view->headLink()->appendStylesheet("/css/template/form.css");
+		$this->view->headLink()->appendStylesheet("/css/pages/deploy.css");
 
 		$projects = new GD_Model_ProjectsMapper();
 		$project_slug = $this->_getParam("project");
@@ -46,6 +48,8 @@ class DeployController extends Zend_Controller_Action
 		{
 			throw new GD_Exception("Project '{$project_slug}' was not set up.");
 		}
+
+		$this->view->project = $project;
 
 		$form = new GDApp_Form_DeploymentSetup($project->getId());
 		$this->view->form = $form;
@@ -86,12 +90,12 @@ class DeployController extends Zend_Controller_Action
 			}
 
 			// Forward to either run or preview page...
-			if(!is_null($this->_request->getParam('submitRun')))
+			if($this->_request->getParam('submitRun_x') > 0)
 			{
 				// go to run
 				$this->_redirect($this->getFrontController()->getBaseUrl() . "/project/" . $this->_getParam("project") . "/deploy/run/" . $deployment->getId());
 			}
-			else if(!is_null($this->_request->getParam('submitPreview')))
+			else if($this->_request->getParam('submitPreview_x') > 0)
 			{
 				// go to preview
 				$this->_redirect($this->getFrontController()->getBaseUrl() . "/project/" . $this->_getParam("project") . "/deploy/preview/" . $deployment->getId());
@@ -138,6 +142,9 @@ class DeployController extends Zend_Controller_Action
 	private function prepareStandardDeployInformation()
 	{
 		$this->_helper->viewRenderer('main');
+		$this->view->headLink()->appendStylesheet("/css/template/table.css");
+		$this->view->headLink()->appendStylesheet("/css/template/form.css");
+		$this->view->headLink()->appendStylesheet("/css/pages/deploy.css");
 
 		$projects = new GD_Model_ProjectsMapper();
 		$project_slug = $this->_getParam("project");
@@ -164,9 +171,21 @@ class DeployController extends Zend_Controller_Action
 
 	public function previewAction()
 	{
+		if($this->getRequest()->isPost())
+		{
+			if($this->_getParam('btn_run_x') > 0)
+			{
+				$this->_redirect($this->getFrontController()->getBaseUrl() . "/project/" . $this->_getParam("project") . "/deploy/run/" . $this->_getParam("id"));
+			}
+			else if($this->_getParam('btn_back_x') > 0)
+			{
+				$this->_redirect($this->getFrontController()->getBaseUrl() . "/project/" . $this->_getParam("project") . "/deploy");
+			}
+		}
+
 		$this->prepareStandardDeployInformation();
 
-		$this->view->preview_deployment = true;
+		$this->view->mode = 'PREVIEW';
 	}
 
 	public function runAction()
@@ -176,15 +195,23 @@ class DeployController extends Zend_Controller_Action
 		if($this->view->deployment->getDeploymentStatusesId() == 1)
 		{
 			$this->view->headScript()->appendFile("/js/pages/deploy_run.js");
-			$this->view->run_deployment = true;
+			$this->view->mode = 'RUN';
 		}
 	}
 
 	public function resultAction()
 	{
+		if($this->getRequest()->isPost())
+		{
+			if($this->_getParam('btn_history_x') > 0)
+			{
+				$this->_redirect($this->getFrontController()->getBaseUrl() . "/project/" . $this->_getParam("project") . "/history");
+			}
+		}
+
 		$this->prepareStandardDeployInformation();
 
-		$this->view->results_only = true;
+		$this->view->mode = 'RESULT';
 	}
 
 	public function executeDeploymentStatusAction()

@@ -1,55 +1,96 @@
-<h2>Summary</h2>
-<ul>
-	<li>
-		<label>Deploy to<label>
-		<span class="value"><?php echo $this->deployment->getServer()->getDisplayName(); ?></span>
-	</li>
-	<li>
-		<label>Repository URL<label>
-		<span class="value"><?php echo $this->project->getRepositoryUrl(); ?></span>
-	</li>
-	<?php if($this->deployment->getFromRevision() != ""): ?>
-	<li>
-		<label>From<label>
-		<span class="value"><?php echo $this->deployment->getFromRevision(); ?></span>
-	</li>
+
+<div class="content">
+<div class="padding_20"></div>
+<h1><?php echo $this->project->getName(); ?> - Deployment</h1>
+<div class="padding_15"></div>
+
+<div class="wrapper w_ededed"><div class="content">
+	<div class="padding_15"></div>
+	<h2>Summary</h2>
+	<div id="form">
+		<form id="deploySummary" enctype="application/x-www-form-urlencoded" action="" method="post">
+			<ol>
+				<fieldset>
+					<li>
+						<label>Deploy to</label>
+						<span class="value"><?php echo $this->deployment->getServer()->getDisplayName(); ?></span>
+					</li>
+					<li>
+						<label>Repository URL</label>
+						<span class="value"><?php echo $this->project->getRepositoryUrl(); ?></span>
+					</li>
+					<?php if($this->deployment->getFromRevision() != ""): ?>
+					<li>
+						<label>From</label>
+						<span class="value"><?php echo $this->deployment->getFromRevision(); ?></span>
+					</li>
+					<?php endif; ?>
+					<li>
+						<label>To</label>
+						<span class="value"><?php echo $this->deployment->getToRevision(); ?></span>
+					</li>
+					<li>
+						<label>Status</label>
+						<span class="value" id="deployment_status"><?php echo $this->deployment->getDeploymentStatus()->getName(); ?></span>
+					</li>
+					<li class="submit">
+					<?php
+					switch($this->mode)
+					{
+						case 'PREVIEW':
+							?>
+							<input type="image" name="btn_run" id="btn_run" src="/images/buttons/small/run-deployment.png">
+							<input type="image" name="btn_back" id="btn_back" src="/images/buttons/small/go-back.png">
+							<?php
+							break;
+						case 'RESULT':
+							?>
+							<input type="image" name="btn_history" id="btn_history" src="/images/buttons/small/go-to-deployment-history.png">
+							<?php
+							break;
+					}
+					?>
+					</li>
+				</fieldset>
+			</ol>
+		</form>
+	</div>
+</div></div>
+
+<div class="padding_20"></div>
+
+<div class="wrapper w_ededed"><div class="content">
+	<div class="padding_15"></div>
+	<h2>Deployment Details</h2>
+
+	<?php if(is_array($this->file_list) && count($this->file_list) > 0): ?>
+	<table>
+		<thead>
+			<tr>
+				<th>File</th>
+				<th>Action</th>
+				<th>Status</th>
+			</tr>
+		</thead>
+		<tbody>
+			<?php foreach($this->file_list as $file): ?>
+			<tr>
+				<td><?php echo $file->getDetails(); ?></td>
+				<td><?php echo $file->getDeploymentFileAction()->getName(); ?></td>
+				<td id="file_<?php echo $file->getId(); ?>_status"><?php echo $file->getDeploymentFileStatus()->getName(); ?></td>
+			</tr>
+			<?php endforeach; ?>
+		</tbody>
+	</table>
+	<?php else: ?>
+	<h3>Looks like there are no files to deploy...?!</h3>
 	<?php endif; ?>
-	<li>
-		<label>To<label>
-		<span class="value"><?php echo $this->deployment->getToRevision(); ?></span>
-	</li>
-	<li>
-		<label>Status<label>
-		<span class="value" id="deployment_status"><?php echo $this->deployment->getDeploymentStatus()->getName(); ?></span>
-	</li>
-</ul>
+</div></div>
 
-<h2>Deployment Details</h2>
+<div class="padding_15"></div>
+</div>
 
-<?php if(is_array($this->file_list) && count($this->file_list) > 0): ?>
-<table>
-	<thead>
-		<tr>
-			<th>File</th>
-			<th>Action</th>
-			<th>Status</th>
-		</tr>
-	</thead>
-	<tbody>
-		<?php foreach($this->file_list as $file): ?>
-		<tr>
-			<td><?php echo $file->getDetails(); ?></td>
-			<td><?php echo $file->getDeploymentFileAction()->getName(); ?></td>
-			<td id="file_<?php echo $file->getId(); ?>_status"><?php echo $file->getDeploymentFileStatus()->getName(); ?></td>
-		</tr>
-		<?php endforeach; ?>
-	</tbody>
-</table>
-<?php else: ?>
-<h3>Looks like there are no files to deploy...?!</h3>
-<?php endif; ?>
-
-<?php if($this->run_deployment): ?>
+<?php if($this->mode == 'RUN'): ?>
 <script type="text/javascript">
 //<![CDATA[
 

@@ -5,7 +5,6 @@ function bootstrapDeployment()
 	var start_url = document.location.href.replace(/\/run\//, '/execute-deployment-start/');
 	
 	deployment_complete = false;
-	fireStatusRequest();
 	
 	new Ajax.Request(start_url, {
 			method: 'get',
@@ -15,6 +14,8 @@ function bootstrapDeployment()
 			},
 			onFailure: function(){ alert('Something went wrong...') }
 		});
+
+	fireStatusRequest();
 }
 
 function fireStatusRequest()
@@ -46,6 +47,10 @@ function fireStatusRequest()
 			if(!deployment_complete)
 			{
 				setTimeout('fireStatusRequest()', 1000);
+			}
+			else
+			{
+				document.location.href = document.location.href.replace(/\/run\//, '/result/');
 			}
 		},
 		onFailure: function(){ alert('something went wrong..') }
