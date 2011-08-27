@@ -41,6 +41,7 @@ class SettingsController extends Zend_Controller_Action
 			$project = new GD_Model_Project();
 			$project->setName("New Project");
 			$project->setDeploymentBranch('master'); // Usually default for git
+			$project->getSSHKey()->generateKeyPair($project);
 			$new_project = true;
 		}
 		$this->view->project = $project;
@@ -58,7 +59,7 @@ class SettingsController extends Zend_Controller_Action
 		{
 			if ($form->isValid($this->getRequest()->getParams()))
 			{
-				$result = $this->saveProject($projects, $project);
+				$result = $this->saveProject($projects, $project, $new_project);
 				if($result !== true)
 				{
 					$form->repositoryUrl->addError("Could not clone the git repository [" . $result . "]. Please check the URL is correct and try again.");
@@ -115,7 +116,7 @@ class SettingsController extends Zend_Controller_Action
 	}
 
 
-	public function saveProject($projects, $project)
+	public function saveProject(GD_Model_ProjectsMapper $projects, GD_Model_Project $project, $new_project = false)
 	{
 		$repo_before = $project->getRepositoryUrl();
 		$project->setName($this->_request->getParam('name', false));
@@ -124,6 +125,18 @@ class SettingsController extends Zend_Controller_Action
 		$project->setRepositoryTypesId(1);
 		$repo_after = $project->getRepositoryUrl();
 
+		// Save the new ssh key if a new project
+		if($new_project)
+		{
+			$ssh_keys_map = new GD_Model_SSHKeysMapper();
+			$key_id = $ssh_keys_map->save($project->getSSHKey());
+			$project->setSSHKeysId($key_id);
+		}
+
+		// Save the project
+		$projects->save($project);
+
+		// Do git operations now
 		$git = new GD_Git($project);
 
 		// If repo URL changed, delete and re-clone
@@ -139,7 +152,6 @@ class SettingsController extends Zend_Controller_Action
 			return $result;
 		}
 
-		$projects->save($project);
 		return true;
 	}
 }

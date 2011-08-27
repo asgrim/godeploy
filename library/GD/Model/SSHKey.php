@@ -83,4 +83,53 @@ class GD_Model_SSHKey
 	{
 		return $this->_comment;
 	}
+
+	public function generateKeyPair()
+	{
+		$comment = "godeploy@" . $_SERVER['SERVER_NAME'];
+
+		$filename = sys_get_temp_dir() . "/ssh_keygen_pair" . md5(microtime());
+
+		$ds = array(
+			0 => array("pipe", "r"),
+			1 => array("pipe", "w"),
+			2 => array("pipe", "a"),
+		);
+		$cmd = 'ssh-keygen -t rsa -C "' . $comment . '" ';
+
+		$pid = proc_open($cmd, $ds, $pipes);
+		if(is_resource($pid))
+		{
+			fwrite($pipes[0], "{$filename}\n");
+			fwrite($pipes[0], "\n");
+			fwrite($pipes[0], "\n");
+			fclose($pipes[0]);
+
+			$output = stream_get_contents($pipes[1]);
+			fclose($pipes[1]);
+
+			$return_value = proc_close($pid);
+		}
+		else
+		{
+			throw new GD_Exception("Failed to start ssh-keygen to generate ssh key pair.");
+		}
+
+		if($return_value == 0)
+		{
+			$id_rsa = file_get_contents($filename);
+			$id_rsa_pub = file_get_contents($filename . ".pub");
+			unlink($filename);
+			unlink($filename . ".pub");
+
+			$this->setPrivateKey($id_rsa);
+			$this->setPublicKey($id_rsa_pub);
+			$this->setComment($comment);
+			$this->setSSHKeyTypesId(1);
+		}
+		else
+		{
+			throw new GD_Exception("Failed to generate ssh key pair: " . nl2br($output));
+		}
+	}
 }
