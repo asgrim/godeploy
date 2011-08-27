@@ -333,6 +333,6 @@ COMMIT;
 -- Data for table `godeploy`.`configuration`
 -- -----------------------------------------------------
 SET AUTOCOMMIT=0;
-insert into `godeploy`.`configuration` (`id`, `key`, `value`) values (1, 'db_version', '2');
+insert into `godeploy`.`configuration` (`id`, `key`, `value`) values (1, 'db_version', '3');
 
 COMMIT;
