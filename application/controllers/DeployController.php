@@ -60,12 +60,24 @@ class DeployController extends Zend_Controller_Action
 		{
 			$user = GD_Auth_Database::GetLoggedInUser();
 
+			$server_id = $this->_request->getParam('serverId', false);
+
+			$last_deployment = $deployments->getLastSuccessfulDeployment($project->getId(), $server_id);
+			if(!is_null($last_deployment))
+			{
+				$from_rev = $last_deployment->getToRevision();
+			}
+			else
+			{
+				$from_rev = "";
+			}
+
 			$deployment = new GD_Model_Deployment();
 			$deployment->setUsersId($user->getId())
 					->setProjectsId($project->getId())
 					->setWhen(date("Y-m-d H:i:s"))
-					->setServersId($this->_request->getParam('serverId', false))
-					->setFromRevision($this->_request->getParam('fromRevision', false))
+					->setServersId($server_id)
+					->setFromRevision($from_rev)
 					->setToRevision($this->_request->getParam('toRevision', false))
 					->setDeploymentStatusesId(1);
 
