@@ -18,6 +18,8 @@ if(is_array($this->deployments) && count($this->deployments) > 0)
 				<tr>
 					<th>Date/Time</th>
 					<th>Server</th>
+					<th>From</th>
+					<th>To</th>
 					<th>Status</th>
 					<th class="empty">&nbsp;</th>
 				</tr>
@@ -27,6 +29,8 @@ if(is_array($this->deployments) && count($this->deployments) > 0)
 				<tr>
 					<td><?php echo $deployment->getWhen("d/m/Y H:i:s"); ?></td>
 					<td><?php echo $deployment->getServer()->getDisplayName(); ?></td>
+					<td title="<?php echo $deployment->getFromRevision(); ?>"><?php echo substr($deployment->getFromRevision(), 0, 7); ?></td>
+					<td title="<?php echo $deployment->getToRevision(); ?>"><?php echo substr($deployment->getToRevision(), 0, 7); ?></td>
 					<td><?php echo $deployment->getDeploymentStatus()->getName(); ?></td>
 					<td class="icon">
 						<a href="<?php echo $this->baseUrl(); ?>/project/<?php echo $this->project->getSlug(); ?>/deploy/result/<?php echo $deployment->getId(); ?>">
