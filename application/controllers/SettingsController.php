@@ -136,20 +136,18 @@ class SettingsController extends Zend_Controller_Action
 		// Save the project
 		$projects->save($project);
 
-		// Do git operations now
-		$git = new GD_Git($project);
-
 		// If repo URL changed, delete and re-clone
-		if($repo_before != $repo_after)
+		if($repo_before != $repo_after || $new_project)
 		{
-			$git->deleteRepository();
-		}
+			$git = new GD_Git($project);
 
-		// Update repository
-		$result = $git->gitCloneOrPull();
-		if($result !== true)
-		{
-			return $result;
+			$git->deleteRepository();
+
+			$result = $git->gitClone();
+			if($result !== true)
+			{
+				return $result;
+			}
 		}
 
 		return true;
