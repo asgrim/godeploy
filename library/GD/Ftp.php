@@ -38,6 +38,8 @@ class GD_Ftp
 	private $_handle;
 	private $_pwd;
 
+	private $_last_error;
+
 	public function __construct(GD_Model_Server $server)
 	{
 		$this->_hostname = $server->getHostname();
@@ -50,6 +52,11 @@ class GD_Ftp
 	public function __destruct()
 	{
 		$this->disconnect();
+	}
+
+	public function getLastError()
+	{
+		return $this->_last_error;
 	}
 
 	private function resetPwd()
@@ -129,6 +136,7 @@ class GD_Ftp
 		}
 		catch(GD_Exception $exception)
 		{
+			$this->_last_error = $exception->getMessage();
 			return false;
 		}
 	}
@@ -161,7 +169,7 @@ class GD_Ftp
 		$remote_dir = str_replace(basename($remote_file), "", $remote_file);
 		$this->ftpChangeOrMakeDirectory($remote_dir);
 
-		if(!ftp_put($this->_handle, basename($remote_file), $local_file, FTP_BINARY))
+		if(!@ftp_put($this->_handle, $remote_file, $local_file, FTP_BINARY))
 		{
 			throw new GD_Exception("Failed to upload '{$local_file}'");
 		}
@@ -179,7 +187,7 @@ class GD_Ftp
 		$remote_dir = str_replace(basename($remote_file), "", $remote_file);
 		$this->ftpChangeOrMakeDirectory($remote_dir);
 
-		if(!ftp_delete($this->_handle, basename($remote_file)))
+		if(!@ftp_delete($this->_handle, basename($remote_file)))
 		{
 			throw new GD_Exception("Failed to delete '{$remote_file}'");
 		}
@@ -189,14 +197,14 @@ class GD_Ftp
 
 	public function connect()
 	{
-		$this->_handle = ftp_connect($this->_hostname, $this->_port);
+		$this->_handle = @ftp_connect($this->_hostname, $this->_port, 10);
 
 		if($this->_handle == false)
 		{
 			throw new GD_Exception("Couldn't connect to FTP server on '{$this->_hostname}:{$this->_port}'");
 		}
 
-		if(!ftp_login($this->_handle, $this->_username, $this->_password))
+		if(!@ftp_login($this->_handle, $this->_username, $this->_password))
 		{
 			throw new GD_Exception("Failed to log in to '{$this->_hostname}:{$this->_port}' with user '{$this->_username}'");
 		}
@@ -206,6 +214,9 @@ class GD_Ftp
 
 	public function disconnect()
 	{
-		ftp_close($this->_handle);
+		if($this->_handle)
+		{
+			ftp_close($this->_handle);
+		}
 	}
 }

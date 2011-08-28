@@ -96,12 +96,16 @@ class ServersController extends Zend_Controller_Action
 
 				if(!$result)
 				{
-					throw new GD_Exception("Failed to test connection to FTP server.");
+					//throw new GD_Exception("Failed to test connection to FTP server.");
+					$form->addError("FTP_CONNECT_ERROR");
+					$this->view->ftpMessage = $ftp->getLastError();
 				}
+				else
+				{
+					$servers->save($server);
 
-				$servers->save($server);
-
-				$this->_redirect($this->getFrontController()->getBaseUrl() . "/project/" . $this->_getParam("project") . "/settings");
+					$this->_redirect($this->getFrontController()->getBaseUrl() . "/project/" . $this->_getParam("project") . "/settings");
+				}
 			}
 		}
 		else
