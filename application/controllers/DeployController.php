@@ -58,75 +58,68 @@ class DeployController extends Zend_Controller_Action
 
 		if($this->getRequest()->isPost())
 		{
-			$user = GD_Auth_Database::GetLoggedInUser();
-
-			$server_id = $this->_request->getParam('serverId', false);
-
-			$last_deployment = $deployments->getLastSuccessfulDeployment($project->getId(), $server_id);
-			if(!is_null($last_deployment))
+			if ($form->isValid($this->getRequest()->getParams()))
 			{
-				$from_rev = $last_deployment->getToRevision();
-			}
-			else
-			{
-				$from_rev = "";
-			}
+				$user = GD_Auth_Database::GetLoggedInUser();
 
-			$deployment = new GD_Model_Deployment();
-			$deployment->setUsersId($user->getId())
-					->setProjectsId($project->getId())
-					->setWhen(date("Y-m-d H:i:s"))
-					->setServersId($server_id)
-					->setFromRevision($from_rev)
-					->setToRevision($this->_request->getParam('toRevision', false))
-					->setDeploymentStatusesId(1);
+				$server_id = $this->_request->getParam('serverId', false);
 
-			$deployments->save($deployment);
+				$last_deployment = $deployments->getLastSuccessfulDeployment($project->getId(), $server_id);
+				if(!is_null($last_deployment))
+				{
+					$from_rev = $last_deployment->getToRevision();
+				}
+				else
+				{
+					$from_rev = "";
+				}
 
-			// Generate the list of files to deploy and save in deployment_files table
-			$git = new GD_Git($project);
-			$files_changed = $git->getFilesChangedList($deployment->getFromRevision(), $deployment->getToRevision());
+				$deployment = new GD_Model_Deployment();
+				$deployment->setUsersId($user->getId())
+						->setProjectsId($project->getId())
+						->setWhen(date("Y-m-d H:i:s"))
+						->setServersId($server_id)
+						->setFromRevision($from_rev)
+						->setToRevision($this->_request->getParam('toRevision', false))
+						->setDeploymentStatusesId(1);
 
-			$deployment_files = new GD_Model_DeploymentFilesMapper();
-			$deployment_file_statuses = new GD_Model_DeploymentFileStatusesMapper();
-			$deployment_file_actions = new GD_Model_DeploymentFileActionsMapper();
-			foreach($files_changed as $fc)
-			{
-				$deployment_file = new GD_Model_DeploymentFile();
-				$deployment_file->setDeploymentsId($deployment->getId());
-				$deployment_file->setDeploymentFileActionsId($deployment_file_actions->getDeploymentFileActionByGitStatus($fc['action'])->getId());
-				$deployment_file->setDeploymentFileStatusesId($deployment_file_statuses->getDeploymentFileStatusByCode('NEW')->getId());
-				$deployment_file->setDetails($fc['file']);
+				$deployments->save($deployment);
 
-				$deployment_files->save($deployment_file);
-			}
+				// Generate the list of files to deploy and save in deployment_files table
+				$git = new GD_Git($project);
+				$git->gitPull();
+				$files_changed = $git->getFilesChangedList($deployment->getFromRevision(), $deployment->getToRevision());
 
-			// Forward to either run or preview page...
-			if($this->_request->getParam('submitRun_x') > 0)
-			{
-				// go to run
-				$this->_redirect($this->getFrontController()->getBaseUrl() . "/project/" . $this->_getParam("project") . "/deploy/run/" . $deployment->getId());
-			}
-			else if($this->_request->getParam('submitPreview_x') > 0)
-			{
-				// go to preview
-				$this->_redirect($this->getFrontController()->getBaseUrl() . "/project/" . $this->_getParam("project") . "/deploy/preview/" . $deployment->getId());
+				$deployment_files = new GD_Model_DeploymentFilesMapper();
+				$deployment_file_statuses = new GD_Model_DeploymentFileStatusesMapper();
+				$deployment_file_actions = new GD_Model_DeploymentFileActionsMapper();
+				foreach($files_changed as $fc)
+				{
+					$deployment_file = new GD_Model_DeploymentFile();
+					$deployment_file->setDeploymentsId($deployment->getId());
+					$deployment_file->setDeploymentFileActionsId($deployment_file_actions->getDeploymentFileActionByGitStatus($fc['action'])->getId());
+					$deployment_file->setDeploymentFileStatusesId($deployment_file_statuses->getDeploymentFileStatusByCode('NEW')->getId());
+					$deployment_file->setDetails($fc['file']);
+
+					$deployment_files->save($deployment_file);
+				}
+
+				// Forward to either run or preview page...
+				if($this->_request->getParam('submitRun_x') > 0)
+				{
+					// go to run
+					$this->_redirect($this->getFrontController()->getBaseUrl() . "/project/" . $this->_getParam("project") . "/deploy/run/" . $deployment->getId());
+				}
+				else if($this->_request->getParam('submitPreview_x') > 0)
+				{
+					// go to preview
+					$this->_redirect($this->getFrontController()->getBaseUrl() . "/project/" . $this->_getParam("project") . "/deploy/preview/" . $deployment->getId());
+				}
 			}
 		}
 		else
 		{
 			$data = array();
-
-			// Git pull before anything
-			$git = new GD_Git($project);
-			$git->gitPull();
-
-			$last_commit = $git->getLastCommit();
-			if(is_array($last_commit))
-			{
-				$to_revision = $last_commit['HASH'];
-				$data['toRevision'] = $to_revision;
-			}
 
 			if(count($data) > 0)
 			{
@@ -328,6 +321,16 @@ class DeployController extends Zend_Controller_Action
 		$servers->find($deployment->getServersId(), $server);
 		$this->writeDebug("done.\n");
 
+		// Update the deployment status to show we're now running
+		$this->writeDebug("Updating deployment status to running... ");
+		$deployment->setDeploymentStatusesId(2); // Running
+		$deployments->save($deployment);
+		$this->writeDebug("done.\n");
+
+		// Perform a git pull to check we're up to date
+		$git = new GD_Git($project);
+		$git->gitPull();
+
 		// File list to action
 		$this->writeDebug("Getting file list... ");
 		$deployment_files = new GD_Model_DeploymentFilesMapper();
@@ -337,16 +340,10 @@ class DeployController extends Zend_Controller_Action
 
 		// Check out the revision we want to upload from
 		$this->writeDebug("Checking out revision {$deployment->getToRevision()}... ");
-		$git = new GD_Git($project);
 		$previous_ref = $git->getCurrentBranch(true);
 		$res = $git->gitCheckout($deployment->getToRevision());
 		if(!$res) $this->writeDebug("FAILED.\n");
 		else $this->writeDebug("done.\n");
-
-		$this->writeDebug("Updating deployment status to running... ");
-		$deployment->setDeploymentStatusesId(2); // Running
-		$deployments->save($deployment);
-		$this->writeDebug("done.\n");
 
 		$errors = false;
 
@@ -456,6 +453,37 @@ class DeployController extends Zend_Controller_Action
 		$data = array(
 			'fromRevision' => $from_rev,
 		);
+
+		$jsonData = Zend_Json::encode($data);
+		$this->_response->appendBody($jsonData);
+	}
+
+	public function getLatestRevisionAction()
+	{
+		// Get project ID from url
+		$projects = new GD_Model_ProjectsMapper();
+		$project_slug = $this->_getParam("project");
+		if($project_slug != "")
+		{
+			$project = $projects->getProjectBySlug($project_slug);
+		}
+
+		// Git pull before anything
+		$git = new GD_Git($project);
+		$git->gitPull();
+
+		$data = array();
+
+		$last_commit = $git->getLastCommit();
+		if(is_array($last_commit))
+		{
+			$to_revision = $last_commit['HASH'];
+			$data['toRevision'] = $to_revision;
+		}
+
+		$this->_response->setHeader('Content-type','text/plain');
+		$this->_helper->viewRenderer->setNoRender();
+		$this->_helper->layout->disableLayout();
 
 		$jsonData = Zend_Json::encode($data);
 		$this->_response->appendBody($jsonData);

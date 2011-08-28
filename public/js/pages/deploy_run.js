@@ -2,7 +2,7 @@ var deployment_complete;
 
 function bootstrapDeployment()
 {
-	var start_url = document.location.href.replace(/\/run\//, '/execute-deployment-start/');
+	var start_url = document.location.href.replace(/\/run\//, '/execute-deployment-start/').replace(/#/, '');
 	
 	deployment_complete = false;
 	
@@ -20,7 +20,7 @@ function bootstrapDeployment()
 
 function fireStatusRequest()
 {
-	var status_url = document.location.href.replace(/\/run\//, '/execute-deployment-status/');
+	var status_url = document.location.href.replace(/\/run\//, '/execute-deployment-status/').replace(/#/, '');
 	new Ajax.Request(status_url, {
 		method: 'get',
 		asynchronous: true,
@@ -50,7 +50,7 @@ function fireStatusRequest()
 			}
 			else
 			{
-				document.location.href = document.location.href.replace(/\/run\//, '/result/');
+				document.location.href = document.location.href.replace(/\/run\//, '/result/').replace(/#/, '');
 			}
 		},
 		onFailure: function(){ alert('something went wrong..') }

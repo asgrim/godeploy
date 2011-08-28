@@ -27,7 +27,19 @@
 			$this->element->options
 		);
 
-		if ($this->element->hasErrors()) echo '<span class="extras"><span class="errors">' . $error_message . '</span></span>';
+		if($this->element->getDescription() || $this->element->hasErrors())
+		{
+			echo '<span class="extras">';
+
+			if($this->element->getDescription()) echo '<span class="description">' . $this->element->getDescription() . '</span>';
+
+			// I'm sure there's a more elegant way of doing this but I can't think :(
+			if($this->element->getDescription() && $this->element->hasErrors()) echo '<br />';
+
+			if($this->element->hasErrors()) echo '<span class="errors">' . $error_message . '</span>';
+
+			echo '</span>';
+		}
 	?>
 	</span>
 	<div class="clear"></div>
