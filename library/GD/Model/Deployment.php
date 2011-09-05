@@ -180,7 +180,7 @@ class GD_Model_Deployment
             $files = $deploymentFilesMapper->getDeploymentFilesByDeployment($this->_id);
             for($a = 0; $a < sizeof($files); $a++)
             {
-                $tmp[$a] = new GD_Model_Deployment();
+                $tmp[$a] = new GD_Model_DeploymentFile();
                 $tmp[$a]->setId($files[$a]['id']);
             }
             return $tmp;
