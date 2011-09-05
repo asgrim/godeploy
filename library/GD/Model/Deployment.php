@@ -168,4 +168,21 @@ class GD_Model_Deployment
 	{
 		return $this->_deployment_status;
 	}
+        
+        /**
+         * Return array of files for this deployment.
+         * @return Array
+         */
+        public function getDeploymentFiles()
+        {
+            $tmp = array();
+            $deploymentFilesMapper = new GD_Model_DeploymentFilesMapper();            
+            $files = $deploymentFilesMapper->getDeploymentFilesByDeployment($this->_id);
+            for($a = 0; $a < sizeof($files); $a++)
+            {
+                $tmp[$a] = new GD_Model_Deployment();
+                $tmp[$a]->setId($files[$a]['id']);
+            }
+            return $tmp;
+        }
 }
