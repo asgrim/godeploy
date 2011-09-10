@@ -130,5 +130,4 @@ class GD_Model_Project
 		}
 		return $this->_ssh_key;
 	}
-
 }
