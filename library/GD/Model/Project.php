@@ -130,36 +130,4 @@ class GD_Model_Project
 		}
 		return $this->_ssh_key;
 	}
-        
-        /*
-         * Return array of deployments for this project.
-         */
-        public function getDeployments()
-        {
-            $tmp = array();
-            $deploymentMapper = new GD_Model_DeploymentsMapper();            
-            $deployments = $deploymentMapper->getDeploymentsByProject($this->_id);
-            for($a = 0; $a < sizeof($deployments); $a++)
-            {
-                $tmp[$a] = new GD_Model_Deployment();
-                $tmp[$a]->setId($deployments[$a]['id']);
-            }
-            return $tmp;
-        }
-        
-        /*
-         * Return servers for this project.
-         */
-        public function getServers()
-        {
-            $tmp = array();
-            $serverMapper = new GD_Model_ServersMapper();
-            $servers = $serverMapper->getServersByProject($this->_id);
-            for($a = 0; $a < sizeof($deployments); $a++)
-            {
-                $tmp[] = new GD_Model_Server();
-                $tmp[$a]->setId($servers[$a]['id']);
-            }
-            return $tmp;
-        }
 }

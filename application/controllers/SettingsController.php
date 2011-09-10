@@ -101,30 +101,36 @@ class SettingsController extends Zend_Controller_Action
 
 		$project = $projects->getProjectBySlug($project_slug);
 
-                // Delete the deployments associated with the project.
-                $deployments = $project->getDeployments();
-                $deploymentsMapper = new GD_Model_DeploymentsMapper(); 
-                foreach($deployments as $deployment)
-                {
-                    // Delete the files associated with the project.
-                    $deploymentFiles = $deployment->getDeploymentFiles();
-                    $deploymentFilesMapper = new GD_Model_DeploymentFilesMapper();
-                    foreach($deploymentFiles as $deploymentFile)
-                        $deploymentFilesMapper->delete($deploymentFile);
-                    // Delete deployment.
-                    $deploymentsMapper->delete($deployment);                    
-                }
-                
+		// Initialise the mapper objects we'll need
+		$deploymentsMapper = new GD_Model_DeploymentsMapper();
+		$deploymentFilesMapper = new GD_Model_DeploymentFilesMapper();
+		$serversMapper = new GD_Model_ServersMapper();
+
+		// Delete the deployments associated with the project.
+		$deployments = $deploymentsMapper->getDeploymentsByProject($project->getId());
+		foreach ($deployments as $deployment) 
+		{
+			// Delete the files associated with the project.
+			$deploymentFiles = $deploymentFilesMapper->getDeploymentFilesByDeployment($deployment->getId());
+			foreach ($deploymentFiles as $deploymentFile) 
+			{
+				$deploymentFilesMapper->delete($deploymentFile);
+			}
+			// Delete deployment.
+			$deploymentsMapper->delete($deployment);
+		}
+
 		// Delete the servers associated with the project.
-                $servers = $project->getServers();
-                $serversMapper = new GD_Model_ServersMapper();
-                foreach($servers as $server)
-                    $serversMapper->delete($server);
-                
-                //Delete the project's git repo.
-                $git = new GD_Git($project);
-                $git->deleteRepository();
-                                
+		$servers = $serversMapper->getServersByProject($project->getId());
+		foreach ($servers as $server) 
+		{
+			$serversMapper->delete($server);
+		}
+
+		//Delete the project's git repo.
+		$git = new GD_Git($project);
+		$git->deleteRepository();
+
 		// Delete the ssh key
 		$ssh_key = $project->getSSHKey();
 		$ssh_keys = new GD_Model_SSHKeysMapper();
