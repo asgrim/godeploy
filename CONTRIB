@@ -51,5 +51,5 @@ UPDATING IN THE FUTURE (FOR ALL DEVELOPERS)
 -------------------------------------------
 1. git remote add upstream git://github.com/Asgrim/GoDeploy.git
 2. git fetch upstream
-3. git merge upstream/master
+3. git merge upstream/develop
 (alternatively if you are daring/careless, you can `git pull upstream` to combine fetch and merge)

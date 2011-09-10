@@ -117,6 +117,7 @@ form span.extras {	background: #90ee90; }*/
 		font-size: 12px;
 		display: block;
 		clear: left;
+		width: 400px;
 		}
 
 		form span.extras span.errors {

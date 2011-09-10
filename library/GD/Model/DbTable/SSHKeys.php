@@ -21,54 +21,9 @@
  * @author James Titcumb, Simon Wade
  * @link http://www.godeploy.com/
  */
-class GD_Model_PublicKey
+class GD_Model_DbTable_SSHKeys extends Zend_Db_Table_Abstract
 {
-	protected $_id;
-	protected $_public_key_types_id;
-	protected $_data;
-	protected $_comment;
+	protected $_name = "ssh_keys";
 
-	public function setId($id)
-	{
-		$this->_id = (int)$id;
-		return $this;
-	}
-
-	public function getId()
-	{
-		return $this->_id;
-	}
-
-	public function setPublicKeyTypesId($id)
-	{
-		$this->_public_key_types_id = (int)$id;
-		return $this;
-	}
-
-	public function getPublicKeyTypesId()
-	{
-		return $this->_public_key_types_id;
-	}
-
-	public function setData($value)
-	{
-		$this->_data = (string)$value;
-		return $this;
-	}
-
-	public function getData()
-	{
-		return $this->_data;
-	}
-
-	public function setComment($value)
-	{
-		$this->_comment = (string)$value;
-		return $this;
-	}
-
-	public function getComment()
-	{
-		return $this->_comment;
-	}
+	protected $_dependentTables = array('GD_Model_DbTable_Projects');
 }

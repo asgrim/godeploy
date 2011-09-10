@@ -49,27 +49,30 @@ class GDApp_Form_DeploymentSetup extends GD_Form_Abstract
 			->setRequired(false)
 			->addFilter('StripTags')
 			->addFilter('StringTrim')
-			->addValidator('NotEmpty');
+			->addValidator('NotEmpty')
+			->setAttrib('readonly', 'readonly')
+			->setAttrib('disabled', 'disabled');
 
 		$to_revision = new Zend_Form_Element_Text('toRevision');
 		$to_revision->setLabel('Deploy revision or tag')
 			->setRequired(true)
 			->addFilter('StripTags')
 			->addFilter('StringTrim')
-			->addValidator('NotEmpty');
+			->addValidator('NotEmpty')
+			->setDescription('<a href="#" onclick="getLatestRevision();">Click to get latest revision</a><span id="get_latest_revision_status"></span>');
 
-		$submitPreview = new Zend_Form_Element_Submit('submitPreview');
-		$submitPreview->setLabel('Preview Deployment');
+		$submitRun = new Zend_Form_Element_Image('submitRun');
+		$submitRun->setImage('/images/buttons/small/run-deployment.png');
 
-		$submitRun = new Zend_Form_Element_Submit('submitRun');
-		$submitRun->setLabel('Run Deployment');
+		$submitPreview = new Zend_Form_Element_Image('submitPreview');
+		$submitPreview->setImage('/images/buttons/small/preview-deployment.png');
 
 		$this->addElements(array(
 			$server_id,
 			$from_revision,
 			$to_revision,
-			$submitPreview,
 			$submitRun,
+			$submitPreview,
 		));
 	}
 }

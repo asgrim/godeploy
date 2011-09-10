@@ -50,7 +50,6 @@ class GDApp_Form_ProjectSettings extends GD_Form_Abstract
 		$repository_url->setLabel('Repository URL')
 			->setRequired(true)
 			->addFilter('StripTags')
-			->addFilter('StringTrim')
 			->addFilter('StringTrim');
 		$not_empty = new Zend_Validate_NotEmpty();
 		$not_empty->setMessage('Please enter the Repository URL');
@@ -61,7 +60,6 @@ class GDApp_Form_ProjectSettings extends GD_Form_Abstract
 		$deployment_branch->setLabel('Deployment Branch')
 			->setRequired(true)
 			->addFilter('StripTags')
-			->addFilter('StringTrim')
 			->addFilter('StringTrim');
 		$not_empty = new Zend_Validate_NotEmpty();
 		$not_empty->setMessage('Please enter the name of the Deployment Branch');
@@ -70,10 +68,8 @@ class GDApp_Form_ProjectSettings extends GD_Form_Abstract
 
 		$public_key = new Zend_Form_Element_Textarea('publicKey');
 		$public_key->setLabel('Public Key')
-			->setRequired(true)
-			->addFilter('StripTags')
-			->addFilter('StringTrim')
-			->addFilter('StringTrim');
+			->setRequired(false)
+			->setAttrib('readonly', 'readonly');
 		$not_empty = new Zend_Validate_NotEmpty();
 		$not_empty->setMessage('Please enter the Public Key');
 		$public_key->addValidators(array($not_empty));

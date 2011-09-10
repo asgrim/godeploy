@@ -60,7 +60,7 @@ class GD_Model_ProjectsMapper extends MAL_Model_MapperAbstract
 			'repository_types_id' => $obj->getRepositoryTypesId(),
 			'repository_url' => $obj->getRepositoryUrl(),
 			'deployment_branch' => $obj->getDeploymentBranch(),
-			'public_keys_id' => $obj->getPublicKeysId(),
+			'ssh_keys_id' => $obj->getSSHKeysId(),
 		);
 		return $data;
 	}
@@ -78,12 +78,12 @@ class GD_Model_ProjectsMapper extends MAL_Model_MapperAbstract
 			->setRepositoryTypesId($row->repository_types_id)
 			->setRepositoryUrl($row->repository_url)
 			->setDeploymentBranch($row->deployment_branch)
-			->setPublicKeysId($row->public_keys_id);
+			->setSSHKeysId($row->ssh_keys_id);
 
-		$pk_map = new GD_Model_PublicKeysMapper();
-		$public_key = new GD_Model_PublicKey();
-		$pk_map->populateObjectFromRow($public_key, $row->findParentRow('GD_Model_DbTable_PublicKeys'));
-		$obj->setPublicKey($public_key);
+		$pk_map = new GD_Model_SSHKeysMapper();
+		$public_key = new GD_Model_SSHKey();
+		$pk_map->populateObjectFromRow($public_key, $row->findParentRow('GD_Model_DbTable_SSHKeys'));
+		$obj->setSSHKey($public_key);
 	}
 
 	/**

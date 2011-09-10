@@ -13,13 +13,33 @@
 
 		<h2>Server Details</h2>
 
-	<?php if ($this->form->isErrors()) : ?>
-		<div id="errors"><div class="content">
+	<?php
+	if ($this->form->isErrors())
+	{
+		echo '<div id="errors"><div class="content">';
+		if(in_array("FTP_CONNECT_ERROR", $this->form->getErrorMessages()))
+		{
+			?>
+			There was a problem connecting to the FTP server with the information you provided.<br /><br />
+			Please check the username and password, and ensure the user has permissions to create and delete files on the FTP server.
+			<?php
+
+			if(isset($this->ftpMessage) && $this->ftpMessage != '')
+			{
+				echo "<br /><br />More information that might be useful: <span style=\"font-weight: normal\">{$this->ftpMessage}</span>";
+			}
+		}
+		else
+		{
+			?>
 			There was a problem with your submission. Please check the fields highlighted below.
-		</div></div>
-		<div class="padding_15"></div>
-	<?php endif; ?>
-		<?php echo $this->form; ?>
+			<?php
+		}
+		echo '</div></div><div class="padding_15"></div>';
+	}
+
+	echo $this->form;
+	?>
 
 	</div></div></div>
 </div>
