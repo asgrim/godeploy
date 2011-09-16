@@ -55,6 +55,8 @@ class GD_Git
 	const GIT_STATUS_ERROR_UNKNOWN = "STATUS_UNKNOWN_ERROR";
 
 	const GIT_GENERAL_ERROR = "GENERAL_GIT_ERROR";
+	const GIT_GENERAL_EMPTY_REF = "EMPTY_REF";
+	const GIT_GENERAL_INVALID_REF = "INVALID_REF";
 
 	public function __construct(GD_Model_Project &$project)
 	{
@@ -263,6 +265,27 @@ class GD_Git
 		return $this->getSingleLog('git log --pretty=oneline | tail -1');
 	}
 
+	public function getFullHash($ref)
+	{
+		$nice_ref = $this->sanitizeRef($ref);
+
+		if($nice_ref == "")
+		{
+			throw new GD_Exception("Could not get full hash '{$nice_ref}': " . self::GIT_GENERAL_EMPTY_REF, 0, self::GIT_GENERAL_EMPTY_REF);
+		}
+
+		$this->runShell('git log -n1 --format="format:%H" ' . $nice_ref);
+
+		if($this->_last_errno == 0)
+		{
+			return $this->_last_output[0];
+		}
+		else
+		{
+			throw new GD_Exception("Could not get full hash '{$nice_ref}': " . self::GIT_GENERAL_INVALID_REF, 0, self::GIT_GENERAL_INVALID_REF);
+		}
+	}
+
 	public function getFilesChangedList($from_rev, $to_rev)
 	{
 		if($from_rev == "")
@@ -325,7 +348,16 @@ class GD_Git
 
 		if($this->_last_errno == 0)
 		{
-			return true;
+			$this->runShell('git fetch --tags ' . $remote);
+
+			if($this->_last_errno == 0)
+			{
+				return true;
+			}
+			else
+			{
+				return self::GIT_PULL_ERROR_UNKNOWN;
+			}
 		}
 		else
 		{

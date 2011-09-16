@@ -24,8 +24,17 @@
 
 class GD_Exception extends Zend_Exception
 {
-	public function __construct($msg = '', $code = 0, Exception $previous = null)
+	private $_strCode;
+
+	public function __construct($msg = '', $code = 0, $str_code = "", Exception $previous = null)
 	{
+		$this->_strCode = (string)$str_code;
+
 		parent::__construct($msg, $code, $previous);
+	}
+
+	public function getStringCode()
+	{
+		return $this->_strCode;
 	}
 }
