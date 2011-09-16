@@ -410,7 +410,7 @@ class DeployController extends Zend_Controller_Action
 			{
 				$errors = true;
 				$file->setDeploymentFileStatusesId($deployment_files_statuses->getDeploymentFileStatusByCode('FAILED')->getId());
-				$this->writeDebug("FAILED.\n");
+				$this->writeDebug("FAILED [" . $ex->getMessage() . "].\n");
 			}
 			$deployment_files->save($file);
 		}
