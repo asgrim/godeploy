@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @copyright 2011 GoDeploy
- * @author James Titcumb, John Whigham, Simon Wade
+ * @author James Titcumb, Jon Wigham, Simon Wade
  * @link http://www.godeploy.com/
  */
 class GDApp_Form_ChangePassword extends GD_Form_Abstract
