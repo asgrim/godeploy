@@ -78,7 +78,7 @@ CREATE  TABLE IF NOT EXISTS `godeploy`.`projects` (
   `ssh_keys_id` INT NOT NULL ,
   PRIMARY KEY (`id`) ,
   INDEX `fk_projects_repository_types` (`repository_types_id` ASC) ,
-  INDEX `fk_projects_public_keys1` (`public_keys_id` ASC) ,
+  INDEX `fk_projects_public_keys1` (`ssh_keys_id` ASC) ,
   CONSTRAINT `fk_projects_repository_types`
     FOREIGN KEY (`repository_types_id` )
     REFERENCES `godeploy`.`repository_types` (`id` )
@@ -284,8 +284,8 @@ COMMIT;
 -- Data for table `godeploy`.`public_key_types`
 -- -----------------------------------------------------
 SET AUTOCOMMIT=0;
-insert into `godeploy`.`public_key_types` (`id`, `name`) values (1, 'rsa');
-insert into `godeploy`.`public_key_types` (`id`, `name`) values (2, 'dsa');
+insert into `godeploy`.`ssh_key_types` (`id`, `name`) values (1, 'rsa');
+insert into `godeploy`.`ssh_key_types` (`id`, `name`) values (2, 'dsa');
 
 COMMIT;
 

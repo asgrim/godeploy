@@ -27,7 +27,7 @@
  * @author james
  *
  */
-class GD_Git
+class GD_Git extends MAL_Util_Shell
 {
 	private $_url;
 	private $_project;
@@ -35,9 +35,6 @@ class GD_Git
 	private $_current_branch;
 	private $_repotype;
 	private $_apache_home;
-
-	private $_last_output;
-	private $_last_errno;
 
 	private $_base_gitdir;
 
@@ -141,11 +138,6 @@ class GD_Git
 		{
 			return self::GIT_REPOTYPE_SSH;
 		}
-	}
-
-	public function getLastError()
-	{
-		return $this->_last_errno;
 	}
 
 	public function getGitDir()
@@ -413,18 +405,7 @@ class GD_Git
 			chdir($this->_gitdir);
 		}
 
-		if($noisy) echo "<strong>" . $cmd . "</strong><br /><br />";
-		$this->_last_errno = 0;
-		$this->_last_output = array();
-		exec($cmd . " 2>&1", $this->_last_output, $this->_last_errno);
-		if($noisy)
-		{
-			echo "<pre>";
-			var_dump($this->_last_output);
-			var_dump($this->_last_errno);
-			echo "</pre>";
-			echo "<hr />";
-		}
+		parent::Exec($cmd, $noisy);
 	}
 
 	private function sanitizeRef($ref)

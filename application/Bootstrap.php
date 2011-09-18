@@ -23,75 +23,49 @@
  */
 class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 {
+	private $_user_config_file;
+
 	protected function _initAutoload()
 	{
 		$autoloader = Zend_Loader_Autoloader::getInstance();
 		$autoloader->registerNamespace('GD_');
 	}
 
+	protected function _initCheckSetup()
+	{
+		// Set the config file name
+		$this->_user_config_file = APPLICATION_PATH . '/configs/config.ini';
+
+		// Check all config files exist - if not, go to setup mode
+		if(!file_exists($this->_user_config_file))
+		{
+			$config = null;
+		}
+		else
+		{
+			$config = new Zend_Config_Ini($this->_user_config_file, 'general');
+			Zend_Registry::set("cryptkey", $config->cryptkey);
+		}
+
+		// Pass config to the VerifySetup controller to check our setup environment and  we're all OK to proceed
+		$this->bootstrap('frontController');
+		$frontController = $this->getResource('frontcontroller');
+		$frontController->registerPlugin(new GD_Plugin_VerifySetup($config));
+	}
+
 	protected function _initConfig()
 	{
 		// Set default database adapter
-		$db_conf = new Zend_Config_Ini(APPLICATION_PATH . '/configs/db.ini', 'database');
-		Zend_Db_Table::setDefaultAdapter(Zend_Db::factory($db_conf->adapter, $db_conf->toArray()));
-		Zend_Registry::set("db", $db_conf);
+		if(file_exists($this->_user_config_file))
+		{
+			$db_conf = new Zend_Config_Ini($this->_user_config_file, 'database');
+			Zend_Db_Table::setDefaultAdapter(Zend_Db::factory($db_conf->adapter, $db_conf->toArray()));
+			Zend_Registry::set("db", $db_conf);
+		}
 
 		// Load version
 		$version_conf = new Zend_Config_Ini(APPLICATION_PATH . '/configs/version.ini', 'version');
 		Zend_Registry::set("gd.version", $version_conf->gd->version);
-	}
-
-	protected function _initDatabaseVersion()
-	{
-		$version_conf = new Zend_Config_Ini(APPLICATION_PATH . '/configs/version.ini', 'version');
-		$expected_db_version = (int)$version_conf->gd->expect_db_version;
-
-		$db = Zend_Db_Table::getDefaultAdapter();
-
-		try
-		{
-			$select = $db->select()
-				->from('configuration', 'value')
-				->where('`key` = ?', 'db_version');
-		}
-		catch(Zend_Db_Adapter_Exception $ex)
-		{
-			if($ex->getCode() == 1049)
-			{
-				$db_config = $db->getConfig();
-				throw new GD_Exception("Database '{$db_config['dbname']}' was not created. Please make it...");
-				//$db->getConnection()->exec('CREATE DATABASE `' . $db_config['dbname'] . '`'); // This doesn't work...
-			}
-			else
-			{
-				throw $ex;
-			}
-		}
-
-		try
-		{
-			$current_db_version = (int)$db->fetchOne($select);
-		}
-		catch(Zend_Db_Statement_Exception $ex)
-		{
-			if($ex->getCode() == 42)
-			{
-				throw new GD_Exception("Please run the db/db_create_v{$expected_db_version}.sql script to initialise the database.");
-			}
-			else
-			{
-				throw $ex;
-			}
-		}
-
-		if($current_db_version < $expected_db_version)
-		{
-			throw new GD_Exception("Database version was out of date. Expected '{$expected_db_version}' and it is currently at '{$current_db_version}'.");
-		}
-		else if($current_db_version > $expected_db_version)
-		{
-			throw new GD_Exception("Database version was too new??? Expected '{$expected_db_version}' and it is currently at '{$current_db_version}'.");
-		}
 	}
 
 	protected function _initNavigation()

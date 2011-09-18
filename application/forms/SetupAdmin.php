@@ -21,35 +21,42 @@
  * @author James Titcumb, Jon Wigham, Simon Wade
  * @link http://www.godeploy.com/
  */
-class GDApp_Form_ChangePassword extends GD_Form_Abstract
+class GDApp_Form_SetupAdmin extends GD_Form_Abstract
 {
 	public function __construct($options = null)
 	{
 		parent::__construct($options);
 
-		$this->setName('changepassword_form');
+		$this->setName('adminsetup_form');
+
+		$username = new Zend_Form_Element_Text('username');
+		$username->setLabel('Username')
+			->setRequired(true)
+			->addFilter('StripTags')
+			->addValidator('NotEmpty');
 
 		$password = new Zend_Form_Element_Password('password');
-		$password->setLabel('New Password')
+		$password->setLabel('Password')
 			->setRequired(true)
-			->addFilter('StripTags');
-		$not_empty = new Zend_Validate_NotEmpty();
-		$password->addValidators(array($not_empty));
+			->addFilter('StripTags')
+			->addValidator('NotEmpty');
 
 		$passwordConfirm = new Zend_Form_Element_Password('passwordconf');
 		$passwordConfirm->setLabel('Confirm Password')
 			->setRequired(true)
-			->addFilter('StripTags');
-		$passwordConfirm->addValidators(array($not_empty));
-		$passwordConfirm->addValidator('Identical', false, array('token' => 'password'));
+			->addFilter('StripTags')
+			->addValidator('NotEmpty')
+			->addValidator('Identical', false, array('token' => 'password'));
 
 		$submit = new Zend_Form_Element_Image('btn_submit');
-		$submit->setImage('/images/buttons/small/save-changes.png');
+		$submit->setImage('/images/buttons/small/next.png')
+			->setAttrib('style', 'float: right;');
 
 		$this->addElements(array(
+			$username,
 			$password,
 			$passwordConfirm,
-			$submit
+			$submit,
 		));
 	}
 }

@@ -10,5 +10,5 @@ nbproject
 .DS_Store
 Thumbs.db
 Desktop.ini
-application/configs/db.ini
+application/configs/config.ini
 gitcache/
