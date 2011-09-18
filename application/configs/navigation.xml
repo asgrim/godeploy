@@ -16,7 +16,7 @@
 			<action>index</action>
 		</home>
 		<profile>
-			<label>Profile</label>
+			<label>Change Password</label>
 			<route>default</route>
 			<controller>profile</controller>
 			<action>index</action>

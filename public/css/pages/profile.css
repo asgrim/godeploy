@@ -1,0 +1,22 @@
+/* CSS Document */
+
+#form label {
+	width: 200px;
+	}
+
+#form li.submit {
+	padding: 10px 0 0 205px;
+	}
+
+	#form span.field {
+		width: 730px;
+		padding-top: 1px;
+		}
+
+	#form li#item_hostname input {
+		width: 300px;
+		}
+
+	#form li#item_port input {
+		width: 30px;
+		}
