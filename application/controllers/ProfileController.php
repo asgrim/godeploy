@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @copyright 2011 GoDeploy
- * @author James Titcumb, John Wigham, Simon Wade
+ * @author James Titcumb, Jon Wigham, Simon Wade
  * @link http://www.godeploy.com/
  */
 class ProfileController extends Zend_Controller_Action
