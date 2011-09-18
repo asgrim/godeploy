@@ -15,12 +15,6 @@
 			<controller>home</controller>
 			<action>index</action>
 		</home>
-		<profile>
-			<label>Change Password</label>
-			<route>default</route>
-			<controller>profile</controller>
-			<action>index</action>
-		</profile>
 		<logout>
 			<label>Logout</label>
 			<route>default</route>

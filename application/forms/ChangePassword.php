@@ -26,29 +26,29 @@ class GDApp_Form_ChangePassword extends GD_Form_Abstract
 	public function __construct($options = null)
 	{
 		parent::__construct($options);
-		
+
 		$this
 			->setName('changepassword_form')
 			->setAction('/profile/changepassword/')
 			->setMethod('post');
-		
+
 		$password = new Zend_Form_Element_Password('password');
 		$password->setLabel('New Password')
 			->setRequired(true)
 			->addFilter('StripTags');
 		$not_empty = new Zend_Validate_NotEmpty();
 		$password->addValidators(array($not_empty));
-		
+
 		$passwordConfirm = new Zend_Form_Element_Password('passwordconf');
 		$passwordConfirm->setLabel('Confirm Password')
 			->setRequired(true)
 			->addFilter('StripTags');
 		$passwordConfirm->addValidators(array($not_empty));
 		$passwordConfirm->addValidator('Identical', false, array('token' => 'password'));
-		
+
 		$submit = new Zend_Form_Element_Image('btn_submit');
-		$submit->setImage('/images/buttons/small/login.png');
-		
+		$submit->setImage('/images/buttons/small/save-changes.png');
+
 		$this->addElements(array(
 			$password,
 			$passwordConfirm,
