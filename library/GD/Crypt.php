@@ -28,4 +28,9 @@ class GD_Crypt extends MAL_Crypt
 	{
 		return parent::Decrypt($data, $this->_key);
 	}
+	
+	public function makeHash($password)
+	{
+		return crypt($password, '$6$rounds=5000$' . substr(md5(microtime().rand()),0,16) . '$');
+	}
 }
