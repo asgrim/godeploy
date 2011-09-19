@@ -19,6 +19,7 @@
 			<li>has PHP modules <em>mcrypt</em> and <em>ftp</em> installed and enabled</li>
 			<li>getenv('HOME') returns a valid looking directory (yours is: '<?php echo getenv('HOME'); ?>'. If it is empty, you will need to fix this)</li>
 			<li>config file in <?php echo APPLICATION_PATH; ?>/configs/config.ini is writable</li>
+			<li>Make directory gitcache which is writeable by apache user</li>
 		</ul>
 
 		<a href="/setup/step2" style="float: right";>

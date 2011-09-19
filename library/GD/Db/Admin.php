@@ -55,7 +55,7 @@ class GD_Db_Admin extends MAL_Util_Shell
 
     	$script = APPLICATION_PATH . "/../db/db_create_v{$version}.sql";
 
-    	$this->Exec("mysql -u{$this->_username} -p{$this->_password} --database={$this->_database} < \"{$script}\"", true);
+    	$this->Exec("mysql -u{$this->_username} -p{$this->_password} --database={$this->_database} < \"{$script}\"");
     }
 
     public function upgradeDatabase($from_version, $to_version)

@@ -41,7 +41,8 @@ class GD_Plugin_VerifySetup extends Zend_Controller_Plugin_Abstract
 		}
 		else if($this->_config instanceof Zend_Config && $this->_config->setupComplete && $request->controller == "setup")
 		{
-			throw new GD_Exception("Setup controller disabled when setupComplete set to true.");
+			$this->_response->setRedirect('/');
+			$this->_response->sendResponse();
 		}
 		else if($this->_config instanceof Zend_Config && $this->_config->setupComplete && $request->controller != "setup")
 		{

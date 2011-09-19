@@ -99,50 +99,73 @@ class SetupController extends Zend_Controller_Action
     	// Create the config ini from session
     	$setup_session = new Zend_Session_Namespace('gd_setup_session');
 
-    	$config = new Zend_Config(array(), true);
+    	if($setup_session->complete)
+    	{
+	    	$config = new Zend_Config(array(), true);
 
-    	$config->general = array();
-    	$config->general->setupComplete = true;
-    	$config->general->cryptkey = md5(microtime() . $setup_session->admin->username . $setup_session->admin->password);
-    	$config->general->installDate = date("d/m/Y H:i:s");
+	    	$config->general = array();
+	    	$config->general->setupComplete = true;
+	    	$config->general->cryptkey = md5(microtime() . $setup_session->admin->username . $setup_session->admin->password);
+	    	$config->general->installDate = date("d/m/Y H:i:s");
 
-    	$config->database = array();
-    	$config->database->adapter = "PDO_MYSQL";
-    	$config->database->host = $setup_session->database->host;
-    	$config->database->username = $setup_session->database->username;
-    	$config->database->password = $setup_session->database->password;
-    	$config->database->dbname = $setup_session->database->dbname;
+	    	$config->database = array();
+	    	$config->database->adapter = "PDO_MYSQL";
+	    	$config->database->host = $setup_session->database->host;
+	    	$config->database->username = $setup_session->database->username;
+	    	$config->database->password = $setup_session->database->password;
+	    	$config->database->dbname = $setup_session->database->dbname;
 
-    	$writer_opts = array(
-    		'config' => $config,
-			'filename' => $_user_config_file,
-    	);
-    	$writer = new Zend_Config_Writer_Ini($writer_opts);
-    	$writer->write();
+	    	$writer_opts = array(
+	    		'config' => $config,
+				'filename' => $_user_config_file,
+	    	);
+	    	$writer = new Zend_Config_Writer_Ini($writer_opts);
 
-    	// Load the database manually
-		Zend_Db_Table::setDefaultAdapter(Zend_Db::factory($config->database->adapter, $config->database->toArray()));
-		Zend_Registry::set("cryptkey", $config->general->cryptkey);
+	    	try
+	    	{
+	    		$writer->write();
+	    	}
+	    	catch(Exception $ex)
+	    	{
+	    		if(strpos($ex->getMessage(), 'Could not write to file') !== false)
+	    		{
+	    			$setup_session->ini_string = $writer->render();
+	    		}
+	    	}
 
-    	// Run the appropriate database setup script
-    	$db_adm = new GD_Db_Admin(
-    		$config->database->host,
-    		$config->database->username,
-    		$config->database->password,
-    		$config->database->dbname
-    	);
-    	$db_adm->installDatabase();
+	    	// Load the database manually
+			Zend_Db_Table::setDefaultAdapter(Zend_Db::factory($config->database->adapter, $config->database->toArray()));
+			Zend_Registry::set("cryptkey", $config->general->cryptkey);
 
-    	// Create the first user in the database
-    	$userMapper = new GD_Model_UsersMapper();
-    	$crypt = new GD_Crypt();
+	    	// Run the appropriate database setup script
+	    	$db_adm = new GD_Db_Admin(
+	    		$config->database->host,
+	    		$config->database->username,
+	    		$config->database->password,
+	    		$config->database->dbname
+	    	);
+	    	$db_adm->installDatabase();
 
-    	$user = new GD_Model_User();
-    	$user->setName($setup_session->admin->username);
-    	$user->setPassword($crypt->makeHash($setup_session->admin->password));
-    	$userMapper->save($user);
+	    	// Create the first user in the database
+	    	$userMapper = new GD_Model_UsersMapper();
+	    	$crypt = new GD_Crypt();
 
-    	$this->_redirect("/setup/complete");
+	    	$user = new GD_Model_User();
+	    	$user->setName($setup_session->admin->username);
+	    	$user->setPassword($crypt->makeHash($setup_session->admin->password));
+	    	$userMapper->save($user);
+
+	    	$setup_session->complete = true;
+    	}
+
+    	if(isset($setup_session->ini_string))
+    	{
+    		$this->view->ini = $setup_session->ini_string;
+    	}
+    	else
+    	{
+    		$this->_redirect("/setup/complete");
+    	}
     }
 
     public function completeAction()
