@@ -68,44 +68,25 @@ class GD_Plugin_VerifySetup extends Zend_Controller_Plugin_Abstract
 			$select = $db->select()
 				->from('configuration', 'value')
 				->where('`key` = ?', 'db_version');
-		}
-		catch(Zend_Db_Adapter_Exception $ex)
-		{
-			if($ex->getCode() == 1049)
-			{
-				$db_config = $db->getConfig();
-				throw new GD_Exception("Database '{$db_config['dbname']}' was not created. Please make it...");
-				//$db->getConnection()->exec('CREATE DATABASE `' . $db_config['dbname'] . '`'); // This doesn't work...
-			}
-			else
-			{
-				throw $ex;
-			}
-		}
 
-		try
-		{
 			$current_db_version = (int)$db->fetchOne($select);
-		}
-		catch(Zend_Db_Statement_Exception $ex)
-		{
-			if($ex->getCode() == 42)
-			{
-				throw new GD_Exception("Please run the db/db_create_v{$expected_db_version}.sql script to initialise the database.");
-			}
-			else
-			{
-				throw $ex;
-			}
-		}
 
-		if($current_db_version < $expected_db_version)
-		{
-			throw new GD_Exception("Database version was out of date. Expected '{$expected_db_version}' and it is currently at '{$current_db_version}'.");
+			if($current_db_version < $expected_db_version)
+			{
+				throw new GD_Exception("Database version was out of date. Expected '{$expected_db_version}' and it is currently at '{$current_db_version}'.");
+			}
+			else if($current_db_version > $expected_db_version)
+			{
+				throw new GD_Exception("Database version was too new??? Expected '{$expected_db_version}' and it is currently at '{$current_db_version}'.");
+			}
 		}
-		else if($current_db_version > $expected_db_version)
+		catch(Exception $ex)
 		{
-			throw new GD_Exception("Database version was too new??? Expected '{$expected_db_version}' and it is currently at '{$current_db_version}'.");
+			$this->_request->setParam('db_error_detail', $ex->getMessage());
+			$this->_request->setModuleName('default');
+			$this->_request->setControllerName('error');
+			$this->_request->setActionName('database');
+			return;
 		}
 	}
 
