@@ -26,8 +26,20 @@ class ErrorController extends Zend_Controller_Action
 	public function privilegeAction()
 	{
 		header('HTTP/1.1 403 Forbidden');
-		echo "<h1>Access denied.</h1>";
-		echo "<p>Might need adding to ACL?</p>";
+		echo "<h1>Access denied (ACL)</h1>";
+		die();
+	}
+
+	public function databaseAction()
+	{
+		header('HTTP/1.1 500 Internal Server Error');
+		echo "<h1>Error establishing database connection</h1>";
+
+		if(APPLICATION_ENV == 'development')
+		{
+			echo "<p>Please check the settings in config.ini</p>";
+			echo "<p>" . $this->_getParam('db_error_detail') . "</p>";
+		}
 		die();
 	}
 

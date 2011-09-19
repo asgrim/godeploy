@@ -76,9 +76,14 @@ class GD_Plugin_Auth extends Zend_Controller_Plugin_Abstract
 			}
 		}
 
-		$request->setModuleName($module);
-		$request->setControllerName($controller);
-		$request->setActionName($action);
+		if($request->controller != $controller
+			|| $request->action != $action
+			|| $request->module != $module)
+		{
+			$request->setModuleName($module);
+			$request->setControllerName($controller);
+			$request->setActionName($action);
+		}
 	}
 
 }

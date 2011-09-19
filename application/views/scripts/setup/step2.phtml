@@ -1,0 +1,38 @@
+<div class="content">
+	<div class="padding_20"></div>
+
+	<h1>Step 2 - Database Settings</h1>
+	<div class="padding_15"></div>
+
+	<div id="form">
+		<div class="wrapper w_ededed">
+			<div class="content">
+				<div class="padding_15"></div>
+				<?php
+				if ($this->form->isErrors())
+				{
+					echo '<div id="errors"><div class="content">';
+					if(in_array("DB_CONNECT_ERROR", $this->form->getErrorMessages()))
+					{
+						?>
+						There was a problem connecting to the database server with the information you provided.<br /><br />
+						Please check the details you entered and try again.
+						<?php
+					}
+					else
+					{
+						?>
+						There was a problem with your submission. Please check the fields highlighted below.
+						<?php
+					}
+					echo '</div></div><div class="padding_15"></div>';
+				}
+
+				echo $this->form;
+				?>
+			</div>
+		</div>
+	</div>
+
+	<div class="padding_15"></div>
+</div>

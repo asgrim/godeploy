@@ -6,7 +6,9 @@
 		<li><a href="<?php echo $this->baseUrl(); ?>/update">Update</a></li>
 		<li><a href="<?php echo $this->baseUrl(); ?>/docs">Docs</a></li>
 		<li><a href="<?php echo $this->baseUrl(); ?>/contribute">Contribute</a></li>
+		<?php if ($this->logged_in): ?>
 		<li><a href="<?php echo $this->baseUrl(); ?>/profile/changepassword">Change Password</a></li>
+		<?php endif; ?>
 	</ul>
 	<div class="clear"></div>
 	<div class="padding_20"></div>

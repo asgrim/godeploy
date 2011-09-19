@@ -21,7 +21,7 @@
 		<?php if ($this->form->isErrors()) : ?>
 			<div id="errors"><div class="content">
 				<?php if ($this->unknownCredentials) : ?>
-					<?php echo reset($this->form->getMessages()); ?>
+					<?php $msgs = $this->form->getMessages(); echo reset($msgs); ?>
 				<?php else : ?>
 					There was a problem with your submission. Please check the fields highlighted below.
 				<?php endif; ?>

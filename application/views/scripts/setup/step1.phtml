@@ -1,0 +1,30 @@
+<div class="content">
+	<div class="padding_20"></div>
+
+	<h1>Step 1 - System Requirements</h1>
+	<div class="padding_15"></div>
+
+	<div class="wrapper w_ededed"><div class="content">
+		<div class="padding_15"></div>
+		<p>GoDeploy needs to check that your system is set up correctly to be able to use the software.</p>
+
+		<p><strong>in development</strong> - for now please make sure your system:</p>
+
+		<ul>
+			<li>has PHP 5.3.2 or greater installed</li>
+			<li>has MySQL 5.1 or greater installed</li>
+			<li>is able to run "exec", "proc_open" and "proc_close" functions (Suhosin may disable these)</li>
+			<li>has OpenSSH installed (try running "ssh -v")</li>
+			<li>has Git installed (try running "git --version")</li>
+			<li>has PHP modules <em>mcrypt</em> and <em>ftp</em> installed and enabled</li>
+			<li>getenv('HOME') returns a valid looking directory (yours is: '<?php echo getenv('HOME'); ?>'. If it is empty, you will need to fix this)</li>
+			<li>config file in <?php echo APPLICATION_PATH; ?>/configs/config.ini is writable</li>
+		</ul>
+
+		<a href="/setup/step2" style="float: right";>
+			<img src="/images/buttons/small/next.png" alt="Go to the next step" title="Go to the next step" />
+		</a>
+		<div class="clear"></div>
+	</div></div>
+	<div class="padding_15"></div>
+</div>
