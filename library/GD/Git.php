@@ -81,6 +81,7 @@ class GD_Git extends MAL_Util_Shell
 		if(!file_exists($this->_base_gitdir))
 		{
 			mkdir($this->_base_gitdir, 0700, true);
+			chdir($this->_base_gitdir);
 		}
 
 		$this->_current_branch = $this->getCurrentBranch(true);
@@ -373,10 +374,11 @@ class GD_Git extends MAL_Util_Shell
 	public function gitClone()
 	{
 		$this->sshKeys();
-		$this->runShell('git clone ' . $this->_url . ' "' . $this->_gitdir . '"', false, true);
+		$this->runShell('git clone ' . $this->_url . ' "' . $this->_gitdir . '"', true);
 
 		if($this->_last_errno == 0)
 		{
+			$this->runShell('git reset --hard HEAD', true);
 			return true;
 		}
 		else
