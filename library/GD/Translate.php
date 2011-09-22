@@ -13,6 +13,11 @@ class GD_Translate
 	{
 		$langfile = APPLICATION_PATH . '/../languages/' . $language . '.mo';
 
+		if(!file_exists($langfile))
+		{
+			die("Language '{$language}' specified in config.ini was not a supported language.");
+		}
+
 		self::$_translate = new Zend_Translate(
 			array(
 				'adapter' => 'gettext',

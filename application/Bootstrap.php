@@ -45,6 +45,10 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 		{
 			$config = new Zend_Config_Ini($this->_user_config_file, 'general');
 			Zend_Registry::set("cryptkey", $config->cryptkey);
+
+			// Choose a default language (English) if language not specified in config.ini
+			$use_lang = isset($config->language) ? $config->language : "english";
+			$translate = GD_Translate::init($use_lang);
 		}
 
 		// Pass config to the VerifySetup controller to check our setup environment and  we're all OK to proceed
@@ -168,8 +172,6 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 		$view->headScript()->appendFile("/js/scriptaculous/1.9.0.js");
 		$view->headScript()->appendFile("/js/common.js");
 		$view->headScript()->appendFile("/js/generate_slug.js");
-
-		$translate = GD_Translate::init("english");
 	}
 }
 
