@@ -104,6 +104,7 @@ class SetupController extends Zend_Controller_Action
 	    	$config = new Zend_Config(array(), true);
 
 	    	$config->general = array();
+	    	$config->general->language = "english";
 	    	$config->general->setupComplete = true;
 	    	$config->general->cryptkey = md5(microtime() . $setup_session->admin->username . $setup_session->admin->password);
 	    	$config->general->installDate = date("d/m/Y H:i:s");
