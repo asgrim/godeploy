@@ -168,6 +168,8 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 		$view->headScript()->appendFile("/js/scriptaculous/1.9.0.js");
 		$view->headScript()->appendFile("/js/common.js");
 		$view->headScript()->appendFile("/js/generate_slug.js");
+
+		$translate = GD_Translate::init("english");
 	}
 }
 
