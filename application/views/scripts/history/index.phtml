@@ -1,6 +1,6 @@
 
 <div class="padding_20"></div>
-<h1><?php echo $this->project->getName(); ?> &raquo; Deployment History</h1>
+<h1><?php echo $this->project->getName(); ?> &raquo; <?php __("Deployment History"); ?></h1>
 
 <?php
 if(is_array($this->deployments) && count($this->deployments) > 0)
@@ -10,17 +10,17 @@ if(is_array($this->deployments) && count($this->deployments) > 0)
 	?>
 	<div class="wrapper w_ededed"><div class="content">
 		<div class="padding_15"></div>
-		<p>This is a list of the deployments that have been run on this project.
+		<p><?php __("This is a list of the deployments that have been run on this project."); ?>
 		There are <?php echo $count; ?> deployment<?php echo $ess; ?> shown,
 		with the most recent at the top.</p>
 		<table>
 			<thead>
 				<tr>
-					<th>Date/Time</th>
-					<th>Server</th>
-					<th>From</th>
-					<th>To</th>
-					<th>Status</th>
+					<th><?php __("Date"); ?>/<?php __("Time"); ?></th>
+					<th><?php __("Server"); ?></th>
+					<th><?php __("From"); ?></th>
+					<th><?php __("To"); ?></th>
+					<th><?php __("Status"); ?></th>
 					<th class="empty">&nbsp;</th>
 				</tr>
 			</thead>
@@ -44,5 +44,5 @@ if(is_array($this->deployments) && count($this->deployments) > 0)
 	</div></div>
 	<div class="padding_15"></div>
 <?php } else { ?>
-<p>This project has not yet been deployed.</p>
+<p><?php __("This project has not yet been deployed."); ?></p>
 <?php } ?>

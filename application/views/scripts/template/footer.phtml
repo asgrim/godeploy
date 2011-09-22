@@ -3,11 +3,11 @@
 
 	<ul>
 		<li>&copy; <?php echo date("Y"); ?> <a href="http://www.godeploy.com">GoDeploy.com v<?php echo Zend_Registry::get('gd.version'); ?></a></li>
-		<li><a href="<?php echo $this->baseUrl(); ?>/update">Update</a></li>
-		<li><a href="<?php echo $this->baseUrl(); ?>/docs">Docs</a></li>
-		<li><a href="<?php echo $this->baseUrl(); ?>/contribute">Contribute</a></li>
+		<li><a href="<?php echo $this->baseUrl(); ?>/update"><?php __("Update"); ?></a></li>
+		<li><a href="<?php echo $this->baseUrl(); ?>/docs"><?php __("Docs"); ?></a></li>
+		<li><a href="<?php echo $this->baseUrl(); ?>/contribute"><?php __("Contribute"); ?></a></li>
 		<?php if ($this->logged_in): ?>
-		<li><a href="<?php echo $this->baseUrl(); ?>/profile/changepassword">Change Password</a></li>
+		<li><a href="<?php echo $this->baseUrl(); ?>/profile/changepassword"><?php __("Change Password"); ?></a></li>
 		<?php endif; ?>
 	</ul>
 	<div class="clear"></div>

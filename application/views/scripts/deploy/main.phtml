@@ -1,36 +1,36 @@
 
 <div class="content">
 <div class="padding_20"></div>
-<h1><?php echo $this->project->getName(); ?> - Deployment</h1>
+<h1><?php echo $this->project->getName(); ?> - <?php __("Deployment"); ?></h1>
 <div class="padding_15"></div>
 
 <div class="wrapper w_ededed"><div class="content">
 	<div class="padding_15"></div>
-	<h2>Summary</h2>
+	<h2><?php __("Summary"); ?></h2>
 	<div id="form">
 		<form id="deploySummary" enctype="application/x-www-form-urlencoded" action="" method="post">
 			<ol>
 				<fieldset>
 					<li>
-						<label>Deploy to</label>
+						<label><?php __("Deploy to"); ?></label>
 						<span class="value"><?php echo $this->deployment->getServer()->getDisplayName(); ?></span>
 					</li>
 					<li>
-						<label>Repository URL</label>
+						<label><?php __("Repository URL"); ?></label>
 						<span class="value"><?php echo $this->project->getRepositoryUrl(); ?></span>
 					</li>
 					<?php if($this->deployment->getFromRevision() != ""): ?>
 					<li>
-						<label>From</label>
+						<label><?php __("From"); ?></label>
 						<span class="value"><?php echo $this->deployment->getFromRevision(); ?></span>
 					</li>
 					<?php endif; ?>
 					<li>
-						<label>To</label>
+						<label><?php __("To"); ?></label>
 						<span class="value"><?php echo $this->deployment->getToRevision(); ?></span>
 					</li>
 					<li>
-						<label>Status</label>
+						<label><?php __("Status"); ?></label>
 						<span class="value" id="deployment_status"><?php echo $this->deployment->getDeploymentStatus()->getName(); ?></span>
 					</li>
 					<li class="submit">
@@ -61,15 +61,15 @@
 
 <div class="wrapper w_ededed"><div class="content">
 	<div class="padding_15"></div>
-	<h2>Deployment Details</h2>
+	<h2><?php __("Deployment Details"); ?></h2>
 
 	<?php if(is_array($this->file_list) && count($this->file_list) > 0): ?>
 	<table>
 		<thead>
 			<tr>
-				<th>File</th>
-				<th>Action</th>
-				<th>Status</th>
+				<th><?php __("File"); ?></th>
+				<th><?php __("Action"); ?></th>
+				<th><?php __("Status"); ?></th>
 			</tr>
 		</thead>
 		<tbody>
@@ -83,7 +83,7 @@
 		</tbody>
 	</table>
 	<?php else: ?>
-	<h3>Looks like there are no files to deploy...?!</h3>
+	<h3><?php __("Looks like there are no files to deploy...?!"); ?></h3>
 	<?php endif; ?>
 </div></div>
 

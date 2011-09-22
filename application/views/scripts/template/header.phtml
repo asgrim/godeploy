@@ -3,8 +3,8 @@
 	<div class="container">
 
 		<div id="logo">
-			<a href="<?php echo $this->baseUrl(); ?>/home" title="GoDeploy - Easy Code Deployment"><img src="<?php echo $this->baseUrl(); ?>/images/header/godeploy.png" alt="GoDeploy - Easy Code Deployment" /></a>
-			<h2 class="hidden">GoDeploy - Easy Code Deployment</h2>
+			<a href="<?php echo $this->baseUrl(); ?>/home" title="GoDeploy - <?php __("Easy Code Deployment"); ?>"><img src="<?php echo $this->baseUrl(); ?>/images/header/godeploy.png" alt="GoDeploy - <?php __("Easy Code Deployment"); ?>" /></a>
+			<h2 class="hidden">GoDeploy - <?php __("Easy Code Deployment"); ?></h2>
 		</div>
 
 		<?php if($this->show_navigation !== false): ?>
@@ -13,9 +13,9 @@
 
 			<span id="logged_in_status">
 			<?php if ($this->logged_in): ?>
-				Logged in as <?php echo Zend_Auth::getInstance()->getIdentity(); ?>
+				<?php __("Logged in as"); ?> <?php echo Zend_Auth::getInstance()->getIdentity(); ?>
 			<?php else: ?>
-				Not logged in.
+				<?php __("Not logged in."); ?>
 			<?php endif; ?>
 			</span>
 
