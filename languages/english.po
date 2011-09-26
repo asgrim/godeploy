@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GoDeploy\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-09-26 21:46+0100\n"
+"POT-Creation-Date: 2011-09-26 23:30+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: James Titcumb <james@asgrim.com>\n"
 "Language-Team: \n"
@@ -15,15 +15,15 @@ msgstr ""
 "X-Poedit-Basepath: ../\n"
 "X-Poedit-SearchPath-0: application\n"
 
-#: application/forms/DeploymentSetup.php:36
+#: application/forms/DeploymentSetup.php:41
 msgid "Server"
 msgstr "Server"
 
-#: application/forms/DeploymentSetup.php:48
+#: application/forms/DeploymentSetup.php:53
 msgid "Current revision"
 msgstr "Current revision"
 
-#: application/forms/DeploymentSetup.php:57
+#: application/forms/DeploymentSetup.php:62
 msgid "Deploy revision or tag"
 msgstr "Deploy revision or tag"
 
@@ -150,20 +150,36 @@ msgstr "Project Settings"
 msgid "There was a problem with your submission. Please check the fields highlighted below."
 msgstr "There was a problem with your submission. Please check the fields highlighted below."
 
-#: application/views/scripts/settings/index.phtml:27
+#: application/views/scripts/settings/index.phtml:20
+msgid "GoDeploy's repository cache has gone wrong!"
+msgstr "GoDeploy's repository cache has gone wrong!"
+
+#: application/views/scripts/settings/index.phtml:21
+msgid "Before you can deploy this project you will need to reclone the repository."
+msgstr "Before you can deploy this project you will need to reclone the repository."
+
+#: application/views/scripts/settings/index.phtml:22
+msgid "Click here"
+msgstr "Click here"
+
+#: application/views/scripts/settings/index.phtml:22
+msgid "to reclone the repository now."
+msgstr "to reclone the repository now."
+
+#: application/views/scripts/settings/index.phtml:35
 msgid "Servers"
 msgstr "Servers"
 
-#: application/views/scripts/settings/index.phtml:34
+#: application/views/scripts/settings/index.phtml:42
 #: application/views/scripts/servers/confirm-delete.phtml:18
 msgid "Type"
 msgstr "Type"
 
-#: application/views/scripts/settings/index.phtml:60
+#: application/views/scripts/settings/index.phtml:68
 msgid "There are no servers currently configured for this project!"
 msgstr "There are no servers currently configured for this project!"
 
-#: application/views/scripts/settings/index.phtml:62
+#: application/views/scripts/settings/index.phtml:70
 msgid "Add another server to this project"
 msgstr "Add another server to this project"
 
