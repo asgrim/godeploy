@@ -113,6 +113,11 @@ form span.extras {	background: #90ee90; }*/
 		background: transparent url("/images/icons/warning/20x20.png") no-repeat 10px 8px;
 		}
 
+		#errors .content a {
+			color: #ffffff;
+			font-weight: normal;
+			}
+
 	form span.extras {
 		font-size: 12px;
 		display: block;

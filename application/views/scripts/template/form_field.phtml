@@ -36,7 +36,11 @@
 			// I'm sure there's a more elegant way of doing this but I can't think :(
 			if($this->element->getDescription() && $this->element->hasErrors()) echo '<br />';
 
-			if($this->element->hasErrors()) echo '<span class="errors">' . $error_message . '</span>';
+			if($this->element->hasErrors())
+			{
+				echo '<span class="errors">' . $error_message . '</span>';
+				echo '<input type="hidden" name="errored" value="true" />';
+			}
 
 			echo '</span>';
 		}

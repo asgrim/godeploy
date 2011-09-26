@@ -43,6 +43,17 @@ class ErrorController extends Zend_Controller_Action
 		die();
 	}
 
+	public function recloneAction()
+	{
+		$proj = $this->_getParam('project');
+		$return = $this->_getParam('return');
+
+		echo "<h1>Out of sync</h1>";
+		echo "Repository for '{$proj}' needs recloning.<br />";
+		echo "<a href=\"/project/{$proj}/settings/reclone?return={$return}\">Reclone now</a>";
+		die();
+	}
+
     public function errorAction()
     {
         $errors = $this->_getParam('error_handler');

@@ -32,6 +32,11 @@ class GDApp_Form_DeploymentSetup extends GD_Form_Abstract
 		$servers_map = new GD_Model_ServersMapper();
 		$servers = $servers_map->getServersByProject($project_id);
 
+		if(!is_array($servers) || count($servers) == 0)
+		{
+			throw new GD_Exception("There are no servers configured for this project.");
+		}
+
 		$server_id = new Zend_Form_Element_Select('serverId');
 		$server_id->setLabel(_r('Server'))
 			->setRequired(true)

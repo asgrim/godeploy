@@ -45,11 +45,15 @@ class GD_Git extends MAL_Util_Shell
 	const GIT_CLONE_ERROR_ALREADY_CLONED = "CLONE_ALREADY_CLONED";
 	const GIT_CLONE_ERROR_HOST_KEY_FAILURE = "CLONE_HOST_KEY_FAILURE";
 	const GIT_CLONE_ERROR_UNKNOWN = "CLONE_UNKNOWN_ERROR";
+	const GIT_CLONE_ERROR_REMOTE_OTHER = "CLONE_REMOTE_OTHER";
+	const GIT_CLONE_ERROR_REMOTE_NOT_FOUND = "CLONE_REMOTE_NOT_FOUND";
 
 	const GIT_PULL_ERROR_UNKNOWN = "PULL_UNKNOWN_ERROR";
 
 	const GIT_STATUS_ERROR_NOT_ON_BRANCH = "STATUS_NOT_ON_BRANCH";
 	const GIT_STATUS_ERROR_UNKNOWN = "STATUS_UNKNOWN_ERROR";
+	const GIT_STATUS_ERROR_DIFFERENT_REPOSITORY = "STATUS_DIFFERENT_REPOSITORY";
+	const GIT_STATUS_ERROR_NOT_A_REPOSITORY = "STATUS_NOT_A_REPOSITORY";
 
 	const GIT_GENERAL_ERROR = "GENERAL_GIT_ERROR";
 	const GIT_GENERAL_EMPTY_REF = "EMPTY_REF";
@@ -392,8 +396,45 @@ class GD_Git extends MAL_Util_Shell
 			{
 				return self::GIT_CLONE_ERROR_HOST_KEY_FAILURE;
 			}
+			if($this->_last_output[0] == "fatal: remote error:")
+			{
+				if(stripos($this->_last_output[1], "Could not find Repository") !== false)
+				{
+					return self::GIT_CLONE_ERROR_REMOTE_NOT_FOUND;
+				}
+				else
+				{
+					return self::GIT_CLONE_ERROR_REMOTE_OTHER;
+				}
+			}
 			return self::GIT_CLONE_ERROR_UNKNOWN;
 		}
+	}
+
+	public function checkValidRepository()
+	{
+		$this->runShell('git remote -v | grep origin | grep fetch', true);
+
+		if($this->_last_errno == 0)
+		{
+			$actual_url = $this->_last_output[0];
+			$actual_url = str_replace("origin", "", $actual_url);
+			$actual_url = str_replace("(fetch)", "", $actual_url);
+			$actual_url = trim($actual_url);
+
+			if($actual_url != $this->_url)
+			{
+				throw new GD_Exception("Repository cache does not match the project's URL", 0, self::GIT_STATUS_ERROR_DIFFERENT_REPOSITORY);
+			}
+
+			return true;
+		}
+		else
+		{
+			throw new GD_Exception("Not a git repository", 0, self::GIT_STATUS_ERROR_NOT_A_REPOSITORY);
+		}
+
+		throw new GD_Exception("Unknown error", 0, self::GIT_STATUS_ERROR_UNKNOWN);
 	}
 
 	private function runShell($cmd, $chdir = true, $noisy = false)

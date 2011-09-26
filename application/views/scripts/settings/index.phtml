@@ -15,7 +15,15 @@
 			<?php _e("There was a problem with your submission. Please check the fields highlighted below."); ?>
 		</div></div>
 		<div class="padding_15"></div>
+	<?php elseif($this->valid_repository === false): ?>
+		<div id="errors"><div class="content">
+			<?php _e("GoDeploy's repository cache has gone wrong!"); ?><br />
+			<?php _e("Before you can deploy this project you will need to reclone the repository."); ?><br />
+			<a href="/project/<?php echo $this->project->getSlug(); ?>/settings/reclone"><?php _e("Click here"); ?></a> <?php _e("to reclone the repository now."); ?>
+		</div></div>
+		<div class="padding_15"></div>
 	<?php endif; ?>
+
 		<?php echo $this->form; ?>
 
 	</div></div></div>

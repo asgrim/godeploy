@@ -143,6 +143,26 @@ class DeployController extends Zend_Controller_Action
 		}
 		else
 		{
+			$git = new GD_Git($project);
+
+			try
+			{
+				$git->checkValidRepository();
+			}
+			catch(GD_Exception $ex)
+			{
+				if($ex->getStringCode() == GD_Git::GIT_STATUS_ERROR_NOT_A_REPOSITORY
+					|| $ex->getStringCode() == GD_Git::GIT_STATUS_ERROR_DIFFERENT_REPOSITORY)
+				{
+					$return_url = base64_encode($_SERVER['SCRIPT_URI']);
+					$this->_redirect($this->getFrontController()->getBaseUrl() . "/error/reclone?project=" . $this->_getParam("project") . "&return=" . $return_url);
+				}
+				else
+				{
+					throw $ex;
+				}
+			}
+
 			$data = array();
 
 			if(count($data) > 0)

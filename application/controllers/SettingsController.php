@@ -59,7 +59,7 @@ class SettingsController extends Zend_Controller_Action
 		{
 			if ($form->isValid($this->getRequest()->getParams()))
 			{
-				$result = $this->saveProject($projects, $project, $new_project);
+				$result = $this->saveProject($projects, $project, $new_project, ($this->_getParam("errored") == "true"));
 				if($result !== true)
 				{
 					$form->repositoryUrl->addError("Could not clone the git repository [" . $result . "]. Please check the URL is correct and try again.");
@@ -72,6 +72,22 @@ class SettingsController extends Zend_Controller_Action
 		}
 		else
 		{
+			if(!$new_project)
+			{
+				$git = new GD_Git($project);
+
+				try
+				{
+					$git->checkValidRepository();
+					$this->view->valid_repository = true;
+				}
+				catch(GD_Exception $ex)
+				{
+					$this->view->valid_repository = false;
+					$form->repositoryUrl->addError("Check this git repository URL - is it correct?");
+				}
+			}
+
 			$data = array(
 				'name' => $project->getName(),
 				'repositoryUrl' => $project->getRepositoryUrl(),
@@ -108,11 +124,11 @@ class SettingsController extends Zend_Controller_Action
 
 		// Delete the deployments associated with the project.
 		$deployments = $deploymentsMapper->getDeploymentsByProject($project->getId());
-		foreach ($deployments as $deployment) 
+		foreach ($deployments as $deployment)
 		{
 			// Delete the files associated with the project.
 			$deploymentFiles = $deploymentFilesMapper->getDeploymentFilesByDeployment($deployment->getId());
-			foreach ($deploymentFiles as $deploymentFile) 
+			foreach ($deploymentFiles as $deploymentFile)
 			{
 				$deploymentFilesMapper->delete($deploymentFile);
 			}
@@ -122,7 +138,7 @@ class SettingsController extends Zend_Controller_Action
 
 		// Delete the servers associated with the project.
 		$servers = $serversMapper->getServersByProject($project->getId());
-		foreach ($servers as $server) 
+		foreach ($servers as $server)
 		{
 			$serversMapper->delete($server);
 		}
@@ -142,7 +158,7 @@ class SettingsController extends Zend_Controller_Action
 	}
 
 
-	public function saveProject(GD_Model_ProjectsMapper $projects, GD_Model_Project $project, $new_project = false)
+	public function saveProject(GD_Model_ProjectsMapper $projects, GD_Model_Project $project, $new_project = false, $errored = false)
 	{
 		$repo_before = $project->getRepositoryUrl();
 		$project->setName($this->_request->getParam('name', false));
@@ -163,7 +179,7 @@ class SettingsController extends Zend_Controller_Action
 		$projects->save($project);
 
 		// If repo URL changed, delete and re-clone
-		if($repo_before != $repo_after || $new_project)
+		if($repo_before != $repo_after || $new_project || $errored)
 		{
 			$git = new GD_Git($project);
 
@@ -177,5 +193,32 @@ class SettingsController extends Zend_Controller_Action
 		}
 
 		return true;
+	}
+
+	public function recloneAction()
+	{
+		$projects = new GD_Model_ProjectsMapper();
+		$project_slug = $this->_getParam("project");
+
+		$project = $projects->getProjectBySlug($project_slug);
+
+		$git = new GD_Git($project);
+
+		$git->deleteRepository();
+
+		$result = $git->gitClone();
+		if($result !== true)
+		{
+			throw new GD_Exception("Reclone failed [$result].");
+		}
+
+		if($this->_getParam("return"))
+		{
+			$this->_redirect(base64_decode($this->_getParam("return")));
+		}
+		else
+		{
+			$this->_redirect("/project/{$project_slug}/settings");
+		}
 	}
 }
