@@ -2,20 +2,20 @@
 <div class="content">
 	<div class="padding_20"></div>
 
-	<h1><?php __("Delete server from the"); ?> "<?php echo $this->project->getName(); ?>" <?php __("project"); ?>?</h1>
+	<h1><?php _e("Delete server from the"); ?> "<?php echo $this->project->getName(); ?>" <?php _e("project"); ?>?</h1>
 	<div class="padding_15"></div>
 
 	<div class="wrapper w_ededed"><div class="content">
 		<div class="padding_15"></div>
 
-		<h2><?php __("This cannot be undone. Are you sure you want to continue?"); ?></h2>
+		<h2><?php _e("This cannot be undone. Are you sure you want to continue?"); ?></h2>
 
 		<table>
 			<thead>
 				<tr>
-					<th><?php __("Name"); ?></th>
-					<th><?php __("Hostname"); ?></th>
-					<th><?php __("Type"); ?></th>
+					<th><?php _e("Name"); ?></th>
+					<th><?php _e("Hostname"); ?></th>
+					<th><?php _e("Type"); ?></th>
 				</tr>
 			</thead>
 			<tbody>
@@ -29,7 +29,7 @@
 		<div class="padding_15"></div>
 
 		<p class="options last">
-			<a href="<?php echo $this->baseUrl(); ?>/project/<?php echo $this->project->getSlug(); ?>/settings" title="No" class="no"><?php __("No, get me out of here!"); ?></a>
+			<a href="<?php echo $this->baseUrl(); ?>/project/<?php echo $this->project->getSlug(); ?>/settings" title="No" class="no"><?php _e("No, get me out of here!"); ?></a>
 			<a href="<?php echo $this->baseUrl(); ?>/project/<?php echo $this->project->getSlug(); ?>/servers/delete/<?php echo $this->server->getId(); ?>" title="Yes, delete it" class="yes"><img src="/images/buttons/small/delete-server.png" alt="Yes, delete it" /></a>
 		</p>
 	</div></div>

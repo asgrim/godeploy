@@ -1,6 +1,7 @@
 <?php
 
-function __($s) { echo GD_Translate::translate($s); }
+function _e($s) { echo GD_Translate::translate($s); }
+function _r($s) { echo GD_Translate::translate($s); }
 
 class GD_Translate
 {

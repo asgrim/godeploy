@@ -1,20 +1,20 @@
 <div class="content">
 	<div class="padding_20"></div>
 
-	<h1><?php __("Nearly done!"); ?></h1>
+	<h1><?php _e("Nearly done!"); ?></h1>
 	<div class="padding_15"></div>
 
 	<div class="wrapper w_ededed">
 		<div class="content">
 			<div class="padding_15"></div>
-			<p><?php __("There's one last step that you need to do. GoDeploy tried to automatically write your new configuration file, but it couldn't."); ?></p>
-			<p><?php __("You now need to save the contents from the text box below into this file:"); ?></p>
+			<p><?php _e("There's one last step that you need to do. GoDeploy tried to automatically write your new configuration file, but it couldn't."); ?></p>
+			<p><?php _e("You now need to save the contents from the text box below into this file:"); ?></p>
 			<p><strong><?php echo APPLICATION_PATH . '/configs/config.ini'; ?></strong></p>
 
 			<textarea style="background-color: black; border: 1px solid white; color: white; width: 600px; height: 230px;"><?php echo $this->ini; ?></textarea>
 
 			<div class="padding_15"></div>
-			<p><?php __("Once you have done this"); ?>, <a href="/"><?php __("click here to log in"); ?></a>!</p>
+			<p><?php _e("Once you have done this"); ?>, <a href="/"><?php _e("click here to log in"); ?></a>!</p>
 		</div>
 	</div>
 </div>
