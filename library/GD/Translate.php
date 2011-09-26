@@ -59,6 +59,7 @@ class GD_Translate
 				}
 			}
 		}
+		sort($langs);
 		return $langs;
 	}
 
