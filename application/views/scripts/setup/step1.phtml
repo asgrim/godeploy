@@ -1,3 +1,19 @@
+<?php
+function hasSuhosin()
+{
+	// http://stackoverflow.com/questions/3383916/how-to-check-whether-suhosin-is-installed
+	// THIS IS UGLY :(
+	ob_start();
+	phpinfo();
+	$phpinfo = ob_get_contents();
+	ob_end_clean();
+	if (strpos($phpinfo, "Suhosin") !== false)
+    	return true;
+
+    return false;
+}
+?>
+
 <div class="content">
 	<div class="padding_20"></div>
 
@@ -17,6 +33,8 @@
 			<li>has OpenSSH installed (try running "ssh -v")</li>
 			<li>has Git installed (try running "git --version")</li>
 			<li>has PHP modules <em>mcrypt</em> and <em>ftp</em> installed and enabled</li>
+			<li>Safe mode should be disabled: <?php echo ini_get('safe_mode') ? "Currently enabled (WON'T WORK!)" : "disabled - should be fine"; ?>
+			<li>MAY not work with Suhosin: <?php echo hasSuhosin() ? "Suhosin is installed" : "Suhosin not detected"; ?>
 			<li>getenv('HOME') returns a valid looking directory (yours is: '<?php echo getenv('HOME'); ?>'. If it is empty, you will need to fix this)</li>
 			<li>config file in <?php echo APPLICATION_PATH; ?>/configs/config.ini is writable</li>
 			<li>Make directory gitcache which is writeable by apache user</li>
