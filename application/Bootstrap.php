@@ -45,11 +45,11 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 		{
 			$config = new Zend_Config_Ini($this->_user_config_file, 'general');
 			Zend_Registry::set("cryptkey", $config->cryptkey);
-
-			// Choose a default language (English) if language not specified in config.ini
-			$use_lang = isset($config->language) ? $config->language : "english";
-			$translate = GD_Translate::init($use_lang);
 		}
+
+		// Choose a default language (English) if language not specified in config.ini
+		$use_lang = (!is_null($config) && isset($config->language)) ? $config->language : "english";
+		$translate = GD_Translate::init($use_lang);
 
 		// Pass config to the VerifySetup controller to check our setup environment and  we're all OK to proceed
 		$this->bootstrap('frontController');
