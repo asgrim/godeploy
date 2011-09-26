@@ -30,25 +30,25 @@ class GDApp_Form_SetupDatabase extends GD_Form_Abstract
 		$this->setName('databasesetup_form');
 
 		$hostname = new Zend_Form_Element_Text('hostname');
-		$hostname->setLabel('Hostname')
+		$hostname->setLabel(_r('Hostname'))
 			->setRequired(true)
 			->addFilter('StripTags')
 			->addValidator('NotEmpty');
 
 		$username = new Zend_Form_Element_Text('db_username');
-		$username->setLabel('Username')
+		$username->setLabel(_r('Username'))
 			->setRequired(true)
 			->addFilter('StripTags')
 			->addValidator('NotEmpty');
 
 		$password = new Zend_Form_Element_Password('db_password');
-		$password->setLabel('Password')
+		$password->setLabel(_r('Password'))
 			->setRequired(true)
 			->addFilter('StripTags')
 			->addValidator('NotEmpty');
 
 		$dbname = new Zend_Form_Element_Text('dbname');
-		$dbname->setLabel('Database Name')
+		$dbname->setLabel(_r('Database Name'))
 			->setRequired(true)
 			->addFilter('StripTags')
 			->addValidator('NotEmpty');

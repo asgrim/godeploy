@@ -30,14 +30,14 @@ class GDApp_Form_ChangePassword extends GD_Form_Abstract
 		$this->setName('changepassword_form');
 
 		$password = new Zend_Form_Element_Password('password');
-		$password->setLabel('New Password')
+		$password->setLabel(_r('New Password'))
 			->setRequired(true)
 			->addFilter('StripTags');
 		$not_empty = new Zend_Validate_NotEmpty();
 		$password->addValidators(array($not_empty));
 
 		$passwordConfirm = new Zend_Form_Element_Password('passwordconf');
-		$passwordConfirm->setLabel('Confirm Password')
+		$passwordConfirm->setLabel(_r('Confirm Password'))
 			->setRequired(true)
 			->addFilter('StripTags');
 		$passwordConfirm->addValidators(array($not_empty));

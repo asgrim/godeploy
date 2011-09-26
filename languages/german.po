@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GoDeploy\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-09-22 22:29+0100\n"
+"POT-Creation-Date: 2011-09-26 20:08+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: James Titcumb <james@asgrim.com>\n"
 "Language-Team: \n"
@@ -11,9 +11,132 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Poedit-Language: German\n"
 "X-Poedit-Country: GERMANY\n"
-"X-Poedit-KeywordsList: __\n"
+"X-Poedit-KeywordsList: _e;_r\n"
 "X-Poedit-Basepath: ../\n"
 "X-Poedit-SearchPath-0: application\n"
+
+#: application/forms/DeploymentSetup.php:36
+msgid "Server"
+msgstr "Server"
+
+#: application/forms/DeploymentSetup.php:48
+msgid "Current revision"
+msgstr "Aktuelle Version"
+
+#: application/forms/DeploymentSetup.php:57
+msgid "Deploy revision or tag"
+msgstr "Deploy revision oder dem Tag"
+
+#: application/forms/Login.php:35
+#: application/forms/SetupDatabase.php:39
+#: application/forms/SetupAdmin.php:33
+#: application/forms/ServerSettings.php:77
+msgid "Username"
+msgstr "Benutzername"
+
+#: application/forms/Login.php:40
+msgid "Please enter your User Name"
+msgstr "Bitte geben Sie Ihren Benutzernamen"
+
+#: application/forms/Login.php:45
+#: application/forms/SetupDatabase.php:45
+#: application/forms/SetupAdmin.php:39
+msgid "Password"
+msgstr "Kennwort"
+
+#: application/forms/Login.php:49
+msgid "Please enter your Password"
+msgstr "Bitte geben Sie Ihr Passwort"
+
+#: application/forms/ProjectSettings.php:33
+msgid "Project Name"
+msgstr "Namen des Projeckts"
+
+#: application/forms/ProjectSettings.php:38
+msgid "Please enter the project name"
+msgstr "Bitte geben Sie den Namen des Projekts"
+
+#: application/forms/ProjectSettings.php:50
+msgid "Repository URL"
+msgstr "Repository URL"
+
+#: application/forms/ProjectSettings.php:55
+msgid "Please enter the Repository URL"
+msgstr "Bitte geben Sie die Repository-URL"
+
+#: application/forms/ProjectSettings.php:60
+msgid "Deployment Branch"
+msgstr "Deployment Niederlassung"
+
+#: application/forms/ProjectSettings.php:65
+msgid "Please enter the name of the Deployment Branch"
+msgstr "Bitte geben Sie den Namen des Deployment Niederlassung"
+
+#: application/forms/ProjectSettings.php:69
+msgid "Public Key"
+msgstr "Public Key"
+
+#: application/forms/ProjectSettings.php:73
+msgid "Please enter the Public Key"
+msgstr "Bitte geben Sie die Public Key"
+
+#: application/forms/SetupDatabase.php:33
+#: application/forms/ServerSettings.php:42
+msgid "Hostname"
+msgstr "Hostname"
+
+#: application/forms/SetupDatabase.php:51
+msgid "Database Name"
+msgstr "Database Name"
+
+#: application/forms/ChangePassword.php:33
+msgid "New Password"
+msgstr "New Password"
+
+#: application/forms/ChangePassword.php:40
+#: application/forms/SetupAdmin.php:45
+msgid "Confirm Password"
+msgstr "Passwort bestätigen"
+
+#: application/forms/ServerSettings.php:33
+msgid "Name"
+msgstr "Name"
+
+#: application/forms/ServerSettings.php:38
+msgid "Please enter the Server Name"
+msgstr "Bitte geben Sie die Server-Name"
+
+#: application/forms/ServerSettings.php:47
+msgid "Please enter the Hostname"
+msgstr "Bitte geben Sie den Hostnamen"
+
+#: application/forms/ServerSettings.php:54
+msgid "Connection Type"
+msgstr "Connection Type"
+
+#: application/forms/ServerSettings.php:59
+msgid "Please choose a Connection Type"
+msgstr "Bitte wählen Sie ein Connection Type"
+
+#: application/forms/ServerSettings.php:68
+msgid "Port"
+msgstr "Port"
+
+#: application/forms/ServerSettings.php:73
+msgid "Please enter the Port Number"
+msgstr "Bitte geben Sie die Port-Nummer"
+
+#: application/forms/ServerSettings.php:83
+msgid "Please enter the Username"
+msgstr "Bitte geben Sie Benutzername"
+
+#: application/forms/ServerSettings.php:94
+msgid "Please enter the Password"
+msgstr "Bitte geben Sie das Passwort"
+
+#: application/forms/ServerSettings.php:98
+msgid "Remote Path"
+msgstr "Remote Path"
 
 #: application/views/scripts/settings/index.phtml:11
 msgid "Project Settings"
@@ -30,16 +153,6 @@ msgstr "Es gab ein Problem mit Ihrer Einreichung. Bitte überprüfen Sie die Fel
 #: application/views/scripts/settings/index.phtml:27
 msgid "Servers"
 msgstr "Server"
-
-#: application/views/scripts/settings/index.phtml:32
-#: application/views/scripts/servers/confirm-delete.phtml:16
-msgid "Name"
-msgstr "Name"
-
-#: application/views/scripts/settings/index.phtml:33
-#: application/views/scripts/servers/confirm-delete.phtml:17
-msgid "Hostname"
-msgstr "Hostname"
 
 #: application/views/scripts/settings/index.phtml:34
 #: application/views/scripts/servers/confirm-delete.phtml:18
@@ -89,10 +202,6 @@ msgstr "Zusammenfassung"
 msgid "Deploy to"
 msgstr "Deploy, um"
 
-#: application/views/scripts/deploy/main.phtml:19
-msgid "Repository URL"
-msgstr "Repository URL"
-
 #: application/views/scripts/deploy/main.phtml:24
 #: application/views/scripts/history/index.phtml:21
 msgid "From"
@@ -140,10 +249,6 @@ msgstr "Datum"
 #: application/views/scripts/history/index.phtml:19
 msgid "Time"
 msgstr "Zeit"
-
-#: application/views/scripts/history/index.phtml:20
-msgid "Server"
-msgstr "Server"
 
 #: application/views/scripts/history/index.phtml:47
 msgid "This project has not yet been deployed."

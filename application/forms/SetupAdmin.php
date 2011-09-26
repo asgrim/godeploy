@@ -30,19 +30,19 @@ class GDApp_Form_SetupAdmin extends GD_Form_Abstract
 		$this->setName('adminsetup_form');
 
 		$username = new Zend_Form_Element_Text('username');
-		$username->setLabel('Username')
+		$username->setLabel(_r('Username'))
 			->setRequired(true)
 			->addFilter('StripTags')
 			->addValidator('NotEmpty');
 
 		$password = new Zend_Form_Element_Password('password');
-		$password->setLabel('Password')
+		$password->setLabel(_r('Password'))
 			->setRequired(true)
 			->addFilter('StripTags')
 			->addValidator('NotEmpty');
 
 		$passwordConfirm = new Zend_Form_Element_Password('passwordconf');
-		$passwordConfirm->setLabel('Confirm Password')
+		$passwordConfirm->setLabel(_r('Confirm Password'))
 			->setRequired(true)
 			->addFilter('StripTags')
 			->addValidator('NotEmpty')

@@ -32,21 +32,21 @@ class GDApp_Form_Login extends GD_Form_Abstract
 			->setMethod('post');
 
 		$username = new Zend_Form_Element_Text('username');
-		$username->setLabel('Username')
+		$username->setLabel(_r('Username'))
 			->setRequired(true)
 			->addFilter('StripTags')
 			->addFilter('StringTrim');
 		$not_empty = new Zend_Validate_NotEmpty();
-		$not_empty->setMessage('Please enter your User Name');
+		$not_empty->setMessage(_r('Please enter your User Name'));
 		$username->addValidators(array($not_empty));
 
 
 		$password = new Zend_Form_Element_Password('password');
-		$password->setLabel('Password')
+		$password->setLabel(_r('Password'))
 			->setRequired(true)
 			->addFilter('StripTags');
 		$not_empty = new Zend_Validate_NotEmpty();
-		$not_empty->setMessage('Please enter your Password');
+		$not_empty->setMessage(_r('Please enter your Password'));
 		$password->addValidators(array($not_empty));
 
 
