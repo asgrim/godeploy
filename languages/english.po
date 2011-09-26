@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GoDeploy\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-09-26 20:07+0100\n"
+"POT-Creation-Date: 2011-09-26 21:46+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: James Titcumb <james@asgrim.com>\n"
 "Language-Team: \n"
@@ -302,11 +302,11 @@ msgstr "Login to GoDeploy"
 msgid "This field has an error"
 msgstr "This field has an error"
 
-#: application/views/scripts/template/header.phtml:16
+#: application/views/scripts/template/header.phtml:18
 msgid "Logged in as"
 msgstr "Logged in as"
 
-#: application/views/scripts/template/header.phtml:18
+#: application/views/scripts/template/header.phtml:20
 msgid "Not logged in."
 msgstr "Not logged in."
 
@@ -369,6 +369,10 @@ msgstr "There was a problem connecting to the database server with the informati
 #: application/views/scripts/setup/step2.phtml:19
 msgid "Please check the details you entered and try again."
 msgstr "Please check the details you entered and try again."
+
+#: application/views/scripts/setup/header.phtml:5
+msgid "Change Language"
+msgstr "Change Language"
 
 #: application/views/scripts/home/index.phtml:11
 msgid "Deployments"
