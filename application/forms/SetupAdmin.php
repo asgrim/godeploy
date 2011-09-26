@@ -18,44 +18,44 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @copyright 2011 GoDeploy
- * @author James Titcumb, Simon Wade
+ * @author James Titcumb, Jon Wigham, Simon Wade
  * @link http://www.godeploy.com/
  */
-class GDApp_Form_Login extends GD_Form_Abstract
+class GDApp_Form_SetupAdmin extends GD_Form_Abstract
 {
 	public function __construct($options = null)
 	{
 		parent::__construct($options);
 
-		$this->setName('login_form')
-			->setAction('/auth/login')
-			->setMethod('post');
+		$this->setName('adminsetup_form');
 
 		$username = new Zend_Form_Element_Text('username');
 		$username->setLabel(_r('Username'))
 			->setRequired(true)
 			->addFilter('StripTags')
-			->addFilter('StringTrim');
-		$not_empty = new Zend_Validate_NotEmpty();
-		$not_empty->setMessage(_r('Please enter your User Name'));
-		$username->addValidators(array($not_empty));
-
+			->addValidator('NotEmpty');
 
 		$password = new Zend_Form_Element_Password('password');
 		$password->setLabel(_r('Password'))
 			->setRequired(true)
-			->addFilter('StripTags');
-		$not_empty = new Zend_Validate_NotEmpty();
-		$not_empty->setMessage(_r('Please enter your Password'));
-		$password->addValidators(array($not_empty));
+			->addFilter('StripTags')
+			->addValidator('NotEmpty');
 
+		$passwordConfirm = new Zend_Form_Element_Password('passwordconf');
+		$passwordConfirm->setLabel(_r('Confirm Password'))
+			->setRequired(true)
+			->addFilter('StripTags')
+			->addValidator('NotEmpty')
+			->addValidator('Identical', false, array('token' => 'password'));
 
 		$submit = new Zend_Form_Element_Image('btn_submit');
-		$submit->setImage('/images/buttons/small/login.png');
+		$submit->setImage('/images/buttons/small/next.png')
+			->setAttrib('style', 'float: right;');
 
 		$this->addElements(array(
 			$username,
 			$password,
+			$passwordConfirm,
 			$submit,
 		));
 	}

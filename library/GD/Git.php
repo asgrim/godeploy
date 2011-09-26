@@ -27,7 +27,7 @@
  * @author james
  *
  */
-class GD_Git
+class GD_Git extends MAL_Util_Shell
 {
 	private $_url;
 	private $_project;
@@ -35,9 +35,6 @@ class GD_Git
 	private $_current_branch;
 	private $_repotype;
 	private $_apache_home;
-
-	private $_last_output;
-	private $_last_errno;
 
 	private $_base_gitdir;
 
@@ -55,6 +52,8 @@ class GD_Git
 	const GIT_STATUS_ERROR_UNKNOWN = "STATUS_UNKNOWN_ERROR";
 
 	const GIT_GENERAL_ERROR = "GENERAL_GIT_ERROR";
+	const GIT_GENERAL_EMPTY_REF = "EMPTY_REF";
+	const GIT_GENERAL_INVALID_REF = "INVALID_REF";
 
 	public function __construct(GD_Model_Project &$project)
 	{
@@ -82,6 +81,7 @@ class GD_Git
 		if(!file_exists($this->_base_gitdir))
 		{
 			mkdir($this->_base_gitdir, 0700, true);
+			chdir($this->_base_gitdir);
 		}
 
 		$this->_current_branch = $this->getCurrentBranch(true);
@@ -139,11 +139,6 @@ class GD_Git
 		{
 			return self::GIT_REPOTYPE_SSH;
 		}
-	}
-
-	public function getLastError()
-	{
-		return $this->_last_errno;
 	}
 
 	public function getGitDir()
@@ -263,6 +258,27 @@ class GD_Git
 		return $this->getSingleLog('git log --pretty=oneline | tail -1');
 	}
 
+	public function getFullHash($ref)
+	{
+		$nice_ref = $this->sanitizeRef($ref);
+
+		if($nice_ref == "")
+		{
+			throw new GD_Exception("Could not get full hash '{$nice_ref}': " . self::GIT_GENERAL_EMPTY_REF, 0, self::GIT_GENERAL_EMPTY_REF);
+		}
+
+		$this->runShell('git log -n1 --format="format:%H" ' . $nice_ref);
+
+		if($this->_last_errno == 0)
+		{
+			return $this->_last_output[0];
+		}
+		else
+		{
+			throw new GD_Exception("Could not get full hash '{$nice_ref}': " . self::GIT_GENERAL_INVALID_REF, 0, self::GIT_GENERAL_INVALID_REF);
+		}
+	}
+
 	public function getFilesChangedList($from_rev, $to_rev)
 	{
 		if($from_rev == "")
@@ -325,7 +341,16 @@ class GD_Git
 
 		if($this->_last_errno == 0)
 		{
-			return true;
+			$this->runShell('git fetch --tags ' . $remote);
+
+			if($this->_last_errno == 0)
+			{
+				return true;
+			}
+			else
+			{
+				return self::GIT_PULL_ERROR_UNKNOWN;
+			}
 		}
 		else
 		{
@@ -349,10 +374,11 @@ class GD_Git
 	public function gitClone()
 	{
 		$this->sshKeys();
-		$this->runShell('git clone ' . $this->_url . ' "' . $this->_gitdir . '"', false, true);
+		$this->runShell('git clone ' . $this->_url . ' "' . $this->_gitdir . '"', true);
 
 		if($this->_last_errno == 0)
 		{
+			$this->runShell('git reset --hard HEAD', true);
 			return true;
 		}
 		else
@@ -381,18 +407,7 @@ class GD_Git
 			chdir($this->_gitdir);
 		}
 
-		if($noisy) echo "<strong>" . $cmd . "</strong><br /><br />";
-		$this->_last_errno = 0;
-		$this->_last_output = array();
-		exec($cmd . " 2>&1", $this->_last_output, $this->_last_errno);
-		if($noisy)
-		{
-			echo "<pre>";
-			var_dump($this->_last_output);
-			var_dump($this->_last_errno);
-			echo "</pre>";
-			echo "<hr />";
-		}
+		parent::Exec($cmd, $noisy);
 	}
 
 	private function sanitizeRef($ref)

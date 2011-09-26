@@ -18,45 +18,38 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @copyright 2011 GoDeploy
- * @author James Titcumb, Simon Wade
+ * @author James Titcumb, Jon Wigham, Simon Wade
  * @link http://www.godeploy.com/
  */
-class GDApp_Form_Login extends GD_Form_Abstract
+class GDApp_Form_ChangePassword extends GD_Form_Abstract
 {
 	public function __construct($options = null)
 	{
 		parent::__construct($options);
 
-		$this->setName('login_form')
-			->setAction('/auth/login')
-			->setMethod('post');
-
-		$username = new Zend_Form_Element_Text('username');
-		$username->setLabel(_r('Username'))
-			->setRequired(true)
-			->addFilter('StripTags')
-			->addFilter('StringTrim');
-		$not_empty = new Zend_Validate_NotEmpty();
-		$not_empty->setMessage(_r('Please enter your User Name'));
-		$username->addValidators(array($not_empty));
-
+		$this->setName('changepassword_form');
 
 		$password = new Zend_Form_Element_Password('password');
-		$password->setLabel(_r('Password'))
+		$password->setLabel(_r('New Password'))
 			->setRequired(true)
 			->addFilter('StripTags');
 		$not_empty = new Zend_Validate_NotEmpty();
-		$not_empty->setMessage(_r('Please enter your Password'));
 		$password->addValidators(array($not_empty));
 
+		$passwordConfirm = new Zend_Form_Element_Password('passwordconf');
+		$passwordConfirm->setLabel(_r('Confirm Password'))
+			->setRequired(true)
+			->addFilter('StripTags');
+		$passwordConfirm->addValidators(array($not_empty));
+		$passwordConfirm->addValidator('Identical', false, array('token' => 'password'));
 
 		$submit = new Zend_Form_Element_Image('btn_submit');
-		$submit->setImage('/images/buttons/small/login.png');
+		$submit->setImage('/images/buttons/small/save-changes.png');
 
 		$this->addElements(array(
-			$username,
 			$password,
-			$submit,
+			$passwordConfirm,
+			$submit
 		));
 	}
 }

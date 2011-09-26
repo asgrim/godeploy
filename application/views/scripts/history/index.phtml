@@ -2,7 +2,7 @@
 <div class="content">
 	<div class="padding_20"></div>
 
-	<h1><?php echo $this->project->getName(); ?> &raquo; Deployment History</h1>
+	<h1><?php echo $this->project->getName(); ?> &raquo; <?php _e("Deployment History"); ?></h1>
 	<div class="padding_15"></div>
 
 <?php
@@ -13,17 +13,17 @@
 ?>
 	<div class="wrapper w_ededed"><div class="content">
 		<div class="padding_15"></div>
-		<p>This is a list of the deployments that have been run on this project.
+		<p><?php _e("This is a list of the deployments that have been run on this project."); ?>
 		There are <?php echo $count; ?> deployment<?php echo $ess; ?> shown,
 		with the most recent at the top.</p>
 		<table>
 			<thead>
 				<tr>
-					<th>Date/Time</th>
-					<th>Server</th>
-					<th>From</th>
-					<th>To</th>
-					<th>Status</th>
+					<th><?php _e("Date"); ?>/<?php _e("Time"); ?></th>
+					<th><?php _e("Server"); ?></th>
+					<th><?php _e("From"); ?></th>
+					<th><?php _e("To"); ?></th>
+					<th><?php _e("Status"); ?></th>
 					<th class="empty">&nbsp;</th>
 				</tr>
 			</thead>
@@ -46,6 +46,7 @@
 		</table>
 	</div></div>
 <?php } else { ?>
-	<p class="last">This project has not yet been deployed.</p>
+	<p class="last"><?php _e("This project has not yet been deployed."); ?></p>
 <?php } ?>
 </div>
+

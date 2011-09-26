@@ -74,46 +74,70 @@ class DeployController extends Zend_Controller_Action
 					$from_rev = "";
 				}
 
-				$deployment = new GD_Model_Deployment();
-				$deployment->setUsersId($user->getId())
-						->setProjectsId($project->getId())
-						->setWhen(date("Y-m-d H:i:s"))
-						->setServersId($server_id)
-						->setFromRevision($from_rev)
-						->setToRevision($this->_request->getParam('toRevision', false))
-						->setDeploymentStatusesId(1);
-
-				$deployments->save($deployment);
-
-				// Generate the list of files to deploy and save in deployment_files table
 				$git = new GD_Git($project);
 				$git->gitPull();
-				$files_changed = $git->getFilesChangedList($deployment->getFromRevision(), $deployment->getToRevision());
 
-				$deployment_files = new GD_Model_DeploymentFilesMapper();
-				$deployment_file_statuses = new GD_Model_DeploymentFileStatusesMapper();
-				$deployment_file_actions = new GD_Model_DeploymentFileActionsMapper();
-				foreach($files_changed as $fc)
+				$input_to_rev = $this->_request->getParam('toRevision', false);
+
+				try
 				{
-					$deployment_file = new GD_Model_DeploymentFile();
-					$deployment_file->setDeploymentsId($deployment->getId());
-					$deployment_file->setDeploymentFileActionsId($deployment_file_actions->getDeploymentFileActionByGitStatus($fc['action'])->getId());
-					$deployment_file->setDeploymentFileStatusesId($deployment_file_statuses->getDeploymentFileStatusByCode('NEW')->getId());
-					$deployment_file->setDetails($fc['file']);
+					$to_rev = $git->getFullHash($input_to_rev);
 
-					$deployment_files->save($deployment_file);
+					$deployment = new GD_Model_Deployment();
+					$deployment->setUsersId($user->getId())
+							->setProjectsId($project->getId())
+							->setWhen(date("Y-m-d H:i:s"))
+							->setServersId($server_id)
+							->setFromRevision($from_rev)
+							->setToRevision($to_rev)
+							->setDeploymentStatusesId(1);
+
+					$deployments->save($deployment);
+
+					// Generate the list of files to deploy and save in deployment_files table
+					$files_changed = $git->getFilesChangedList($deployment->getFromRevision(), $deployment->getToRevision());
+
+					$deployment_files = new GD_Model_DeploymentFilesMapper();
+					$deployment_file_statuses = new GD_Model_DeploymentFileStatusesMapper();
+					$deployment_file_actions = new GD_Model_DeploymentFileActionsMapper();
+					foreach($files_changed as $fc)
+					{
+						$deployment_file = new GD_Model_DeploymentFile();
+						$deployment_file->setDeploymentsId($deployment->getId());
+						$deployment_file->setDeploymentFileActionsId($deployment_file_actions->getDeploymentFileActionByGitStatus($fc['action'])->getId());
+						$deployment_file->setDeploymentFileStatusesId($deployment_file_statuses->getDeploymentFileStatusByCode('NEW')->getId());
+						$deployment_file->setDetails($fc['file']);
+
+						$deployment_files->save($deployment_file);
+					}
+
+					// Forward to either run or preview page...
+					if($this->_request->getParam('submitRun_x') > 0)
+					{
+						// go to run
+						$this->_redirect($this->getFrontController()->getBaseUrl() . "/project/" . $this->_getParam("project") . "/deploy/run/" . $deployment->getId());
+					}
+					else if($this->_request->getParam('submitPreview_x') > 0)
+					{
+						// go to preview
+						$this->_redirect($this->getFrontController()->getBaseUrl() . "/project/" . $this->_getParam("project") . "/deploy/preview/" . $deployment->getId());
+					}
 				}
-
-				// Forward to either run or preview page...
-				if($this->_request->getParam('submitRun_x') > 0)
+				catch(GD_Exception $ex)
 				{
-					// go to run
-					$this->_redirect($this->getFrontController()->getBaseUrl() . "/project/" . $this->_getParam("project") . "/deploy/run/" . $deployment->getId());
-				}
-				else if($this->_request->getParam('submitPreview_x') > 0)
-				{
-					// go to preview
-					$this->_redirect($this->getFrontController()->getBaseUrl() . "/project/" . $this->_getParam("project") . "/deploy/preview/" . $deployment->getId());
+					if($ex->getStringCode() === GD_Git::GIT_GENERAL_EMPTY_REF)
+					{
+						$form->toRevision->addError("Empty ref: " . $ex->getMessage());
+					}
+					else if($ex->getStringCode() === GD_Git::GIT_GENERAL_INVALID_REF)
+					{
+						$form->toRevision->addError("This revision could not be found in this project. Please check it.");
+						$form->addError("error");
+					}
+					else
+					{
+						throw $ex;
+					}
 				}
 			}
 		}
@@ -386,7 +410,7 @@ class DeployController extends Zend_Controller_Action
 			{
 				$errors = true;
 				$file->setDeploymentFileStatusesId($deployment_files_statuses->getDeploymentFileStatusByCode('FAILED')->getId());
-				$this->writeDebug("FAILED.\n");
+				$this->writeDebug("FAILED [" . $ex->getMessage() . "].\n");
 			}
 			$deployment_files->save($file);
 		}

@@ -33,7 +33,7 @@ class GDApp_Form_DeploymentSetup extends GD_Form_Abstract
 		$servers = $servers_map->getServersByProject($project_id);
 
 		$server_id = new Zend_Form_Element_Select('serverId');
-		$server_id->setLabel('Server')
+		$server_id->setLabel(_r('Server'))
 			->setRequired(true)
 			->addFilter('StripTags')
 			->addFilter('StringTrim')
@@ -45,7 +45,7 @@ class GDApp_Form_DeploymentSetup extends GD_Form_Abstract
 		}
 
 		$from_revision = new Zend_Form_Element_Text('fromRevision');
-		$from_revision->setLabel('Current revision')
+		$from_revision->setLabel(_r('Current revision'))
 			->setRequired(false)
 			->addFilter('StripTags')
 			->addFilter('StringTrim')
@@ -54,7 +54,7 @@ class GDApp_Form_DeploymentSetup extends GD_Form_Abstract
 			->setAttrib('disabled', 'disabled');
 
 		$to_revision = new Zend_Form_Element_Text('toRevision');
-		$to_revision->setLabel('Deploy revision or tag')
+		$to_revision->setLabel(_r('Deploy revision or tag'))
 			->setRequired(true)
 			->addFilter('StripTags')
 			->addFilter('StringTrim')

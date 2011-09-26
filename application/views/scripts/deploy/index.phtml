@@ -8,11 +8,11 @@
 	<div id="form"><div class="wrapper w_ededed"><div class="content">
 		<div class="padding_15"></div>
 
-		<h2>Start Deployment</h2>
+		<h2><?php _e("Start Deployment"); ?></h2>
 
 	<?php if ($this->form->isErrors()) : ?>
 		<div id="errors"><div class="content">
-			There was a problem with your submission. Please check the fields highlighted below.
+			<?php _e("There was a problem with your submission. Please check the fields highlighted below."); ?>
 		</div></div>
 		<div class="padding_15"></div>
 	<?php endif; ?>

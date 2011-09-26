@@ -8,11 +8,11 @@
 	<div id="form"><div class="wrapper w_ededed"><div class="content">
 		<div class="padding_15"></div>
 
-		<h2>Project Settings</h2>
+		<h2><?php _e("Project Settings"); ?></h2>
 
 	<?php if ($this->form->isErrors()) : ?>
 		<div id="errors"><div class="content">
-			There was a problem with your submission. Please check the fields highlighted below.
+			<?php _e("There was a problem with your submission. Please check the fields highlighted below."); ?>
 		</div></div>
 		<div class="padding_15"></div>
 	<?php endif; ?>
@@ -24,14 +24,14 @@
 	<div class="padding_20"></div>
 	<div id="table"><div class="wrapper w_ededed"><div class="content">
 		<div class="padding_15"></div>
-		<h2>Servers</h2>
+		<h2><?php _e("Servers"); ?></h2>
 		<?php if(is_array($this->servers) && count($this->servers) > 0): $another = "another"; ?>
 			<table>
 				<thead>
 					<tr>
-						<th>Name</th>
-						<th>Hostname</th>
-						<th>Type</th>
+						<th><?php _e("Name"); ?></th>
+						<th><?php _e("Hostname"); ?></th>
+						<th><?php _e("Type"); ?></th>
 						<th class="empty" colspan="2">&nbsp;</th>
 					</tr>
 				</thead>
@@ -57,9 +57,9 @@
 			</table>
 			<div class="padding_15"></div>
 		<?php else: $another = "the first"; ?>
-			<p><strong>There are no servers currently configured for this project!</strong></p>
+			<p><strong><?php _e("There are no servers currently configured for this project!"); ?></strong></p>
 		<?php endif; ?>
-			<a href="<?php echo $this->baseUrl(); ?>/project/<?php echo $this->project->getSlug(); ?>/servers/add" class="add_icon">Add another server to this project &raquo;</a>
+			<a href="<?php echo $this->baseUrl(); ?>/project/<?php echo $this->project->getSlug(); ?>/servers/add" class="add_icon"><?php _e("Add another server to this project"); ?> &raquo;</a>
 	</div></div></div>
 	<?php endif; ?>
 

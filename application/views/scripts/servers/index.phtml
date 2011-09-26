@@ -11,7 +11,7 @@
 	<div id="form"><div class="wrapper w_ededed"><div class="content">
 		<div class="padding_15"></div>
 
-		<h2>Server Details</h2>
+		<h2><?php _e("Server Details"); ?></h2>
 
 	<?php
 	if ($this->form->isErrors())
@@ -19,21 +19,20 @@
 		echo '<div id="errors"><div class="content">';
 		if(in_array("FTP_CONNECT_ERROR", $this->form->getErrorMessages()))
 		{
-			?>
-			There was a problem connecting to the FTP server with the information you provided.<br /><br />
-			Please check the username and password, and ensure the user has permissions to create and delete files on the FTP server.
-			<?php
+			_e("There was a problem connecting to the FTP server with the information you provided.");
+			echo "<br /><br />";
+			_e("Please check the username and password, and ensure the user has permissions to create and delete files on the FTP server.");
 
 			if(isset($this->ftpMessage) && $this->ftpMessage != '')
 			{
-				echo "<br /><br />More information that might be useful: <span style=\"font-weight: normal\">{$this->ftpMessage}</span>";
+				echo "<br /><br />";
+				_e("More information that might be useful: ");
+				echo "<span style=\"font-weight: normal\">{$this->ftpMessage}</span>";
 			}
 		}
 		else
 		{
-			?>
-			There was a problem with your submission. Please check the fields highlighted below.
-			<?php
+			_e("There was a problem with your submission. Please check the fields highlighted below.");
 		}
 		echo '</div></div><div class="padding_15"></div>';
 	}
