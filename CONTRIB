@@ -1,7 +1,7 @@
 CONTRIBUTION NOTES
 ------------------
 GoDeploy requirements:
- * MAL (https://github.com/Asgrim/MAL)
+ * MAL (https://github.com/asgrim/mal)
  * Zend Framework (http://framework.zend.com)
  * PHP 5.3.2 (not tested with other versions)
  * MySQL 5.1.41 (not tested with other versions)
@@ -29,10 +29,10 @@ http://vimeo.com/16018419
 
 SETTING UP ENVIRONMENT FOR GITHUB PULL REQUESTS
 -----------------------------------------------
-1. Fork https://github.com/Asgrim/GoDeploy on GitHub
-2. git clone git@github.com:[YOURUSER]/GoDeploy.git
+1. Fork https://github.com/asgrim/godeploy on GitHub
+2. git clone git@github.com:[YOURUSER]/godeploy.git
 2. cd library
-3. git clone git://github.com/Asgrim/MAL.git MAL
+3. git clone git://github.com/asgrim/mal.git MAL
 4. svn co http://framework.zend.com/svn/framework/standard/tags/release-1.10.8/library/Zend Zend
 5. Run latest db/db_create_v?.sql script on your DB
 6. Run db/test_data.sql
@@ -40,16 +40,16 @@ SETTING UP ENVIRONMENT FOR GITHUB PULL REQUESTS
 
 SETTING UP ENVIRONMENT (READ-ONLY - FOR TESTING ETC.)
 -----------------------------------------------------
-1. git clone git://github.com/Asgrim/GoDeploy.git
+1. git clone git://github.com/asgrim/godeploy.git
 2. cd library
-3. git clone git://github.com/Asgrim/MAL.git MAL
+3. git clone git://github.com/asgrim/mal.git MAL
 4. svn co http://framework.zend.com/svn/framework/standard/tags/release-1.10.8/library/Zend Zend
 5. Run latest db/db_create_v?.sql script
 6. Set up DB settings in application/configs/application.ini
 
 UPDATING IN THE FUTURE (FOR ALL DEVELOPERS)
 -------------------------------------------
-1. git remote add upstream git://github.com/Asgrim/GoDeploy.git
+1. git remote add upstream git://github.com/asgrim/godeploy.git
 2. git fetch upstream
 3. git merge upstream/develop
 (alternatively if you are daring/careless, you can `git pull upstream` to combine fetch and merge)
