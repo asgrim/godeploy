@@ -28,11 +28,41 @@ class SetupController extends Zend_Controller_Action
     {
         /* Initialize action controller here */
     	$this->view->show_navigation = false;
+    	$this->view->prenavigation_header = "setup/header.phtml";
+    	$this->view->available_languages = GD_Translate::getAvailableLanguages();
+
+    	$setup_session = new Zend_Session_Namespace('gd_setup_session');
+
+    	if(!isset($setup_session->language) || $setup_session->language == "")
+    	{
+    		$setup_session->language = "english";
+    	}
+
+    	$this->view->current_language = $setup_session->language;
     }
 
     public function indexAction()
     {
     	$this->_redirect("/setup/step1");
+    }
+
+    public function languageAction()
+    {
+    	if($this->getRequest()->isPost())
+    	{
+    		$setup_session = new Zend_Session_Namespace('gd_setup_session');
+    		$setup_session->language = $this->_getParam("lang");
+    	}
+
+    	if($this->_getParam("return"))
+    	{
+    		$url = $this->_getParam("return");
+    	}
+    	else
+    	{
+    		$url = "/setup/step1";
+    	}
+    	$this->_redirect($url);
     }
 
     public function step1Action()
@@ -104,7 +134,7 @@ class SetupController extends Zend_Controller_Action
 	    	$config = new Zend_Config(array(), true);
 
 	    	$config->general = array();
-	    	$config->general->language = "english";
+	    	$config->general->language = $setup_session->language ? $setup_session->language : "english" ;
 	    	$config->general->setupComplete = true;
 	    	$config->general->cryptkey = md5(microtime() . $setup_session->admin->username . $setup_session->admin->password);
 	    	$config->general->installDate = date("d/m/Y H:i:s");

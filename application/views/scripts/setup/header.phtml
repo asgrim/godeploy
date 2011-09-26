@@ -1,0 +1,13 @@
+
+<div id="language">
+	<form action="/setup/language" method="POST" style="float: right;">
+		<input type="hidden" name="return" value="<?php echo $_SERVER['REQUEST_URI']; ?>" />
+		<?php _e("Change Language"); ?>:
+		<select name="lang" id="lang">
+		<?php if(is_array($this->available_languages)) foreach($this->available_languages as $lang): ?>
+			<option value="<?php echo $lang; ?>"<?php echo ($lang == $this->current_language ? " selected=\"selected\"" : ""); ?>><?php echo ucfirst($lang); ?></option>
+		<?php endforeach; ?>
+		</select>
+		<input type="submit" value="Change &raquo;" />
+	</form>
+</div>
