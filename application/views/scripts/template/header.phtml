@@ -7,6 +7,8 @@
 			<h2 class="hidden">GoDeploy - <?php _e("Easy Code Deployment"); ?></h2>
 		</div>
 
+		<?php if(isset($this->prenavigation_header) && $this->prenavigation_header != "") echo $this->render($this->prenavigation_header); ?>
+
 		<?php if($this->show_navigation !== false): ?>
 		<div id="menu">
 			<?php echo $this->navigation()->menu(); ?>
@@ -22,6 +24,8 @@
 			<div class="clear"></div>
 		</div>
 		<?php endif; ?>
+
+		<?php if(isset($this->postnavigation_header) && $this->postnavigation_header != "") echo $this->render($this->postnavigation_header); ?>
 
 		<div class="clear"></div>
 

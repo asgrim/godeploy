@@ -76,3 +76,15 @@
 				background-image: none;
 				background-color: #ffffff;
 				}
+
+				
+#language {
+	float: right;
+	width: 540px;
+	margin-top: 73px;
+	margin-right: 20px;
+	}
+	#language form {
+		float: right;
+		color: #ffffff;
+		}

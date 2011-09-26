@@ -47,8 +47,21 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 			Zend_Registry::set("cryptkey", $config->cryptkey);
 		}
 
+		$setup_session = new Zend_Session_Namespace('gd_setup_session');
+
 		// Choose a default language (English) if language not specified in config.ini
-		$use_lang = (!is_null($config) && isset($config->language)) ? $config->language : "english";
+		if(!is_null($config) && isset($config->language))
+		{
+			$use_lang = $config->language;
+		}
+		else if(isset($setup_session->language))
+		{
+			$use_lang = $setup_session->language;
+		}
+		else
+		{
+			$use_lang = "english";
+		}
 		$translate = GD_Translate::init($use_lang);
 
 		// Pass config to the VerifySetup controller to check our setup environment and  we're all OK to proceed
