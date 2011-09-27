@@ -59,6 +59,9 @@ class GD_Git extends MAL_Util_Shell
 	const GIT_GENERAL_EMPTY_REF = "EMPTY_REF";
 	const GIT_GENERAL_INVALID_REF = "INVALID_REF";
 
+	const GIT_SSH_ERROR_HOSTNME = "SSH_RESOLVE_HOSTNAME";
+	const GIT_SSH_ERROR_UNKNOWN = "SSH_UNKNOWN_ERROR";
+
 	public function __construct(GD_Model_Project &$project)
 	{
 		$this->_project = $project;
@@ -107,24 +110,53 @@ class GD_Git extends MAL_Util_Shell
 			file_put_contents($keyfile, $id_rsa);
 			chmod($keyfile, 0600);
 
+			// Get the hostname part of the URL
+			$x = strrchr($this->_url, ':');
+			$host = substr($this->_url, 0, -strlen($x));
+			$host = preg_replace("/[^@0-9a-zA-Z-_.]/", "", $host);
+
 			// Test the connection
-			$this->runShell("ssh -T -o StrictHostKeyChecking=no git@github.com", false);
+			$this->runShell("ssh -T -o StrictHostKeyChecking=no {$host}", false);
 
-			// Check the connection worked - normally the valid string is the first (and only) output from
-			// the ssh command, but sometimes we add to known_hosts so the first is a warning.
-			$valid_string = "You've successfully authenticated";
-			$is_valid = false;
-			foreach($this->_last_output as $o)
+			if($this->_last_errno != 0)
 			{
-				if(strpos($o, $valid_string) !== false)
+				// First check if we're a Github sort of repo
+				// Github returns: Hi [USER]! You've successfully authenticated, but GitHub does not provide shell access.
+				$valid_string = "You've successfully authenticated";
+				$is_valid = false;
+				foreach($this->_last_output as $o)
 				{
-					$is_valid = true;
+					if(strpos($o, $valid_string) !== false)
+					{
+						return;
+					}
 				}
-			}
 
-			if(!$is_valid)
-			{
-				throw new GD_Exception("Tried setting up SSH authentication but failed.");
+				if(in_array("ERROR:gitosis.serve.main:Need SSH_ORIGINAL_COMMAND in environment.", $this->_last_output))
+				{
+					/*
+					 * This is actually a correct response - default gitosis setup will serve up one of these:
+					 *
+					 * PTY allocation request failed on channel 0
+					 * ERROR:gitosis.serve.main:Need SSH_ORIGINAL_COMMAND in environment.
+					 *
+					 * or just
+					 *
+					 * ERROR:gitosis.serve.main:Need SSH_ORIGINAL_COMMAND in environment.
+					 *
+					 */
+					return;
+				}
+				else if(strpos($this->_last_output[0], "Could not resolve hostname") !== false
+						|| (isset($this->_last_output[1]) && strpos($this->_last_output[1], "Could not resolve hostname") !== false))
+				{
+					throw new GD_Exception("Could not resolve hostname '{$host}'", 0, self::GIT_SSH_ERROR_HOSTNME);
+				}
+				else
+				{
+					$final_error = end($this->_last_output);
+					throw new GD_Exception("Tried setting up SSH authentication but failed. Final error was: {$final_error}", 0, self::GIT_SSH_ERROR_UNKNOWN);
+				}
 			}
 		}
 	}
