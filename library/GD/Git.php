@@ -122,7 +122,8 @@ class GD_Git extends MAL_Util_Shell
 			{
 				// First check if we're a Github sort of repo
 				// Github returns: Hi [USER]! You've successfully authenticated, but GitHub does not provide shell access.
-				$valid_string = "You've successfully authenticated";
+				// Codebase returns: You've successfully uploaded your public key to Codebase and authenticated.
+				$valid_string = "You've successfully";
 				$is_valid = false;
 				foreach($this->_last_output as $o)
 				{
