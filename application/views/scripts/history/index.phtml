@@ -1,13 +1,16 @@
 
-<div class="padding_20"></div>
-<h1><?php echo $this->project->getName(); ?> &raquo; <?php _e("Deployment History"); ?></h1>
+<div class="content">
+	<div class="padding_20"></div>
+
+	<h1><?php echo $this->project->getName(); ?> &raquo; <?php _e("Deployment History"); ?></h1>
+	<div class="padding_15"></div>
 
 <?php
-if(is_array($this->deployments) && count($this->deployments) > 0)
-{
-	$count = count($this->deployments);
-	$ess = $count == "1" ? "" : "s";
-	?>
+	if (is_array($this->deployments) && count($this->deployments) > 0)
+	{
+		$count = count($this->deployments);
+		$ess = $count == "1" ? "" : "s";
+?>
 	<div class="wrapper w_ededed"><div class="content">
 		<div class="padding_15"></div>
 		<p><?php _e("This is a list of the deployments that have been run on this project."); ?>
@@ -25,7 +28,7 @@ if(is_array($this->deployments) && count($this->deployments) > 0)
 				</tr>
 			</thead>
 			<tbody>
-			<?php foreach($this->deployments as $deployment): ?>
+			<?php foreach ($this->deployments as $deployment) : ?>
 				<tr>
 					<td><?php echo $deployment->getWhen("d/m/Y H:i:s"); ?></td>
 					<td><?php echo $deployment->getServer()->getDisplayName(); ?></td>
@@ -42,7 +45,8 @@ if(is_array($this->deployments) && count($this->deployments) > 0)
 			</tbody>
 		</table>
 	</div></div>
-	<div class="padding_15"></div>
 <?php } else { ?>
-<p><?php _e("This project has not yet been deployed."); ?></p>
+	<p class="last"><?php _e("This project has not yet been deployed."); ?></p>
 <?php } ?>
+</div>
+

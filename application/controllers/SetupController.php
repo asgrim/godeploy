@@ -129,7 +129,7 @@ class SetupController extends Zend_Controller_Action
     	// Create the config ini from session
     	$setup_session = new Zend_Session_Namespace('gd_setup_session');
 
-    	if($setup_session->complete)
+    	if (!$setup_session->complete)
     	{
 	    	$config = new Zend_Config(array(), true);
 
