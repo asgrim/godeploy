@@ -108,11 +108,11 @@ class SettingsController extends Zend_Controller_Action
 
 		// Delete the deployments associated with the project.
 		$deployments = $deploymentsMapper->getDeploymentsByProject($project->getId());
-		foreach ($deployments as $deployment) 
+		foreach ($deployments as $deployment)
 		{
 			// Delete the files associated with the project.
 			$deploymentFiles = $deploymentFilesMapper->getDeploymentFilesByDeployment($deployment->getId());
-			foreach ($deploymentFiles as $deploymentFile) 
+			foreach ($deploymentFiles as $deploymentFile)
 			{
 				$deploymentFilesMapper->delete($deploymentFile);
 			}
@@ -122,7 +122,7 @@ class SettingsController extends Zend_Controller_Action
 
 		// Delete the servers associated with the project.
 		$servers = $serversMapper->getServersByProject($project->getId());
-		foreach ($servers as $server) 
+		foreach ($servers as $server)
 		{
 			$serversMapper->delete($server);
 		}
