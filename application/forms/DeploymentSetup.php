@@ -62,10 +62,11 @@ class GDApp_Form_DeploymentSetup extends GD_Form_Abstract
 			->setDescription('<a href="#" onclick="getLatestRevision();">Click to get latest revision</a><span id="get_latest_revision_status"></span>');
 
 		$submitRun = new Zend_Form_Element_Image('submitRun');
-		$submitRun->setImage('/images/buttons/small/run-deployment.png');
+		$submitRun->setImage('/images/buttons/small/deploy.png');
 
 		$submitPreview = new Zend_Form_Element_Image('submitPreview');
-		$submitPreview->setImage('/images/buttons/small/preview-deployment.png');
+		$submitPreview->setImage('/images/buttons/small/inverted/preview.png');
+		$submitPreview->class = "preview";
 
 		$this->addElements(array(
 			$server_id,

@@ -1,21 +1,33 @@
 /* CSS Document */
 
 #deploymentSetup li.submit {
-	padding: 10px 0 0 205px;
+	padding: 10px 0 0 0;
+	width: 340px;
+	text-align: right;
+	float: left;
 	}
+
+	#deploymentSetup li.submit input.preview {
+		float: left;
+		margin-left: 15px;
+		}
+
 	#fromRevision, #toRevision {
 		width: 400px;
 		}
 
 #deploySummary {
 	}
+
 	#deploySummary label {
 		font-weight: bold;
 		text-align: right;
 		}
+
 	#deploySummary span.value {
 		margin-left: 15px;
 		}
+
 	#deploySummary li.submit {
 		padding: 10px 0 0 220px;
 		}
