@@ -41,7 +41,13 @@ class SettingsController extends Zend_Controller_Action
 			$project = new GD_Model_Project();
 			$project->setName("New Project");
 			$project->setDeploymentBranch('master'); // Usually default for git
-			$project->getSSHKey()->generateKeyPair($project);
+
+			// Load the ssh key
+			$ssh_keys_map = new GD_Model_SSHKeysMapper();
+			$ssh_keys = new GD_Model_SSHKey();
+			$ssh_keys_map->find(1, $ssh_keys);
+			$project->setSSHKey($ssh_keys);
+
 			$new_project = true;
 		}
 		$this->view->project = $project;
@@ -143,14 +149,9 @@ class SettingsController extends Zend_Controller_Action
 			$serversMapper->delete($server);
 		}
 
-		//Delete the project's git repo.
+		// Delete the project's git repo.
 		$git = new GD_Git($project);
 		$git->deleteRepository();
-
-		// Delete the ssh key
-		$ssh_key = $project->getSSHKey();
-		$ssh_keys = new GD_Model_SSHKeysMapper();
-		$ssh_keys->delete($ssh_key);
 
 		// Delete the project
 		$projects->delete($project);
@@ -165,15 +166,8 @@ class SettingsController extends Zend_Controller_Action
 		$project->setRepositoryUrl($this->_request->getParam('repositoryUrl', false));
 		$project->setDeploymentBranch($this->_request->getParam('deploymentBranch', false));
 		$project->setRepositoryTypesId(1);
+		$project->setSSHKeysId(1);
 		$repo_after = $project->getRepositoryUrl();
-
-		// Save the new ssh key if a new project
-		if($new_project)
-		{
-			$ssh_keys_map = new GD_Model_SSHKeysMapper();
-			$key_id = $ssh_keys_map->save($project->getSSHKey());
-			$project->setSSHKeysId($key_id);
-		}
 
 		// Save the project
 		$projects->save($project);

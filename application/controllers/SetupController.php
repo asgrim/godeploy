@@ -186,6 +186,15 @@ class SetupController extends Zend_Controller_Action
 	    	$user->setPassword($crypt->makeHash($setup_session->admin->password));
 	    	$userMapper->save($user);
 
+			// Setup the SSH keypair
+			$ssh_key = new GD_Model_SSHKey();
+			$ssh_key->setSSHKeyTypesId(1);
+			$ssh_key->generateKeyPair();
+			$ssh_key->setId(1);
+
+			$ssh_keys_map = new GD_Model_SSHKeysMapper();
+			$ssh_keys_map->save($ssh_key);
+
 	    	$setup_session->complete = true;
     	}
 
