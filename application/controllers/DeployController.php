@@ -95,7 +95,18 @@ class DeployController extends Zend_Controller_Action
 					$deployments->save($deployment);
 
 					// Generate the list of files to deploy and save in deployment_files table
-					$files_changed = $git->getFilesChangedList($deployment->getFromRevision(), $deployment->getToRevision());
+					try
+					{
+						$files_changed = $git->getFilesChangedList($deployment->getFromRevision(), $deployment->getToRevision());
+					}
+					catch(GD_Exception $ex)
+					{
+						if($ex->getStringCode() == GD_Git::GIT_GENERAL_NO_FILES_CHANGED)
+						{
+							$files_changed = array();
+						}
+						else throw $ex;
+					}
 
 					$deployment_files = new GD_Model_DeploymentFilesMapper();
 					$deployment_file_statuses = new GD_Model_DeploymentFileStatusesMapper();
