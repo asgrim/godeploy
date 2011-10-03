@@ -9,8 +9,8 @@
 	<h2><?php _e("Summary"); ?></h2>
 	<div id="form">
 		<form id="deploySummary" enctype="application/x-www-form-urlencoded" action="" method="post">
-			<ol>
-				<fieldset>
+			<fieldset>
+				<ol>
 					<li>
 						<label><?php _e("Deploy to"); ?></label>
 						<span class="value"><?php echo $this->deployment->getServer()->getDisplayName(); ?></span>
@@ -19,12 +19,12 @@
 						<label><?php _e("Repository URL"); ?></label>
 						<span class="value"><?php echo $this->project->getRepositoryUrl(); ?></span>
 					</li>
-					<?php if($this->deployment->getFromRevision() != ""): ?>
+				<?php if($this->deployment->getFromRevision() != ""): ?>
 					<li>
 						<label><?php _e("From"); ?></label>
 						<span class="value"><?php echo $this->deployment->getFromRevision(); ?></span>
 					</li>
-					<?php endif; ?>
+				<?php endif; ?>
 					<li>
 						<label><?php _e("To"); ?></label>
 						<span class="value"><?php echo $this->deployment->getToRevision(); ?></span>
@@ -34,25 +34,25 @@
 						<span class="value" id="deployment_status"><?php echo $this->deployment->getDeploymentStatus()->getName(); ?></span>
 					</li>
 					<li class="submit">
-					<?php
+				<?php
 					switch($this->mode)
 					{
 						case 'PREVIEW':
-							?>
-							<input type="image" name="btn_run" id="btn_run" src="/images/buttons/small/run-deployment.png">
-							<input type="image" name="btn_back" id="btn_back" src="/images/buttons/small/go-back.png">
-							<?php
-							break;
+				?>
+						<input type="image" name="btn_run" id="btn_run" src="/images/buttons/small/deploy.png">
+						<input type="image" name="btn_back" id="btn_back" src="/images/buttons/small/go-back.png">
+				<?php
+						break;
 						case 'RESULT':
-							?>
-							<input type="image" name="btn_history" id="btn_history" src="/images/buttons/small/go-to-deployment-history.png">
-							<?php
-							break;
+				?>
+						<input type="image" name="btn_history" id="btn_history" src="/images/buttons/small/go-to-deployment-history.png">
+				<?php
+						break;
 					}
-					?>
+				?>
 					</li>
-				</fieldset>
-			</ol>
+				</ol>
+			</fieldset>
 		</form>
 	</div>
 </div></div>
