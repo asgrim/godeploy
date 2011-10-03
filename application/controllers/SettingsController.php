@@ -72,7 +72,7 @@ class SettingsController extends Zend_Controller_Action
 				}
 				else
 				{
-					$this->_redirect($this->getFrontController()->getBaseUrl() . "/home");
+					$this->_redirect($this->getFrontController()->getBaseUrl() . "project/" . $project->getSlug() . '/settings');
 				}
 			}
 		}
