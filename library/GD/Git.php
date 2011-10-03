@@ -416,6 +416,7 @@ class GD_Git extends MAL_Util_Shell
 		if($this->_last_errno == 0)
 		{
 			$this->runShell('git reset --hard HEAD', true);
+			$this->runShell('git config core.filemode false', true);
 			return true;
 		}
 		else
