@@ -64,14 +64,15 @@ class GDApp_Form_DeploymentSetup extends GD_Form_Abstract
 			->addFilter('StripTags')
 			->addFilter('StringTrim')
 			->addValidator('NotEmpty')
-			->setDescription('<a href="#" onclick="getLatestRevision();">Click to get latest revision</a><span id="get_latest_revision_status"></span>');
+			->setDescription('<a href="javascript:;" onclick="getLatestRevision();">Click to get latest revision</a><span id="get_latest_revision_status"></span>');
 
 		$submitRun = new Zend_Form_Element_Image('submitRun');
 		$submitRun->setImage('/images/buttons/small/deploy.png');
+		$submitRun->class = "processing_btn size_small";
 
 		$submitPreview = new Zend_Form_Element_Image('submitPreview');
 		$submitPreview->setImage('/images/buttons/small/inverted/preview.png');
-		$submitPreview->class = "preview";
+		$submitPreview->class = "preview processing_btn size_small";
 
 		$this->addElements(array(
 			$server_id,
