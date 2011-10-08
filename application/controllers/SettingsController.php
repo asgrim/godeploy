@@ -162,28 +162,44 @@ class SettingsController extends Zend_Controller_Action
 	public function saveProject(GD_Model_ProjectsMapper $projects, GD_Model_Project $project, $new_project = false, $errored = false)
 	{
 		$repo_before = $project->getRepositoryUrl();
+		$branch_before = $project->getDeploymentBranch();
 		$project->setName($this->_request->getParam('name', false));
 		$project->setRepositoryUrl($this->_request->getParam('repositoryUrl', false));
 		$project->setDeploymentBranch($this->_request->getParam('deploymentBranch', false));
 		$project->setRepositoryTypesId(1);
 		$project->setSSHKeysId(1);
 		$repo_after = $project->getRepositoryUrl();
+		$branch_after = $project->getDeploymentBranch();
 
 		// Save the project
 		$projects->save($project);
 
+		$git = new GD_Git($project);
+
+		$branch_changed = false;
+
 		// If repo URL changed, delete and re-clone
 		if($repo_before != $repo_after || $new_project || $errored)
 		{
-			$git = new GD_Git($project);
-
+			// Delete any existing repo
 			$git->deleteRepository();
 
+			// Clone repository from source
 			$result = $git->gitClone();
 			if($result !== true)
 			{
 				return $result;
 			}
+
+			// Checkout the appropriate branch
+			$git->gitCheckout($branch_after);
+			$branch_changed = true;
+		}
+
+		if($branch_before != $branch_after && !$branch_changed)
+		{
+			// If not already checked out, or branch has changed, do a checkout
+			$git->gitCheckout($branch_after);
 		}
 
 		return true;
