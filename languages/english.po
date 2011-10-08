@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GoDeploy\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-09-26 23:30+0100\n"
+"POT-Creation-Date: 2011-10-08 22:37+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: James Titcumb <james@asgrim.com>\n"
 "Language-Team: \n"
@@ -27,6 +27,10 @@ msgstr "Current revision"
 msgid "Deploy revision or tag"
 msgstr "Deploy revision or tag"
 
+#: application/forms/DeploymentSetup.php:70
+msgid "Comment (optional)"
+msgstr "Comment (optional)"
+
 #: application/forms/Login.php:35
 #: application/forms/SetupDatabase.php:39
 #: application/forms/SetupAdmin.php:33
@@ -40,7 +44,7 @@ msgstr "Please enter your User Name"
 
 #: application/forms/Login.php:45
 #: application/forms/SetupDatabase.php:45
-#: application/forms/SetupAdmin.php:39
+#: application/forms/SetupAdmin.php:40
 msgid "Password"
 msgstr "Password"
 
@@ -94,7 +98,7 @@ msgid "New Password"
 msgstr "New Password"
 
 #: application/forms/ChangePassword.php:40
-#: application/forms/SetupAdmin.php:45
+#: application/forms/SetupAdmin.php:46
 msgid "Confirm Password"
 msgstr "Confirm Password"
 
@@ -219,18 +223,18 @@ msgid "Deploy to"
 msgstr "Deploy to"
 
 #: application/views/scripts/deploy/main.phtml:24
-#: application/views/scripts/history/index.phtml:21
+#: application/views/scripts/history/index.phtml:36
 msgid "From"
 msgstr "From"
 
 #: application/views/scripts/deploy/main.phtml:29
-#: application/views/scripts/history/index.phtml:22
+#: application/views/scripts/history/index.phtml:37
 msgid "To"
 msgstr "To"
 
 #: application/views/scripts/deploy/main.phtml:33
 #: application/views/scripts/deploy/main.phtml:72
-#: application/views/scripts/history/index.phtml:23
+#: application/views/scripts/history/index.phtml:39
 msgid "Status"
 msgstr "Status"
 
@@ -247,26 +251,34 @@ msgid "Action"
 msgstr "Action"
 
 #: application/views/scripts/deploy/main.phtml:86
-msgid "Looks like there are no files to deploy...?!"
-msgstr "Looks like there are no files to deploy...?!"
+msgid "There are no files to deploy."
+msgstr "There are no files to deploy."
 
-#: application/views/scripts/history/index.phtml:3
+#: application/views/scripts/history/index.phtml:5
 msgid "Deployment History"
 msgstr "Deployment History"
 
-#: application/views/scripts/history/index.phtml:13
+#: application/views/scripts/history/index.phtml:16
 msgid "This is a list of the deployments that have been run on this project."
 msgstr "This is a list of the deployments that have been run on this project."
 
-#: application/views/scripts/history/index.phtml:19
+#: application/views/scripts/history/index.phtml:30
+msgid "The feeds are also available in RSS, JSON or CSV. Click the icon on the right for a feed of the deployment history..."
+msgstr "The feeds are also available in RSS, JSON or CSV. Click the icon on the right for a feed of the deployment history..."
+
+#: application/views/scripts/history/index.phtml:34
 msgid "Date"
 msgstr "Date"
 
-#: application/views/scripts/history/index.phtml:19
+#: application/views/scripts/history/index.phtml:34
 msgid "Time"
 msgstr "Time"
 
-#: application/views/scripts/history/index.phtml:47
+#: application/views/scripts/history/index.phtml:38
+msgid "Comment"
+msgstr "Comment"
+
+#: application/views/scripts/history/index.phtml:63
 msgid "This project has not yet been deployed."
 msgstr "This project has not yet been deployed."
 
@@ -366,11 +378,11 @@ msgstr "click here to log in"
 msgid "Step 3 - Create First User"
 msgstr "Step 3 - Create First User"
 
-#: application/views/scripts/setup/step1.phtml:4
+#: application/views/scripts/setup/step1.phtml:20
 msgid "Step 1 - System Requirements"
 msgstr "Step 1 - System Requirements"
 
-#: application/views/scripts/setup/step1.phtml:9
+#: application/views/scripts/setup/step1.phtml:25
 msgid "GoDeploy needs to check that your system is set up correctly to be able to use the software."
 msgstr "GoDeploy needs to check that your system is set up correctly to be able to use the software."
 
