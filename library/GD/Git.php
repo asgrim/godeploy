@@ -92,6 +92,19 @@ class GD_Git extends MAL_Util_Shell
 			chdir($this->_base_gitdir);
 		}
 
+		// Check out the specified branch in the project if we're a valid repo
+		try
+		{
+			if($this->checkValidRepository())
+			{
+				$this->gitCheckout($project->getDeploymentBranch());
+			}
+		}
+		catch(GD_Exception $ex)
+		{
+			$invalid = true;
+		}
+
 		$this->_current_branch = $this->getCurrentBranch(true);
 	}
 
