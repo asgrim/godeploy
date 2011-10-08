@@ -64,7 +64,13 @@ class GDApp_Form_DeploymentSetup extends GD_Form_Abstract
 			->addFilter('StripTags')
 			->addFilter('StringTrim')
 			->addValidator('NotEmpty')
-			->setDescription('<a href="javascript:;" onclick="getLatestRevision();">Click to get latest revision</a><span id="get_latest_revision_status"></span>');
+			->setDescription('<a href="javascript:;" onclick="getLatestRevision();">Click to get latest revision</a><span id="get_latest_revision_status"></span>');$from_revision = new Zend_Form_Element_Text('fromRevision');
+
+		$comment = new Zend_Form_Element_Text('comment');
+		$comment->setLabel(_r('Comment (optional)'))
+			->setRequired(false)
+			->addFilter('StripTags')
+			->addFilter('StringTrim');
 
 		$submitRun = new Zend_Form_Element_Image('submitRun');
 		$submitRun->setImage('/images/buttons/small/deploy.png');
@@ -78,6 +84,7 @@ class GDApp_Form_DeploymentSetup extends GD_Form_Abstract
 			$server_id,
 			$from_revision,
 			$to_revision,
+			$comment,
 			$submitRun,
 			$submitPreview,
 		));

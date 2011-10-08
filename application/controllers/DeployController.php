@@ -78,6 +78,7 @@ class DeployController extends Zend_Controller_Action
 				$git->gitPull();
 
 				$input_to_rev = $this->_request->getParam('toRevision', false);
+				$comment = $this->_request->getParam('comment', '');
 
 				try
 				{
@@ -90,6 +91,7 @@ class DeployController extends Zend_Controller_Action
 							->setServersId($server_id)
 							->setFromRevision($from_rev)
 							->setToRevision($to_rev)
+							->setComment($comment)
 							->setDeploymentStatusesId(1);
 
 					$deployments->save($deployment);

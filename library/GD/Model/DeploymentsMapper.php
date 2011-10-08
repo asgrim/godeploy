@@ -61,6 +61,7 @@ class GD_Model_DeploymentsMapper extends MAL_Model_MapperAbstract
 			'servers_id' => $obj->getServersId(),
 			'from_revision' => $obj->getFromRevision(),
 			'to_revision' => $obj->getToRevision(),
+			'comment' => $obj->getComment(),
 			'deployment_statuses_id' => $obj->getDeploymentStatusesId(),
 		);
 		return $data;
@@ -80,6 +81,7 @@ class GD_Model_DeploymentsMapper extends MAL_Model_MapperAbstract
 			->setServersId($row->servers_id)
 			->setFromRevision($row->from_revision)
 			->setToRevision($row->to_revision)
+			->setComment($row->comment)
 			->setDeploymentStatusesId($row->deployment_statuses_id);
 
 		$u_map = new GD_Model_UsersMapper();

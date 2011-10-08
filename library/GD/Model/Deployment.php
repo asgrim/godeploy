@@ -30,6 +30,7 @@ class GD_Model_Deployment
 	protected $_servers_id;
 	protected $_from_revision;
 	protected $_to_revision;
+	protected $_comment;
 	protected $_deployment_statuses_id;
 
 	protected $_user;
@@ -112,6 +113,17 @@ class GD_Model_Deployment
 	public function getToRevision()
 	{
 		return $this->_to_revision;
+	}
+
+	public function setComment($value)
+	{
+		$this->_comment = (string)$value;
+		return $this;
+	}
+
+	public function getComment()
+	{
+		return $this->_comment;
 	}
 
 	public function setDeploymentStatusesId($value)

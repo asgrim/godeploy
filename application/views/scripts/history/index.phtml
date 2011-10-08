@@ -23,6 +23,7 @@
 					<th><?php _e("Server"); ?></th>
 					<th><?php _e("From"); ?></th>
 					<th><?php _e("To"); ?></th>
+					<th><?php _e("Comment"); ?></th>
 					<th><?php _e("Status"); ?></th>
 					<th class="empty">&nbsp;</th>
 				</tr>
@@ -30,11 +31,12 @@
 			<tbody>
 			<?php foreach ($this->deployments as $deployment) : ?>
 				<tr>
-					<td><?php echo $deployment->getWhen("d/m/Y H:i:s"); ?></td>
-					<td><?php echo $deployment->getServer()->getDisplayName(); ?></td>
+					<td class="nowrap"><?php echo $deployment->getWhen("d/m/Y H:i:s"); ?></td>
+					<td title="<?php echo $deployment->getServer()->getDisplayName(); ?>" class="nowrap"><?php echo $deployment->getServer()->getName(); ?></td>
 					<td title="<?php echo $deployment->getFromRevision(); ?>"><?php echo substr($deployment->getFromRevision(), 0, 7); ?></td>
 					<td title="<?php echo $deployment->getToRevision(); ?>"><?php echo substr($deployment->getToRevision(), 0, 7); ?></td>
-					<td><?php echo $deployment->getDeploymentStatus()->getName(); ?></td>
+					<td><?php echo $deployment->getComment(); ?></td>
+					<td class="nowrap"><?php echo ucfirst(strtolower($deployment->getDeploymentStatus()->getCode())); ?></td>
 					<td class="icon">
 						<a href="<?php echo $this->baseUrl(); ?>/project/<?php echo $this->project->getSlug(); ?>/deploy/result/<?php echo $deployment->getId(); ?>">
 							<img src="/images/icons/view/16x16.png" alt="View &raquo;" title="Click to view this deployment" />
