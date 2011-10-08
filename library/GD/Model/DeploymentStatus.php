@@ -62,6 +62,6 @@ class GD_Model_DeploymentStatus
 
 	public function getShortName()
 	{
-		return ucfirst(strtolower($this->getName()));
+		return ucfirst(strtolower($this->getCode()));
 	}
 }
