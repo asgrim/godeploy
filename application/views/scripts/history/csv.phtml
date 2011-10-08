@@ -1,0 +1,15 @@
+DateTime,Server,From,To,Comment,Status
+<?php
+if (is_array($this->deployments) && count($this->deployments) > 0)
+{
+	foreach ($this->deployments as $deployment)
+	{
+		echo $deployment->getWhen("d/m/Y H:i:s") . ',';
+		echo '"' . str_replace('"', '', $deployment->getServer()->getName()) . '",';
+		echo $deployment->getFromRevision() . ',';
+		echo $deployment->getToRevision() . ',';
+		echo '"' . str_replace('"', '', $deployment->getComment()) . '",';
+		echo $deployment->getDeploymentStatus()->getShortName() . "\n";
+	}
+}
+?>

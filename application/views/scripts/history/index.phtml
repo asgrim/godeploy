@@ -16,6 +16,18 @@
 		<p><?php _e("This is a list of the deployments that have been run on this project."); ?>
 		There are <?php echo $count; ?> deployment<?php echo $ess; ?> shown,
 		with the most recent at the top.</p>
+		<div id="feed_icons">
+			<a href="<?php echo $this->baseUrl(); ?>/project/<?php echo $this->project->getSlug(); ?>/history/rss">
+				<img src="/images/icons/feed/rss.png" title="RSS Feed" alt="RSS" />
+			</a>
+			<a href="<?php echo $this->baseUrl(); ?>/project/<?php echo $this->project->getSlug(); ?>/history/json">
+				<img src="/images/icons/feed/json.png" title="JSON Feed" alt="JSON" />
+			</a>
+			<a href="<?php echo $this->baseUrl(); ?>/project/<?php echo $this->project->getSlug(); ?>/history/csv">
+				<img src="/images/icons/feed/csv.png" title="CSV Feed" alt="CSV" />
+			</a>
+		</div>
+		<p><?php _e("The feeds are also available in RSS, JSON or CSV. Click the icon on the right for a feed of the deployment history..."); ?></p>
 		<table>
 			<thead>
 				<tr>
@@ -36,7 +48,7 @@
 					<td title="<?php echo $deployment->getFromRevision(); ?>"><?php echo substr($deployment->getFromRevision(), 0, 7); ?></td>
 					<td title="<?php echo $deployment->getToRevision(); ?>"><?php echo substr($deployment->getToRevision(), 0, 7); ?></td>
 					<td><?php echo $deployment->getComment(); ?></td>
-					<td class="nowrap"><?php echo ucfirst(strtolower($deployment->getDeploymentStatus()->getCode())); ?></td>
+					<td class="nowrap"><?php echo $deployment->getDeploymentStatus()->getShortName(); ?></td>
 					<td class="icon">
 						<a href="<?php echo $this->baseUrl(); ?>/project/<?php echo $this->project->getSlug(); ?>/deploy/result/<?php echo $deployment->getId(); ?>">
 							<img src="/images/icons/view/16x16.png" alt="View &raquo;" title="Click to view this deployment" />

@@ -59,4 +59,9 @@ class GD_Model_DeploymentStatus
 	{
 		return $this->_name;
 	}
+
+	public function getShortName()
+	{
+		return ucfirst(strtolower($this->getName()));
+	}
 }
