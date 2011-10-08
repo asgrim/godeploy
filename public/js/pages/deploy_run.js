@@ -18,6 +18,13 @@ function bootstrapDeployment()
 	fireStatusRequest();
 }
 
+function continueDeployment()
+{
+	deployment_complete = false;
+
+	fireStatusRequest();
+}
+
 function fireStatusRequest()
 {
 	var status_url = document.location.href.replace(/\/run\//, '/execute-deployment-status/').replace(/#/, '');

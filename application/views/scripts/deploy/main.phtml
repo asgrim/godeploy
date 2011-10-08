@@ -97,4 +97,11 @@
 $(document).observe("dom:loaded", bootstrapDeployment);
 //]]>
 </script>
+<?php elseif($this->mode == 'RUNNING'): ?>
+<script type="text/javascript">
+//<![CDATA[
+
+$(document).observe("dom:loaded", continueDeployment);
+//]]>
+</script>
 <?php endif; ?>

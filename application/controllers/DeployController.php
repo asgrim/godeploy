@@ -247,17 +247,45 @@ class DeployController extends Zend_Controller_Action
 
 		$this->prepareStandardDeployInformation();
 
+		$status = $this->view->deployment->getDeploymentStatusesId();
+
+		if($status == 2)
+		{
+			// Redirect to running page
+			$this->_redirect($this->getFrontController()->getBaseUrl() . "/project/" . $this->_getParam("project") . "/deploy/run/" . $this->_getParam("id"));
+		}
+		else if($status == 3 || $status == 4)
+		{
+			// Redirect to result page
+			$this->_redirect($this->getFrontController()->getBaseUrl() . "/project/" . $this->_getParam("project") . "/deploy/result/" . $this->_getParam("id"));
+		}
+
 		$this->view->mode = 'PREVIEW';
+
 	}
 
 	public function runAction()
 	{
 		$this->prepareStandardDeployInformation();
 
-		if($this->view->deployment->getDeploymentStatusesId() == 1)
+		$status = $this->view->deployment->getDeploymentStatusesId();
+
+		if($status == 1)
 		{
+			// Status is previewing, commence deployment
 			$this->view->headScript()->appendFile("/js/pages/deploy_run.js");
 			$this->view->mode = 'RUN';
+		}
+		else if($status == 2)
+		{
+			// Status is running, don't start a new deployment just update
+			$this->view->headScript()->appendFile("/js/pages/deploy_run.js");
+			$this->view->mode = 'RUNNING';
+		}
+		else if($status == 3 || $status == 4)
+		{
+			// Redirect to result page
+			$this->_redirect($this->getFrontController()->getBaseUrl() . "/project/" . $this->_getParam("project") . "/deploy/result/" . $this->_getParam("id"));
 		}
 	}
 
@@ -272,6 +300,19 @@ class DeployController extends Zend_Controller_Action
 		}
 
 		$this->prepareStandardDeployInformation();
+
+		$status = $this->view->deployment->getDeploymentStatusesId();
+
+		if($status == 1)
+		{
+			// Status is previewing
+			$this->_redirect($this->getFrontController()->getBaseUrl() . "/project/" . $this->_getParam("project") . "/deploy/preview/" . $this->_getParam("id"));
+		}
+		else if($status == 2)
+		{
+			// Status is running, don't start a new deployment just update
+			$this->_redirect($this->getFrontController()->getBaseUrl() . "/project/" . $this->_getParam("project") . "/deploy/run/" . $this->_getParam("id"));
+		}
 
 		$this->view->mode = 'RESULT';
 	}
