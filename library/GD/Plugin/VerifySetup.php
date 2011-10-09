@@ -74,11 +74,33 @@ class GD_Plugin_VerifySetup extends Zend_Controller_Plugin_Abstract
 
 			if($current_db_version < $expected_db_version)
 			{
-				throw new GD_Exception("Database version was out of date. Expected '{$expected_db_version}' and it is currently at '{$current_db_version}'.");
+				if($_SESSION["UPGRADE_ATTEMPTS"] >= 1)
+				{
+					$_SESSION["UPGRADE_ATTEMPTS"] = 0;
+					die("Database upgrade failed.");
+				}
+				else
+				{
+					$cfg = $db->getConfig();
+					$db_adm = new GD_Db_Admin($cfg["host"], $cfg["username"], $cfg["password"], $cfg["dbname"]);
+					$db_adm->upgradeDatabase($current_db_version, $expected_db_version);
+
+					if(isset($_SESSION["UPGRADE_ATTEMPTS"]))
+					{
+						$_SESSION["UPGRADE_ATTEMPTS"]++;
+					}
+					else
+					{
+						$_SESSION["UPGRADE_ATTEMPTS"] = 1;
+					}
+
+					$this->_response->setRedirect('/');
+					$this->_response->sendResponse();
+				}
 			}
 			else if($current_db_version > $expected_db_version)
 			{
-				throw new GD_Exception("Database version was too new??? Expected '{$expected_db_version}' and it is currently at '{$current_db_version}'.");
+				die("Database version was too new??? Expected '{$expected_db_version}' and it is currently at '{$current_db_version}'.");
 			}
 		}
 		catch(Exception $ex)
