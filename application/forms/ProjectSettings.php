@@ -45,6 +45,7 @@ class GDApp_Form_ProjectSettings extends GD_Form_Abstract
 			$project_name->addValidators(array($unique_name));
 		}
 
+		$git_validator = new GD_Validate_GitUrl();
 
 		$repository_url = new Zend_Form_Element_Text('repositoryUrl');
 		$repository_url->setLabel(_r('Repository URL'))
@@ -53,7 +54,7 @@ class GDApp_Form_ProjectSettings extends GD_Form_Abstract
 			->addFilter('StringTrim');
 		$not_empty = new Zend_Validate_NotEmpty();
 		$not_empty->setMessage(_r('Please enter the Repository URL'));
-		$repository_url->addValidators(array($not_empty));
+		$repository_url->addValidators(array($not_empty, $git_validator));
 
 
 		$deployment_branch = new Zend_Form_Element_Text('deploymentBranch');
