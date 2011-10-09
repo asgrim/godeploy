@@ -37,3 +37,10 @@ table {
 		padding: 5px;
 		width: 16px;
 		}
+		
+	table tfoot td {
+		font-size: 14px;
+		background-color: #e0e0e0;
+		font-weight: bold;
+		border-top: 3px solid #bdbdbd;
+		}
