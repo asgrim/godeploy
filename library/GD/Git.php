@@ -384,7 +384,7 @@ class GD_Git extends MAL_Util_Shell
 		return $file_list;
 	}
 
-	public function gitPull($branch = "master", $remote = "origin")
+	public function gitPull($branch = "", $remote = "")
 	{
 		// TODO - Clean arguments (only accept valid branch/remote characters)
 		$this->sshKeys();
