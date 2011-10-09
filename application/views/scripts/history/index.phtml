@@ -45,7 +45,7 @@
 				<tr>
 					<td class="nowrap"><?php echo $deployment->getWhen("d/m/Y H:i:s"); ?></td>
 					<td title="<?php echo $deployment->getServer()->getDisplayName(); ?>" class="nowrap"><?php echo $deployment->getServer()->getName(); ?></td>
-					<td title="<?php echo $deployment->getFromRevision(); ?>"><?php echo substr($deployment->getFromRevision(), 0, 7); ?></td>
+					<td title="<?php echo $deployment->getFromRevision(); ?>"><?php echo $deployment->getFromRevision() ? substr($deployment->getFromRevision(), 0, 7) : "None"; ?></td>
 					<td title="<?php echo $deployment->getToRevision(); ?>"><?php echo substr($deployment->getToRevision(), 0, 7); ?></td>
 					<td><?php echo $deployment->getComment(); ?></td>
 					<td class="nowrap"><?php echo $deployment->getDeploymentStatus()->getShortName(); ?></td>
