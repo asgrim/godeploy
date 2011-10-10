@@ -5,6 +5,9 @@
 	<h1><?php echo $this->project->getName(); ?> &raquo; <?php _e("Deployment History"); ?></h1>
 	<div class="padding_15"></div>
 
+	<div class="wrapper w_ededed"><div class="content">
+		<div class="padding_15"></div>
+
 <?php
 	if (is_array($this->deployments) && count($this->deployments) > 0)
 	{
@@ -13,10 +16,9 @@
 		$are = $count == "1" ? _r("is") : _r("are");
 		$recent = $count == "1" ? "" : _r(", with the most recent at the top");
 ?>
-	<div class="wrapper w_ededed"><div class="content">
-		<div class="padding_15"></div>
-		<p><?php _e("This is a list of the deployments that have been run on this project."); ?>
-		There <?php echo $are; ?> <?php echo $count; ?> deployment<?php echo $ess; ?> shown<?php echo $recent; ?>.</p>
+		<h2>Deployment history</h2>
+		<p>There <?php echo $are; ?> <?php echo $count; ?> deployment<?php echo $ess; ?> shown<?php echo $recent; ?>.</p>
+
 		<div id="feed_icons">
 			<a href="<?php echo $this->baseUrl(); ?>/project/<?php echo $this->project->getSlug(); ?>/history/rss">
 				<img src="/images/icons/feed/rss.png" title="RSS Feed" alt="RSS" />
@@ -59,9 +61,9 @@
 			<?php endforeach; ?>
 			</tbody>
 		</table>
-	</div></div>
 <?php } else { ?>
-	<p class="last"><?php _e("This project has not yet been deployed."); ?></p>
+		<h2 class="last"><?php _e("This project is yet to be deployed."); ?></h2>
 <?php } ?>
+	</div></div>
 </div>
 
