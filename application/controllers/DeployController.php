@@ -78,6 +78,7 @@ class DeployController extends Zend_Controller_Action
 				$git->gitPull();
 
 				$input_to_rev = $this->_request->getParam('toRevision', false);
+				$comment = $this->_request->getParam('comment', '');
 
 				try
 				{
@@ -90,12 +91,24 @@ class DeployController extends Zend_Controller_Action
 							->setServersId($server_id)
 							->setFromRevision($from_rev)
 							->setToRevision($to_rev)
+							->setComment($comment)
 							->setDeploymentStatusesId(1);
 
 					$deployments->save($deployment);
 
 					// Generate the list of files to deploy and save in deployment_files table
-					$files_changed = $git->getFilesChangedList($deployment->getFromRevision(), $deployment->getToRevision());
+					try
+					{
+						$files_changed = $git->getFilesChangedList($deployment->getFromRevision(), $deployment->getToRevision());
+					}
+					catch(GD_Exception $ex)
+					{
+						if($ex->getStringCode() == GD_Git::GIT_GENERAL_NO_FILES_CHANGED)
+						{
+							$files_changed = array();
+						}
+						else throw $ex;
+					}
 
 					$deployment_files = new GD_Model_DeploymentFilesMapper();
 					$deployment_file_statuses = new GD_Model_DeploymentFileStatusesMapper();
@@ -234,17 +247,45 @@ class DeployController extends Zend_Controller_Action
 
 		$this->prepareStandardDeployInformation();
 
+		$status = $this->view->deployment->getDeploymentStatusesId();
+
+		if($status == 2)
+		{
+			// Redirect to running page
+			$this->_redirect($this->getFrontController()->getBaseUrl() . "/project/" . $this->_getParam("project") . "/deploy/run/" . $this->_getParam("id"));
+		}
+		else if($status == 3 || $status == 4)
+		{
+			// Redirect to result page
+			$this->_redirect($this->getFrontController()->getBaseUrl() . "/project/" . $this->_getParam("project") . "/deploy/result/" . $this->_getParam("id"));
+		}
+
 		$this->view->mode = 'PREVIEW';
+
 	}
 
 	public function runAction()
 	{
 		$this->prepareStandardDeployInformation();
 
-		if($this->view->deployment->getDeploymentStatusesId() == 1)
+		$status = $this->view->deployment->getDeploymentStatusesId();
+
+		if($status == 1)
 		{
+			// Status is previewing, commence deployment
 			$this->view->headScript()->appendFile("/js/pages/deploy_run.js");
 			$this->view->mode = 'RUN';
+		}
+		else if($status == 2)
+		{
+			// Status is running, don't start a new deployment just update
+			$this->view->headScript()->appendFile("/js/pages/deploy_run.js");
+			$this->view->mode = 'RUNNING';
+		}
+		else if($status == 3 || $status == 4)
+		{
+			// Redirect to result page
+			$this->_redirect($this->getFrontController()->getBaseUrl() . "/project/" . $this->_getParam("project") . "/deploy/result/" . $this->_getParam("id"));
 		}
 	}
 
@@ -259,6 +300,19 @@ class DeployController extends Zend_Controller_Action
 		}
 
 		$this->prepareStandardDeployInformation();
+
+		$status = $this->view->deployment->getDeploymentStatusesId();
+
+		if($status == 1)
+		{
+			// Status is previewing
+			$this->_redirect($this->getFrontController()->getBaseUrl() . "/project/" . $this->_getParam("project") . "/deploy/preview/" . $this->_getParam("id"));
+		}
+		else if($status == 2)
+		{
+			// Status is running, don't start a new deployment just update
+			$this->_redirect($this->getFrontController()->getBaseUrl() . "/project/" . $this->_getParam("project") . "/deploy/run/" . $this->_getParam("id"));
+		}
 
 		$this->view->mode = 'RESULT';
 	}

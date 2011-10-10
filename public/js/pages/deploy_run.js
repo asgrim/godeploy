@@ -18,6 +18,13 @@ function bootstrapDeployment()
 	fireStatusRequest();
 }
 
+function continueDeployment()
+{
+	deployment_complete = false;
+
+	fireStatusRequest();
+}
+
 function fireStatusRequest()
 {
 	var status_url = document.location.href.replace(/\/run\//, '/execute-deployment-status/').replace(/#/, '');
@@ -30,11 +37,14 @@ function fireStatusRequest()
 			
 			// Set overall status
 			$('deployment_status').innerHTML = data.OVERALL;
-			
+
 			// Set status of each file
-			for(var x in data.FILES)
+			if(data.FILES.length > 0)
 			{
-				$('file_' + x + '_status').innerHTML = data.FILES[x];
+				for(var x in data.FILES)
+				{
+					$('file_' + x + '_status').innerHTML = data.FILES[x];
+				}
 			}
 			
 			// Set that we are complete or not

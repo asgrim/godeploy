@@ -58,6 +58,7 @@ class GD_Git extends MAL_Util_Shell
 	const GIT_GENERAL_ERROR = "GENERAL_GIT_ERROR";
 	const GIT_GENERAL_EMPTY_REF = "EMPTY_REF";
 	const GIT_GENERAL_INVALID_REF = "INVALID_REF";
+	const GIT_GENERAL_NO_FILES_CHANGED = "NO_FILES_CHANGED";
 
 	const GIT_SSH_ERROR_HOSTNME = "SSH_RESOLVE_HOSTNAME";
 	const GIT_SSH_ERROR_UNKNOWN = "SSH_UNKNOWN_ERROR";
@@ -89,6 +90,19 @@ class GD_Git extends MAL_Util_Shell
 		{
 			mkdir($this->_base_gitdir, 0700, true);
 			chdir($this->_base_gitdir);
+		}
+
+		// Check out the specified branch in the project if we're a valid repo
+		try
+		{
+			if($this->checkValidRepository())
+			{
+				$this->gitCheckout($project->getDeploymentBranch());
+			}
+		}
+		catch(GD_Exception $ex)
+		{
+			$invalid = true;
 		}
 
 		$this->_current_branch = $this->getCurrentBranch(true);
@@ -357,7 +371,7 @@ class GD_Git extends MAL_Util_Shell
 
 		if(!is_array($files) || count($files) <= 0)
 		{
-			throw new GD_Exception("Could not get file list... could be that there was no changes.");
+			throw new GD_Exception("Could not get file list... could be that there was no changes.", 0, self::GIT_GENERAL_NO_FILES_CHANGED);
 		}
 
 		// Now parse the file list into something sensible
@@ -370,7 +384,7 @@ class GD_Git extends MAL_Util_Shell
 		return $file_list;
 	}
 
-	public function gitPull($branch = "master", $remote = "origin")
+	public function gitPull($branch = "", $remote = "")
 	{
 		// TODO - Clean arguments (only accept valid branch/remote characters)
 		$this->sshKeys();
@@ -416,6 +430,7 @@ class GD_Git extends MAL_Util_Shell
 		if($this->_last_errno == 0)
 		{
 			$this->runShell('git reset --hard HEAD', true);
+			$this->runShell('git config core.filemode false', true);
 			return true;
 		}
 		else

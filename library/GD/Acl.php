@@ -55,6 +55,9 @@ class GD_Acl extends Zend_Acl
 		$this->allow('guest', 'error');
 		$this->allow('guest', 'auth');
 		$this->allow('guest', 'setup');
+		$this->allow('guest', 'history', 'rss');
+		$this->allow('guest', 'history', 'json');
+		$this->allow('guest', 'history', 'csv');
 		$this->allow('member', 'profile');
 		$this->allow('member', 'home');
 		$this->allow('member', 'history');

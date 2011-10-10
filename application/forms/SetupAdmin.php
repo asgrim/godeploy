@@ -31,6 +31,7 @@ class GDApp_Form_SetupAdmin extends GD_Form_Abstract
 
 		$username = new Zend_Form_Element_Text('username');
 		$username->setLabel(_r('Username'))
+			->setValue("admin")
 			->setRequired(true)
 			->addFilter('StripTags')
 			->addValidator('NotEmpty');

@@ -24,54 +24,148 @@
 class SetupController extends Zend_Controller_Action
 {
 
-    public function init()
-    {
-        /* Initialize action controller here */
-    	$this->view->show_navigation = false;
-    	$this->view->prenavigation_header = "setup/header.phtml";
-    	$this->view->available_languages = GD_Translate::getAvailableLanguages();
+	public function init()
+	{
+		/* Initialize action controller here */
+		$this->view->show_navigation = false;
+		$this->view->prenavigation_header = "setup/header.phtml";
+		$this->view->available_languages = GD_Translate::getAvailableLanguages();
 
-    	$setup_session = new Zend_Session_Namespace('gd_setup_session');
+		$setup_session = new Zend_Session_Namespace('gd_setup_session');
 
-    	if(!isset($setup_session->language) || $setup_session->language == "")
-    	{
-    		$setup_session->language = "english";
-    	}
+		if(!isset($setup_session->language) || $setup_session->language == "")
+		{
+			$setup_session->language = "english";
+		}
 
-    	$this->view->current_language = $setup_session->language;
-    }
+		$this->view->current_language = $setup_session->language;
+	}
 
-    public function indexAction()
-    {
-    	$this->_redirect("/setup/step1");
-    }
+	public function indexAction()
+	{
+		$this->_redirect("/setup/step1");
+	}
 
-    public function languageAction()
-    {
-    	if($this->getRequest()->isPost())
-    	{
-    		$setup_session = new Zend_Session_Namespace('gd_setup_session');
-    		$setup_session->language = $this->_getParam("lang");
-    	}
+	public function languageAction()
+	{
+		if($this->getRequest()->isPost())
+		{
+			$setup_session = new Zend_Session_Namespace('gd_setup_session');
+			$setup_session->language = $this->_getParam("lang");
+		}
 
-    	if($this->_getParam("return"))
-    	{
-    		$url = $this->_getParam("return");
-    	}
-    	else
-    	{
-    		$url = "/setup/step1";
-    	}
-    	$this->_redirect($url);
-    }
+		if($this->_getParam("return"))
+		{
+			$url = $this->_getParam("return");
+		}
+		else
+		{
+			$url = "/setup/step1";
+		}
+		$this->_redirect($url);
+	}
 
-    public function step1Action()
-    {
+	public function step1Action()
+	{
+		$this->view->headLink()->appendStylesheet("/css/template/table.css");
 
-    }
+		$sh = new MAL_Util_Shell();
+		$requirements = array();
 
-    public function step2Action()
-    {
+		$requirements["PHP version greater than 5.3.2"] = array(
+			"ACTUAL" => PHP_VERSION,
+			"RESULT" => PHP_VERSION_ID >= 50302,
+		);
+
+		$requirements["PHP mcrypt module installed"] = array(
+			"ACTUAL" => (extension_loaded("mcrypt") ? "OK" : "Not installed"),
+			"RESULT" => extension_loaded("mcrypt"),
+		);
+
+		$requirements["PHP ftp module installed"] = array(
+			"ACTUAL" => (extension_loaded("ftp") ? "OK" : "Not installed"),
+			"RESULT" => extension_loaded("ftp"),
+		);
+
+		$requirements["PHP Safe mode is disabled"] = array(
+			"ACTUAL" => ini_get('safe_mode') ? "safe_mode = " . ini_get('safe_mode') : "Not set",
+			"RESULT" => ini_get('safe_mode') != '1',
+		);
+
+		$requirements["MySQL installed"] = array(
+			"ACTUAL" => (extension_loaded("pdo_mysql") ? "OK" : "Not installed"),
+			"RESULT" => extension_loaded("pdo_mysql"),
+		);
+
+		$sh->Exec("echo test");
+		$requirements["Permission to run 'exec' function"] = array(
+			"ACTUAL" => (($sh->getLastOutput() == array("test")) ? "OK" : ""),
+			"RESULT" => ($sh->getLastOutput() == array("test")),
+		);
+
+		$sh->Exec("ssh -v");
+		$r = $sh->getLastOutput();
+		$requirements["OpenSSH installed"] = array(
+			"ACTUAL" => $r[0],
+			"RESULT" => strpos($r[0], "OpenSSH") !== false,
+		);
+
+		$sh->Exec("git --version");
+		$r = $sh->getLastOutput();
+		$requirements["Git installed"] = array(
+			"ACTUAL" => $r[0],
+			"RESULT" => strpos($r[0], "git version ") !== false,
+		);
+
+		$requirements["May not work with Suhosin"] = array(
+			"ACTUAL" => $this->hasSuhosin() ? "Suhosin is enabled - <strong>GoDeploy may not function correctly</strong>" : "Suhosin not enabled",
+			"RESULT" => !($this->hasSuhosin()),
+			"NOT_CRITICAL" => true,
+		);
+
+		$requirements["HOME directory environment variable is set"] = array(
+			"ACTUAL" => getenv('HOME'),
+			"RESULT" => getenv('HOME') != '',
+		);
+
+		$cfg_test = APPLICATION_PATH . "/configs/config.ini";
+		$fh = @fopen($cfg_test, "a+");
+		$requirements["Config file writeable"] = array(
+			"ACTUAL" => $cfg_test . " is " . ($fh === false ? "<strong>not writable</strong>" : "writeable"),
+			"RESULT" => ($fh !== false),
+			"NOT_CRITICAL" => true,
+		);
+		if($fh !== false) fclose($fh);
+
+		$cache_test = str_replace("/application", "/gitcache/.test", APPLICATION_PATH);
+		$fh = @fopen($cache_test, "a+");
+		$requirements["gitcache directory writeable"] = array(
+			"ACTUAL" => $cache_test . " is " . ($fh === false ? "<strong>not writable</strong>" : "writeable"),
+			"RESULT" => ($fh !== false),
+		);
+		if($fh !== false)
+		{
+			fclose($fh);
+			@unlink($cache_test);
+		}
+
+		// Check we've passed everything
+		$passed = true;
+		foreach($requirements as $rq)
+		{
+			if($rq["RESULT"] === false && !isset($rq["NOT_CRITICAL"]))
+			{
+				$passed = false;
+			}
+		}
+
+		$this->view->passed = $passed;
+
+		$this->view->requirements = $requirements;
+	}
+
+	public function step2Action()
+	{
 		$this->view->headLink()->appendStylesheet("/css/template/form.css");
 
 		$form = new GDApp_Form_SetupDatabase();
@@ -100,11 +194,11 @@ class SetupController extends Zend_Controller_Action
 				}
 			}
 		}
-    }
+	}
 
-    public function step3Action()
-    {
-    	$this->view->headLink()->appendStylesheet("/css/template/form.css");
+	public function step3Action()
+	{
+		$this->view->headLink()->appendStylesheet("/css/template/form.css");
 
 		$form = new GDApp_Form_SetupAdmin();
 		$this->view->form = $form;
@@ -120,89 +214,111 @@ class SetupController extends Zend_Controller_Action
 				$this->_redirect("/setup/dosetup");
 			}
 		}
-    }
+	}
 
-    public function dosetupAction()
-    {
-    	$_user_config_file = APPLICATION_PATH . '/configs/config.ini';
+	public function dosetupAction()
+	{
+		$_user_config_file = APPLICATION_PATH . '/configs/config.ini';
 
-    	// Create the config ini from session
-    	$setup_session = new Zend_Session_Namespace('gd_setup_session');
+		// Create the config ini from session
+		$setup_session = new Zend_Session_Namespace('gd_setup_session');
 
-    	if (!$setup_session->complete)
-    	{
-	    	$config = new Zend_Config(array(), true);
+		if (!$setup_session->complete)
+		{
+			$config = new Zend_Config(array(), true);
 
-	    	$config->general = array();
-	    	$config->general->language = $setup_session->language ? $setup_session->language : "english" ;
-	    	$config->general->setupComplete = true;
-	    	$config->general->cryptkey = md5(microtime() . $setup_session->admin->username . $setup_session->admin->password);
-	    	$config->general->installDate = date("d/m/Y H:i:s");
+			$config->general = array();
+			$config->general->language = $setup_session->language ? $setup_session->language : "english" ;
+			$config->general->setupComplete = true;
+			$config->general->cryptkey = md5(microtime() . $setup_session->admin->username . $setup_session->admin->password);
+			$config->general->installDate = date("d/m/Y H:i:s");
 
-	    	$config->database = array();
-	    	$config->database->adapter = "PDO_MYSQL";
-	    	$config->database->host = $setup_session->database->host;
-	    	$config->database->username = $setup_session->database->username;
-	    	$config->database->password = $setup_session->database->password;
-	    	$config->database->dbname = $setup_session->database->dbname;
+			$config->database = array();
+			$config->database->adapter = "PDO_MYSQL";
+			$config->database->host = $setup_session->database->host;
+			$config->database->username = $setup_session->database->username;
+			$config->database->password = $setup_session->database->password;
+			$config->database->dbname = $setup_session->database->dbname;
 
-	    	$writer_opts = array(
-	    		'config' => $config,
+			$writer_opts = array(
+				'config' => $config,
 				'filename' => $_user_config_file,
-	    	);
-	    	$writer = new Zend_Config_Writer_Ini($writer_opts);
+			);
+			$writer = new Zend_Config_Writer_Ini($writer_opts);
 
-	    	try
-	    	{
-	    		$writer->write();
-	    	}
-	    	catch(Exception $ex)
-	    	{
-	    		if(strpos($ex->getMessage(), 'Could not write to file') !== false)
-	    		{
-	    			$setup_session->ini_string = $writer->render();
-	    		}
-	    	}
+			try
+			{
+				$writer->write();
+			}
+			catch(Exception $ex)
+			{
+				if(strpos($ex->getMessage(), 'Could not write to file') !== false)
+				{
+					$setup_session->ini_string = $writer->render();
+				}
+			}
 
-	    	// Load the database manually
+			// Load the database manually
 			Zend_Db_Table::setDefaultAdapter(Zend_Db::factory($config->database->adapter, $config->database->toArray()));
 			Zend_Registry::set("cryptkey", $config->general->cryptkey);
 
-	    	// Run the appropriate database setup script
-	    	$db_adm = new GD_Db_Admin(
-	    		$config->database->host,
-	    		$config->database->username,
-	    		$config->database->password,
-	    		$config->database->dbname
-	    	);
-	    	$db_adm->installDatabase();
+			// Run the appropriate database setup script
+			$db_adm = new GD_Db_Admin(
+				$config->database->host,
+				$config->database->username,
+				$config->database->password,
+				$config->database->dbname
+			);
+			$db_adm->installDatabase();
 
-	    	// Create the first user in the database
-	    	$userMapper = new GD_Model_UsersMapper();
-	    	$crypt = new GD_Crypt();
+			// Create the first user in the database
+			$userMapper = new GD_Model_UsersMapper();
+			$crypt = new GD_Crypt();
 
-	    	$user = new GD_Model_User();
-	    	$user->setName($setup_session->admin->username);
-	    	$user->setPassword($crypt->makeHash($setup_session->admin->password));
-	    	$userMapper->save($user);
+			$user = new GD_Model_User();
+			$user->setName($setup_session->admin->username);
+			$user->setPassword($crypt->makeHash($setup_session->admin->password));
+			$userMapper->save($user);
 
-	    	$setup_session->complete = true;
-    	}
+			// Setup the SSH keypair
+			$ssh_key = new GD_Model_SSHKey();
+			$ssh_key->setSSHKeyTypesId(1);
+			$ssh_key->generateKeyPair();
+			$ssh_key->setId(1);
 
-    	if(isset($setup_session->ini_string))
-    	{
-    		$this->view->ini = $setup_session->ini_string;
-    	}
-    	else
-    	{
-    		$this->_redirect("/setup/complete");
-    	}
-    }
+			$ssh_keys_map = new GD_Model_SSHKeysMapper();
+			$ssh_keys_map->save($ssh_key);
 
-    public function completeAction()
-    {
-    	// TODO - dump what's in the config file basically
-    	$this->_redirect("/");
-    }
+			$setup_session->complete = true;
+		}
+
+		if(isset($setup_session->ini_string))
+		{
+			$this->view->ini = $setup_session->ini_string;
+		}
+		else
+		{
+			$this->_redirect("/setup/complete");
+		}
+	}
+
+	public function completeAction()
+	{
+		// TODO - dump what's in the config file basically
+		$this->_redirect("/");
+	}
+
+	public function hasSuhosin()
+	{
+		// http://stackoverflow.com/questions/3383916/how-to-check-whether-suhosin-is-installed
+		ob_start();
+		phpinfo();
+		$phpinfo = ob_get_contents();
+		ob_end_clean();
+		if (strpos($phpinfo, "Suhosin") !== false)
+			return true;
+
+		return false;
+	}
 }
 

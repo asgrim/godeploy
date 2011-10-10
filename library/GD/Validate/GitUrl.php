@@ -21,47 +21,35 @@
  * @author James Titcumb, Simon Wade, Jon Wigham
  * @link http://www.godeploy.com/
  */
-class GD_Model_DeploymentStatus
+class GD_Validate_GitUrl extends Zend_Validate_Abstract
 {
-	protected $_id;
-	protected $_code;
-	protected $_name;
+	const HTTP_NOT_SUPPORTED = 'http_not_supported';
+	const MALFORMATTED = 'malformatted';
 
-	public function setId($id)
-	{
-		$this->_id = (int)$id;
-		return $this;
-	}
+	protected $_messageTemplates = array(
+		self::HTTP_NOT_SUPPORTED => "HTTP/HTTPS Git repositories are not supported",
+		self::MALFORMATTED => "The URL did not look like a valid Git URL",
+	);
 
-	public function getId()
+	public function isValid($value)
 	{
-		return $this->_id;
-	}
+		$this->_setValue($value);
 
-	public function setCode($value)
-	{
-		$this->_code = (string)$value;
-		return $this;
-	}
+		if(substr($value, 0, 6) == "git://")
+		{
+			return true; // git://anything
+		}
+		else if(substr($value, 0, 8) == "https://" || substr($value, 0, 7) == "http://")
+		{
+			$this->_error(self::HTTP_NOT_SUPPORTED);
+			return false;
+		}
+		else if(preg_match("/^[a-zA-Z]+@[a-zA-Z0-9.]+:[a-zA-Z0-9\/]+(.git)?$/", $value))
+		{
+			return true; // git@github.com:repo.git
+		}
 
-	public function getCode()
-	{
-		return $this->_code;
-	}
-
-	public function setName($value)
-	{
-		$this->_name = (string)$value;
-		return $this;
-	}
-
-	public function getName()
-	{
-		return $this->_name;
-	}
-
-	public function getShortName()
-	{
-		return ucfirst(strtolower($this->getCode()));
+		$this->_error(self::MALFORMATTED);
+		return false;
 	}
 }

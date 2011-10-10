@@ -60,6 +60,15 @@ class GD_Db_Admin extends MAL_Util_Shell
 
     public function upgradeDatabase($from_version, $to_version)
     {
-    	die("DB upgrade not supported yet");
+		$v = $from_version;
+
+		while($v < $to_version)
+		{
+			// do upgrade
+			$script = APPLICATION_PATH . "/../db/db_alter_v" . ($v + 1) . ".sql";
+			$this->Exec("mysql -u{$this->_username} -p{$this->_password} --database={$this->_database} < \"{$script}\"");
+
+			$v++;
+		}
     }
 }

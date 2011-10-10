@@ -13,7 +13,7 @@
 		margin-left: -190px;
 		}
 
-	#fromRevision, #toRevision {
+	#fromRevision, #toRevision, #comment {
 		width: 400px;
 		}
 

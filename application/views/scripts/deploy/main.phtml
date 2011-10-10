@@ -83,7 +83,7 @@
 		</tbody>
 	</table>
 	<?php else: ?>
-	<h3><?php _e("Looks like there are no files to deploy...?!"); ?></h3>
+	<h3><?php _e("There are no files to deploy."); ?></h3>
 	<?php endif; ?>
 </div></div>
 
@@ -95,6 +95,13 @@
 //<![CDATA[
 
 $(document).observe("dom:loaded", bootstrapDeployment);
+//]]>
+</script>
+<?php elseif($this->mode == 'RUNNING'): ?>
+<script type="text/javascript">
+//<![CDATA[
+
+$(document).observe("dom:loaded", continueDeployment);
 //]]>
 </script>
 <?php endif; ?>

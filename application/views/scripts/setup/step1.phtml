@@ -1,18 +1,3 @@
-<?php
-function hasSuhosin()
-{
-	// http://stackoverflow.com/questions/3383916/how-to-check-whether-suhosin-is-installed
-	// THIS IS UGLY :(
-	ob_start();
-	phpinfo();
-	$phpinfo = ob_get_contents();
-	ob_end_clean();
-	if (strpos($phpinfo, "Suhosin") !== false)
-    	return true;
-
-    return false;
-}
-?>
 
 <div class="content">
 	<div class="padding_20"></div>
@@ -24,25 +9,66 @@ function hasSuhosin()
 		<div class="padding_15"></div>
 		<p><?php _e("GoDeploy needs to check that your system is set up correctly to be able to use the software."); ?></p>
 
-		<p><strong>in development</strong> - for now please make sure your system:</p>
+		<table>
+			<thead>
+				<tr>
+					<th>Requirement</th>
+					<th>Value</th>
+					<th>Result</th>
+				</tr>
+			</thead>
+			<tfoot>
+				<tr>
+					<td colspan="2" class="align_right"><strong>Overall</strong></td>
+					<td>
+						<img src="/images/icons/<?php echo $this->passed ? "complete" : "failed"; ?>/16x16.png" alt="<?php echo $this->passed ? "complete" : "failed"; ?> icon" />
+						<strong><?php echo $this->passed ? "Pass" : "Fail"; ?></strong>
+					</td>
+				</tr>
+			</tfoot>
+			<tbody>
+			<?php
+			foreach($this->requirements as $req => $test)
+			{
+				if($test["RESULT"])
+				{
+					$r = "Pass";
+					$i = "complete";
+				}
+				else
+				{
+					if(isset($test["NOT_CRITICAL"]) && $test["NOT_CRITICAL"])
+					{
+						$r = "Warning";
+						$i = "warning";
+					}
+					else
+					{
+						$r = "Fail";
+						$i = "failed";
+					}
+				}
+			?>
+				<tr>
+					<td><?php echo $req; ?></td>
+					<td><?php echo $test["ACTUAL"]; ?></td>
+					<td><img src="/images/icons/<?php echo $i; ?>/16x16.png" alt="<?php echo $i; ?> icon" /> <?php echo $r; ?></td>
+				</tr>
+			<?php } ?>
+			</tbody>
+		</table>
 
-		<ul>
-			<li>has PHP 5.3.2 or greater installed</li>
-			<li>has MySQL 5.1 or greater installed</li>
-			<li>is able to run "exec", "proc_open" and "proc_close" functions (Suhosin may disable these)</li>
-			<li>has OpenSSH installed (try running "ssh -v")</li>
-			<li>has Git installed (try running "git --version")</li>
-			<li>has PHP modules <em>mcrypt</em> and <em>ftp</em> installed and enabled</li>
-			<li>Safe mode should be disabled: <?php echo ini_get('safe_mode') ? "Currently enabled (WON'T WORK!)" : "disabled - should be fine"; ?>
-			<li>MAY not work with Suhosin: <?php echo hasSuhosin() ? "Suhosin is installed" : "Suhosin not detected"; ?>
-			<li>getenv('HOME') returns a valid looking directory (yours is: '<?php echo getenv('HOME'); ?>'. If it is empty, you will need to fix this)</li>
-			<li>config file in <?php echo APPLICATION_PATH; ?>/configs/config.ini is writable</li>
-			<li>Make directory gitcache which is writeable by apache user</li>
-		</ul>
+		<div class="padding_10"></div>
 
+		<?php if($this->passed): ?>
 		<a href="/setup/step2" style="float: right";>
 			<img src="/images/buttons/small/next.png" alt="Go to the next step" title="Go to the next step" />
 		</a>
+		<?php else: ?>
+		<span style="float: right;">
+			You cannot proceed with setup until the above items marked "Failed" are corrected.
+		</span>
+		<?php endif; ?>
 		<div class="clear"></div>
 	</div></div>
 	<div class="padding_15"></div>
