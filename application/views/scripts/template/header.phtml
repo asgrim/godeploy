@@ -11,11 +11,20 @@
 
 		<?php if($this->show_navigation !== false): ?>
 		<div id="menu">
+
+			<div id="menu_heading">
+			<?php if ($this->project): ?>
+				Current Project: <strong><?php echo $this->project->getName(); ?></strong>
+			<?php else: ?>
+				&nbsp;
+			<?php endif; ?>
+			</div>
+
 			<?php echo $this->navigation()->menu(); ?>
 
 			<span id="logged_in_status">
 			<?php if ($this->logged_in): ?>
-				<?php _e("Logged in as"); ?> <?php echo Zend_Auth::getInstance()->getIdentity(); ?>
+				<?php echo Zend_Auth::getInstance()->getIdentity(); ?> (<a href="/auth/logout" title="Logout"><?php _e("Log out"); ?></a>)
 			<?php else: ?>
 				<?php _e("Not logged in."); ?>
 			<?php endif; ?>
