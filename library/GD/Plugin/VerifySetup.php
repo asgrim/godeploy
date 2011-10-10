@@ -51,12 +51,14 @@ class GD_Plugin_VerifySetup extends Zend_Controller_Plugin_Abstract
 		$this->_response->sendResponse();
 	}
 
+	/**
+	 * Create "secondary config" values if they don't exist
+	 * Passing "true" as last arg to GD_Config::set means it won't overwrite
+	 * a value if it's already there, so this is ideal for just checking we
+	 * have any extra config settings
+	 */
 	protected function checkConfig()
 	{
-		// Create "secondary config" values if they don't exist
-		// Passing "true" as last arg to GD_Config::set means it won't overwrite
-		// a value if it's already there, so this is ideal for just checking we
-		// have any extra config settings
 		GD_Config::set("debug_level", "0", true);
 	}
 
