@@ -135,7 +135,11 @@ class SetupController extends Zend_Controller_Action
 			"RESULT" => ($fh !== false),
 			"NOT_CRITICAL" => true,
 		);
-		if($fh !== false) fclose($fh);
+		if($fh !== false)
+		{
+			fclose($fh);
+			@unlink($cfg_test);
+		}
 
 		$cache_test = str_replace("/application", "/gitcache/.test", APPLICATION_PATH);
 		$fh = @fopen($cache_test, "a+");
