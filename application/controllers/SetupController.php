@@ -72,66 +72,66 @@ class SetupController extends Zend_Controller_Action
 		$sh = new MAL_Util_Shell();
 		$requirements = array();
 
-		$requirements["PHP version greater than 5.3.2"] = array(
+		$requirements[_r("PHP version greater than 5.3.2")] = array(
 			"ACTUAL" => PHP_VERSION,
 			"RESULT" => PHP_VERSION_ID >= 50302,
 		);
 
-		$requirements["PHP mcrypt module installed"] = array(
-			"ACTUAL" => (extension_loaded("mcrypt") ? "OK" : "Not installed"),
+		$requirements[_r("PHP mcrypt module installed")] = array(
+			"ACTUAL" => (extension_loaded("mcrypt") ? _r("OK") : _r("Not installed")),
 			"RESULT" => extension_loaded("mcrypt"),
 		);
 
-		$requirements["PHP ftp module installed"] = array(
-			"ACTUAL" => (extension_loaded("ftp") ? "OK" : "Not installed"),
+		$requirements[_r("PHP ftp module installed")] = array(
+			"ACTUAL" => (extension_loaded("ftp") ? _r("OK") : _r("Not installed")),
 			"RESULT" => extension_loaded("ftp"),
 		);
 
-		$requirements["PHP Safe mode is disabled"] = array(
-			"ACTUAL" => ini_get('safe_mode') ? "safe_mode = " . ini_get('safe_mode') : "Not set",
+		$requirements[_r("PHP Safe mode is disabled")] = array(
+			"ACTUAL" => ini_get('safe_mode') ? "safe_mode = " . ini_get('safe_mode') : _r("Not set"),
 			"RESULT" => ini_get('safe_mode') != '1',
 		);
 
-		$requirements["MySQL installed"] = array(
-			"ACTUAL" => (extension_loaded("pdo_mysql") ? "OK" : "Not installed"),
+		$requirements[_r("MySQL installed")] = array(
+			"ACTUAL" => (extension_loaded("pdo_mysql") ? _r("OK") : _r("Not installed")),
 			"RESULT" => extension_loaded("pdo_mysql"),
 		);
 
 		$sh->Exec("echo test");
-		$requirements["Permission to run 'exec' function"] = array(
-			"ACTUAL" => (($sh->getLastOutput() == array("test")) ? "OK" : ""),
+		$requirements[_r("Permission to run 'exec' function")] = array(
+			"ACTUAL" => (($sh->getLastOutput() == array("test")) ? _r("OK") : _r("Could not run")),
 			"RESULT" => ($sh->getLastOutput() == array("test")),
 		);
 
 		$sh->Exec("ssh -v");
 		$r = $sh->getLastOutput();
-		$requirements["OpenSSH installed"] = array(
+		$requirements[_r("OpenSSH installed")] = array(
 			"ACTUAL" => $r[0],
 			"RESULT" => strpos($r[0], "OpenSSH") !== false,
 		);
 
 		$sh->Exec("git --version");
 		$r = $sh->getLastOutput();
-		$requirements["Git installed"] = array(
+		$requirements[_r("Git installed")] = array(
 			"ACTUAL" => $r[0],
 			"RESULT" => strpos($r[0], "git version ") !== false,
 		);
 
-		$requirements["May not work with Suhosin"] = array(
-			"ACTUAL" => $this->hasSuhosin() ? "Suhosin is enabled - <strong>GoDeploy may not function correctly</strong>" : "Suhosin not enabled",
+		$requirements[_r("May not work with Suhosin")] = array(
+			"ACTUAL" => $this->hasSuhosin() ? _r("Suhosin is enabled") . " - <strong>" . _r("GoDeploy may not function correctly") . "</strong>" : _r("Suhosin not enabled"),
 			"RESULT" => !($this->hasSuhosin()),
 			"NOT_CRITICAL" => true,
 		);
 
-		$requirements["HOME directory environment variable is set"] = array(
+		$requirements[_r("HOME directory environment variable is set")] = array(
 			"ACTUAL" => getenv('HOME'),
 			"RESULT" => getenv('HOME') != '',
 		);
 
 		$cfg_test = APPLICATION_PATH . "/configs/config.ini";
 		$fh = @fopen($cfg_test, "a+");
-		$requirements["Config file writeable"] = array(
-			"ACTUAL" => $cfg_test . " is " . ($fh === false ? "<strong>not writable</strong>" : "writeable"),
+		$requirements[_r("Config file writable")] = array(
+			"ACTUAL" => $cfg_test . " " . _r("is") . " " . ($fh === false ? "<strong>" . _r("not writable") . "</strong>" : _r("writable")),
 			"RESULT" => ($fh !== false),
 			"NOT_CRITICAL" => true,
 		);
@@ -139,8 +139,8 @@ class SetupController extends Zend_Controller_Action
 
 		$cache_test = str_replace("/application", "/gitcache/.test", APPLICATION_PATH);
 		$fh = @fopen($cache_test, "a+");
-		$requirements["gitcache directory writeable"] = array(
-			"ACTUAL" => $cache_test . " is " . ($fh === false ? "<strong>not writable</strong>" : "writeable"),
+		$requirements[_r("gitcache directory writable")] = array(
+			"ACTUAL" => $cache_test . " " . _r("is") . " " . ($fh === false ? "<strong>" . _r("not writable") . "</strong>" : _r("writable")),
 			"RESULT" => ($fh !== false),
 		);
 		if($fh !== false)

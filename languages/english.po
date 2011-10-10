@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GoDeploy\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-10-08 22:37+0100\n"
+"POT-Creation-Date: 2011-10-10 09:00+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: James Titcumb <james@asgrim.com>\n"
 "Language-Team: \n"
@@ -60,27 +60,27 @@ msgstr "Project Name"
 msgid "Please enter the project name"
 msgstr "Please enter the project name"
 
-#: application/forms/ProjectSettings.php:50
+#: application/forms/ProjectSettings.php:51
 msgid "Repository URL"
 msgstr "Repository URL"
 
-#: application/forms/ProjectSettings.php:55
+#: application/forms/ProjectSettings.php:56
 msgid "Please enter the Repository URL"
 msgstr "Please enter the Repository URL"
 
-#: application/forms/ProjectSettings.php:60
+#: application/forms/ProjectSettings.php:61
 msgid "Deployment Branch"
 msgstr "Deployment Branch"
 
-#: application/forms/ProjectSettings.php:65
+#: application/forms/ProjectSettings.php:66
 msgid "Please enter the name of the Deployment Branch"
 msgstr "Please enter the name of the Deployment Branch"
 
-#: application/forms/ProjectSettings.php:69
+#: application/forms/ProjectSettings.php:70
 msgid "Public Key"
 msgstr "Public Key"
 
-#: application/forms/ProjectSettings.php:73
+#: application/forms/ProjectSettings.php:74
 msgid "Please enter the Public Key"
 msgstr "Please enter the Public Key"
 
@@ -141,6 +141,102 @@ msgstr "Please enter the Password"
 #: application/forms/ServerSettings.php:98
 msgid "Remote Path"
 msgstr "Remote Path"
+
+#: application/controllers/SetupController.php:75
+msgid "PHP version greater than 5.3.2"
+msgstr "PHP version greater than 5.3.2"
+
+#: application/controllers/SetupController.php:80
+msgid "PHP mcrypt module installed"
+msgstr "PHP mcrypt module installed"
+
+#: application/controllers/SetupController.php:81
+#: application/controllers/SetupController.php:86
+#: application/controllers/SetupController.php:96
+#: application/controllers/SetupController.php:102
+msgid "OK"
+msgstr "OK"
+
+#: application/controllers/SetupController.php:81
+#: application/controllers/SetupController.php:86
+#: application/controllers/SetupController.php:96
+msgid "Not installed"
+msgstr "Not installed"
+
+#: application/controllers/SetupController.php:85
+msgid "PHP ftp module installed"
+msgstr "PHP ftp module installed"
+
+#: application/controllers/SetupController.php:90
+msgid "PHP Safe mode is disabled"
+msgstr "PHP Safe mode is disabled"
+
+#: application/controllers/SetupController.php:91
+msgid "Not set"
+msgstr "Not set"
+
+#: application/controllers/SetupController.php:95
+msgid "MySQL installed"
+msgstr "MySQL installed"
+
+#: application/controllers/SetupController.php:101
+msgid "Permission to run 'exec' function"
+msgstr "Permission to run 'exec' function"
+
+#: application/controllers/SetupController.php:102
+msgid "Could not run"
+msgstr "Could not run"
+
+#: application/controllers/SetupController.php:108
+msgid "OpenSSH installed"
+msgstr "OpenSSH installed"
+
+#: application/controllers/SetupController.php:115
+msgid "Git installed"
+msgstr "Git installed"
+
+#: application/controllers/SetupController.php:120
+msgid "May not work with Suhosin"
+msgstr "May not work with Suhosin"
+
+#: application/controllers/SetupController.php:121
+msgid "Suhosin is enabled"
+msgstr "Suhosin is enabled"
+
+#: application/controllers/SetupController.php:121
+msgid "GoDeploy may not function correctly"
+msgstr "GoDeploy may not function correctly"
+
+#: application/controllers/SetupController.php:121
+msgid "Suhosin not enabled"
+msgstr "Suhosin not enabled"
+
+#: application/controllers/SetupController.php:126
+msgid "HOME directory environment variable is set"
+msgstr "HOME directory environment variable is set"
+
+#: application/controllers/SetupController.php:133
+msgid "Config file writable"
+msgstr "Config file writable"
+
+#: application/controllers/SetupController.php:134
+#: application/controllers/SetupController.php:143
+msgid "is"
+msgstr "is"
+
+#: application/controllers/SetupController.php:134
+#: application/controllers/SetupController.php:143
+msgid "not writable"
+msgstr "not writable"
+
+#: application/controllers/SetupController.php:134
+#: application/controllers/SetupController.php:143
+msgid "writable"
+msgstr "writable"
+
+#: application/controllers/SetupController.php:142
+msgid "gitcache directory writable"
+msgstr "gitcache directory writable"
 
 #: application/views/scripts/settings/index.phtml:11
 msgid "Project Settings"
@@ -378,13 +474,47 @@ msgstr "click here to log in"
 msgid "Step 3 - Create First User"
 msgstr "Step 3 - Create First User"
 
-#: application/views/scripts/setup/step1.phtml:20
+#: application/views/scripts/setup/step1.phtml:5
 msgid "Step 1 - System Requirements"
 msgstr "Step 1 - System Requirements"
 
-#: application/views/scripts/setup/step1.phtml:25
+#: application/views/scripts/setup/step1.phtml:10
 msgid "GoDeploy needs to check that your system is set up correctly to be able to use the software."
 msgstr "GoDeploy needs to check that your system is set up correctly to be able to use the software."
+
+#: application/views/scripts/setup/step1.phtml:15
+msgid "Requirement"
+msgstr "Requirement"
+
+#: application/views/scripts/setup/step1.phtml:16
+msgid "Value"
+msgstr "Value"
+
+#: application/views/scripts/setup/step1.phtml:17
+msgid "Result"
+msgstr "Result"
+
+#: application/views/scripts/setup/step1.phtml:22
+msgid "Overall Result"
+msgstr "Overall Result"
+
+#: application/views/scripts/setup/step1.phtml:25
+#: application/views/scripts/setup/step1.phtml:35
+msgid "Pass"
+msgstr "Pass"
+
+#: application/views/scripts/setup/step1.phtml:25
+#: application/views/scripts/setup/step1.phtml:47
+msgid "Fail"
+msgstr "Fail"
+
+#: application/views/scripts/setup/step1.phtml:42
+msgid "Warning"
+msgstr "Warning"
+
+#: application/views/scripts/setup/step1.phtml:69
+msgid "You cannot proceed with setup until the above items marked 'Failed' are corrected."
+msgstr "You cannot proceed with setup until the above items marked 'Failed' are corrected."
 
 #: application/views/scripts/setup/step2.phtml:4
 msgid "Step 2 - Database Settings"
