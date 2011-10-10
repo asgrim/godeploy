@@ -10,12 +10,13 @@
 	{
 		$count = count($this->deployments);
 		$ess = $count == "1" ? "" : "s";
+		$are = $count == "1" ? _r("is") : _r("are");
+		$recent = $count == "1" ? "" : _r(", with the most recent at the top");
 ?>
 	<div class="wrapper w_ededed"><div class="content">
 		<div class="padding_15"></div>
 		<p><?php _e("This is a list of the deployments that have been run on this project."); ?>
-		There are <?php echo $count; ?> deployment<?php echo $ess; ?> shown,
-		with the most recent at the top.</p>
+		There <?php echo $are; ?> <?php echo $count; ?> deployment<?php echo $ess; ?> shown<?php echo $recent; ?>.</p>
 		<div id="feed_icons">
 			<a href="<?php echo $this->baseUrl(); ?>/project/<?php echo $this->project->getSlug(); ?>/history/rss">
 				<img src="/images/icons/feed/rss.png" title="RSS Feed" alt="RSS" />
