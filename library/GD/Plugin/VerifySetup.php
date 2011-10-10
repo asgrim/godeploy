@@ -23,28 +23,18 @@
  */
 class GD_Plugin_VerifySetup extends Zend_Controller_Plugin_Abstract
 {
-	private $_config;
-
-	/**
-	 * @param Zend_Config_Ini|null $config Config object
-	 */
-	public function __construct($config = null)
-	{
-		$this->_config = $config;
-	}
-
 	public function preDispatch(Zend_Controller_Request_Abstract $request)
 	{
-		if(is_null($this->_config) && $request->controller != "setup")
+		if((GD_Config::get("setup_complete") === false || GD_Config::get("setup_complete") != "1") && $request->controller != "setup")
 		{
 			$this->startInitialSetup();
 		}
-		else if($this->_config instanceof Zend_Config && $this->_config->setupComplete && $request->controller == "setup")
+		else if(GD_Config::get("setup_complete") == "1" && $request->controller == "setup")
 		{
 			$this->_response->setRedirect('/');
 			$this->_response->sendResponse();
 		}
-		else if($this->_config instanceof Zend_Config && $this->_config->setupComplete && $request->controller != "setup")
+		else if(GD_Config::get("setup_complete") == "1" && $request->controller != "setup")
 		{
 			// Check we're using the correct database version - throw exception if not
 			$this->checkDatabaseVersion();
@@ -53,6 +43,9 @@ class GD_Plugin_VerifySetup extends Zend_Controller_Plugin_Abstract
 
 	protected function startInitialSetup()
 	{
+		$setup_session = new Zend_Session_Namespace('gd_setup_session');
+		$setup_session->complete = false;
+
 		$this->_response->setRedirect('/setup');
 		$this->_response->sendResponse();
 	}
@@ -62,15 +55,9 @@ class GD_Plugin_VerifySetup extends Zend_Controller_Plugin_Abstract
 		$version_conf = new Zend_Config_Ini(APPLICATION_PATH . '/configs/version.ini', 'version');
 		$expected_db_version = (int)$version_conf->gd->expect_db_version;
 
-		$db = Zend_Db_Table::getDefaultAdapter();
-
 		try
 		{
-			$select = $db->select()
-				->from('configuration', 'value')
-				->where('`key` = ?', 'db_version');
-
-			$current_db_version = (int)$db->fetchOne($select);
+			$current_db_version = (int)GD_Config::get("db_version");
 
 			if($current_db_version < $expected_db_version)
 			{
@@ -81,7 +68,7 @@ class GD_Plugin_VerifySetup extends Zend_Controller_Plugin_Abstract
 				}
 				else
 				{
-					$cfg = $db->getConfig();
+					$cfg = Zend_Db_Table::getDefaultAdapter()->getConfig();
 					$db_adm = new GD_Db_Admin($cfg["host"], $cfg["username"], $cfg["password"], $cfg["dbname"]);
 					$db_adm->upgradeDatabase($current_db_version, $expected_db_version);
 

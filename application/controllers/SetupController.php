@@ -231,12 +231,6 @@ class SetupController extends Zend_Controller_Action
 		{
 			$config = new Zend_Config(array(), true);
 
-			$config->general = array();
-			$config->general->language = $setup_session->language ? $setup_session->language : "english" ;
-			$config->general->setupComplete = true;
-			$config->general->cryptkey = md5(microtime() . $setup_session->admin->username . $setup_session->admin->password);
-			$config->general->installDate = date("d/m/Y H:i:s");
-
 			$config->database = array();
 			$config->database->adapter = "PDO_MYSQL";
 			$config->database->host = $setup_session->database->host;
@@ -264,7 +258,6 @@ class SetupController extends Zend_Controller_Action
 
 			// Load the database manually
 			Zend_Db_Table::setDefaultAdapter(Zend_Db::factory($config->database->adapter, $config->database->toArray()));
-			Zend_Registry::set("cryptkey", $config->general->cryptkey);
 
 			// Run the appropriate database setup script
 			$db_adm = new GD_Db_Admin(
@@ -274,6 +267,12 @@ class SetupController extends Zend_Controller_Action
 				$config->database->dbname
 			);
 			$db_adm->installDatabase();
+
+			// Set the other config values into database
+			GD_Config::set("language", $setup_session->language ? $setup_session->language : "english");
+			GD_Config::set("setup_complete", "1");
+			GD_Config::set("cryptkey", md5(microtime() . $setup_session->admin->username . $setup_session->admin->password));
+			GD_Config::set("install_date", date("d/m/Y H:i:s"));
 
 			// Create the first user in the database
 			$userMapper = new GD_Model_UsersMapper();
@@ -288,10 +287,12 @@ class SetupController extends Zend_Controller_Action
 			$ssh_key = new GD_Model_SSHKey();
 			$ssh_key->setSSHKeyTypesId(1);
 			$ssh_key->generateKeyPair();
-			$ssh_key->setId(1);
+			//$ssh_key->setId(1);
 
 			$ssh_keys_map = new GD_Model_SSHKeysMapper();
-			$ssh_keys_map->save($ssh_key);
+			$ssh_key_id = $ssh_keys_map->save($ssh_key);
+
+			GD_Config::set("ssh_key_id", $ssh_key_id);
 
 			$setup_session->complete = true;
 		}

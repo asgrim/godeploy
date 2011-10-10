@@ -28,7 +28,7 @@ class GD_Crypt extends MAL_Crypt
 
 	public function __construct()
 	{
-		$raw_cryptkey = Zend_Registry::get("cryptkey");
+		$raw_cryptkey = GD_Config::get("cryptkey");
 		if(!isset($raw_cryptkey) || $raw_cryptkey == "")
 		{
 			throw new GD_Exception("The 'cryptkey' value must be specified in config.ini.");

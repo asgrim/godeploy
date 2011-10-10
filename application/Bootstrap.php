@@ -23,66 +23,56 @@
  */
 class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 {
-	private $_user_config_file;
-
 	protected function _initAutoload()
 	{
 		$autoloader = Zend_Loader_Autoloader::getInstance();
 		$autoloader->registerNamespace('GD_');
 	}
 
-	protected function _initCheckSetup()
+	protected function _initConfig()
 	{
-		// Set the config file name
-		$this->_user_config_file = APPLICATION_PATH . '/configs/config.ini';
-
-		// Check all config files exist - if not, go to setup mode
-		if(!file_exists($this->_user_config_file))
-		{
-			$config = null;
-		}
-		else
-		{
-			$config = new Zend_Config_Ini($this->_user_config_file, 'general');
-			Zend_Registry::set("cryptkey", $config->cryptkey);
-		}
-
-		$setup_session = new Zend_Session_Namespace('gd_setup_session');
-
-		// Choose a default language (English) if language not specified in config.ini
-		if(!is_null($config) && isset($config->language))
-		{
-			$use_lang = $config->language;
-		}
-		else if(isset($setup_session->language))
+		// Default languages
+		$use_lang = false;
+		if(isset($setup_session->language))
 		{
 			$use_lang = $setup_session->language;
 		}
-		else
+
+		// Config file
+		$cfg_file = APPLICATION_PATH . '/configs/config.ini';
+
+		// Set default database adapter
+		if(file_exists($cfg_file))
+		{
+			$db_conf = new Zend_Config_Ini($cfg_file, 'database');
+			Zend_Db_Table::setDefaultAdapter(Zend_Db::factory($db_conf->adapter, $db_conf->toArray()));
+			Zend_Registry::set("db", $db_conf);
+
+			$lang = GD_Config::get("language");
+			if($lang !== false)
+			{
+				$use_lang = $lang;
+			}
+		}
+
+		if(!$use_lang)
 		{
 			$use_lang = "english";
 		}
+
 		$translate = GD_Translate::init($use_lang);
-
-		// Pass config to the VerifySetup controller to check our setup environment and  we're all OK to proceed
-		$this->bootstrap('frontController');
-		$frontController = $this->getResource('frontcontroller');
-		$frontController->registerPlugin(new GD_Plugin_VerifySetup($config));
-	}
-
-	protected function _initConfig()
-	{
-		// Set default database adapter
-		if(file_exists($this->_user_config_file))
-		{
-			$db_conf = new Zend_Config_Ini($this->_user_config_file, 'database');
-			Zend_Db_Table::setDefaultAdapter(Zend_Db::factory($db_conf->adapter, $db_conf->toArray()));
-			Zend_Registry::set("db", $db_conf);
-		}
 
 		// Load version
 		$version_conf = new Zend_Config_Ini(APPLICATION_PATH . '/configs/version.ini', 'version');
 		Zend_Registry::set("gd.version", $version_conf->gd->version);
+	}
+
+	protected function _initCheckSetup()
+	{
+		// Pass config to the VerifySetup controller to check our setup environment and  we're all OK to proceed
+		$this->bootstrap('frontController');
+		$frontController = $this->getResource('frontcontroller');
+		$frontController->registerPlugin(new GD_Plugin_VerifySetup());
 	}
 
 	protected function _initNavigation()
