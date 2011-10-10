@@ -27,7 +27,7 @@
  * @author james
  *
  */
-class GD_Git extends MAL_Util_Shell
+class GD_Git extends GD_Shell
 {
 	private $_url;
 	private $_project;

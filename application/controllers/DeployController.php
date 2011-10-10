@@ -23,9 +23,6 @@
  */
 class DeployController extends Zend_Controller_Action
 {
-	private $_enable_debug = false;
-	private $_debug_fh;
-
 	public function init()
 	{
 		/* Initialize action controller here */
@@ -183,22 +180,6 @@ class DeployController extends Zend_Controller_Action
 				$form->populate($data);
 			}
 		}
-	}
-
-	private function writeDebug($debug)
-	{
-		if(!$this->_enable_debug) return;
-
-		if(!$this->_debug_fh)
-		{
-			$logfile = sys_get_temp_dir() . "/gd_deploy_log";
-			$this->_debug_fh = fopen($logfile, "a");
-			chmod($logfile, 0755);
-			fwrite($this->_debug_fh, "===============================================================================\n");
-			fwrite($this->_debug_fh, "Deployment ID " . $this->_getParam("id") . " started " . date("Y-m-d H:i:s") . "\n");
-			fwrite($this->_debug_fh, "===============================================================================\n");
-		}
-		fwrite($this->_debug_fh, $debug);
 	}
 
 	private function prepareStandardDeployInformation()
@@ -386,12 +367,14 @@ class DeployController extends Zend_Controller_Action
 		Zend_Session::writeClose();
 
 		ob_start();
-		$this->writeDebug("Setting time limit... ");
+		GD_Debug::StartDeploymentLog($this->_getParam("id"));
+
+		GD_Debug::Log("Setting time limit... ", GD_Debug::DEBUG_BASIC, false);
 		set_time_limit(0);
-		$this->writeDebug("done.\n");
+		GD_Debug::Log("done.", GD_Debug::DEBUG_BASIC, true, false);
 
 		// Project information
-		$this->writeDebug("Loading project... ");
+		GD_Debug::Log("Loading project... ", GD_Debug::DEBUG_BASIC, false);
 		$projects = new GD_Model_ProjectsMapper();
 		$project_slug = $this->_getParam("project");
 		if($project_slug != "")
@@ -403,50 +386,50 @@ class DeployController extends Zend_Controller_Action
 		{
 			throw new GD_Exception("Project '{$project_slug}' was not set up.");
 		}
-		$this->writeDebug("done.\n");
+		GD_Debug::Log("done.", GD_Debug::DEBUG_BASIC, true, false);
 
 		// Deployment information
-		$this->writeDebug("Loading deployment information... ");
+		GD_Debug::Log("Loading deployment information... ", GD_Debug::DEBUG_BASIC, false);
 		$deployments = new GD_Model_DeploymentsMapper();
 		$deployment = new GD_Model_Deployment();
 		$deployments->find($this->_getParam('id'), $deployment);
-		$this->writeDebug("done.\n");
+		GD_Debug::Log("done.", GD_Debug::DEBUG_BASIC, true, false);
 
 		// Server information
-		$this->writeDebug("Loading server information... ");
+		GD_Debug::Log("Loading server information... ", GD_Debug::DEBUG_BASIC, false);
 		$servers = new GD_Model_ServersMapper();
 		$server = new GD_Model_Server();
 		$servers->find($deployment->getServersId(), $server);
-		$this->writeDebug("done.\n");
+		GD_Debug::Log("done.", GD_Debug::DEBUG_BASIC, true, false);
 
 		// Update the deployment status to show we're now running
-		$this->writeDebug("Updating deployment status to running... ");
+		GD_Debug::Log("Updating deployment status to running... ", GD_Debug::DEBUG_BASIC, false);
 		$deployment->setDeploymentStatusesId(2); // Running
 		$deployments->save($deployment);
-		$this->writeDebug("done.\n");
+		GD_Debug::Log("done.", GD_Debug::DEBUG_BASIC, true, false);
 
 		// Perform a git pull to check we're up to date
 		$git = new GD_Git($project);
 		$git->gitPull();
 
 		// File list to action
-		$this->writeDebug("Getting file list... ");
+		GD_Debug::Log("Getting file list... ", GD_Debug::DEBUG_BASIC, false);
 		$deployment_files = new GD_Model_DeploymentFilesMapper();
 		$deployment_files_statuses = new GD_Model_DeploymentFileStatusesMapper();
 		$file_list = $deployment_files->getDeploymentFilesByDeployment($deployment->getId());
-		$this->writeDebug("done.\n");
+		GD_Debug::Log("done.", GD_Debug::DEBUG_BASIC, true, false);
 
 		// Check out the revision we want to upload from
-		$this->writeDebug("Checking out revision {$deployment->getToRevision()}... ");
+		GD_Debug::Log("Checking out revision {$deployment->getToRevision()}... ", GD_Debug::DEBUG_BASIC, false);
 		$previous_ref = $git->getCurrentBranch(true);
 		$res = $git->gitCheckout($deployment->getToRevision());
-		if(!$res) $this->writeDebug("FAILED.\n");
-		else $this->writeDebug("done.\n");
+		if(!$res) GD_Debug::Log("FAILED.", GD_Debug::DEBUG_BASIC, true, false);
+		else GD_Debug::Log("done.", GD_Debug::DEBUG_BASIC, true, false);
 
 		$errors = false;
 
 		// Do the upload
-		$this->writeDebug("Actioning files now.\n");
+		GD_Debug::Log("Actioning files now.", GD_Debug::DEBUG_BASIC);
 		$ftp = new GD_Ftp($server);
 		try
 		{
@@ -454,11 +437,11 @@ class DeployController extends Zend_Controller_Action
 		}
 		catch(GD_Exception $ex)
 		{
-			$this->writeDebug("FTP Connect failed: {$ex->getMessage()}\n");
+			GD_Debug::Log("FTP Connect failed: {$ex->getMessage()}", GD_Debug::DEBUG_BASIC);
 		}
 		foreach($file_list as $file)
 		{
-			$this->writeDebug("Actioning '{$file->getDetails()}'... ");
+			GD_Debug::Log("Actioning '{$file->getDetails()}'... ", GD_Debug::DEBUG_BASIC, false);
 			$file->setDeploymentFileStatusesId($deployment_files_statuses->getDeploymentFileStatusByCode('IN_PROGRESS')->getId());
 			$deployment_files->save($file);
 
@@ -478,24 +461,24 @@ class DeployController extends Zend_Controller_Action
 						break;
 				}
 				$file->setDeploymentFileStatusesId($deployment_files_statuses->getDeploymentFileStatusByCode('COMPLETE')->getId());
-				$this->writeDebug("done.\n");
+				GD_Debug::Log("done.", GD_Debug::DEBUG_BASIC, true, false);
 			}
 			catch(GD_Exception $ex)
 			{
 				$errors = true;
 				$file->setDeploymentFileStatusesId($deployment_files_statuses->getDeploymentFileStatusByCode('FAILED')->getId());
-				$this->writeDebug("FAILED [" . $ex->getMessage() . "].\n");
+				GD_Debug::Log("FAILED [" . $ex->getMessage() . "].", GD_Debug::DEBUG_BASIC, true, false);
 			}
 			$deployment_files->save($file);
 		}
 
 		// Revert to previous revision
-		$this->writeDebug("Checking out revision {$previous_ref}... ");
+		GD_Debug::Log("Checking out revision {$previous_ref}... ", GD_Debug::DEBUG_BASIC, false);
 		$res = $git->gitCheckout($previous_ref);
-		if(!$res) $this->writeDebug("FAILED.\n");
-		else $this->writeDebug("done.\n");
+		if(!$res) GD_Debug::Log("FAILED.", GD_Debug::DEBUG_BASIC, true, false);
+		else GD_Debug::Log("done.", GD_Debug::DEBUG_BASIC, true, false);
 
-		$this->writeDebug("Setting deployment status " . ($errors ? "[errors]" : "[success]") . "... ");
+		GD_Debug::Log("Setting deployment status " . ($errors ? "[errors]" : "[success]") . "... ", GD_Debug::DEBUG_BASIC, false);
 		if($errors)
 		{
 			$deployment->setDeploymentStatusesId(4); // Failed
@@ -506,15 +489,17 @@ class DeployController extends Zend_Controller_Action
 			$deployment->setDeploymentStatusesId(3); // Complete
 			$deployments->save($deployment);
 		}
-		$this->writeDebug("done.\n");
+		GD_Debug::Log("done.", GD_Debug::DEBUG_BASIC, true, false);
 
-		$this->writeDebug("All finished.\n");
+		GD_Debug::Log("All finished.", GD_Debug::DEBUG_BASIC);
 
 		$buf = ob_get_contents();
 		if($buf)
 		{
-			$this->writeDebug("Extra content:\n\n{$buf}");
+			GD_Debug::Log("Extra content:\n\n{$buf}", GD_Debug::DEBUG_BASIC);
 		}
+
+		GD_Debug::EndDeploymentLog($this->_getParam("id"));
 		ob_end_clean();
 		flush();
 		die();
