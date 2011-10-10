@@ -27,5 +27,7 @@ class GD_Shell extends MAL_Util_Shell
 	public function Exec($cmd, $noisy = false)
 	{
 		parent::Exec($cmd, $noisy);
+
+		GD_Debug::Log("GD_Shell cmd: {$cmd}", GD_Debug::DEBUG_FULL);
 	}
 }
