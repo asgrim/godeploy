@@ -21,7 +21,7 @@
  * @author James Titcumb, Jon Wigham, Simon Wade
  * @link http://www.godeploy.com/
  */
-class GD_Db_Admin extends MAL_Util_Shell
+class GD_Db_Admin extends GD_Shell
 {
 	protected $_hostname;
 	protected $_username;
