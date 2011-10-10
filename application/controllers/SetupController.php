@@ -72,75 +72,79 @@ class SetupController extends Zend_Controller_Action
 		$sh = new MAL_Util_Shell();
 		$requirements = array();
 
-		$requirements["PHP version greater than 5.3.2"] = array(
+		$requirements[_r("PHP version greater than 5.3.2")] = array(
 			"ACTUAL" => PHP_VERSION,
 			"RESULT" => PHP_VERSION_ID >= 50302,
 		);
 
-		$requirements["PHP mcrypt module installed"] = array(
-			"ACTUAL" => (extension_loaded("mcrypt") ? "OK" : "Not installed"),
+		$requirements[_r("PHP mcrypt module installed")] = array(
+			"ACTUAL" => (extension_loaded("mcrypt") ? _r("OK") : _r("Not installed")),
 			"RESULT" => extension_loaded("mcrypt"),
 		);
 
-		$requirements["PHP ftp module installed"] = array(
-			"ACTUAL" => (extension_loaded("ftp") ? "OK" : "Not installed"),
+		$requirements[_r("PHP ftp module installed")] = array(
+			"ACTUAL" => (extension_loaded("ftp") ? _r("OK") : _r("Not installed")),
 			"RESULT" => extension_loaded("ftp"),
 		);
 
-		$requirements["PHP Safe mode is disabled"] = array(
-			"ACTUAL" => ini_get('safe_mode') ? "safe_mode = " . ini_get('safe_mode') : "Not set",
+		$requirements[_r("PHP Safe mode is disabled")] = array(
+			"ACTUAL" => ini_get('safe_mode') ? "safe_mode = " . ini_get('safe_mode') : _r("Not set"),
 			"RESULT" => ini_get('safe_mode') != '1',
 		);
 
-		$requirements["MySQL installed"] = array(
-			"ACTUAL" => (extension_loaded("pdo_mysql") ? "OK" : "Not installed"),
+		$requirements[_r("MySQL installed")] = array(
+			"ACTUAL" => (extension_loaded("pdo_mysql") ? _r("OK") : _r("Not installed")),
 			"RESULT" => extension_loaded("pdo_mysql"),
 		);
 
 		$sh->Exec("echo test");
-		$requirements["Permission to run 'exec' function"] = array(
-			"ACTUAL" => (($sh->getLastOutput() == array("test")) ? "OK" : ""),
+		$requirements[_r("Permission to run 'exec' function")] = array(
+			"ACTUAL" => (($sh->getLastOutput() == array("test")) ? _r("OK") : _r("Could not run")),
 			"RESULT" => ($sh->getLastOutput() == array("test")),
 		);
 
 		$sh->Exec("ssh -v");
 		$r = $sh->getLastOutput();
-		$requirements["OpenSSH installed"] = array(
+		$requirements[_r("OpenSSH installed")] = array(
 			"ACTUAL" => $r[0],
 			"RESULT" => strpos($r[0], "OpenSSH") !== false,
 		);
 
 		$sh->Exec("git --version");
 		$r = $sh->getLastOutput();
-		$requirements["Git installed"] = array(
+		$requirements[_r("Git installed")] = array(
 			"ACTUAL" => $r[0],
 			"RESULT" => strpos($r[0], "git version ") !== false,
 		);
 
-		$requirements["May not work with Suhosin"] = array(
-			"ACTUAL" => $this->hasSuhosin() ? "Suhosin is enabled - <strong>GoDeploy may not function correctly</strong>" : "Suhosin not enabled",
+		$requirements[_r("May not work with Suhosin")] = array(
+			"ACTUAL" => $this->hasSuhosin() ? _r("Suhosin is enabled") . " - <strong>" . _r("GoDeploy may not function correctly") . "</strong>" : _r("Suhosin not enabled"),
 			"RESULT" => !($this->hasSuhosin()),
 			"NOT_CRITICAL" => true,
 		);
 
-		$requirements["HOME directory environment variable is set"] = array(
+		$requirements[_r("HOME directory environment variable is set")] = array(
 			"ACTUAL" => getenv('HOME'),
 			"RESULT" => getenv('HOME') != '',
 		);
 
 		$cfg_test = APPLICATION_PATH . "/configs/config.ini";
 		$fh = @fopen($cfg_test, "a+");
-		$requirements["Config file writeable"] = array(
-			"ACTUAL" => $cfg_test . " is " . ($fh === false ? "<strong>not writable</strong>" : "writeable"),
+		$requirements[_r("Config file writable")] = array(
+			"ACTUAL" => $cfg_test . " " . _r("is") . " " . ($fh === false ? "<strong>" . _r("not writable") . "</strong>" : _r("writable")),
 			"RESULT" => ($fh !== false),
 			"NOT_CRITICAL" => true,
 		);
-		if($fh !== false) fclose($fh);
+		if($fh !== false)
+		{
+			fclose($fh);
+			@unlink($cfg_test);
+		}
 
 		$cache_test = str_replace("/application", "/gitcache/.test", APPLICATION_PATH);
 		$fh = @fopen($cache_test, "a+");
-		$requirements["gitcache directory writeable"] = array(
-			"ACTUAL" => $cache_test . " is " . ($fh === false ? "<strong>not writable</strong>" : "writeable"),
+		$requirements[_r("gitcache directory writable")] = array(
+			"ACTUAL" => $cache_test . " " . _r("is") . " " . ($fh === false ? "<strong>" . _r("not writable") . "</strong>" : _r("writable")),
 			"RESULT" => ($fh !== false),
 		);
 		if($fh !== false)
@@ -227,12 +231,6 @@ class SetupController extends Zend_Controller_Action
 		{
 			$config = new Zend_Config(array(), true);
 
-			$config->general = array();
-			$config->general->language = $setup_session->language ? $setup_session->language : "english" ;
-			$config->general->setupComplete = true;
-			$config->general->cryptkey = md5(microtime() . $setup_session->admin->username . $setup_session->admin->password);
-			$config->general->installDate = date("d/m/Y H:i:s");
-
 			$config->database = array();
 			$config->database->adapter = "PDO_MYSQL";
 			$config->database->host = $setup_session->database->host;
@@ -260,7 +258,6 @@ class SetupController extends Zend_Controller_Action
 
 			// Load the database manually
 			Zend_Db_Table::setDefaultAdapter(Zend_Db::factory($config->database->adapter, $config->database->toArray()));
-			Zend_Registry::set("cryptkey", $config->general->cryptkey);
 
 			// Run the appropriate database setup script
 			$db_adm = new GD_Db_Admin(
@@ -270,6 +267,12 @@ class SetupController extends Zend_Controller_Action
 				$config->database->dbname
 			);
 			$db_adm->installDatabase();
+
+			// Set the other config values into database
+			GD_Config::set("language", $setup_session->language ? $setup_session->language : "english");
+			GD_Config::set("setup_complete", "1");
+			GD_Config::set("cryptkey", md5(microtime() . $setup_session->admin->username . $setup_session->admin->password));
+			GD_Config::set("install_date", date("d/m/Y H:i:s"));
 
 			// Create the first user in the database
 			$userMapper = new GD_Model_UsersMapper();
@@ -284,10 +287,12 @@ class SetupController extends Zend_Controller_Action
 			$ssh_key = new GD_Model_SSHKey();
 			$ssh_key->setSSHKeyTypesId(1);
 			$ssh_key->generateKeyPair();
-			$ssh_key->setId(1);
+			//$ssh_key->setId(1);
 
 			$ssh_keys_map = new GD_Model_SSHKeysMapper();
-			$ssh_keys_map->save($ssh_key);
+			$ssh_key_id = $ssh_keys_map->save($ssh_key);
+
+			GD_Config::set("ssh_key_id", $ssh_key_id);
 
 			$setup_session->complete = true;
 		}

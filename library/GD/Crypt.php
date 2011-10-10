@@ -1,12 +1,34 @@
 <?php
 
+/**
+ * GoDeploy deployment application
+ * Copyright (C) 2011 James Titcumb, Simon Wade
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * @copyright 2011 GoDeploy
+ * @author James Titcumb, Jon Wigham, Simon Wade
+ * @link http://www.godeploy.com/
+ */
+
 class GD_Crypt extends MAL_Crypt
 {
 	private $_key;
 
 	public function __construct()
 	{
-		$raw_cryptkey = Zend_Registry::get("cryptkey");
+		$raw_cryptkey = GD_Config::get("cryptkey");
 		if(!isset($raw_cryptkey) || $raw_cryptkey == "")
 		{
 			throw new GD_Exception("The 'cryptkey' value must be specified in config.ini.");

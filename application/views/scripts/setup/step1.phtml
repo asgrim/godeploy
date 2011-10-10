@@ -12,17 +12,17 @@
 		<table>
 			<thead>
 				<tr>
-					<th>Requirement</th>
-					<th>Value</th>
-					<th>Result</th>
+					<th><?php _e("Requirement"); ?></th>
+					<th><?php _e("Value"); ?></th>
+					<th><?php _e("Result"); ?></th>
 				</tr>
 			</thead>
 			<tfoot>
 				<tr>
-					<td colspan="2" class="align_right"><strong>Overall</strong></td>
+					<td colspan="2" class="align_right"><strong><?php _e("Overall Result"); ?></strong></td>
 					<td>
 						<img src="/images/icons/<?php echo $this->passed ? "complete" : "failed"; ?>/16x16.png" alt="<?php echo $this->passed ? "complete" : "failed"; ?> icon" />
-						<strong><?php echo $this->passed ? "Pass" : "Fail"; ?></strong>
+						<strong><?php echo $this->passed ? _r("Pass") : _r("Fail"); ?></strong>
 					</td>
 				</tr>
 			</tfoot>
@@ -32,19 +32,19 @@
 			{
 				if($test["RESULT"])
 				{
-					$r = "Pass";
+					$r = _r("Pass");
 					$i = "complete";
 				}
 				else
 				{
 					if(isset($test["NOT_CRITICAL"]) && $test["NOT_CRITICAL"])
 					{
-						$r = "Warning";
+						$r = _r("Warning");
 						$i = "warning";
 					}
 					else
 					{
-						$r = "Fail";
+						$r = _r("Fail");
 						$i = "failed";
 					}
 				}
@@ -66,7 +66,7 @@
 		</a>
 		<?php else: ?>
 		<span style="float: right;">
-			You cannot proceed with setup until the above items marked "Failed" are corrected.
+			<?php _e("You cannot proceed with setup until the above items marked 'Failed' are corrected."); ?>
 		</span>
 		<?php endif; ?>
 		<div class="clear"></div>

@@ -44,7 +44,7 @@ class GD_Validate_GitUrl extends Zend_Validate_Abstract
 			$this->_error(self::HTTP_NOT_SUPPORTED);
 			return false;
 		}
-		else if(preg_match("/^[a-zA-Z]+@[a-zA-Z0-9.]+:[a-zA-Z0-9\/]+(.git)?$/", $value))
+		else if(preg_match("/^[a-zA-Z_.-]+@[a-zA-Z0-9.-]+:[a-zA-Z0-9\/_.-]+(.git)?$/", $value))
 		{
 			return true; // git@github.com:repo.git
 		}
