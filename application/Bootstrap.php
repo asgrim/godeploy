@@ -77,27 +77,16 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 
 	protected function _initNavigation()
 	{
-		$auth = Zend_Auth::getInstance();
-
-		if($auth->hasIdentity())
-		{
-			$navMode = 'navAccount';
-			$logged_in = true;
-		}
-		else
-		{
-			$navMode = 'navLogin';
-			$logged_in = false;
-		}
-
 		$this->bootstrap('layout');
 		$layout = $this->getResource('layout');
 		$view = $layout->getView();
-		$config = new Zend_Config_Xml(APPLICATION_PATH . '/configs/navigation.xml', $navMode);
 
-		$navigation = new Zend_Navigation($config);
-		$view->navigation($navigation);
+		$auth = Zend_Auth::getInstance();
+		$logged_in = ($auth->hasIdentity());
 		$view->logged_in = $logged_in;
+
+		$frontController = $this->getResource('frontcontroller');
+		$frontController->registerPlugin(new GD_Plugin_Navigation($view));
 	}
 
 	protected function _initAcl()
