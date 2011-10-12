@@ -9,6 +9,8 @@ ALTER TABLE  `users`
   ADD  `admin` BOOL NOT NULL ,
   ADD  `active` BOOL NOT NULL ;
 
+UPDATE `users` SET `active` = '1';
+
 UPDATE `configuration` SET `value` = '5' WHERE `key` = 'db_version';
 
 SET SQL_MODE=@OLD_SQL_MODE;
