@@ -34,7 +34,7 @@
 					<td><?php echo $this->escape($project->getName()); ?></td>
 					<td>
 					<?php if ($last_deployment instanceof GD_Model_Deployment): ?>
-						<?php echo $last_deployment->getWhen(); ?>
+						<?php echo $last_deployment->getWhen("jS M 'y @ G:i"); ?>
 					<?php else: ?>
 						<strong>This project is yet to be deployed.</strong>
 					<?php endif; ?>
