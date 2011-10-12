@@ -130,4 +130,25 @@ class GD_Model_Project
 		}
 		return $this->_ssh_key;
 	}
+
+	/**
+	 * @return a GD_Model_DeploymentFile of the latest deployment
+	 */
+	public function getLastDeployment()
+	{
+		$deployments = new GD_Model_DeploymentsMapper();
+		$last_deployment = $deployments->getDeploymentsByProject($this->getId(), 0, 1, false);
+
+		return $last_deployment;
+	}
+
+	/**
+	 * @return int $count number of deployments
+	 */
+	public function getNumDeployments()
+	{
+		$deployments = new GD_Model_DeploymentsMapper();
+		$num_deploymens = $deployments->getNumDeployments($this->getId());
+		return $num_deploymens;
+	}
 }

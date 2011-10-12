@@ -65,6 +65,11 @@ a {
 		padding-left: 21px;
 		}
 
+	a.view_icon {
+		background: transparent url('/images/icons/view/16x16.png') no-repeat 0 0;
+		padding-left: 21px;
+		}
+
 	h1 a {
 		font-weight: normal;
 		text-decoration: none;

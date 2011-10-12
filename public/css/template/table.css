@@ -12,6 +12,7 @@ table {
 	table th, table td {
 		padding: 5px 10px;
 		border: 1px solid #bdbdbd;
+		vertical-align: top;
 		}
 
 	table th {
@@ -27,7 +28,6 @@ table {
 	table td {
 		background-color: #ffffff;
 		font-size: 12px;
-		vertical-align: top;
 		}
 	table td.nowrap {
 		white-space: nowrap;
@@ -36,6 +36,7 @@ table {
 	table td.icon {
 		padding: 5px;
 		width: 16px;
+		vertical-align: middle;
 		}
 		
 	table tfoot td {

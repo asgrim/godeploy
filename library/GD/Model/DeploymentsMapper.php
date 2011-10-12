@@ -153,4 +153,18 @@ class GD_Model_DeploymentsMapper extends MAL_Model_MapperAbstract
 
 		return $this->fetchAll($select);
 	}
+
+	/**
+	 * @param int $num_deployments
+	 */
+	public function getNumDeployments($project_id)
+	{
+		$select = $this->getDbTable()
+			->select()
+			->where("projects_id = ?", $project_id);
+		$deployments = $this->fetchAll($select);
+		$num_deployments = count($deployments);
+
+		return $num_deployments;
+	}
 }

@@ -82,6 +82,10 @@
 			box-shadow: 3px 3px 3px rgba(0,0,0,0.5);
 			}
 
+			#menu a {
+				text-decoration: none;
+				}
+
 			#menu ul li.active {
 				border: 1px solid #bdbdbd;
 				border-bottom: none;
