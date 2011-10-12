@@ -282,6 +282,7 @@ class SetupController extends Zend_Controller_Action
 			$user->setName($setup_session->admin->username)
 				->setPassword($crypt->makeHash($setup_session->admin->password))
 				->setDateAdded(date('Y-m-d H:i:s'))
+				->setAdmin(1)
 				->enableUser();
 
 			$userMapper->save($user);
