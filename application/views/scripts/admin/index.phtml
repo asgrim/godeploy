@@ -1,0 +1,48 @@
+
+<div class="content">
+	<div class="padding_20"></div>
+
+	<h1><?php _e("Administration"); ?></h1>
+	<div class="padding_15"></div>
+
+	<div class="wrapper w_ededed"><div class="content">
+		<div class="padding_15"></div>
+
+<?php
+	if (is_array($this->users) && count($this->users) > 0)
+	{
+?>
+		<h2>Deployment history</h2>
+
+		<table>
+			<thead>
+				<tr>
+					<th><?php _e("Username"); ?></th>
+					<th><?php _e("Admin"); ?></th>
+					<th><?php _e("Active"); ?></th>
+					<th class="empty">&nbsp;</th>
+				</tr>
+			</thead>
+			<tbody>
+			<?php foreach ($this->users as $user) : ?>
+				<tr>
+					<td><?php echo $user->getName(); ?></td>
+					<td><?php echo $user->isAdmin() ? "Yes" : "No"; ?></td>
+					<td><?php echo $user->isActive() ? "Yes" : "No"; ?></td>
+					<td class="icon">
+						<a href="<?php echo $this->baseUrl(); ?>/admin/edit">
+							<img src="/images/icons/edit/16x16.png" alt="Edit &raquo;" />
+						</a>
+					</td>
+				</tr>
+			<?php endforeach; ?>
+			</tbody>
+		</table>
+<?php } else { ?>
+		<h2 class="last"><?php _e("There are no users... somehow?!"); ?></h2>
+<?php } ?>
+		<div class="padding_15"></div>
+		<p class="last"><a href="<?php echo $this->baseUrl(); ?>/admin/add" class="add_icon"><?php _e("Add a user"); ?></a></p>
+	</div></div>
+</div>
+

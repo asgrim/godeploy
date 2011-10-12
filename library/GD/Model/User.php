@@ -134,4 +134,14 @@ class GD_Model_User
 		$this->setActive(1);
 		return $this;
 	}
+
+	public function isAdmin()
+	{
+		return ($this->getAdmin() == 1);
+	}
+
+	public function isActive()
+	{
+		return ($this->getActive() == 1);
+	}
 }
