@@ -59,7 +59,7 @@ class SettingsController extends Zend_Controller_Action
 			$this->view->servers = $servers->getServersByProject($project->getId());
 		}
 
-		$form = new GDApp_Form_ProjectSettings(null, $new_project);
+		$form = new GDApp_Form_ProjectSettings($project, null, $new_project);
 		$this->view->form = $form;
 		if ($this->getRequest()->isPost())
 		{
@@ -192,7 +192,10 @@ class SettingsController extends Zend_Controller_Action
 			}
 
 			// Checkout the appropriate branch
-			$git->gitCheckout($branch_after);
+			if(!$git->gitCheckout($branch_after))
+			{
+				return "Branch '{$branch_after}' does not exist.";
+			}
 			$branch_changed = true;
 		}
 
