@@ -30,23 +30,29 @@ class ProfileController extends Zend_Controller_Action
 
 	public function changepasswordAction()
 	{
+		$this->view->headLink()->appendStylesheet("/css/template/form.css");
+		$this->view->headLink()->appendStylesheet("/css/pages/profile.css");
+		$this->view->form = $form;
+
 		$form = new GDApp_Form_ChangePassword();
+
 		if($this->getRequest()->isPost())
 		{
 			if($form->isValid($this->getRequest()->getParams()))
 			{
 				$password = $this->_request->getParam('password');
+
 				$username = Zend_Auth::getInstance()->getIdentity();
 				$crypt = new GD_Crypt();
+
 				$userMapper = new GD_Model_UsersMapper();
 				$user = $userMapper->getUserByName($username);
+
 				$user->setPassword($crypt->makeHash($password));
 				$userMapper->save($user);
+
 				$this->view->success = true;
 			}
 		}
-		$this->view->headLink()->appendStylesheet("/css/template/form.css");
-		$this->view->headLink()->appendStylesheet("/css/pages/profile.css");
-		$this->view->form = $form;
 	}
 }
