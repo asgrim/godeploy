@@ -62,26 +62,5 @@ class GD_Validate_GitBranch extends Zend_Validate_Abstract
 			$this->_error(self::NO_REPO);
 			return false;
 		}
-
-		/*if(@chdir($this->_gitdir))
-		{
-			$sh = new GD_Shell();
-			$sh->Exec('git checkout ' . preg_replace("/[^-\/a-zA-Z0-9_-]/", "", $value));
-
-			if($sh->getLastError() == 0)
-			{
-				return true;
-			}
-			else
-			{
-				$this->_error(self::INVALID);
-				return false;
-			}
-		}
-		else
-		{
-			$this->_error(self::NO_REPO);
-			return false;
-		}*/
 	}
 }
