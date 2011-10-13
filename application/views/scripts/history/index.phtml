@@ -39,6 +39,7 @@
 					<th><?php _e("From"); ?></th>
 					<th><?php _e("To"); ?></th>
 					<th><?php _e("Comment"); ?></th>
+					<th><?php _e("Deployed By"); ?></th>
 					<th><?php _e("Status"); ?></th>
 					<th class="empty">&nbsp;</th>
 				</tr>
@@ -51,6 +52,7 @@
 					<td title="<?php echo $deployment->getFromRevision(); ?>"><?php echo $deployment->getFromRevision() ? substr($deployment->getFromRevision(), 0, 7) : "None"; ?></td>
 					<td title="<?php echo $deployment->getToRevision(); ?>"><?php echo substr($deployment->getToRevision(), 0, 7); ?></td>
 					<td><?php echo $deployment->getComment(); ?></td>
+					<td><?php echo $deployment->getUser()->getName(); ?></td>
 					<td class="nowrap"><?php echo $deployment->getDeploymentStatus()->getShortName(); ?></td>
 					<td class="icon">
 						<a href="<?php echo $this->baseUrl(); ?>/project/<?php echo $this->project->getSlug(); ?>/deploy/result/<?php echo $deployment->getId(); ?>">
