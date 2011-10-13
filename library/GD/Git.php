@@ -108,7 +108,7 @@ class GD_Git extends GD_Shell
 			// Write the id_rsa key to the gitcache
 			$id_rsa = $this->_project->getSSHKey()->getPrivateKey();
 
-			$keyfile = $this->_base_gitdir . "ssh-" . $this->_project->getSlug();
+			$keyfile = $this->_base_gitdir . "id_rsa";
 
 			if(file_exists($keyfile))
 			{
@@ -122,7 +122,14 @@ class GD_Git extends GD_Shell
 			$host = substr($this->_url, 0, -strlen($x));
 			$host = preg_replace("/[^@0-9a-zA-Z-_.]/", "", $host);
 
-			putenv("GIT_SSH=ssh -i {$keyfile} -o  UserKnownHostsFile=/dev/null ");
+			$ssh_cmd = "ssh -T -o StrictHostKeyChecking=no -i {$keyfile} -o  UserKnownHostsFile=/dev/null ";
+
+			// Use a script file
+			$script = "#!/bin/sh\n\n{$ssh_cmd} $*\n";
+			$script_file = $this->_base_gitdir . "ssh.sh";
+			file_put_contents($script_file, $script);
+			chmod($script_file, 0755);
+			putenv("GIT_SSH={$script_file}");
 
 			// Test the connection
 			$this->runShell("\$GIT_SSH -T -o StrictHostKeyChecking=no {$host}", false);
