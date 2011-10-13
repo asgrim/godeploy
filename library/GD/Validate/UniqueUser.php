@@ -29,9 +29,21 @@ class GD_Validate_UniqueUser extends Zend_Validate_Abstract
 		self::ISUNIQUE => "This username is not unique - please enter something different",
 	);
 
+	private $_current_user;
+
+	public function __construct($current_user = false)
+	{
+		$this->_current_user = $current_user;
+	}
+
 	public function isValid($value)
 	{
 		$this->_setValue($value);
+
+		if($this->_current_user == $value)
+		{
+			return true;
+		}
 
 		$m_users = new GD_Model_UsersMapper();
 		$existing_user = $m_users->getUserByName($value, false);

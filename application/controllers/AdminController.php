@@ -23,44 +23,49 @@
  */
 class AdminController extends Zend_Controller_Action
 {
-    public function indexAction()
-    {
+	public function indexAction()
+	{
 		$this->view->headLink()->appendStylesheet("/css/template/table.css");
 
 		$userMapper = new GD_Model_UsersMapper();
-		$users = $userMapper->fetchAll();
+		$users = $userMapper->fetchAll(null, 'name');
 
 		$this->view->users = $users;
-    }
+	}
 
-    public function userAction()
-    {
+	public function userAction()
+	{
 		$this->view->headLink()->appendStylesheet("/css/template/form.css");
 		$this->view->headLink()->appendStylesheet("/css/pages/project_servers.css");
 
-    	$form = new GDApp_Form_User();
-    	$this->view->form = $form;
+		$users = new GD_Model_UsersMapper();
+		$user = new GD_Model_User();
 
-    	$users = new GD_Model_UsersMapper();
-    	$user = new GD_Model_User();
+		$form_options = array();
 
-    	if($this->_getParam('id') > 0)
-    	{
-    		$users->find($this->_getParam('id'), $user);
-    	}
-    	else
-    	{
-    		$form->password->setRequired(true)->setDescription('');
-    	}
+		if($this->_getParam('id') > 0)
+		{
+			$users->find($this->_getParam('id'), $user);
+			$form_options['current_user'] = $user->getName();
+			$form = new GDApp_Form_User($form_options);
+		}
+		else
+		{
+			$form = new GDApp_Form_User();
+			$form->password->setRequired(true)->setDescription('');
+			$user->setDateAdded(date("Y-m-d H:i:s"));
+		}
 
-    	if($this->getRequest()->isPost())
+		$this->view->form = $form;
+
+		if($this->getRequest()->isPost())
 		{
 			if ($form->isValid($this->getRequest()->getParams()))
 			{
 				if($this->_getParam('password', false))
 				{
 					$crypt = new GD_Crypt();
-					$user->setPassword($crypt->makeHash($password));
+					$user->setPassword($crypt->makeHash($this->_getParam('password')));
 				}
 
 				$user->setName($this->_getParam('username'));
@@ -89,7 +94,7 @@ class AdminController extends Zend_Controller_Action
 				'active' => $user->isActive(),
 			);
 
-    		$form->populate($data);
+			$form->populate($data);
 		}
-    }
+	}
 }

@@ -42,12 +42,12 @@ class ProfileController extends Zend_Controller_Action
 			{
 				$password = $this->_request->getParam('password');
 
-				$username = Zend_Auth::getInstance()->getIdentity();
+
 				$crypt = new GD_Crypt();
 
-				$userMapper = new GD_Model_UsersMapper();
-				$user = $userMapper->getUserByName($username);
+				$user = GD_Auth_Database::GetLoggedInUser();
 
+				$userMapper = new GD_Model_UsersMapper();
 				$user->setPassword($crypt->makeHash($password));
 				$userMapper->save($user);
 

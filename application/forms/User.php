@@ -33,7 +33,7 @@ class GDApp_Form_User extends GD_Form_Abstract
 			->addFilter('StripTags')
 			->addFilter('StringTrim')
 			->addValidator('NotEmpty')
-			->addValidator(new GD_Validate_UniqueUser());
+			->addValidator(new GD_Validate_UniqueUser($options['current_user']));
 
 		$password = new Zend_Form_Element_Password('password');
 		$password->setLabel(_r('Password'))
