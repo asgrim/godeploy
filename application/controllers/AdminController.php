@@ -28,8 +28,68 @@ class AdminController extends Zend_Controller_Action
 		$this->view->headLink()->appendStylesheet("/css/template/table.css");
 
 		$userMapper = new GD_Model_UsersMapper();
-		$users = $userMapper->fetchAll("active = 1");
+		$users = $userMapper->fetchAll();
 
 		$this->view->users = $users;
+    }
+
+    public function userAction()
+    {
+		$this->view->headLink()->appendStylesheet("/css/template/form.css");
+		$this->view->headLink()->appendStylesheet("/css/pages/project_servers.css");
+
+    	$form = new GDApp_Form_User();
+    	$this->view->form = $form;
+
+    	$users = new GD_Model_UsersMapper();
+    	$user = new GD_Model_User();
+
+    	if($this->_getParam('id') > 0)
+    	{
+    		$users->find($this->_getParam('id'), $user);
+    	}
+    	else
+    	{
+    		$form->password->setRequired(true)->setDescription('');
+    	}
+
+    	if($this->getRequest()->isPost())
+		{
+			if ($form->isValid($this->getRequest()->getParams()))
+			{
+				if($this->_getParam('password', false))
+				{
+					$crypt = new GD_Crypt();
+					$user->setPassword($crypt->makeHash($password));
+				}
+
+				$user->setName($this->_getParam('username'));
+
+				if($this->_getParam('active'))
+				{
+					$user->enableUser();
+				}
+				else
+				{
+					$user->disableUser();
+				}
+
+				$user->setAdmin($this->_getParam('admin'));
+
+				$users->save($user);
+
+				$this->_redirect('/admin');
+			}
+		}
+		else
+		{
+			$data = array(
+				'username' => $user->getName(),
+				'admin' => $user->isAdmin(),
+				'active' => $user->isActive(),
+			);
+
+    		$form->populate($data);
+		}
     }
 }

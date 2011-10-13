@@ -30,7 +30,7 @@
 					<td><?php echo $user->isAdmin() ? "Yes" : "No"; ?></td>
 					<td><?php echo $user->isActive() ? "Yes" : "No"; ?></td>
 					<td class="icon">
-						<a href="<?php echo $this->baseUrl(); ?>/admin/edit">
+						<a href="<?php echo $this->baseUrl(); ?>/admin/user?id=<?php echo $user->getId(); ?>">
 							<img src="/images/icons/edit/16x16.png" alt="Edit &raquo;" />
 						</a>
 					</td>
@@ -42,7 +42,7 @@
 		<h2 class="last"><?php _e("There are no users... somehow?!"); ?></h2>
 <?php } ?>
 		<div class="padding_15"></div>
-		<p class="last"><a href="<?php echo $this->baseUrl(); ?>/admin/add" class="add_icon"><?php _e("Add a user"); ?></a></p>
+		<p class="last"><a href="<?php echo $this->baseUrl(); ?>/admin/user" class="add_icon"><?php _e("Add a user"); ?></a></p>
 	</div></div>
 </div>
 
