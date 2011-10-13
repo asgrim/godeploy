@@ -31,7 +31,7 @@
 					$num_deployments = $project->getNumDeployments();
 			?>
 				<tr>
-					<td><?php echo $this->escape($project->getName()); ?></td>
+					<td class="title"><?php echo $this->escape($project->getName()); ?></td>
 					<td>
 					<?php if ($last_deployment instanceof GD_Model_Deployment): ?>
 						<?php echo $last_deployment->getWhen("jS M 'y @ G:i"); ?>
