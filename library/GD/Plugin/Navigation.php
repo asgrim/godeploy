@@ -72,10 +72,23 @@ class GD_Plugin_Navigation extends Zend_Controller_Plugin_Abstract
 			else
 			{
 				$nav[] = array(
-					"label" => "Change Password",
-					"id" => "password-link",
-					"uri" => "/profile/changepassword"
+					"label" => "Profile",
+					"id" => "profile-link",
+					"uri" => "/profile"
 				);
+
+				$username = Zend_Auth::getInstance()->getIdentity();
+				$userMapper = new GD_Model_UsersMapper();
+				$user = $userMapper->getUserByName($username);
+
+				if($user->isAdmin())
+				{
+					$nav[] = array(
+						"label" => "Admin",
+						"id" => "admin-link",
+						"uri" => "/admin"
+					);
+				}
 			}
 		}
 		else

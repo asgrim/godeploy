@@ -44,7 +44,18 @@ class GD_Plugin_Auth extends Zend_Controller_Plugin_Abstract
 	{
 		if ($this->_auth->hasIdentity())
 		{
-			$role = 'member';
+			$username = Zend_Auth::getInstance()->getIdentity();
+			$userMapper = new GD_Model_UsersMapper();
+			$user = $userMapper->getUserByName($username);
+
+			if($user->isAdmin())
+			{
+				$role = 'admin';
+			}
+			else
+			{
+				$role = 'member';
+			}
 		}
 		else
 		{

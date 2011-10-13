@@ -279,8 +279,12 @@ class SetupController extends Zend_Controller_Action
 			$crypt = new GD_Crypt();
 
 			$user = new GD_Model_User();
-			$user->setName($setup_session->admin->username);
-			$user->setPassword($crypt->makeHash($setup_session->admin->password));
+			$user->setName($setup_session->admin->username)
+				->setPassword($crypt->makeHash($setup_session->admin->password))
+				->setDateAdded(date('Y-m-d H:i:s'))
+				->setAdmin(1)
+				->enableUser();
+
 			$userMapper->save($user);
 
 			// Setup the SSH keypair
