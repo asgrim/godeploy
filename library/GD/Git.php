@@ -34,7 +34,6 @@ class GD_Git extends GD_Shell
 	private $_gitdir;
 	private $_current_branch;
 	private $_repotype;
-	private $_apache_home;
 
 	private $_base_gitdir;
 
@@ -66,16 +65,10 @@ class GD_Git extends GD_Shell
 	public function __construct(GD_Model_Project &$project)
 	{
 		$this->_project = $project;
-		$this->_base_gitdir = APPLICATION_PATH . "/../gitcache/";;
+		$this->_base_gitdir = APPLICATION_PATH . "/../gitcache/";
 		$this->_gitdir = $this->_base_gitdir . $this->_project->getId();
 		$this->_url = $this->_project->getRepositoryUrl();
 		$this->_repotype = $this->parseRepoType($this->_url);
-		$this->_apache_home = getenv('HOME');
-
-		if($this->_apache_home == "")
-		{
-			throw new GD_Exception("Apache user '" . getenv('APACHE_RUN_USER') . "' directory not exported. Try export HOME=???");
-		}
 
 		if($this->_repotype == self::GIT_REPOTYPE_HTTP)
 		{
@@ -112,10 +105,10 @@ class GD_Git extends GD_Shell
 	{
 		if($this->_repotype == self::GIT_REPOTYPE_SSH)
 		{
-			// Write the id_rsa key to the apache home directory
+			// Write the id_rsa key to the gitcache
 			$id_rsa = $this->_project->getSSHKey()->getPrivateKey();
 
-			$keyfile = $this->_apache_home . "/.ssh/id_rsa";
+			$keyfile = $this->_base_gitdir . "ssh-" . $this->_project->getSlug();
 
 			if(file_exists($keyfile))
 			{
@@ -129,8 +122,10 @@ class GD_Git extends GD_Shell
 			$host = substr($this->_url, 0, -strlen($x));
 			$host = preg_replace("/[^@0-9a-zA-Z-_.]/", "", $host);
 
+			putenv("GIT_SSH=ssh -i {$keyfile} -o  UserKnownHostsFile=/dev/null ");
+
 			// Test the connection
-			$this->runShell("ssh -T -o StrictHostKeyChecking=no {$host}", false);
+			$this->runShell("\$GIT_SSH -T -o StrictHostKeyChecking=no {$host}", false);
 
 			if($this->_last_errno != 0)
 			{
