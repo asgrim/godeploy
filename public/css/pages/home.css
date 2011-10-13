@@ -2,6 +2,10 @@
 
 #projects {}
 
+	#projects td {
+		vertical-align: middle;
+		}
+
 	#projects td p {
 		padding: 0 0 5px 0;
 		}
@@ -9,4 +13,9 @@
 	#projects td p a {
 		color: #1c4c8e;
 		font-size: 12px;
+		}
+
+	#projects td.title {
+		font-size: 16px;
+		font-weight: bold;
 		}

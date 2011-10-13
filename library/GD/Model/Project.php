@@ -137,7 +137,7 @@ class GD_Model_Project
 	public function getLastDeployment()
 	{
 		$deployments = new GD_Model_DeploymentsMapper();
-		$last_deployment = $deployments->getDeploymentsByProject($this->getId(), 0, 1, false);
+		$last_deployment = $deployments->getLastSuccessfulDeployment($this->getId());
 
 		return $last_deployment;
 	}
