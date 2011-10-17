@@ -104,7 +104,19 @@ class GD_Ftp
 		{
 			if($folders[$i] == "")
 			{
-				return true;
+				if($i == 0)
+				{
+					$failed = false;
+					while(ftp_pwd($this->_handle) != '/' && $failed = false)
+					{
+						$failed = ftp_cdup($this->_handle);
+					}
+					continue;
+				}
+				else
+				{
+					return true;
+				}
 			}
 
 			if(!@ftp_chdir($this->_handle, $folders[$i]))
