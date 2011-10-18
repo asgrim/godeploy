@@ -104,12 +104,11 @@ class GD_Ftp
 		{
 			if($folders[$i] == "")
 			{
-				if($i == 0)
+				if($i == 0 && count($folders) > 1)
 				{
-					$failed = false;
-					while(ftp_pwd($this->_handle) != '/' && $failed = false)
+					if(!@ftp_chdir($this->_handle, "/"))
 					{
-						$failed = ftp_cdup($this->_handle);
+						throw new GD_Exception("Failed to change to root directory using absolute path '$dir'");
 					}
 					continue;
 				}
