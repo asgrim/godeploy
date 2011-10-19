@@ -75,6 +75,7 @@ class ServersController extends Zend_Controller_Action
 		{
 			$server->setProjectsId($project->getId());
     		$server->setName("New Server");
+			$server->setPort(21);
 		}
 		$this->view->server = $server;
 
@@ -85,10 +86,15 @@ class ServersController extends Zend_Controller_Action
 				$server->setName($this->_request->getParam('name', false));
 				$server->setHostname($this->_request->getParam('hostname', false));
 				$server->setConnectionTypesId($this->_request->getParam('connectionTypeId', false));
-				$server->setPort($this->_request->getParam('port', false));
+				$server->setPort($this->_request->getParam('port', 21));
 				$server->setUsername($this->_request->getParam('username', false));
 				$server->setPassword($this->_request->getParam('password', false));
 				$server->setRemotePath($this->_request->getParam('remotePath', false));
+
+				if($server->getPort() <= 0)
+				{
+					$server->setPort(21);
+				}
 
 				// Test the connection first
 				$ftp = new GD_Ftp($server);
