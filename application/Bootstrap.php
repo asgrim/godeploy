@@ -165,6 +165,12 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 		$view->headScript()->appendFile("/js/common.js");
 		$view->headScript()->appendFile("/js/generate_slug.js");
 		$view->headScript()->appendFile("/js/form_processing.js");
+
+		// Base page title
+		//$view->headTitle('GoDeploy');
+		$view->headTitle('GoDeploy')
+			->setSeparator(' - ')
+			->setDefaultAttachOrder(Zend_View_Helper_Placeholder_Container_Abstract::PREPEND);
 	}
 }
 
