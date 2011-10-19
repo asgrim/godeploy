@@ -69,10 +69,12 @@ class ServersController extends Zend_Controller_Action
 
 		if($server_id > 0 && $this->_method == "edit")
 		{
+			$this->view->headTitle('Edit Server');
 			$servers->find($server_id, $server);
 		}
 		else if($this->_method == "add")
 		{
+			$this->view->headTitle('Add Server');
 			$server->setProjectsId($project->getId());
     		$server->setName("New Server");
 			$server->setPort(21);
@@ -144,6 +146,7 @@ class ServersController extends Zend_Controller_Action
     	$this->view->project = $project;
     	$this->view->server = $server;
 
+    	$this->view->headTitle('Confirm Server Delete');
 		$this->view->headLink()->appendStylesheet("/css/template/table.css");
 		$this->view->headLink()->appendStylesheet("/css/pages/confirm_delete.css");
     }

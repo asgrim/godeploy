@@ -27,6 +27,7 @@ class SetupController extends Zend_Controller_Action
 	public function init()
 	{
 		/* Initialize action controller here */
+		$this->view->headTitle('Setup');
 		$this->view->show_navigation = false;
 		$this->view->prenavigation_header = "setup/header.phtml";
 		$this->view->available_languages = GD_Translate::getAvailableLanguages();
@@ -67,6 +68,7 @@ class SetupController extends Zend_Controller_Action
 
 	public function step1Action()
 	{
+		$this->view->headTitle('Step 1');
 		$this->view->headLink()->appendStylesheet("/css/template/table.css");
 
 		$sh = new MAL_Util_Shell();
@@ -170,6 +172,7 @@ class SetupController extends Zend_Controller_Action
 
 	public function step2Action()
 	{
+		$this->view->headTitle('Step 2');
 		$this->view->headLink()->appendStylesheet("/css/template/form.css");
 
 		$form = new GDApp_Form_SetupDatabase();
@@ -202,6 +205,7 @@ class SetupController extends Zend_Controller_Action
 
 	public function step3Action()
 	{
+		$this->view->headTitle('Step 3');
 		$this->view->headLink()->appendStylesheet("/css/template/form.css");
 
 		$form = new GDApp_Form_SetupAdmin();
@@ -222,6 +226,7 @@ class SetupController extends Zend_Controller_Action
 
 	public function dosetupAction()
 	{
+		$this->view->headTitle('Configuration');
 		$_user_config_file = APPLICATION_PATH . '/configs/config.ini';
 
 		// Create the config ini from session

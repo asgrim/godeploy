@@ -30,6 +30,7 @@ class DeployController extends Zend_Controller_Action
 
 	public function indexAction()
 	{
+		$this->view->headTitle('New Deployment');
 		$this->view->headScript()->appendFile($this->getFrontController()->getBaseUrl() . "/js/pages/deploy_setup.js");
 		$this->view->headLink()->appendStylesheet("/css/template/form.css");
 		$this->view->headLink()->appendStylesheet("/css/pages/deploy.css");
@@ -243,6 +244,7 @@ class DeployController extends Zend_Controller_Action
 
 		$this->view->mode = 'PREVIEW';
 
+		$this->view->headTitle('Preview Deployment');
 	}
 
 	public function runAction()
@@ -268,6 +270,7 @@ class DeployController extends Zend_Controller_Action
 			// Redirect to result page
 			$this->_redirect($this->getFrontController()->getBaseUrl() . "/project/" . $this->_getParam("project") . "/deploy/result/" . $this->_getParam("id"));
 		}
+		$this->view->headTitle('Deploying...');
 	}
 
 	public function resultAction()
@@ -296,6 +299,7 @@ class DeployController extends Zend_Controller_Action
 		}
 
 		$this->view->mode = 'RESULT';
+		$this->view->headTitle('Deployment Results');
 	}
 
 	public function executeDeploymentStatusAction()

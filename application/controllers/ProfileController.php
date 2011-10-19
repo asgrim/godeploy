@@ -30,6 +30,7 @@ class ProfileController extends Zend_Controller_Action
 
 	public function changepasswordAction()
 	{
+		$this->view->headTitle('Change Password');
 		$this->view->headLink()->appendStylesheet("/css/template/form.css");
 		$this->view->headLink()->appendStylesheet("/css/pages/profile.css");
 		$this->view->form = $form;

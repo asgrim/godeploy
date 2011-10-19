@@ -25,6 +25,8 @@ class AuthController extends Zend_Controller_Action
 {
     public function loginAction()
     {
+    	$this->view->headTitle('Login');
+
 		$form = new GDApp_Form_Login();
     	if ($this->_request->isPost())
 		{

@@ -25,6 +25,7 @@ class AdminController extends Zend_Controller_Action
 {
 	public function indexAction()
 	{
+		$this->view->headTitle('Administration');
 		$this->view->headLink()->appendStylesheet("/css/template/table.css");
 
 		$userMapper = new GD_Model_UsersMapper();
@@ -45,12 +46,14 @@ class AdminController extends Zend_Controller_Action
 
 		if($this->_getParam('id') > 0)
 		{
+			$this->view->headTitle('Edit User');
 			$users->find($this->_getParam('id'), $user);
 			$form_options['current_user'] = $user->getName();
 			$form = new GDApp_Form_User($form_options);
 		}
 		else
 		{
+			$this->view->headTitle('Add User');
 			$form = new GDApp_Form_User();
 			$form->password->setRequired(true)->setDescription('');
 			$user->setDateAdded(date("Y-m-d H:i:s"));

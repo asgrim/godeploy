@@ -49,6 +49,7 @@ class HistoryController extends Zend_Controller_Action
 		$this->populateView();
 
 		$this->_helper->viewRenderer('index');
+		$this->view->headTitle('History');
 
 		$this->view->headLink()->appendStylesheet("/css/template/table.css");
 		$this->view->headLink()->appendStylesheet("/css/pages/history.css");

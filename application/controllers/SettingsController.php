@@ -33,11 +33,13 @@ class SettingsController extends Zend_Controller_Action
 		$project_slug = $this->_getParam("project");
 		if ($project_slug != "new")
 		{
+			$this->view->headTitle('Edit Project');
 			$project = $projects->getProjectBySlug($project_slug);
 			$new_project = false;
 		}
 		else
 		{
+			$this->view->headTitle('Add Project');
 			$project = new GD_Model_Project();
 			$project->setName("New Project");
 			$project->setDeploymentBranch('master'); // Usually default for git
@@ -113,6 +115,7 @@ class SettingsController extends Zend_Controller_Action
 
 		$this->view->project = $project;
 
+		$this->view->headTitle('Confirm Project Delete');
 		$this->view->headLink()->appendStylesheet("/css/pages/confirm_delete.css");
 	}
 
