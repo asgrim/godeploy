@@ -322,6 +322,7 @@ class DeployController extends Zend_Controller_Action
 
 		$file_statuses = array();
 
+		$completed_count = 0;
 		foreach($file_list as $file)
 		{
 			if($file->getDeploymentFileStatus()->getCode() == "IN_PROGRESS")
@@ -331,6 +332,12 @@ class DeployController extends Zend_Controller_Action
 			else
 			{
 				$file_statuses[$file->getId()] = $file->getDeploymentFileStatus()->getName();
+			}
+
+			if($file->getDeploymentFileStatus()->getCode() != "NEW"
+			    && $file->getDeploymentFileStatus()->getCode() != "IN_PROGRESS")
+			{
+				$completed_count++;
 			}
 		}
 
@@ -345,10 +352,16 @@ class DeployController extends Zend_Controller_Action
 			$complete = false;
 		}
 
+		$num_files = count($file_statuses);
+		if($num_files > 0)
+		{
+			$cmp_text = " (" . ceil(($completed_count / $num_files) * 100) . "%)";
+		}
+
 		$data = array(
 			"FILES" => $file_statuses,
-			"NUM_FILES" => count($file_statuses),
-			"OVERALL" => $deployment_status,
+			"NUM_FILES" => $num_files,
+			"OVERALL" => $deployment_status . $cmp_text,
 			"COMPLETE" => $complete,
 		);
 
