@@ -47,7 +47,11 @@
 			<tbody>
 			<?php foreach ($this->deployments as $deployment) : ?>
 				<tr>
-					<td class="nowrap"><?php echo $deployment->getWhen("d/m/Y H:i:s"); ?></td>
+					<td class="nowrap">
+						<a href="<?php echo $this->baseUrl(); ?>/project/<?php echo $this->project->getSlug(); ?>/deploy/result/<?php echo $deployment->getId(); ?>">
+							<?php echo $deployment->getWhen("d/m/Y H:i:s"); ?>
+						</a>
+					</td>
 					<td title="<?php echo $deployment->getServer()->getDisplayName(); ?>" class="nowrap"><?php echo $deployment->getServer()->getName(); ?></td>
 					<td title="<?php echo $deployment->getFromRevision(); ?>"><?php echo $deployment->getFromRevision() ? substr($deployment->getFromRevision(), 0, 7) : "None"; ?></td>
 					<td title="<?php echo $deployment->getToRevision(); ?>"><?php echo substr($deployment->getToRevision(), 0, 7); ?></td>
