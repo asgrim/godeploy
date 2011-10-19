@@ -100,7 +100,7 @@ class HistoryController extends Zend_Controller_Action
 		$this->populateView();
 
 		// Basic information
-		$url = $_SERVER["SCRIPT_URI"];
+		$url = $this->_request->getScheme() . "://" . $this->getRequest()->getHttpHost() . $this->getRequest()->getRequestUri();
 		$author = array(
 			'name'  => 'GoDeploy RSS Generator',
 			'email' => 'info@godeploy.com',
