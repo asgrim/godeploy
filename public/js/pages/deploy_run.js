@@ -39,7 +39,7 @@ function fireStatusRequest()
 			$('deployment_status').innerHTML = data.OVERALL;
 
 			// Set status of each file
-			if(data.FILES.length > 0)
+			if(data.NUM_FILES > 0)
 			{
 				for(var x in data.FILES)
 				{

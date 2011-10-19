@@ -347,6 +347,7 @@ class DeployController extends Zend_Controller_Action
 
 		$data = array(
 			"FILES" => $file_statuses,
+			"NUM_FILES" => count($file_statuses),
 			"OVERALL" => $deployment_status,
 			"COMPLETE" => $complete,
 		);
