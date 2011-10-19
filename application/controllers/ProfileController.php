@@ -33,16 +33,15 @@ class ProfileController extends Zend_Controller_Action
 		$this->view->headTitle('Change Password');
 		$this->view->headLink()->appendStylesheet("/css/template/form.css");
 		$this->view->headLink()->appendStylesheet("/css/pages/profile.css");
-		$this->view->form = $form;
 
 		$form = new GDApp_Form_ChangePassword();
+		$this->view->form = $form;
 
 		if($this->getRequest()->isPost())
 		{
 			if($form->isValid($this->getRequest()->getParams()))
 			{
 				$password = $this->_request->getParam('password');
-
 
 				$crypt = new GD_Crypt();
 
