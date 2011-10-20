@@ -49,7 +49,8 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 		if(file_exists($cfg_file))
 		{
 			$db_conf = new Zend_Config_Ini($cfg_file, 'database');
-			Zend_Db_Table::setDefaultAdapter(Zend_Db::factory($db_conf->adapter, $db_conf->toArray()));
+			$adapter = Zend_Db::factory($db_conf->adapter, $db_conf->toArray());
+			Zend_Db_Table::setDefaultAdapter($adapter);
 			Zend_Registry::set("db", $db_conf);
 
 			$lang = GD_Config::get("language");
