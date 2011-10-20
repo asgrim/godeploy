@@ -33,7 +33,14 @@ class GD_Debug
 
 	private static function initialise()
 	{
-		self::$_current_debug_level = GD_Config::get("debug_level");
+		try
+		{
+			self::$_current_debug_level = GD_Config::get("debug_level");
+		}
+		catch(Zend_Db_Adapter_Exception $ex)
+		{
+			self::$_current_debug_level = self::DEBUG_NONE;
+		}
 
 		if(!self::$_current_debug_level || self::$_current_debug_level == "0")
 		{
