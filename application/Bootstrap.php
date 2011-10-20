@@ -45,6 +45,10 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 		$version_conf = new Zend_Config_Ini(APPLICATION_PATH . '/configs/version.ini', 'version');
 		Zend_Registry::set("gd.version", $version_conf->gd->version);
 
+		// Initialise language to english in case of a "fallback" mode
+		// Mainly for using _e and _r if something else fails.
+		GD_Translate::init("english");
+
 		// Set default database adapter
 		if(file_exists($cfg_file))
 		{
