@@ -1,0 +1,11 @@
+/* CSS Document */
+
+p.options {}
+	
+	p.options .no {
+		margin-right: 20px;
+		}
+
+	p.options img {
+		vertical-align: middle;
+		}

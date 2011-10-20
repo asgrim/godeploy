@@ -1,37 +1,85 @@
-<h2><?php echo $this->project->getName(); ?> &ndash; Project Settings</h2>
-<?php echo $this->form; ?>
 
-<h2>Servers</h2>
-<?php if(!is_null($this->project->getId())): ?>
-	<?php if(is_array($this->servers) && count($this->servers) > 0): $another = "another"; ?>
-	<table>
-		<thead>
-			<tr>
-				<th>Name</th>
-				<th>Hostname</th>
-				<th>Type</th>
-				<th>&nbsp;</th>
-			</tr>
-		</thead>
-		<tbody>
-		<?php foreach($this->servers as $server): ?>
-			<tr>
-				<td><?php echo $this->escape($server->getName()); ?></td>
-				<td><?php echo $this->escape($server->getHostname()); ?></td>
-				<td><?php echo $this->escape($server->getConnectionType()->getName()); ?></td>
-				<td>
-					<a href="<?php echo $this->baseUrl(); ?>/project/<?php echo $this->project->getSlug(); ?>/servers/edit/<?php echo $server->getId(); ?>">Edit</a>
-					|
-					<a href="<?php echo $this->baseUrl(); ?>/project/<?php echo $this->project->getSlug(); ?>/servers/delete/<?php echo $server->getId(); ?>">Delete</a>
-				</td>
-			</tr>
-		<?php endforeach; ?>
-		</tbody>
-	</table>
-	<?php else: $another = "the first"; ?>
-	<p><strong>There are no servers currently configured for this project!</strong></p>
+<div class="content">
+	<div class="padding_20"></div>
+
+	<h1><?php echo $this->project->getName(); ?></h1>
+	<div class="padding_15"></div>
+
+	<div id="form"><div class="wrapper w_ededed"><div class="content">
+		<div class="padding_15"></div>
+
+		<h2><?php _e("Project Settings"); ?></h2>
+
+	<?php if ($this->form->isErrors()) : ?>
+		<div id="errors"><div class="content">
+			<?php _e("There was a problem with your submission. Please check the fields highlighted below."); ?>
+		</div></div>
+		<div class="padding_15"></div>
+	<?php elseif($this->valid_repository === false): ?>
+		<div id="errors"><div class="content">
+			<?php _e("GoDeploy's repository cache has gone wrong!"); ?><br />
+			<?php _e("Before you can deploy this project you will need to reclone the repository."); ?><br />
+			<a href="/project/<?php echo $this->project->getSlug(); ?>/settings/reclone"><?php _e("Click here"); ?></a> <?php _e("to reclone the repository now."); ?>
+		</div></div>
+		<div class="padding_15"></div>
 	<?php endif; ?>
-	<a href="<?php echo $this->baseUrl(); ?>/project/<?php echo $this->project->getSlug(); ?>/servers/add">Add <?php echo $another; ?> server to this project.</a>
-<?php else: ?>
-	<p><strong>You must save changes to the project before adding servers to it.</strong></p>
-<?php endif; ?>
+
+		<?php echo $this->form; ?>
+
+	</div></div></div>
+
+	<?php if(!is_null($this->project->getId())): ?>
+	<div class="padding_20"></div>
+	<div id="table"><div class="wrapper w_ededed"><div class="content">
+		<div class="padding_15"></div>
+		<h2><?php _e("Servers"); ?></h2>
+		<?php if(is_array($this->servers) && count($this->servers) > 0): $another = "another"; ?>
+			<table>
+				<thead>
+					<tr>
+						<th><?php _e("Name"); ?></th>
+						<th><?php _e("Hostname"); ?></th>
+						<th><?php _e("Type"); ?></th>
+						<th class="empty" colspan="2">&nbsp;</th>
+					</tr>
+				</thead>
+				<tbody>
+				<?php foreach($this->servers as $server): ?>
+					<tr>
+						<td><?php echo $this->escape($server->getName()); ?></td>
+						<td><?php echo $this->escape($server->getHostname()); ?></td>
+						<td><?php echo $this->escape($server->getConnectionType()->getName()); ?></td>
+						<td class="icon">
+							<a href="<?php echo $this->baseUrl(); ?>/project/<?php echo $this->project->getSlug(); ?>/servers/edit/<?php echo $server->getId(); ?>">
+								<img src="/images/icons/edit/16x16.png" alt="Edit &raquo;" />
+							</a>
+						</td>
+						<td class="icon">
+							<a href="<?php echo $this->baseUrl(); ?>/project/<?php echo $this->project->getSlug(); ?>/servers/confirm-delete/<?php echo $server->getId(); ?>">
+								<img src="/images/icons/delete/16x16.png" alt="Delete &raquo;" />
+							</a>
+						</td>
+					</tr>
+				<?php endforeach; ?>
+				</tbody>
+			</table>
+			<div class="padding_15"></div>
+		<?php else: $another = "the first"; ?>
+			<p><strong><?php _e("There are no servers currently configured for this project!"); ?></strong></p>
+		<?php endif; ?>
+			<a href="<?php echo $this->baseUrl(); ?>/project/<?php echo $this->project->getSlug(); ?>/servers/add" class="add_icon"><?php _e("Add another server to this project"); ?> &raquo;</a>
+	</div></div></div>
+	<?php endif; ?>
+
+</div>
+<div class="clear"></div>
+
+<div class="content align_right">
+	<a href="/project/<?php echo $this->project->getSlug(); ?>/settings/confirm-delete"><?php _e("Click here"); ?></a> <?php _e("to delete the project."); ?>
+</div>
+
+<script type="text/JavaScript">
+/* <![CDATA[ */
+	if (typeof(initSlug) == "function") initSlug("name");
+/* ]]> */
+</script>

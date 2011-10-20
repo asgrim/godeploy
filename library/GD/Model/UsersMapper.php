@@ -57,6 +57,11 @@ class GD_Model_UsersMapper extends MAL_Model_MapperAbstract
 		$data = array(
 			'name' => $obj->getName(),
 			'password' => $obj->getPassword(),
+			'date_added' => $obj->getDateAdded(),
+			'date_updated' => date('Y-m-d H:i:s'),
+			'date_disabled' => $obj->getDateDisabled(),
+			'admin' => $obj->getAdmin(),
+			'active' => $obj->getActive(),
 		);
 		return $data;
 	}
@@ -70,7 +75,12 @@ class GD_Model_UsersMapper extends MAL_Model_MapperAbstract
 	{
 		$obj->setId($row->id)
 			->setName($row->name)
-			->setPassword($row->password);
+			->setPassword($row->password)
+			->setDateAdded($row->date_added)
+			->setDateUpdated($row->date_updated)
+			->setDateDisabled($row->date_disabled)
+			->setAdmin($row->admin)
+			->setActive($row->active);
 	}
 
 	/**
@@ -78,13 +88,18 @@ class GD_Model_UsersMapper extends MAL_Model_MapperAbstract
 	 * @param string $name username to find
 	 * @return GD_Model_User
 	 */
-	public function getUserByName($name)
+	public function getUserByName($name, $only_active = false)
 	{
 		$obj = new GD_Model_User();
 
 		$select = $this->getDbTable()
 			->select()
 			->where("name = ?", $name);
+
+		if($only_active)
+		{
+			$select->where("active = 1");
+		}
 
 		$row = $this->getDbTable()->fetchRow($select);
 

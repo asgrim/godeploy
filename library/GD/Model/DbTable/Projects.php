@@ -26,10 +26,12 @@ class GD_Model_DbTable_Projects extends Zend_Db_Table_Abstract
 	protected $_name = "projects";
 
 	protected $_referenceMap = array(
-		'GD_Model_DbTable_PublicKeys' => array(
-			'columns' => 'public_keys_id',  // the column in the 'projects' table which is used for the join
-			'refTableClass' => 'GD_Model_DbTable_PublicKeys',  // the public_keys table name
-			'refColumns' => 'id' // the primary key of the public_keys table
+		'GD_Model_DbTable_SSHKeys' => array(
+			'columns' => 'ssh_keys_id',  // the column in the 'projects' table which is used for the join
+			'refTableClass' => 'GD_Model_DbTable_SSHKeys',  // the ssh_keys table name
+			'refColumns' => 'id' // the primary key of the ssh_keys table
 		)
 	);
+
+	protected $_dependentTables = array('GD_Model_DbTable_Deployments');
 }

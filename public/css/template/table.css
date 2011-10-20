@@ -1,0 +1,47 @@
+/* CSS Document */
+
+table {
+	width: 100%;
+	border-collapse: collapse;
+	}
+
+	table thead th {
+		text-align: left;
+		}
+
+	table th, table td {
+		padding: 5px 10px;
+		border: 1px solid #bdbdbd;
+		vertical-align: top;
+		}
+
+	table th {
+		background-color: #d0d0d0;
+		font-weight: bold;
+		}
+
+		table th.empty {
+			background-color: transparent;
+			border: 0;
+			}
+
+	table td {
+		background-color: #ffffff;
+		font-size: 12px;
+		}
+	table td.nowrap {
+		white-space: nowrap;
+		}
+
+	table td.icon {
+		padding: 5px;
+		width: 16px;
+		vertical-align: middle;
+		}
+		
+	table tfoot td {
+		font-size: 14px;
+		background-color: #e0e0e0;
+		font-weight: bold;
+		border-top: 3px solid #bdbdbd;
+		}

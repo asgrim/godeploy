@@ -27,27 +27,40 @@ class ServersController extends Zend_Controller_Action
 
 	public function init()
 	{
-		if(!in_array($this->_request->getActionName() . "Action", get_class_methods($this)))
+		$action = $this->_request->getActionName();
+
+		if (!in_array($action . "Action", get_class_methods($this)))
 		{
-			if($this->_request->getActionName() == "add")
+			if ($action == "add")
 			{
 				$this->_method = "add";
+				$this->_forward("index");
 			}
-			else if($this->_request->getActionName() == "edit")
+			else if ($action == "edit")
 			{
 				$this->_method = "edit";
+				$this->_forward("index");
 			}
-
-			$this->_forward("index");
+			else if ($action == "confirm-delete")
+			{
+				$this->_method = "confirm-delete";
+			}
 		}
 	}
 
 	public function indexAction()
 	{
-		$project_slug = $this->_getParam("project");
-
     	$form = new GDApp_Form_ServerSettings();
     	$this->view->form = $form;
+
+		$this->view->headLink()->appendStylesheet("/css/template/form.css");
+		$this->view->headLink()->appendStylesheet("/css/pages/project_servers.css");
+
+		// Grab the project so we can add it to the title
+    	$project_slug = $this->_getParam("project");
+    	$projects = new GD_Model_ProjectsMapper();
+   		$project = $projects->getProjectBySlug($project_slug);
+    	$this->view->project = $project;
 
 		$servers = new GD_Model_ServersMapper();
 		$server = new GD_Model_Server();
@@ -56,38 +69,52 @@ class ServersController extends Zend_Controller_Action
 
 		if($server_id > 0 && $this->_method == "edit")
 		{
+			$this->view->headTitle('Edit Server');
 			$servers->find($server_id, $server);
 		}
 		else if($this->_method == "add")
 		{
-			$projects = new GD_Model_ProjectsMapper();
-			$project = $projects->getProjectBySlug($project_slug);
+			$this->view->headTitle('Add Server');
 			$server->setProjectsId($project->getId());
+    		$server->setName("New Server");
+			$server->setPort(21);
 		}
 		$this->view->server = $server;
 
 		if($this->getRequest()->isPost())
 		{
-			$server->setName($this->_request->getParam('name', false));
-			$server->setHostname($this->_request->getParam('hostname', false));
-			$server->setConnectionTypesId($this->_request->getParam('connectionTypeId', false));
-			$server->setPort($this->_request->getParam('port', false));
-			$server->setUsername($this->_request->getParam('username', false));
-			$server->setPassword($this->_request->getParam('password', false));
-			$server->setRemotePath($this->_request->getParam('remotePath', false));
-
-			// Test the connection first
-			$ftp = new GD_Ftp($server);
-			$result = $ftp->testConnection();
-
-			if(!$result)
+			if ($form->isValid($this->getRequest()->getParams()))
 			{
-				throw new GD_Exception("Failed to test connection to FTP server.");
+				$server->setName($this->_request->getParam('name', false));
+				$server->setHostname($this->_request->getParam('hostname', false));
+				$server->setConnectionTypesId($this->_request->getParam('connectionTypeId', false));
+				$server->setPort($this->_request->getParam('port', 21));
+				$server->setUsername($this->_request->getParam('username', false));
+				$server->setPassword($this->_request->getParam('password', false));
+				$server->setRemotePath($this->_request->getParam('remotePath', false));
+
+				if($server->getPort() <= 0)
+				{
+					$server->setPort(21);
+				}
+
+				// Test the connection first
+				$ftp = new GD_Ftp($server);
+				$result = $ftp->testConnection();
+
+				if(!$result)
+				{
+					//throw new GD_Exception("Failed to test connection to FTP server.");
+					$form->addError("FTP_CONNECT_ERROR");
+					$this->view->ftpMessage = $ftp->getLastError();
+				}
+				else
+				{
+					$servers->save($server);
+
+					$this->_redirect($this->getFrontController()->getBaseUrl() . "/project/" . $this->_getParam("project") . "/settings");
+				}
 			}
-
-			$servers->save($server);
-
-			$this->_redirect($this->getFrontController()->getBaseUrl() . "/project/" . $this->_getParam("project") . "/settings");
 		}
 		else
 		{
@@ -105,6 +132,25 @@ class ServersController extends Zend_Controller_Action
 		}
 	}
 
+    public function confirmDeleteAction()
+    {
+    	$projects = new GD_Model_ProjectsMapper();
+    	$project_slug = $this->_getParam("project");
+    	$project = $projects->getProjectBySlug($project_slug);
+
+		$servers = new GD_Model_ServersMapper();
+		$server = new GD_Model_Server();
+		$server_id = $this->_request->getParam('id', 0);
+		$servers->find($server_id, $server);
+
+    	$this->view->project = $project;
+    	$this->view->server = $server;
+
+    	$this->view->headTitle('Confirm Server Delete');
+		$this->view->headLink()->appendStylesheet("/css/template/table.css");
+		$this->view->headLink()->appendStylesheet("/css/pages/confirm_delete.css");
+    }
+
 	public function deleteAction()
 	{
 		$project_slug = $this->_getParam("project");
@@ -118,7 +164,7 @@ class ServersController extends Zend_Controller_Action
 		{
 			$servers->find($server_id, $server);
 			$servers->delete($server);
-			$this->_redirect($this->getFrontController()->getBaseUrl() . "/project/" . $this->_getParam("project") . "/settings");
+			$this->_redirect($this->getFrontController()->getBaseUrl() . "/project/" . $project_slug . "/settings");
 		}
 		else
 		{

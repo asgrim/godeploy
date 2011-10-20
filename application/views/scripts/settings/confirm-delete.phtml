@@ -1,0 +1,20 @@
+
+<div class="content">
+	<div class="padding_20"></div>
+
+	<h1><?php _e("Delete the"); ?> "<?php echo $this->project->getName(); ?>" <?php _e("project"); ?>?</h1>
+	<div class="padding_15"></div>
+
+	<div class="wrapper w_ededed"><div class="content">
+		<div class="padding_15"></div>
+
+		<h2><?php _e("This cannot be undone. Are you sure you want to continue?"); ?></h2>
+
+		<p class="options last">
+			<a href="<?php echo $this->baseUrl(); ?>/" title="No" class="no"><?php _e("No, get me out of here!"); ?></a>
+			<a href="<?php echo $this->baseUrl(); ?>/project/<?php echo $this->project->getSlug(); ?>/settings/delete" title="Yes, delete it" class="yes"><img src="/images/buttons/small/delete-project.png" alt="Yes, delete it" /></a>
+		</p>
+	</div></div>
+
+</div>
+<div class="clear"></div>

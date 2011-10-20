@@ -26,6 +26,7 @@ class GD_Model_DeploymentFileStatus
 	protected $_id;
 	protected $_name;
 	protected $_code;
+	protected $_image_name;
 
 	public function setId($id)
 	{
@@ -58,5 +59,16 @@ class GD_Model_DeploymentFileStatus
 	public function getCode()
 	{
 		return $this->_code;
+	}
+
+	public function setImageName($value)
+	{
+		$this->_image_name = (string)$value;
+		return $this;
+	}
+
+	public function getImageName()
+	{
+		return $this->_image_name;
 	}
 }

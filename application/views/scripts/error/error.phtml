@@ -1,28 +1,39 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-  <title>Zend Framework Default Application</title>
-</head>
-<body>
-  <h1>An error occurred</h1>
-  <h2><?php echo $this->message ?></h2>
 
-  <?php if (isset($this->exception)): ?>
+<div class="content">
+	<div class="padding_20"></div>
 
-  <h3>Exception information:</h3>
-  <p>
-      <b>Message:</b> <?php echo $this->exception->getMessage() ?>
-  </p>
+	<h1><?php _e("Oh dear - something went wrong&hellip;"); ?></h1>
+	<div class="padding_15"></div>
 
-  <h3>Stack trace:</h3>
-  <pre><?php echo $this->exception->getTraceAsString() ?>
-  </pre>
+	<div id="form">
+		<div class="wrapper w_ededed">
+			<div class="content">
+				<div class="padding_20"></div>
+				<h2><?php echo $this->message; ?></h2>
 
-  <h3>Request Parameters:</h3>
-  <pre><?php echo var_export($this->request->getParams(), true) ?>
-  </pre>
-  <?php endif ?>
+			<?php if (isset($this->extended_information)): ?>
+				<?php echo $this->extended_information; ?>
+			<?php endif; ?>
 
-</body>
-</html>
+			<?php if (isset($this->exception)): ?>
+				<div class="padding_10"></div>
+				<div style="background-color: #f0d1d1; padding: 20px; overflow: scroll;">
+					<h2>Debug Information (Developer Mode)</h2>
+					<h3>Exception information:</h3>
+					<p>
+						<b>Message:</b> <?php echo $this->exception->getMessage() ?>
+					</p>
+
+					<h3>Stack trace:</h3>
+					<pre><?php echo $this->exception->getTraceAsString() ?>
+					</pre>
+
+					<h3>Request Parameters:</h3>
+					<pre><?php echo var_export($this->request->getParams(), true) ?>
+					</pre>
+				</div>
+			<?php endif; ?>
+			</div>
+		</div>
+	</div>
+</div>

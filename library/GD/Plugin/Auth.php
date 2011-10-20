@@ -42,9 +42,22 @@ class GD_Plugin_Auth extends Zend_Controller_Plugin_Abstract
 
 	public function preDispatch(Zend_Controller_Request_Abstract $request)
 	{
+		if($request->controller == "error") return;
+
 		if ($this->_auth->hasIdentity())
 		{
-			$role = 'member';
+			$username = Zend_Auth::getInstance()->getIdentity();
+			$userMapper = new GD_Model_UsersMapper();
+			$user = $userMapper->getUserByName($username);
+
+			if($user->isAdmin())
+			{
+				$role = 'admin';
+			}
+			else
+			{
+				$role = 'member';
+			}
 		}
 		else
 		{
@@ -76,9 +89,14 @@ class GD_Plugin_Auth extends Zend_Controller_Plugin_Abstract
 			}
 		}
 
-		$request->setModuleName($module);
-		$request->setControllerName($controller);
-		$request->setActionName($action);
+		if($request->controller != $controller
+			|| $request->action != $action
+			|| $request->module != $module)
+		{
+			$request->setModuleName($module);
+			$request->setControllerName($controller);
+			$request->setActionName($action);
+		}
 	}
 
 }

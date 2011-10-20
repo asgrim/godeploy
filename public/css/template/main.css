@@ -9,7 +9,7 @@ body {
 	}
 
 .container {
-	width: 1004px;
+	width: 1000px;
 	margin: 0 auto;
 	}
 
@@ -27,7 +27,7 @@ body {
 	background-color: #ffffff;
 	}
 
-	#main .content {
+	.content {
 		padding: 0 15px 15px 15px;
 		}
 
@@ -60,9 +60,21 @@ a {
 		text-decoration: none;
 		}
 
-.add_icon {
-	background-image: url('/images/buttons/add.png');
-	background-repeat: no-repeat;
-	background-position: left center;
-	padding-left: 21px;
-	}
+	a.add_icon {
+		background: transparent url('/images/icons/add/16x16.png') no-repeat 0 0;
+		padding-left: 21px;
+		}
+
+	a.view_icon {
+		background: transparent url('/images/icons/view/16x16.png') no-repeat 0 0;
+		padding-left: 21px;
+		}
+
+	h1 a {
+		font-weight: normal;
+		text-decoration: none;
+		}
+
+		h1 a:hover {
+			text-decoration: underline;
+			}

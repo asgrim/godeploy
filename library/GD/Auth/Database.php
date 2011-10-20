@@ -70,10 +70,11 @@ class GD_Auth_Database implements Zend_Auth_Adapter_Interface
 		// Get user details for the email we're trying to get
 		$users = new GD_Model_UsersMapper();
 
-		$user = $users->getUserByName($this->_username);
+		$user = $users->getUserByName($this->_username, true);
 
 		if(is_null($user))
 		{
+			GD_Debug::Log("Authentication failure - user '{$this->_username}' not found.", GD_Debug::DEBUG_BASIC);
 			return new Zend_Auth_Result(Zend_Auth_Result::FAILURE_IDENTITY_NOT_FOUND, $this->_username);
 		}
 
@@ -91,6 +92,7 @@ class GD_Auth_Database implements Zend_Auth_Adapter_Interface
 		}
 		else
 		{
+			GD_Debug::Log("Authentication failure - incorrect password for '{$this->_username}'.", GD_Debug::DEBUG_BASIC);
 			return new Zend_Auth_Result(Zend_Auth_Result::FAILURE_CREDENTIAL_INVALID,$this->_username);
 		}
 	}
@@ -114,7 +116,7 @@ class GD_Auth_Database implements Zend_Auth_Adapter_Interface
 			}
 
 			$users = new GD_Model_UsersMapper();
-			self::$_currentUser = $users->getUserByName($username);
+			self::$_currentUser = $users->getUserByName($username, true);
 
 			return self::$_currentUser;
 		}

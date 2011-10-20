@@ -31,92 +31,85 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 
 	protected function _initConfig()
 	{
-		// Set default database adapter
-		$db_conf = new Zend_Config_Ini(APPLICATION_PATH . '/configs/db.ini', 'database');
-		Zend_Db_Table::setDefaultAdapter(Zend_Db::factory($db_conf->adapter, $db_conf->toArray()));
-		Zend_Registry::set("db", $db_conf);
+		// Default languages
+		$use_lang = false;
+		if(isset($setup_session->language))
+		{
+			$use_lang = $setup_session->language;
+		}
+
+		// Config file
+		$cfg_file = APPLICATION_PATH . '/configs/config.ini';
 
 		// Load version
 		$version_conf = new Zend_Config_Ini(APPLICATION_PATH . '/configs/version.ini', 'version');
 		Zend_Registry::set("gd.version", $version_conf->gd->version);
+
+		// Initialise language to english in case of a "fallback" mode
+		// Mainly for using _e and _r if something else fails.
+		GD_Translate::init("english");
+
+		// Set default database adapter
+		if(file_exists($cfg_file))
+		{
+			$db_conf = new Zend_Config_Ini($cfg_file, 'database');
+			$adapter = Zend_Db::factory($db_conf->adapter, $db_conf->toArray());
+			Zend_Db_Table::setDefaultAdapter($adapter);
+			Zend_Registry::set("db", $db_conf);
+
+			// If we're not on the /error/database page, do a DB test, else
+			// we return out to ensure no DB errors later in this Bootstrap fn.
+			if(stripos($_SERVER['REQUEST_URI'], '/error/database') === false)
+			{
+				// Do a database test to ensure we can run queries on the DB. If not
+				// redirect to the error controller in a hacky way.
+				try
+				{
+					$adapter->query("SELECT 1");
+				}
+				catch(Zend_Db_Adapter_Exception $ex)
+				{
+					header("Location: /error/database");
+					die();
+				}
+			}
+			else return;
+
+			$lang = GD_Config::get("language");
+			if($lang !== false)
+			{
+				$use_lang = $lang;
+			}
+		}
+
+		if(!$use_lang)
+		{
+			$use_lang = "english";
+		}
+
+		$translate = GD_Translate::init($use_lang);
 	}
 
-	protected function _initDatabaseVersion()
+	protected function _initCheckSetup()
 	{
-		$version_conf = new Zend_Config_Ini(APPLICATION_PATH . '/configs/version.ini', 'version');
-		$expected_db_version = (int)$version_conf->gd->expect_db_version;
-
-		$db = Zend_Db_Table::getDefaultAdapter();
-
-		try
-		{
-			$select = $db->select()
-				->from('configuration', 'value')
-				->where('`key` = ?', 'db_version');
-		}
-		catch(Zend_Db_Adapter_Exception $ex)
-		{
-			if($ex->getCode() == 1049)
-			{
-				$db_config = $db->getConfig();
-				throw new GD_Exception("Database '{$db_config['dbname']}' was not created. Please make it...");
-				//$db->getConnection()->exec('CREATE DATABASE `' . $db_config['dbname'] . '`'); // This doesn't work...
-			}
-			else
-			{
-				throw $ex;
-			}
-		}
-
-		try
-		{
-			$current_db_version = (int)$db->fetchOne($select);
-		}
-		catch(Zend_Db_Statement_Exception $ex)
-		{
-			if($ex->getCode() == 42)
-			{
-				throw new GD_Exception("Please run the db/db_create_v{$expected_db_version}.sql script to initialise the database.");
-			}
-			else
-			{
-				throw $ex;
-			}
-		}
-
-		if($current_db_version < $expected_db_version)
-		{
-			throw new GD_Exception("Database version was out of date. Expected '{$expected_db_version}' and it is currently at '{$current_db_version}'.");
-		}
-		else if($current_db_version > $expected_db_version)
-		{
-			throw new GD_Exception("Database version was too new??? Expected '{$expected_db_version}' and it is currently at '{$current_db_version}'.");
-		}
+		// Pass config to the VerifySetup controller to check our setup environment and  we're all OK to proceed
+		$this->bootstrap('frontController');
+		$frontController = $this->getResource('frontcontroller');
+		$frontController->registerPlugin(new GD_Plugin_VerifySetup());
 	}
 
 	protected function _initNavigation()
 	{
-		$auth = Zend_Auth::getInstance();
-
-		if($auth->hasIdentity())
-		{
-			$navMode = 'navAccount';
-			$logged_in = true;
-		}
-		else
-		{
-			$navMode = 'navLogin';
-			$logged_in = false;
-		}
-
 		$this->bootstrap('layout');
 		$layout = $this->getResource('layout');
 		$view = $layout->getView();
-		$config = new Zend_Config_Xml(APPLICATION_PATH . '/configs/navigation.xml', $navMode);
 
-		$navigation = new Zend_Navigation($config);
-		$view->navigation($navigation);
+		$auth = Zend_Auth::getInstance();
+		$logged_in = ($auth->hasIdentity());
 		$view->logged_in = $logged_in;
+
+		$frontController = $this->getResource('frontcontroller');
+		$frontController->registerPlugin(new GD_Plugin_Navigation($view));
 	}
 
 	protected function _initAcl()
@@ -150,7 +143,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 				'project'=>'',
 			),
 			array(
-				'project' => '[a-z-]+',
+				'project' => '[a-z0-9-]+',
 			)
 		);
 		$projectRoute = new Zend_Controller_Router_Route(
@@ -163,7 +156,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 				'id' => 0,
 			),
 			array(
-				'project' => '[a-z-]+',
+				'project' => '[a-z0-9-]+',
 				'id' => '\d+',
 			)
 		);
@@ -193,6 +186,14 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 		$view->headScript()->appendFile("/js/prototype/1.7.js");
 		$view->headScript()->appendFile("/js/scriptaculous/1.9.0.js");
 		$view->headScript()->appendFile("/js/common.js");
+		$view->headScript()->appendFile("/js/generate_slug.js");
+		$view->headScript()->appendFile("/js/form_processing.js");
+
+		// Base page title
+		//$view->headTitle('GoDeploy');
+		$view->headTitle('GoDeploy')
+			->setSeparator(' - ')
+			->setDefaultAttachOrder(Zend_View_Helper_Placeholder_Container_Abstract::PREPEND);
 	}
 }
 

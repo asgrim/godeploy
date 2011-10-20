@@ -1,0 +1,416 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: GoDeploy\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2011-09-26 23:31+0100\n"
+"PO-Revision-Date: \n"
+"Last-Translator: James Titcumb <james@asgrim.com>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-Language: German\n"
+"X-Poedit-Country: GERMANY\n"
+"X-Poedit-KeywordsList: _e;_r\n"
+"X-Poedit-Basepath: ../\n"
+"X-Poedit-SearchPath-0: application\n"
+
+#: application/forms/DeploymentSetup.php:41
+msgid "Server"
+msgstr "Server"
+
+#: application/forms/DeploymentSetup.php:53
+msgid "Current revision"
+msgstr "Aktuelle Version"
+
+#: application/forms/DeploymentSetup.php:62
+msgid "Deploy revision or tag"
+msgstr "Deploy revision oder dem Tag"
+
+#: application/forms/Login.php:35
+#: application/forms/SetupDatabase.php:39
+#: application/forms/SetupAdmin.php:33
+#: application/forms/ServerSettings.php:77
+msgid "Username"
+msgstr "Benutzername"
+
+#: application/forms/Login.php:40
+msgid "Please enter your User Name"
+msgstr "Bitte geben Sie Ihren Benutzernamen"
+
+#: application/forms/Login.php:45
+#: application/forms/SetupDatabase.php:45
+#: application/forms/SetupAdmin.php:39
+msgid "Password"
+msgstr "Kennwort"
+
+#: application/forms/Login.php:49
+msgid "Please enter your Password"
+msgstr "Bitte geben Sie Ihr Passwort"
+
+#: application/forms/ProjectSettings.php:33
+msgid "Project Name"
+msgstr "Namen des Projeckts"
+
+#: application/forms/ProjectSettings.php:38
+msgid "Please enter the project name"
+msgstr "Bitte geben Sie den Namen des Projekts"
+
+#: application/forms/ProjectSettings.php:50
+msgid "Repository URL"
+msgstr "Repository URL"
+
+#: application/forms/ProjectSettings.php:55
+msgid "Please enter the Repository URL"
+msgstr "Bitte geben Sie die Repository-URL"
+
+#: application/forms/ProjectSettings.php:60
+msgid "Deployment Branch"
+msgstr "Deployment Niederlassung"
+
+#: application/forms/ProjectSettings.php:65
+msgid "Please enter the name of the Deployment Branch"
+msgstr "Bitte geben Sie den Namen des Deployment Niederlassung"
+
+#: application/forms/ProjectSettings.php:69
+msgid "Public Key"
+msgstr "Public Key"
+
+#: application/forms/ProjectSettings.php:73
+msgid "Please enter the Public Key"
+msgstr "Bitte geben Sie die Public Key"
+
+#: application/forms/SetupDatabase.php:33
+#: application/forms/ServerSettings.php:42
+msgid "Hostname"
+msgstr "Hostname"
+
+#: application/forms/SetupDatabase.php:51
+msgid "Database Name"
+msgstr "Database Name"
+
+#: application/forms/ChangePassword.php:33
+msgid "New Password"
+msgstr "New Password"
+
+#: application/forms/ChangePassword.php:40
+#: application/forms/SetupAdmin.php:45
+msgid "Confirm Password"
+msgstr "Passwort bestätigen"
+
+#: application/forms/ServerSettings.php:33
+msgid "Name"
+msgstr "Name"
+
+#: application/forms/ServerSettings.php:38
+msgid "Please enter the Server Name"
+msgstr "Bitte geben Sie die Server-Name"
+
+#: application/forms/ServerSettings.php:47
+msgid "Please enter the Hostname"
+msgstr "Bitte geben Sie den Hostnamen"
+
+#: application/forms/ServerSettings.php:54
+msgid "Connection Type"
+msgstr "Connection Type"
+
+#: application/forms/ServerSettings.php:59
+msgid "Please choose a Connection Type"
+msgstr "Bitte wählen Sie ein Connection Type"
+
+#: application/forms/ServerSettings.php:68
+msgid "Port"
+msgstr "Port"
+
+#: application/forms/ServerSettings.php:73
+msgid "Please enter the Port Number"
+msgstr "Bitte geben Sie die Port-Nummer"
+
+#: application/forms/ServerSettings.php:83
+msgid "Please enter the Username"
+msgstr "Bitte geben Sie Benutzername"
+
+#: application/forms/ServerSettings.php:94
+msgid "Please enter the Password"
+msgstr "Bitte geben Sie das Passwort"
+
+#: application/forms/ServerSettings.php:98
+msgid "Remote Path"
+msgstr "Remote Path"
+
+#: application/views/scripts/settings/index.phtml:11
+msgid "Project Settings"
+msgstr "Projekt-Einstellungen"
+
+#: application/views/scripts/settings/index.phtml:15
+#: application/views/scripts/deploy/index.phtml:15
+#: application/views/scripts/servers/index.phtml:35
+#: application/views/scripts/profile/changepassword.phtml:13
+#: application/views/scripts/auth/login.phtml:26
+msgid "There was a problem with your submission. Please check the fields highlighted below."
+msgstr "Es gab ein Problem mit Ihrer Einreichung. Bitte überprüfen Sie die Felder unten markiert."
+
+#: application/views/scripts/settings/index.phtml:20
+msgid "GoDeploy's repository cache has gone wrong!"
+msgstr "GoDeploy Repository Cache ist schief gegangen!"
+
+#: application/views/scripts/settings/index.phtml:21
+msgid "Before you can deploy this project you will need to reclone the repository."
+msgstr "Bevor Sie dieses Projekt bereitstellen können, müssen Sie den Repository klonieren."
+
+#: application/views/scripts/settings/index.phtml:22
+msgid "Click here"
+msgstr "Klicken Sie hier"
+
+#: application/views/scripts/settings/index.phtml:22
+msgid "to reclone the repository now."
+msgstr "zu klonieren."
+
+#: application/views/scripts/settings/index.phtml:35
+msgid "Servers"
+msgstr "Server"
+
+#: application/views/scripts/settings/index.phtml:42
+#: application/views/scripts/servers/confirm-delete.phtml:18
+msgid "Type"
+msgstr "Typ"
+
+#: application/views/scripts/settings/index.phtml:68
+msgid "There are no servers currently configured for this project!"
+msgstr "Es sind keine Server derzeit für dieses Projekt konfiguriert!"
+
+#: application/views/scripts/settings/index.phtml:70
+msgid "Add another server to this project"
+msgstr "Fügen Sie einen anderen Server, um dieses Projekt"
+
+#: application/views/scripts/settings/confirm-delete.phtml:5
+msgid "Delete the"
+msgstr "Löschen Sie die"
+
+#: application/views/scripts/settings/confirm-delete.phtml:5
+#: application/views/scripts/servers/confirm-delete.phtml:5
+msgid "project"
+msgstr "Projekt"
+
+#: application/views/scripts/settings/confirm-delete.phtml:11
+#: application/views/scripts/servers/confirm-delete.phtml:11
+msgid "This cannot be undone. Are you sure you want to continue?"
+msgstr "Dies kann nicht rückgängig gemacht werden. Sind Sie sicher, dass Sie den Vorgang fortsetzen?"
+
+#: application/views/scripts/settings/confirm-delete.phtml:14
+#: application/views/scripts/servers/confirm-delete.phtml:32
+msgid "No, get me out of here!"
+msgstr "Nein, Sie mich hier raus!"
+
+#: application/views/scripts/deploy/index.phtml:11
+msgid "Start Deployment"
+msgstr "Starten Sie Deployment"
+
+#: application/views/scripts/deploy/main.phtml:4
+msgid "Deployment"
+msgstr "Einsatz"
+
+#: application/views/scripts/deploy/main.phtml:9
+msgid "Summary"
+msgstr "Zusammenfassung"
+
+#: application/views/scripts/deploy/main.phtml:15
+msgid "Deploy to"
+msgstr "Deploy, um"
+
+#: application/views/scripts/deploy/main.phtml:24
+#: application/views/scripts/history/index.phtml:21
+msgid "From"
+msgstr "Aus"
+
+#: application/views/scripts/deploy/main.phtml:29
+#: application/views/scripts/history/index.phtml:22
+msgid "To"
+msgstr "Zu"
+
+#: application/views/scripts/deploy/main.phtml:33
+#: application/views/scripts/deploy/main.phtml:72
+#: application/views/scripts/history/index.phtml:23
+msgid "Status"
+msgstr "Status"
+
+#: application/views/scripts/deploy/main.phtml:64
+msgid "Deployment Details"
+msgstr "Deployment Einzelheiten"
+
+#: application/views/scripts/deploy/main.phtml:70
+msgid "File"
+msgstr "Datei"
+
+#: application/views/scripts/deploy/main.phtml:71
+msgid "Action"
+msgstr "Aktion"
+
+#: application/views/scripts/deploy/main.phtml:86
+msgid "Looks like there are no files to deploy...?!"
+msgstr "Sieht aus wie es gibt keine Dateien zu installieren ...?!"
+
+#: application/views/scripts/history/index.phtml:3
+msgid "Deployment History"
+msgstr "Deployment History"
+
+#: application/views/scripts/history/index.phtml:13
+msgid "This is a list of the deployments that have been run on this project."
+msgstr "Dies ist eine Liste der Einsätze, die an diesem Projekt ausgeführt wurden."
+
+#: application/views/scripts/history/index.phtml:19
+msgid "Date"
+msgstr "Datum"
+
+#: application/views/scripts/history/index.phtml:19
+msgid "Time"
+msgstr "Zeit"
+
+#: application/views/scripts/history/index.phtml:47
+msgid "This project has not yet been deployed."
+msgstr "Dieses Projekt wurde noch nicht eingesetzt."
+
+#: application/views/scripts/servers/index.phtml:14
+msgid "Server Details"
+msgstr "Serverdetails"
+
+#: application/views/scripts/servers/index.phtml:22
+msgid "There was a problem connecting to the FTP server with the information you provided."
+msgstr "Es war ein Problem beim Verbinden mit dem FTP-Server mit der von Ihnen bereitgestellten Informationen."
+
+#: application/views/scripts/servers/index.phtml:24
+msgid "Please check the username and password, and ensure the user has permissions to create and delete files on the FTP server."
+msgstr "Bitte überprüfen Sie den Benutzernamen und das Kennwort ein, und sicherzustellen, dass die Benutzer über Berechtigungen zum Erstellen und Löschen von Dateien auf dem FTP-Server."
+
+#: application/views/scripts/servers/index.phtml:29
+msgid "More information that might be useful: "
+msgstr "Weitere Informationen, die nützlich sein könnten:"
+
+#: application/views/scripts/servers/confirm-delete.phtml:5
+msgid "Delete server from the"
+msgstr "Delete Server aus der"
+
+#: application/views/scripts/profile/changepassword.phtml:4
+msgid "Change Your Password"
+msgstr "Ändern Sie Ihr Passwort"
+
+#: application/views/scripts/profile/changepassword.phtml:17
+msgid "Success! Your password was changed."
+msgstr "Erfolg! Dein Passwort wurde geändert."
+
+#: application/views/scripts/auth/login.phtml:6
+msgid "Easy Code Deployment"
+msgstr "Easy Code Deployment"
+
+#: application/views/scripts/auth/login.phtml:8
+msgid "GoDeploy is an installable tool that enables you to deploy changes from a Git repository to an FTP or SFTP server. It works with any Git server (not just GitHub!). GoDeploy is Open Source software which means you can help us make the software better."
+msgstr "GoDeploy ist eine installierbare Tool, das Sie Änderungen von einem Git-Repository auf einen FTP-oder SFTP-Server bereitstellen können. Es funktioniert mit jedem Git-Server (nicht nur GitHub!). GoDeploy ist Open Source Software, die Sie können uns helfen, die Software besser ist."
+
+#: application/views/scripts/auth/login.phtml:9
+msgid "Visit the Contribute page to find out more"
+msgstr "Besuchen Sie die Contribute-Seite erfahren Sie mehr"
+
+#: application/views/scripts/auth/login.phtml:18
+msgid "Login to GoDeploy"
+msgstr "Melden Sie sich GoDeploy"
+
+#: application/views/scripts/template/form_field.phtml:17
+msgid "This field has an error"
+msgstr "Dieses Feld hat einen Fehler"
+
+#: application/views/scripts/template/header.phtml:18
+msgid "Logged in as"
+msgstr "Angemeldet als"
+
+#: application/views/scripts/template/header.phtml:20
+msgid "Not logged in."
+msgstr "Nicht eingeloggt"
+
+#: application/views/scripts/template/footer.phtml:6
+msgid "Update"
+msgstr "Aktualisierung"
+
+#: application/views/scripts/template/footer.phtml:7
+msgid "Docs"
+msgstr "Docs"
+
+#: application/views/scripts/template/footer.phtml:8
+msgid "Contribute"
+msgstr "Beitragen"
+
+#: application/views/scripts/template/footer.phtml:10
+msgid "Change Password"
+msgstr "Passwort ändern"
+
+#: application/views/scripts/setup/dosetup.phtml:4
+msgid "Nearly done!"
+msgstr "Fast fertig!"
+
+#: application/views/scripts/setup/dosetup.phtml:10
+msgid "There's one last step that you need to do. GoDeploy tried to automatically write your new configuration file, but it couldn't."
+msgstr "Es gibt einen letzten Schritt, den Sie tun müssen. GoDeploy versucht, automatisch schreiben Sie Ihre neue Konfigurationsdatei, aber es ging nicht."
+
+#: application/views/scripts/setup/dosetup.phtml:11
+msgid "You now need to save the contents from the text box below into this file:"
+msgstr "Sie müssen nun den Inhalt aus dem Textfeld unten sparen in diese Datei:"
+
+#: application/views/scripts/setup/dosetup.phtml:17
+msgid "Once you have done this"
+msgstr "Sobald Sie dies getan haben"
+
+#: application/views/scripts/setup/dosetup.phtml:17
+msgid "click here to log in"
+msgstr "Klicken Sie hier, um sich einzuloggen"
+
+#: application/views/scripts/setup/step3.phtml:4
+msgid "Step 3 - Create First User"
+msgstr "Schritt 3 - Erstellen des ersten Benutzersteuerelements"
+
+#: application/views/scripts/setup/step1.phtml:4
+msgid "Step 1 - System Requirements"
+msgstr "Schritt 1 - Systemanforderungen"
+
+#: application/views/scripts/setup/step1.phtml:9
+msgid "GoDeploy needs to check that your system is set up correctly to be able to use the software."
+msgstr "GoDeploy Bedürfnisse zu überprüfen, ob Ihr System korrekt zu können, um die Software verwenden soll."
+
+#: application/views/scripts/setup/step2.phtml:4
+msgid "Step 2 - Database Settings"
+msgstr "Schritt 2 - Database Settings"
+
+#: application/views/scripts/setup/step2.phtml:17
+msgid "There was a problem connecting to the database server with the information you provided."
+msgstr "Es gab ein Problem beim Verbinden mit dem Datenbankserver mit der von Ihnen bereitgestellten Informationen."
+
+#: application/views/scripts/setup/step2.phtml:19
+msgid "Please check the details you entered and try again."
+msgstr "Bitte überprüfen Sie die von Ihnen eingegebenen und erneut versuchen."
+
+#: application/views/scripts/setup/header.phtml:5
+msgid "Change Language"
+msgstr "Sprache ändern"
+
+#: application/views/scripts/home/index.phtml:11
+msgid "Deployments"
+msgstr "Deployments"
+
+#: application/views/scripts/home/index.phtml:12
+msgid "Settings"
+msgstr "Einstellungen"
+
+#: application/views/scripts/home/index.phtml:13
+msgid "Delete"
+msgstr "Löschen"
+
+#: application/views/scripts/home/index.phtml:20
+msgid "No projects set up yet."
+msgstr "Keine Projekte bis noch nicht fest."
+
+#: application/views/scripts/home/index.phtml:24
+msgid "Add another project"
+msgstr "Fügen Sie ein weiteres Projekt"
+
+#: application/views/scripts/home/index.phtml:26
+msgid "Add the first project"
+msgstr "Fügen Sie das erste Projekt"
+

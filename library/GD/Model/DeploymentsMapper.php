@@ -61,6 +61,7 @@ class GD_Model_DeploymentsMapper extends MAL_Model_MapperAbstract
 			'servers_id' => $obj->getServersId(),
 			'from_revision' => $obj->getFromRevision(),
 			'to_revision' => $obj->getToRevision(),
+			'comment' => $obj->getComment(),
 			'deployment_statuses_id' => $obj->getDeploymentStatusesId(),
 		);
 		return $data;
@@ -80,7 +81,28 @@ class GD_Model_DeploymentsMapper extends MAL_Model_MapperAbstract
 			->setServersId($row->servers_id)
 			->setFromRevision($row->from_revision)
 			->setToRevision($row->to_revision)
+			->setComment($row->comment)
 			->setDeploymentStatusesId($row->deployment_statuses_id);
+
+		$u_map = new GD_Model_UsersMapper();
+		$user = new GD_Model_User();
+		$u_map->populateObjectFromRow($user, $row->findParentRow('GD_Model_DbTable_Users'));
+		$obj->setUser($user);
+
+		$p_map = new GD_Model_ProjectsMapper();
+		$project = new GD_Model_Project();
+		$p_map->populateObjectFromRow($project, $row->findParentRow('GD_Model_DbTable_Projects'));
+		$obj->setProject($project);
+
+		$s_map = new GD_Model_ServersMapper();
+		$server = new GD_Model_Server();
+		$s_map->populateObjectFromRow($server, $row->findParentRow('GD_Model_DbTable_Servers'));
+		$obj->setServer($server);
+
+		$ds_map = new GD_Model_DeploymentStatusesMapper();
+		$deployment_status = new GD_Model_DeploymentStatus();
+		$ds_map->populateObjectFromRow($deployment_status, $row->findParentRow('GD_Model_DbTable_DeploymentStatuses'));
+		$obj->setDeploymentStatus($deployment_status);
 	}
 
 	/**
@@ -89,16 +111,21 @@ class GD_Model_DeploymentsMapper extends MAL_Model_MapperAbstract
 	 * @param int $server_id
 	 * @return GD_Model_Deployment
 	 */
-	public function getLastSuccessfulDeployment($project_id, $server_id)
+	public function getLastSuccessfulDeployment($project_id, $server_id = 0)
 	{
 		$obj = new GD_Model_Deployment();
 
 		$select = $this->getDbTable()
 			->select()
 			->where("deployment_statuses_id = ?", 3)
-			->where("projects_id = ?", $project_id)
-			->where("servers_id = ?", $server_id)
-			->order('when DESC')
+			->where("projects_id = ?", $project_id);
+
+		if($server_id > 0)
+		{
+			$select->where("servers_id = ?", $server_id);
+		}
+
+		$select->order('when DESC')
 			->limit(1);
 
 		$row = $this->getDbTable()->fetchRow($select);
@@ -109,5 +136,40 @@ class GD_Model_DeploymentsMapper extends MAL_Model_MapperAbstract
 		}
 		$this->populateObjectFromRow($obj, $row);
 		return $obj;
+	}
+
+	/**
+	 * Get a list of the deployments for a project
+	 * @param int $project_id
+	 * @return array of GD_Model_Server objects
+	 */
+	public function getDeploymentsByProject($project_id, $offset = 0, $limit = 15, $include_previews = false)
+	{
+		$select = $this->getDbTable()
+			->select()
+			->where("projects_id = ?", $project_id)
+			->order("when DESC")
+			->limit($limit, $offset);
+
+		if(!$include_previews)
+		{
+			$select->where("deployment_statuses_id != 1");
+		}
+
+		return $this->fetchAll($select);
+	}
+
+	/**
+	 * @param int $num_deployments
+	 */
+	public function getNumDeployments($project_id)
+	{
+		$select = $this->getDbTable()->getDefaultAdapter()
+			->select()
+			->from("deployments", "COUNT(*)")
+			->where("projects_id = ?", $project_id)
+			->where("deployment_statuses_id != 1");
+
+		return $this->getDbTable()->getDefaultAdapter()->fetchOne($select);
 	}
 }

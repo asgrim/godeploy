@@ -2,57 +2,54 @@ var deployment_complete;
 
 function bootstrapDeployment()
 {
-	var start_url = document.location.href.replace(/\/run\//, '/execute-deployment-start/');
+	var start_url = document.location.href.replace(/\/run\//, '/execute-deployment-start/').replace(/#/, '');
 	
 	deployment_complete = false;
-	fireStatusRequest();
 	
 	new Ajax.Request(start_url, {
 			method: 'get',
 			asynchronous: true,
 			onSuccess: function(transport){
 				var response = transport.responseText;
-				alert(response);
-				/*var data = response.evalJSON();
-				
-				if(data.started)
-				{
-					alert(response);
-				}
-				else
-				{
-					alert('An error happened - couldn\'t start deployment...');
-				}*/
 			},
 			onFailure: function(){ alert('Something went wrong...') }
 		});
+
+	fireStatusRequest();
+}
+
+function continueDeployment()
+{
+	deployment_complete = false;
+
+	fireStatusRequest();
 }
 
 function fireStatusRequest()
 {
-	var status_url = document.location.href.replace(/\/run\//, '/execute-deployment-status/');
+	var status_url = document.location.href.replace(/\/run\//, '/execute-deployment-status/').replace(/#/, '');
 	new Ajax.Request(status_url, {
 		method: 'get',
 		asynchronous: true,
 		onSuccess: function(transport){
 			var response = transport.responseText;
 			var data = response.evalJSON();
-	
-			$('lol').innerHTML = parseInt($('lol').innerHTML) + 1;
 			
 			// Set overall status
-			$('deployment_status').innerHTML = data.OVERALL;
-			
+			$('deployment_status').innerHTML = '<img src="/images/icons/' + data.OVERALL_ICON + '" alt="icon"> ' + data.OVERALL;
+
 			// Set status of each file
-			for(var x in data.FILES)
+			if(data.NUM_FILES > 0)
 			{
-				$('file_' + x + '_status').innerHTML = data.FILES[x];
+				for(var x in data.FILES)
+				{
+					$('file_' + x + '_status').innerHTML = '<img src="/images/icons/' + data.FILE_ICONS[x] + '" alt="icon"> ' + data.FILES[x];
+				}
 			}
 			
 			// Set that we are complete or not
 			if(data.COMPLETE)
 			{
-				alert("Deployment finished.");
 				deployment_complete = true;
 			}
 			
@@ -60,6 +57,10 @@ function fireStatusRequest()
 			if(!deployment_complete)
 			{
 				setTimeout('fireStatusRequest()', 1000);
+			}
+			else
+			{
+				document.location.href = document.location.href.replace(/\/run\//, '/result/').replace(/#/, '');
 			}
 		},
 		onFailure: function(){ alert('something went wrong..') }

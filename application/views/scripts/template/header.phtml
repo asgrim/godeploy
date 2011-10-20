@@ -3,23 +3,39 @@
 	<div class="container">
 
 		<div id="logo">
-			<a href="<?php echo $this->baseUrl(); ?>/home" title="GoDeploy - Easy Code Deployment"><img src="<?php echo $this->baseUrl(); ?>/images/header/godeploy.png" alt="GoDeploy - Easy Code Deployment" /></a>
-			<h2 class="hidden">GoDeploy - Easy Code Deployment</h2>
+			<a href="<?php echo $this->baseUrl(); ?>/home" title="GoDeploy - <?php _e("Easy Code Deployment"); ?>"><img src="<?php echo $this->baseUrl(); ?>/images/header/godeploy.png" alt="GoDeploy - <?php _e("Easy Code Deployment"); ?>" /></a>
+			<h2 class="hidden">GoDeploy - <?php _e("Easy Code Deployment"); ?></h2>
 		</div>
 
+		<?php if(isset($this->prenavigation_header) && $this->prenavigation_header != "") echo $this->render($this->prenavigation_header); ?>
+
+		<?php if($this->show_navigation !== false): ?>
 		<div id="menu">
+
+			<div id="menu_heading">
+			<?php if ($this->project): ?>
+				Current Project: <strong><?php echo $this->project->getName(); ?></strong>
+			<?php else: ?>
+				&nbsp;
+			<?php endif; ?>
+			</div>
+
 			<?php echo $this->navigation()->menu(); ?>
 
 			<span id="logged_in_status">
 			<?php if ($this->logged_in): ?>
-				Logged in as <?php echo Zend_Auth::getInstance()->getIdentity(); ?>
+				<?php echo Zend_Auth::getInstance()->getIdentity(); ?> (<a href="/auth/logout" title="Logout"><?php _e("Log out"); ?></a>)
 			<?php else: ?>
-				Not logged in.
+				<?php _e("Not logged in."); ?>
 			<?php endif; ?>
 			</span>
 
 			<div class="clear"></div>
 		</div>
+		<?php endif; ?>
+
+		<?php if(isset($this->postnavigation_header) && $this->postnavigation_header != "") echo $this->render($this->postnavigation_header); ?>
+
 		<div class="clear"></div>
 
 	</div>

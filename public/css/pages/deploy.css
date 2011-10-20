@@ -1,0 +1,38 @@
+/* CSS Document */
+
+#deploymentSetup li.submit {
+	padding: 10px 0 0 205px;
+	float: left;
+	}
+
+	#deploymentSetup li.submit input {
+		float: left;
+		}
+
+	#deploymentSetup li.submit .preview {
+		margin-left: -190px;
+		}
+
+	#fromRevision, #toRevision, #comment {
+		width: 400px;
+		}
+
+#get_latest_revision_status {
+	padding-left: 5px;
+	}
+
+#deploySummary {
+	}
+
+	#deploySummary label {
+		font-weight: bold;
+		text-align: right;
+		}
+
+	#deploySummary span.value {
+		margin-left: 15px;
+		}
+
+	#deploySummary li.submit {
+		padding: 10px 0 0 220px;
+		}

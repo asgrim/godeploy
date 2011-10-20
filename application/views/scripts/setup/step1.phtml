@@ -1,0 +1,75 @@
+
+<div class="content">
+	<div class="padding_20"></div>
+
+	<h1><?php _e("Step 1 - System Requirements"); ?></h1>
+	<div class="padding_15"></div>
+
+	<div class="wrapper w_ededed"><div class="content">
+		<div class="padding_15"></div>
+		<p><?php _e("GoDeploy needs to check that your system is set up correctly to be able to use the software."); ?></p>
+
+		<table>
+			<thead>
+				<tr>
+					<th><?php _e("Requirement"); ?></th>
+					<th><?php _e("Value"); ?></th>
+					<th><?php _e("Result"); ?></th>
+				</tr>
+			</thead>
+			<tfoot>
+				<tr>
+					<td colspan="2" class="align_right"><strong><?php _e("Overall Result"); ?></strong></td>
+					<td>
+						<img src="/images/icons/<?php echo $this->passed ? "complete" : "failed"; ?>/16x16.png" alt="<?php echo $this->passed ? "complete" : "failed"; ?> icon" />
+						<strong><?php echo $this->passed ? _r("Pass") : _r("Fail"); ?></strong>
+					</td>
+				</tr>
+			</tfoot>
+			<tbody>
+			<?php
+			foreach($this->requirements as $req => $test)
+			{
+				if($test["RESULT"])
+				{
+					$r = _r("Pass");
+					$i = "complete";
+				}
+				else
+				{
+					if(isset($test["NOT_CRITICAL"]) && $test["NOT_CRITICAL"])
+					{
+						$r = _r("Warning");
+						$i = "warning";
+					}
+					else
+					{
+						$r = _r("Fail");
+						$i = "failed";
+					}
+				}
+			?>
+				<tr>
+					<td><?php echo $req; ?></td>
+					<td><?php echo $test["ACTUAL"]; ?></td>
+					<td><img src="/images/icons/<?php echo $i; ?>/16x16.png" alt="<?php echo $i; ?> icon" /> <?php echo $r; ?></td>
+				</tr>
+			<?php } ?>
+			</tbody>
+		</table>
+
+		<div class="padding_10"></div>
+
+		<?php if($this->passed): ?>
+		<a href="/setup/step2" style="float: right";>
+			<img src="/images/buttons/small/next.png" alt="Go to the next step" title="Go to the next step" />
+		</a>
+		<?php else: ?>
+		<span style="float: right;">
+			<?php _e("You cannot proceed with setup until the above items marked 'Failed' are corrected."); ?>
+		</span>
+		<?php endif; ?>
+		<div class="clear"></div>
+	</div></div>
+	<div class="padding_15"></div>
+</div>

@@ -38,6 +38,8 @@ class GD_Ftp
 	private $_handle;
 	private $_pwd;
 
+	private $_last_error;
+
 	public function __construct(GD_Model_Server $server)
 	{
 		$this->_hostname = $server->getHostname();
@@ -52,6 +54,11 @@ class GD_Ftp
 		$this->disconnect();
 	}
 
+	public function getLastError()
+	{
+		return $this->_last_error;
+	}
+
 	private function resetPwd()
 	{
 		if(!$this->_handle)
@@ -59,51 +66,6 @@ class GD_Ftp
 			throw new GD_Exception("Not connected (resetPwd).");
 		}
 		ftp_chdir($this->_handle, $this->_pwd);
-	}
-
-	private function getRemotePath($filename)
-	{
-		if(!$this->_handle)
-		{
-			throw new GD_Exception("Must be connected to get remote path.");
-		}
-
-		$filename_has_leading_slash = false;
-		$remote_path_has_trailing_slash = false;
-		$remote_path_has_leading_slash = false;
-
-		if(substr($filename, 0, 1) == "/")
-		{
-			$filename_has_leading_slash = true;
-		}
-
-		if(substr($this->_remote_path, strlen($this->_remote_path) - 1, 1) == "/")
-		{
-			$remote_path_has_trailing_slash = true;
-		}
-
-		if(substr($this->_remote_path, 0, 1) == "/")
-		{
-			$remote_path_has_leading_slash = true;
-		}
-
-		$use_remote_path = $this->_remote_path;
-
-		if($remote_path_has_trailing_slash && $filename_has_leading_slash)
-		{
-			$use_remote_path = substr($use_remote_path, 0, strlen($this->_remote_path) - 1);
-		}
-		else if(!$remote_path_has_trailing_slash && !$filename_has_leading_slash)
-		{
-			$use_remote_path = $use_remote_path . "/";
-		}
-
-		if(!$remote_path_has_leading_slash)
-		{
-			$use_remote_path = $this->_pwd . "/" . $use_remote_path;
-		}
-
-		return $use_remote_path . $filename;
 	}
 
 	public function testConnection()
@@ -114,7 +76,7 @@ class GD_Ftp
 
 			$test_content = "Some test content...";
 			$test_file = tempnam(sys_get_temp_dir(), "gd_upload_test_");
-			$remote_test_file = $this->getRemotePath(".gd_test_file");
+			$remote_test_file = ".gd_test_file";
 			file_put_contents($test_file, $test_content);
 			chmod($test_file, 0777);
 
@@ -129,26 +91,48 @@ class GD_Ftp
 		}
 		catch(GD_Exception $exception)
 		{
+			$this->_last_error = $exception->getMessage();
 			return false;
 		}
 	}
 
 	private function ftpChangeOrMakeDirectory($dir)
 	{
-		if(!$this->_handle)
-		{
-			throw new GD_Exception("Not connected (ftpChangeOrMakeDirectory).");
-		}
+		$folders = explode("/", $dir);
 
-		if($dir == "" || @ftp_chdir($this->_handle, $dir) || @ftp_mkdir($this->_handle, $dir))
+		for($i = 0; $i < count($folders); $i++)
 		{
-			return true;
+			if($folders[$i] == "")
+			{
+				if($i == 0 && count($folders) > 1)
+				{
+					if(!@ftp_chdir($this->_handle, "/"))
+					{
+						throw new GD_Exception("Failed to change to root directory using absolute path '$dir'");
+					}
+					continue;
+				}
+				else
+				{
+					return true;
+				}
+			}
+
+			if(!@ftp_chdir($this->_handle, $folders[$i]))
+			{
+				$res = @ftp_mkdir($this->_handle, $folders[$i]);
+				if($res === false)
+				{
+					throw new GD_Exception("Failed to create FTP directory {$folders[$i]}. pwd=" . ftp_pwd($this->_handle));
+				}
+
+				if(!@ftp_chdir($this->_handle, $folders[$i]))
+				{
+					throw new GD_Exception("Failed to change into new directory {$folders[$i]}. pwd=" . ftp_pwd($this->_handle));
+				}
+			}
 		}
-		if(!$this->ftpChangeOrMakeDirectory(dirname($dir)))
-		{
-			return false;
-		}
-		return ftp_mkdir($this->_handle, $dir);
+		return true;
 	}
 
 	public function upload($local_file, $remote_file)
@@ -161,9 +145,9 @@ class GD_Ftp
 		$remote_dir = str_replace(basename($remote_file), "", $remote_file);
 		$this->ftpChangeOrMakeDirectory($remote_dir);
 
-		if(!ftp_put($this->_handle, basename($remote_file), $local_file, FTP_BINARY))
+		if(!@ftp_put($this->_handle, basename($remote_file), $local_file, FTP_BINARY))
 		{
-			throw new GD_Exception("Failed to upload '{$local_file}'");
+			throw new GD_Exception("Failed to upload '{$local_file}' [pwd=" . ftp_pwd($this->_handle) . "]");
 		}
 
 		$this->resetPwd();
@@ -179,9 +163,9 @@ class GD_Ftp
 		$remote_dir = str_replace(basename($remote_file), "", $remote_file);
 		$this->ftpChangeOrMakeDirectory($remote_dir);
 
-		if(!ftp_delete($this->_handle, basename($remote_file)))
+		if(!@ftp_delete($this->_handle, basename($remote_file)))
 		{
-			throw new GD_Exception("Failed to delete '{$remote_file}'");
+			throw new GD_Exception("Failed to delete '{$remote_file}' [pwd=" . ftp_pwd($this->_handle) . "]");
 		}
 
 		$this->resetPwd();
@@ -189,23 +173,28 @@ class GD_Ftp
 
 	public function connect()
 	{
-		$this->_handle = ftp_connect($this->_hostname, $this->_port);
+		$this->_handle = @ftp_connect($this->_hostname, $this->_port, 10);
 
 		if($this->_handle == false)
 		{
 			throw new GD_Exception("Couldn't connect to FTP server on '{$this->_hostname}:{$this->_port}'");
 		}
 
-		if(!ftp_login($this->_handle, $this->_username, $this->_password))
+		if(!@ftp_login($this->_handle, $this->_username, $this->_password))
 		{
 			throw new GD_Exception("Failed to log in to '{$this->_hostname}:{$this->_port}' with user '{$this->_username}'");
 		}
+
+		$this->ftpChangeOrMakeDirectory($this->_remote_path);
 
 		$this->_pwd = ftp_pwd($this->_handle);
 	}
 
 	public function disconnect()
 	{
-		ftp_close($this->_handle);
+		if($this->_handle)
+		{
+			ftp_close($this->_handle);
+		}
 	}
 }

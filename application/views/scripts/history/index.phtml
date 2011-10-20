@@ -1,1 +1,78 @@
-History
+
+<div class="content">
+	<div class="padding_20"></div>
+
+	<h1><?php echo $this->project->getName(); ?> &raquo; <?php _e("Deployment History"); ?></h1>
+	<div class="padding_15"></div>
+
+	<div class="wrapper w_ededed"><div class="content">
+		<div class="padding_15"></div>
+
+<?php
+	if (is_array($this->deployments) && count($this->deployments) > 0)
+	{
+		$count = count($this->deployments);
+		$ess = $count == "1" ? "" : "s";
+		$are = $count == "1" ? _r("is") : _r("are");
+		$recent = $count == "1" ? "" : _r(", with the most recent at the top");
+?>
+		<h2>Deployment history</h2>
+		<p>There <?php echo $are; ?> <?php echo $count; ?> deployment<?php echo $ess; ?> shown<?php echo $recent; ?>.</p>
+
+		<div id="feed_icons">
+			<a href="<?php echo $this->baseUrl(); ?>/project/<?php echo $this->project->getSlug(); ?>/history/rss">
+				<img src="/images/icons/feed/rss.png" title="RSS Feed" alt="RSS" />
+			</a>
+			<a href="<?php echo $this->baseUrl(); ?>/project/<?php echo $this->project->getSlug(); ?>/history/json">
+				<img src="/images/icons/feed/json.png" title="JSON Feed" alt="JSON" />
+			</a>
+			<a href="<?php echo $this->baseUrl(); ?>/project/<?php echo $this->project->getSlug(); ?>/history/csv">
+				<img src="/images/icons/feed/csv.png" title="CSV Feed" alt="CSV" />
+			</a>
+		</div>
+		<p><?php _e("The feeds are also available in RSS, JSON or CSV. Click the icon on the right for a feed of the deployment history..."); ?></p>
+		<table>
+			<thead>
+				<tr>
+					<th><?php _e("Date"); ?>/<?php _e("Time"); ?></th>
+					<th><?php _e("Server"); ?></th>
+					<th><?php _e("From"); ?></th>
+					<th><?php _e("To"); ?></th>
+					<th><?php _e("Comment"); ?></th>
+					<th><?php _e("Deployed By"); ?></th>
+					<th><?php _e("Status"); ?></th>
+					<th class="empty">&nbsp;</th>
+				</tr>
+			</thead>
+			<tbody>
+			<?php foreach ($this->deployments as $deployment) : ?>
+				<tr>
+					<td class="nowrap">
+						<a href="<?php echo $this->baseUrl(); ?>/project/<?php echo $this->project->getSlug(); ?>/deploy/result/<?php echo $deployment->getId(); ?>">
+							<?php echo $deployment->getWhen("d/m/Y H:i:s"); ?>
+						</a>
+					</td>
+					<td title="<?php echo $deployment->getServer()->getDisplayName(); ?>" class="nowrap"><?php echo $deployment->getServer()->getName(); ?></td>
+					<td title="<?php echo $deployment->getFromRevision(); ?>"><?php echo $deployment->getFromRevision() ? substr($deployment->getFromRevision(), 0, 7) : "None"; ?></td>
+					<td title="<?php echo $deployment->getToRevision(); ?>"><?php echo substr($deployment->getToRevision(), 0, 7); ?></td>
+					<td><?php echo $deployment->getComment(); ?></td>
+					<td><?php echo $deployment->getUser()->getName(); ?></td>
+					<td class="nowrap">
+						<img src="/images/icons/<?php echo $deployment->getDeploymentStatus()->getImageName(); ?>" alt="icon" />
+						<?php echo $deployment->getDeploymentStatus()->getShortName(); ?>
+					</td>
+					<td class="icon">
+						<a href="<?php echo $this->baseUrl(); ?>/project/<?php echo $this->project->getSlug(); ?>/deploy/result/<?php echo $deployment->getId(); ?>">
+							<img src="/images/icons/view/16x16.png" alt="View &raquo;" title="Click to view this deployment" />
+						</a>
+					</td>
+				</tr>
+			<?php endforeach; ?>
+			</tbody>
+		</table>
+<?php } else { ?>
+		<h2 class="last"><?php _e("This project is yet to be deployed."); ?></h2>
+<?php } ?>
+	</div></div>
+</div>
+

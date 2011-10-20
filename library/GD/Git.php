@@ -27,41 +27,171 @@
  * @author james
  *
  */
-class GD_Git
+class GD_Git extends GD_Shell
 {
 	private $_url;
 	private $_project;
 	private $_gitdir;
 	private $_current_branch;
-
-	private $_last_output;
-	private $_last_errno;
+	private $_repotype;
 
 	private $_base_gitdir;
+
+	const GIT_REPOTYPE_SSH = 'ssh'; // SSH (read/write)
+	const GIT_REPOTYPE_HTTP = 'http'; // HTTP (read/write)
+	const GIT_REPOTYPE_GIT = 'git'; // Git Read-Only
 
 	const GIT_CLONE_ERROR_ALREADY_CLONED = "CLONE_ALREADY_CLONED";
 	const GIT_CLONE_ERROR_HOST_KEY_FAILURE = "CLONE_HOST_KEY_FAILURE";
 	const GIT_CLONE_ERROR_UNKNOWN = "CLONE_UNKNOWN_ERROR";
+	const GIT_CLONE_ERROR_REMOTE_OTHER = "CLONE_REMOTE_OTHER";
+	const GIT_CLONE_ERROR_REMOTE_NOT_FOUND = "CLONE_REMOTE_NOT_FOUND";
 
 	const GIT_PULL_ERROR_UNKNOWN = "PULL_UNKNOWN_ERROR";
 
 	const GIT_STATUS_ERROR_NOT_ON_BRANCH = "STATUS_NOT_ON_BRANCH";
 	const GIT_STATUS_ERROR_UNKNOWN = "STATUS_UNKNOWN_ERROR";
+	const GIT_STATUS_ERROR_DIFFERENT_REPOSITORY = "STATUS_DIFFERENT_REPOSITORY";
+	const GIT_STATUS_ERROR_NOT_A_REPOSITORY = "STATUS_NOT_A_REPOSITORY";
 
 	const GIT_GENERAL_ERROR = "GENERAL_GIT_ERROR";
+	const GIT_GENERAL_EMPTY_REF = "EMPTY_REF";
+	const GIT_GENERAL_INVALID_REF = "INVALID_REF";
+	const GIT_GENERAL_NO_FILES_CHANGED = "NO_FILES_CHANGED";
+
+	const GIT_SSH_ERROR_HOSTNME = "SSH_RESOLVE_HOSTNAME";
+	const GIT_SSH_ERROR_UNKNOWN = "SSH_UNKNOWN_ERROR";
 
 	public function __construct(GD_Model_Project &$project)
 	{
 		$this->_project = $project;
-		$this->_base_gitdir = APPLICATION_PATH . "/../gitcache/";;
+		$this->_base_gitdir = APPLICATION_PATH . "/../gitcache/";
 		$this->_gitdir = $this->_base_gitdir . $this->_project->getId();
+		$this->_url = $this->_project->getRepositoryUrl();
+		$this->_repotype = $this->parseRepoType($this->_url);
+
+		if($this->_repotype == self::GIT_REPOTYPE_HTTP)
+		{
+			throw new GD_Exception("Repository type HTTP/HTTPS not supported yet.");
+		}
+		/*if($this->_repotype == self::GIT_REPOTYPE_SSH)
+		{
+			throw new GD_Exception("Repository type Git (read+write via SSH) not supported yet.");
+		}*/
 
 		if(!file_exists($this->_base_gitdir))
 		{
 			mkdir($this->_base_gitdir, 0700, true);
+			chdir($this->_base_gitdir);
+		}
+
+		// Check out the specified branch in the project if we're a valid repo
+		try
+		{
+			if($this->checkValidRepository())
+			{
+				$this->gitCheckout($project->getDeploymentBranch());
+			}
+		}
+		catch(GD_Exception $ex)
+		{
+			$invalid = true;
 		}
 
 		$this->_current_branch = $this->getCurrentBranch(true);
+	}
+
+	private function sshKeys()
+	{
+		if($this->_repotype == self::GIT_REPOTYPE_SSH)
+		{
+			// Write the id_rsa key to the gitcache
+			$id_rsa = $this->_project->getSSHKey()->getPrivateKey();
+
+			$keyfile = $this->_base_gitdir . "id_rsa";
+
+			if(file_exists($keyfile))
+			{
+				unlink($keyfile);
+			}
+			file_put_contents($keyfile, $id_rsa);
+			chmod($keyfile, 0600);
+
+			// Get the hostname part of the URL
+			$x = strrchr($this->_url, ':');
+			$host = substr($this->_url, 0, -strlen($x));
+			$host = preg_replace("/[^@0-9a-zA-Z-_.]/", "", $host);
+
+			$ssh_cmd = "ssh -T -o StrictHostKeyChecking=no -i {$keyfile} -o  UserKnownHostsFile=/dev/null ";
+
+			// Use a script file
+			$script = "#!/bin/sh\n\n{$ssh_cmd} $*\n";
+			$script_file = $this->_base_gitdir . "ssh.sh";
+			file_put_contents($script_file, $script);
+			chmod($script_file, 0755);
+			putenv("GIT_SSH={$script_file}");
+
+			// Test the connection
+			$this->runShell("\$GIT_SSH -T -o StrictHostKeyChecking=no {$host}", false);
+
+			if($this->_last_errno != 0)
+			{
+				// First check if we're a Github sort of repo
+				// Github returns: Hi [USER]! You've successfully authenticated, but GitHub does not provide shell access.
+				// Codebase returns: You've successfully uploaded your public key to Codebase and authenticated.
+				$valid_string = "You've successfully";
+				$is_valid = false;
+				foreach($this->_last_output as $o)
+				{
+					if(strpos($o, $valid_string) !== false)
+					{
+						return;
+					}
+				}
+
+				if(in_array("ERROR:gitosis.serve.main:Need SSH_ORIGINAL_COMMAND in environment.", $this->_last_output))
+				{
+					/*
+					 * This is actually a correct response - default gitosis setup will serve up one of these:
+					 *
+					 * PTY allocation request failed on channel 0
+					 * ERROR:gitosis.serve.main:Need SSH_ORIGINAL_COMMAND in environment.
+					 *
+					 * or just
+					 *
+					 * ERROR:gitosis.serve.main:Need SSH_ORIGINAL_COMMAND in environment.
+					 *
+					 */
+					return;
+				}
+				else if(strpos($this->_last_output[0], "Could not resolve hostname") !== false
+						|| (isset($this->_last_output[1]) && strpos($this->_last_output[1], "Could not resolve hostname") !== false))
+				{
+					throw new GD_Exception("Could not resolve hostname '{$host}'", 0, self::GIT_SSH_ERROR_HOSTNME);
+				}
+				else
+				{
+					$final_error = end($this->_last_output);
+					throw new GD_Exception("Tried setting up SSH authentication but failed. Final error was: {$final_error}", 0, self::GIT_SSH_ERROR_UNKNOWN);
+				}
+			}
+		}
+	}
+
+	private function parseRepoType($url)
+	{
+		if(substr($url, 0, 6) == "git://")
+		{
+			return self::GIT_REPOTYPE_GIT;
+		}
+		else if(substr($url, 0, 8) == "https://")
+		{
+			return self::GIT_REPOTYPE_HTTP;
+		}
+		else
+		{
+			return self::GIT_REPOTYPE_SSH;
+		}
 	}
 
 	public function getGitDir()
@@ -181,6 +311,27 @@ class GD_Git
 		return $this->getSingleLog('git log --pretty=oneline | tail -1');
 	}
 
+	public function getFullHash($ref)
+	{
+		$nice_ref = $this->sanitizeRef($ref);
+
+		if($nice_ref == "")
+		{
+			throw new GD_Exception("Could not get full hash '{$nice_ref}': " . self::GIT_GENERAL_EMPTY_REF, 0, self::GIT_GENERAL_EMPTY_REF);
+		}
+
+		$this->runShell('git log -n1 --format="format:%H" ' . $nice_ref);
+
+		if($this->_last_errno == 0)
+		{
+			return $this->_last_output[0];
+		}
+		else
+		{
+			throw new GD_Exception("Could not get full hash '{$nice_ref}': " . self::GIT_GENERAL_INVALID_REF, 0, self::GIT_GENERAL_INVALID_REF);
+		}
+	}
+
 	public function getFilesChangedList($from_rev, $to_rev)
 	{
 		if($from_rev == "")
@@ -222,7 +373,7 @@ class GD_Git
 
 		if(!is_array($files) || count($files) <= 0)
 		{
-			throw new GD_Exception("Could not get file list...");
+			throw new GD_Exception("Could not get file list... could be that there was no changes.", 0, self::GIT_GENERAL_NO_FILES_CHANGED);
 		}
 
 		// Now parse the file list into something sensible
@@ -235,14 +386,24 @@ class GD_Git
 		return $file_list;
 	}
 
-	public function gitPull($branch = "master", $remote = "origin")
+	public function gitPull($branch = "", $remote = "")
 	{
 		// TODO - Clean arguments (only accept valid branch/remote characters)
+		$this->sshKeys();
 		$this->runShell('git pull ' . $remote . ' ' . $branch);
 
 		if($this->_last_errno == 0)
 		{
-			return true;
+			$this->runShell('git fetch --tags ' . $remote);
+
+			if($this->_last_errno == 0)
+			{
+				return true;
+			}
+			else
+			{
+				return self::GIT_PULL_ERROR_UNKNOWN;
+			}
 		}
 		else
 		{
@@ -265,10 +426,13 @@ class GD_Git
 
 	public function gitClone()
 	{
-		$this->runShell('git clone ' . $this->_project->getRepositoryUrl() . ' "' . $this->_gitdir . '"', false);
+		$this->sshKeys();
+		$this->runShell('git clone ' . $this->_url . ' "' . $this->_gitdir . '"', true);
 
 		if($this->_last_errno == 0)
 		{
+			$this->runShell('git reset --hard HEAD', true);
+			$this->runShell('git config core.filemode false', true);
 			return true;
 		}
 		else
@@ -282,29 +446,59 @@ class GD_Git
 			{
 				return self::GIT_CLONE_ERROR_HOST_KEY_FAILURE;
 			}
+			if($this->_last_output[0] == "fatal: remote error:")
+			{
+				if(stripos($this->_last_output[1], "Could not find Repository") !== false)
+				{
+					return self::GIT_CLONE_ERROR_REMOTE_NOT_FOUND;
+				}
+				else
+				{
+					return self::GIT_CLONE_ERROR_REMOTE_OTHER;
+				}
+			}
 			return self::GIT_CLONE_ERROR_UNKNOWN;
 		}
+	}
+
+	public function checkValidRepository()
+	{
+		$this->runShell('git remote -v | grep origin | grep fetch', true);
+
+		if($this->_last_errno == 0)
+		{
+			$actual_url = $this->_last_output[0];
+			$actual_url = str_replace("origin", "", $actual_url);
+			$actual_url = str_replace("(fetch)", "", $actual_url);
+			$actual_url = trim($actual_url);
+
+			if($actual_url != $this->_url)
+			{
+				throw new GD_Exception("Repository cache does not match the project's URL", 0, self::GIT_STATUS_ERROR_DIFFERENT_REPOSITORY);
+			}
+
+			return true;
+		}
+		else
+		{
+			throw new GD_Exception("Not a git repository", 0, self::GIT_STATUS_ERROR_NOT_A_REPOSITORY);
+		}
+
+		throw new GD_Exception("Unknown error", 0, self::GIT_STATUS_ERROR_UNKNOWN);
 	}
 
 	private function runShell($cmd, $chdir = true, $noisy = false)
 	{
 		if($chdir)
 		{
+			if(!file_exists($this->_gitdir))
+			{
+				mkdir($this->_gitdir, 0700, true);
+			}
 			chdir($this->_gitdir);
 		}
 
-		if($noisy) echo "<strong>" . $cmd . "</strong><br /><br />";
-		$this->_last_errno = 0;
-		$this->_last_output = array();
-		exec($cmd . " 2>&1", $this->_last_output, $this->_last_errno);
-		if($noisy)
-		{
-			echo "<pre>";
-			var_dump($this->_last_output);
-			var_dump($this->_last_errno);
-			echo "</pre>";
-			echo "<hr />";
-		}
+		parent::Exec($cmd, $noisy);
 	}
 
 	private function sanitizeRef($ref)

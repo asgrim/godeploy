@@ -32,8 +32,13 @@ class GDApp_Form_DeploymentSetup extends GD_Form_Abstract
 		$servers_map = new GD_Model_ServersMapper();
 		$servers = $servers_map->getServersByProject($project_id);
 
+		if(!is_array($servers) || count($servers) == 0)
+		{
+			throw new GD_Exception("There are no servers configured for this project.");
+		}
+
 		$server_id = new Zend_Form_Element_Select('serverId');
-		$server_id->setLabel('Server')
+		$server_id->setLabel(_r('Server'))
 			->setRequired(true)
 			->addFilter('StripTags')
 			->addFilter('StringTrim')
@@ -41,35 +46,47 @@ class GDApp_Form_DeploymentSetup extends GD_Form_Abstract
 
 		foreach($servers as $server)
 		{
-			$server_id->addMultiOption($server->getId(), $server->getName());
+			$server_id->addMultiOption($server->getId(), $server->getDisplayName());
 		}
 
 		$from_revision = new Zend_Form_Element_Text('fromRevision');
-		$from_revision->setLabel('Current revision')
+		$from_revision->setLabel(_r('Current revision'))
 			->setRequired(false)
 			->addFilter('StripTags')
 			->addFilter('StringTrim')
-			->addValidator('NotEmpty');
+			->addValidator('NotEmpty')
+			->setAttrib('readonly', 'readonly')
+			->setAttrib('disabled', 'disabled');
 
 		$to_revision = new Zend_Form_Element_Text('toRevision');
-		$to_revision->setLabel('Deploy revision or tag')
+		$to_revision->setLabel(_r('Deploy revision or tag'))
 			->setRequired(true)
 			->addFilter('StripTags')
 			->addFilter('StringTrim')
-			->addValidator('NotEmpty');
+			->addValidator('NotEmpty')
+			->setDescription('<a href="javascript:;" onclick="getLatestRevision();">Click to get latest revision</a><span id="get_latest_revision_status"></span>');$from_revision = new Zend_Form_Element_Text('fromRevision');
 
-		$submitPreview = new Zend_Form_Element_Submit('submitPreview');
-		$submitPreview->setLabel('Preview Deployment');
+		$comment = new Zend_Form_Element_Text('comment');
+		$comment->setLabel(_r('Comment (optional)'))
+			->setRequired(false)
+			->addFilter('StripTags')
+			->addFilter('StringTrim');
 
-		$submitRun = new Zend_Form_Element_Submit('submitRun');
-		$submitRun->setLabel('Run Deployment');
+		$submitRun = new Zend_Form_Element_Image('submitRun');
+		$submitRun->setImage('/images/buttons/small/deploy.png');
+		$submitRun->class = "processing_btn size_small";
+
+		$submitPreview = new Zend_Form_Element_Image('submitPreview');
+		$submitPreview->setImage('/images/buttons/small/inverted/preview.png');
+		$submitPreview->class = "preview processing_btn size_small";
 
 		$this->addElements(array(
 			$server_id,
 			$from_revision,
 			$to_revision,
-			$submitPreview,
+			$comment,
 			$submitRun,
+			$submitPreview,
 		));
 	}
 }

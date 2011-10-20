@@ -23,15 +23,11 @@
  */
 class AuthController extends Zend_Controller_Action
 {
-	public function getForm()
-	{
-		return new GDApp_Form_Login();
-	}
-
-
     public function loginAction()
     {
-		$form = $this->getForm();
+    	$this->view->headTitle('Login');
+
+		$form = new GDApp_Form_Login();
     	if ($this->_request->isPost())
 		{
 			if ($form->isValid($this->getRequest()->getParams()))

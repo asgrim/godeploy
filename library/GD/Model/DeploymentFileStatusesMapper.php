@@ -57,6 +57,7 @@ class GD_Model_DeploymentFileStatusesMapper extends MAL_Model_MapperAbstract
 		$data = array(
 			'name' => $obj->getName(),
 			'code' => $obj->getCode(),
+			'image_name' => $obj->getImageName(),
 		);
 		return $data;
 	}
@@ -70,7 +71,8 @@ class GD_Model_DeploymentFileStatusesMapper extends MAL_Model_MapperAbstract
 	{
 		$obj->setId($row->id)
 			->setName($row->name)
-			->setCode($row->code);
+			->setCode($row->code)
+			->setImageName($row->image_name);
 	}
 
 	/**

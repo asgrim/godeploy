@@ -1,32 +1,33 @@
 
-<div class="column c_12"><div class="content"><div class="content">
+<div class="column c_12"><div class="content">
+
 	<div class="padding_20"></div>
+
+	<h1><?php _e("Easy Code Deployment"); ?></h1>
 	<div class="padding_15"></div>
-	<h3>Easy Code Deployment</h3>
-	<p class="last">
-		GoDeploy is an installable tool that enables you to deploy changes from a Git repository to an FTP or SFTP server. It works with any Git server (not just GitHub!).
-		GoDeploy is Open Source software which means you can help us make the software better. <a href="<?php echo $this->baseUrl(); ?>/contribute" title="Contribute">Visit the Contribute page to find out more &raquo;</a>
-	</p>
-</div></div></div>
-<div class="column c_34"><div class="content">
+	<p><?php _e("GoDeploy is an installable tool that enables you to deploy changes from a Git repository to an FTP or SFTP server. It works with any Git server (not just GitHub!). GoDeploy is Open Source software which means you can help us make the software better."); ?></p>
+	<p class="last"><a href="<?php echo $this->baseUrl(); ?>/contribute" title="Contribute"><?php _e("Visit the Contribute page to find out more"); ?> &raquo;</a></p>
+
+</div></div>
+<div class="column c_34">
 	<div class="padding_20"></div>
 
 	<div class="wrapper w_ededed">
 		<div class="content">
 			<div class="padding_15"></div>
-			<h3 class="last">Login to GoDeploy</h3>
+			<h3 class="last"><?php _e("Login to GoDeploy"); ?></h3>
 			<div class="padding_10"></div>
 
-		<?php if ($this->form->isErrors()) { ?>
+		<?php if ($this->form->isErrors()) : ?>
 			<div id="errors"><div class="content">
-				<?php if ($this->unknownCredentials) { ?>
-					<?php echo reset($this->form->getMessages()); ?>
-				<?php } else { ?>
-					There was a problem with your submission. Please check the fields highlighted below.
-				<?php } ?>
+				<?php if ($this->unknownCredentials) : ?>
+					<?php $msgs = $this->form->getMessages(); echo reset($msgs); ?>
+				<?php else : ?>
+					<?php _e("There was a problem with your submission. Please check the fields highlighted below."); ?>
+				<?php endif; ?>
 			</div></div>
 			<div class="padding_15"></div>
-		<?php } ?>
+		<?php endif; ?>
 
 			<div id="form">
 				<?php echo $this->form; ?>
@@ -35,5 +36,6 @@
 		</div>
 	</div>
 
-</div></div>
+</div>
 <div class="clear"></div>
+<div class="padding_15"></div>

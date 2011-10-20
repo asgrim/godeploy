@@ -6,24 +6,45 @@
 	if ($this->element->hasErrors())
 	{
 		$class_name .= " error";
-		$error_message = reset($this->element->getMessages());
+		$messages = $this->element->getMessages();
+		$error_message = reset($messages);
 	}
 
 ?>
 <li id="item_<?php echo $this->element->getId(); ?>" class="<?php echo $class_name; ?>">
 	<label>
 		<span>
-			<span title="<?php if ($this->element->hasErrors()) echo $error_message; ?>"></span>
+			<span title="<?php if ($this->element->hasErrors()) echo _e("This field has an error"); ?>"></span>
 			<?php echo $this->element->getLabel(); ?>
 		</span>
 	</label>
-	<span class="field"><?php
+	<span class="field">
+	<?php
 		echo $this->{$this->element->helper}(
 			$this->element->getName(),
 			$this->element->getValue(),
 			$this->element->getAttribs(),
 			$this->element->options
 		);
-	?></span>
+
+		if($this->element->getDescription() || $this->element->hasErrors())
+		{
+			echo '<span class="extras">';
+
+			if($this->element->getDescription()) echo '<span class="description">' . $this->element->getDescription() . '</span>';
+
+			// I'm sure there's a more elegant way of doing this but I can't think :(
+			if($this->element->getDescription() && $this->element->hasErrors()) echo '<br />';
+
+			if($this->element->hasErrors())
+			{
+				echo '<span class="errors">' . $error_message . '</span>';
+				echo '<input type="hidden" name="errored" value="true" />';
+			}
+
+			echo '</span>';
+		}
+	?>
+	</span>
 	<div class="clear"></div>
 </li>

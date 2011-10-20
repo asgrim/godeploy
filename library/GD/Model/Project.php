@@ -29,9 +29,9 @@ class GD_Model_Project
 	protected $_repository_types_id;
 	protected $_repository_url;
 	protected $_deployment_branch;
-	protected $_public_keys_id;
+	protected $_ssh_keys_id;
 
-	protected $_public_key;
+	protected $_ssh_key;
 
 	public function setId($id)
 	{
@@ -47,10 +47,7 @@ class GD_Model_Project
 	public function setName($value)
 	{
 		$this->_name = (string)$value;
-
-		$slug = strtolower($this->_name);
-		$slug = preg_replace("/[^0-9a-z]/", "-", $slug);
-		$this->setSlug($slug);
+		$this->setSlug(MAL_Util_TextFormatting::MakeSlug($value));
 
 		return $this;
 	}
@@ -104,34 +101,54 @@ class GD_Model_Project
 		return $this->_deployment_branch;
 	}
 
-	public function setPublicKeysId($id)
+	public function setSSHKeysId($id)
 	{
-		$this->_public_keys_id = (int)$id;
+		$this->_ssh_keys_id = (int)$id;
 		return $this;
 	}
 
-	public function getPublicKeysId()
+	public function getSSHKeysId()
 	{
-		return $this->_public_keys_id;
+		return $this->_ssh_keys_id;
 	}
 
-	public function setPublicKey(GD_Model_PublicKey $obj)
+	public function setSSHKey(GD_Model_SSHKey $obj)
 	{
-		$this->_public_key = $obj;
+		$this->_ssh_key = $obj;
 		return $this;
 	}
 
 	/**
-	 * @return GD_Model_PublicKeys
+	 * @return GD_Model_SSHKey
 	 */
-	public function getPublicKey()
+	public function getSSHKey()
 	{
-		if(is_null($this->_public_key))
+		if(is_null($this->_ssh_key))
 		{
-			$this->_public_key = new GD_Model_PublicKey();
-			$this->_public_key->setPublicKeyTypesId(1);
+			$this->_ssh_key = new GD_Model_SSHKey();
+			$this->_ssh_key->setSSHKeyTypesId(1);
 		}
-		return $this->_public_key;
+		return $this->_ssh_key;
 	}
 
+	/**
+	 * @return a GD_Model_DeploymentFile of the latest deployment
+	 */
+	public function getLastDeployment()
+	{
+		$deployments = new GD_Model_DeploymentsMapper();
+		$last_deployment = $deployments->getLastSuccessfulDeployment($this->getId());
+
+		return $last_deployment;
+	}
+
+	/**
+	 * @return int $count number of deployments
+	 */
+	public function getNumDeployments()
+	{
+		$deployments = new GD_Model_DeploymentsMapper();
+		$num_deploymens = $deployments->getNumDeployments($this->getId());
+		return $num_deploymens;
+	}
 }

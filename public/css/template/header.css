@@ -18,7 +18,7 @@
 	}
 
 	#header #logo a {
-		margin-left: 40px;
+		margin-left: 20px;
 		}
 
 #login {
@@ -34,14 +34,27 @@
 #menu {
 	float: right;
 	width: 540px;
-	margin-top: 73px;
+	margin-top: 30px;
+	margin-right: 20px;
 	}
+
+	#menu #menu_heading {
+		float: right;
+		width: 540px;
+		text-align: right;
+		padding: 15px 10px;
+		color: #ffffff;
+		}
 
 	#menu #logged_in_status {
 		float: right;
 		color: #ffffff;
-		padding: 10px 10px 0 0;
+		padding: 10px 5px 0 0;
 		}
+
+		#menu #logged_in_status a {
+			color: #ffffff;
+			}
 
 	#menu ul {
 		margin: 0;
@@ -69,9 +82,25 @@
 			box-shadow: 3px 3px 3px rgba(0,0,0,0.5);
 			}
 
+			#menu a {
+				text-decoration: none;
+				}
+
 			#menu ul li.active {
 				border: 1px solid #bdbdbd;
 				border-bottom: none;
 				background-image: none;
 				background-color: #ffffff;
 				}
+
+				
+#language {
+	float: right;
+	width: 540px;
+	margin-top: 73px;
+	margin-right: 20px;
+	}
+	#language form {
+		float: right;
+		color: #ffffff;
+		}
