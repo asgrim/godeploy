@@ -25,6 +25,8 @@ class GD_Plugin_VerifySetup extends Zend_Controller_Plugin_Abstract
 {
 	public function preDispatch(Zend_Controller_Request_Abstract $request)
 	{
+		if($request->controller == "error") return;
+
 		if((GD_Config::get("setup_complete") === false || GD_Config::get("setup_complete") != "1") && $request->controller != "setup")
 		{
 			$this->startInitialSetup();

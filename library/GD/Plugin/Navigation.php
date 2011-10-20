@@ -32,6 +32,8 @@ class GD_Plugin_Navigation extends Zend_Controller_Plugin_Abstract
 
 	public function preDispatch(Zend_Controller_Request_Abstract $request)
 	{
+		if($request->controller == "error") return;
+
 		$nav = array();
 
 		if ($this->_view->logged_in)

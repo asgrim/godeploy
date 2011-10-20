@@ -42,6 +42,8 @@ class GD_Plugin_Auth extends Zend_Controller_Plugin_Abstract
 
 	public function preDispatch(Zend_Controller_Request_Abstract $request)
 	{
+		if($request->controller == "error") return;
+
 		if ($this->_auth->hasIdentity())
 		{
 			$username = Zend_Auth::getInstance()->getIdentity();
