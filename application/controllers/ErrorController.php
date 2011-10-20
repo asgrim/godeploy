@@ -25,83 +25,93 @@ class ErrorController extends Zend_Controller_Action
 {
 	public function privilegeAction()
 	{
-		header('HTTP/1.1 403 Forbidden');
-		echo "<h1>Access denied (ACL)</h1>";
-		die();
+		$this->_helper->viewRenderer('error');
+		$this->getResponse()->setHttpResponseCode(404);
+
+		$ext_inf = '<p style="text-align: center; font-size: 172px; font-weight: bold; color: #348e1c;">404</p>';
+
+		$this->view->message = _r("Could not find the page you were looking for...");
+		$this->view->extended_information = $ext_inf;
+
+		// Log exception
+		GD_Debug::Log("ACL access denied for URL '{$_SERVER['REQUEST_URI']}'", GD_Debug::DEBUG_BASIC);
 	}
 
 	public function databaseAction()
 	{
-		header('HTTP/1.1 500 Internal Server Error');
-		echo "<h1>Error establishing database connection</h1>";
+		$this->_helper->viewRenderer('error');
+		$this->getResponse()->setHttpResponseCode(500);
 
-		if(APPLICATION_ENV == 'development')
-		{
-			echo "<p>Please check the settings in config.ini</p>";
-			echo "<p>" . $this->_getParam('db_error_detail') . "</p>";
-		}
-		die();
+		$ext_inf = '<p>' . _r("The most likely cause is the settings in the configuration are incorrect or the database server is unavailable. One of the following solutions may help to fix this problem:") . '</p>';
+		$ext_inf .= '<ol>';
+		$ext_inf .= '<li>' . _r("Ensure the database is running") . '</li>';
+		$ext_inf .= '<li>' . _r("Check the settings in") . ' <span style="font-family: monospace;">' . realpath(APPLICATION_PATH . "/configs/config.ini") . '</span> ' . _r("are correct") . '</li>';
+		$ext_inf .= '</ol>';
+
+		$this->view->message = _r("Error establishing database connection");
+		$this->view->extended_information = $ext_inf;
+
+		// Log exception
+		GD_Debug::Log("Database connection failed...", GD_Debug::DEBUG_BASIC);
 	}
 
 	public function recloneAction()
 	{
+		$this->_helper->viewRenderer('error');
+		$this->getResponse()->setHttpResponseCode(500);
+
 		$proj = $this->_getParam('project');
 		$return = $this->_getParam('return');
 
-		echo "<h1>Out of sync</h1>";
-		echo "Repository for '{$proj}' needs recloning.<br />";
-		echo "<a href=\"/project/{$proj}/settings/reclone?return={$return}\">Reclone now</a>";
-		die();
+		$ext_inf = "<p>The repository cache for '{$proj}' has gone wrong somehow and needs re-cloning.</p>";
+		$ext_inf .= "<p>To reclone the repository, <strong><a href=\"/project/{$proj}/settings/reclone?return={$return}\">click this link now</a></strong> and this will hopefully fix the problem.";
+
+		$this->view->message = _r("Local repository cache is out of sync.");
+		$this->view->extended_information = $ext_inf;
+
+		// Log exception
+		GD_Debug::Log("Reclone required for {$proj} (reclone error)", GD_Debug::DEBUG_BASIC);
 	}
 
-    public function errorAction()
-    {
-        $errors = $this->_getParam('error_handler');
+	public function errorAction()
+	{
+		$errors = $this->_getParam('error_handler');
 
-        if (!$errors) {
-            $this->view->message = 'You have reached the error page';
-            return;
-        }
+		if (!$errors) {
+			$this->view->message = 'You have reached the error page';
+			return;
+		}
 
-        switch ($errors->type) {
-            case Zend_Controller_Plugin_ErrorHandler::EXCEPTION_NO_ROUTE:
-            case Zend_Controller_Plugin_ErrorHandler::EXCEPTION_NO_CONTROLLER:
-            case Zend_Controller_Plugin_ErrorHandler::EXCEPTION_NO_ACTION:
+		switch ($errors->type) {
+			case Zend_Controller_Plugin_ErrorHandler::EXCEPTION_NO_ROUTE:
+			case Zend_Controller_Plugin_ErrorHandler::EXCEPTION_NO_CONTROLLER:
+			case Zend_Controller_Plugin_ErrorHandler::EXCEPTION_NO_ACTION:
 
-                // 404 error -- controller or action not found
-                $this->getResponse()->setHttpResponseCode(404);
-                $this->view->message = 'Page not found';
-                break;
-            default:
-                // application error
-                $this->getResponse()->setHttpResponseCode(500);
-                $this->view->message = 'Application error';
-                break;
-        }
+				// 404 error -- controller or action not found
+				$this->getResponse()->setHttpResponseCode(404);
+				$this->view->message = _r("Could not find the page you were looking for...");
+				break;
+			default:
+				// application error
+				$this->getResponse()->setHttpResponseCode(500);
+				$this->view->message = 'Application error';
 
-        // Log exception, if logger available
-        if ($log = $this->getLog()) {
-            $log->crit($this->view->message, $errors->exception);
-        }
+				if($errors->exception instanceof GD_Exception)
+				{
+					$this->view->extended_information = $errors->exception->getMessage();
+				}
+				break;
+		}
 
-        // conditionally display exceptions
-        if ($this->getInvokeArg('displayExceptions') == true) {
-            $this->view->exception = $errors->exception;
-        }
+		// Log exception
+		GD_Debug::Log("Exception: " . $this->view->message, GD_Debug::DEBUG_BASIC);
 
-        $this->view->request   = $errors->request;
-    }
+		// conditionally display exceptions
+		if ($this->getInvokeArg('displayExceptions') == true) {
+			$this->view->exception = $errors->exception;
+		}
 
-    public function getLog()
-    {
-        $bootstrap = $this->getInvokeArg('bootstrap');
-        if (!$bootstrap->hasResource('Log')) {
-            return false;
-        }
-        $log = $bootstrap->getResource('Log');
-        return $log;
-    }
-
-
+		$this->view->request   = $errors->request;
+	}
 }
 
