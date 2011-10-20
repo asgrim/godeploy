@@ -41,6 +41,10 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 		// Config file
 		$cfg_file = APPLICATION_PATH . '/configs/config.ini';
 
+		// Load version
+		$version_conf = new Zend_Config_Ini(APPLICATION_PATH . '/configs/version.ini', 'version');
+		Zend_Registry::set("gd.version", $version_conf->gd->version);
+
 		// Set default database adapter
 		if(file_exists($cfg_file))
 		{
@@ -61,10 +65,6 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 		}
 
 		$translate = GD_Translate::init($use_lang);
-
-		// Load version
-		$version_conf = new Zend_Config_Ini(APPLICATION_PATH . '/configs/version.ini', 'version');
-		Zend_Registry::set("gd.version", $version_conf->gd->version);
 	}
 
 	protected function _initCheckSetup()
