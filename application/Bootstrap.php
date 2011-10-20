@@ -57,6 +57,24 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 			Zend_Db_Table::setDefaultAdapter($adapter);
 			Zend_Registry::set("db", $db_conf);
 
+			// If we're not on the /error/database page, do a DB test, else
+			// we return out to ensure no DB errors later in this Bootstrap fn.
+			if(stripos($_SERVER['REQUEST_URI'], '/error/database') === false)
+			{
+				// Do a database test to ensure we can run queries on the DB. If not
+				// redirect to the error controller in a hacky way.
+				try
+				{
+					$adapter->query("SELECT 1");
+				}
+				catch(Zend_Db_Adapter_Exception $ex)
+				{
+					header("Location: /error/database");
+					die();
+				}
+			}
+			else return;
+
 			$lang = GD_Config::get("language");
 			if($lang !== false)
 			{
