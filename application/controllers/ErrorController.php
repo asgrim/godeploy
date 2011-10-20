@@ -28,7 +28,7 @@ class ErrorController extends Zend_Controller_Action
 		$this->_helper->viewRenderer('error');
 		$this->getResponse()->setHttpResponseCode(404);
 
-		$ext_inf = '<p style="text-align: center; font-size: 172px; font-weight: bold; color: #348e1c;">404</p>';
+		$ext_inf = '<p style="text-align: center; font-size: 172px; font-weight: bold; color: #348e1c;">This = 404</p>';
 
 		$this->view->message = _r("Could not find the page you were looking for...");
 		$this->view->extended_information = $ext_inf;
