@@ -26,7 +26,7 @@ ENGINE = MyISAM;
 
 SET AUTOCOMMIT=0;
 insert into `deployment_statuses` (`id`, `code`, `name`, `image_name`) values (1, 'PREVIEW', 'Previewing', 'view/16x16.png');
-insert into `deployment_statuses` (`id`, `code`, `name`, `image_name`) values (2, 'RUNNING', 'Running', 'running/on_ededed/16x16.png');
+insert into `deployment_statuses` (`id`, `code`, `name`, `image_name`) values (2, 'RUNNING', 'Running', 'running/on_ededed/16x16.gif');
 insert into `deployment_statuses` (`id`, `code`, `name`, `image_name`) values (3, 'COMPLETE', 'Completed (no errors)', 'complete/16x16.png');
 insert into `deployment_statuses` (`id`, `code`, `name`, `image_name`) values (4, 'FAILED', 'Failed - There were errors (see below)', 'failed/16x16.png');
 
@@ -34,7 +34,7 @@ COMMIT;
 
 SET AUTOCOMMIT=0;
 insert into `deployment_file_statuses` (`id`, `code`, `name`, `image_name`) values (1, 'NEW', 'Not started', 'waiting/16x16.png');
-insert into `deployment_file_statuses` (`id`, `code`, `name`, `image_name`) values (2, 'IN_PROGRESS', 'In progress', 'running/on_ffffff/16x16.png');
+insert into `deployment_file_statuses` (`id`, `code`, `name`, `image_name`) values (2, 'IN_PROGRESS', 'In progress', 'running/on_ffffff/16x16.gif');
 insert into `deployment_file_statuses` (`id`, `code`, `name`, `image_name`) values (3, 'COMPLETE', 'Complete', 'complete/16x16.png');
 insert into `deployment_file_statuses` (`id`, `code`, `name`, `image_name`) values (4, 'FAILED', 'Failed', 'failed/16x16.png');
 

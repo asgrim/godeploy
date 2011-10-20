@@ -57,7 +57,10 @@
 					<td title="<?php echo $deployment->getToRevision(); ?>"><?php echo substr($deployment->getToRevision(), 0, 7); ?></td>
 					<td><?php echo $deployment->getComment(); ?></td>
 					<td><?php echo $deployment->getUser()->getName(); ?></td>
-					<td class="nowrap"><?php echo $deployment->getDeploymentStatus()->getShortName(); ?></td>
+					<td class="nowrap">
+						<img src="/images/icons/<?php echo $deployment->getDeploymentStatus()->getImageName(); ?>" alt="icon" />
+						<?php echo $deployment->getDeploymentStatus()->getShortName(); ?>
+					</td>
 					<td class="icon">
 						<a href="<?php echo $this->baseUrl(); ?>/project/<?php echo $this->project->getSlug(); ?>/deploy/result/<?php echo $deployment->getId(); ?>">
 							<img src="/images/icons/view/16x16.png" alt="View &raquo;" title="Click to view this deployment" />

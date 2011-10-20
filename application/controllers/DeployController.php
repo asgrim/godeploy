@@ -325,6 +325,7 @@ class DeployController extends Zend_Controller_Action
 		$file_list = $deployment_files->getDeploymentFilesByDeployment($deployment->getId());
 
 		$file_statuses = array();
+		$file_icons = array();
 
 		$completed_count = 0;
 		foreach($file_list as $file)
@@ -337,6 +338,8 @@ class DeployController extends Zend_Controller_Action
 			{
 				$file_statuses[$file->getId()] = $file->getDeploymentFileStatus()->getName();
 			}
+
+			$file_icons[$file->getId()] = $file->getDeploymentFileStatus()->getImageName();
 
 			if($file->getDeploymentFileStatus()->getCode() != "NEW"
 			    && $file->getDeploymentFileStatus()->getCode() != "IN_PROGRESS")
@@ -364,8 +367,10 @@ class DeployController extends Zend_Controller_Action
 
 		$data = array(
 			"FILES" => $file_statuses,
+			"FILE_ICONS" => $file_icons,
 			"NUM_FILES" => $num_files,
 			"OVERALL" => $deployment_status . $cmp_text,
+			"OVERALL_ICON" => $deployment->getDeploymentStatus()->getImageName(),
 			"COMPLETE" => $complete,
 		);
 

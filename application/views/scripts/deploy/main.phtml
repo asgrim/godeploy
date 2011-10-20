@@ -31,7 +31,10 @@
 					</li>
 					<li>
 						<label><?php _e("Status"); ?></label>
-						<span class="value" id="deployment_status"><?php echo $this->deployment->getDeploymentStatus()->getName(); ?></span>
+						<span class="value" id="deployment_status">
+							<img src="/images/icons/<?php echo $this->deployment->getDeploymentStatus()->getImageName(); ?>" alt="icon" />
+							<?php echo $this->deployment->getDeploymentStatus()->getName(); ?>
+						</span>
 					</li>
 					<li class="submit">
 				<?php
@@ -77,7 +80,10 @@
 			<tr>
 				<td><?php echo $file->getDetails(); ?></td>
 				<td><?php echo $file->getDeploymentFileAction()->getName(); ?></td>
-				<td id="file_<?php echo $file->getId(); ?>_status"><?php echo $file->getDeploymentFileStatus()->getName(); ?></td>
+				<td id="file_<?php echo $file->getId(); ?>_status">
+					<img src="/images/icons/<?php echo $file->getDeploymentFileStatus()->getImageName(); ?>" alt="icon" />
+					<?php echo $file->getDeploymentFileStatus()->getName(); ?>
+				</td>
 			</tr>
 			<?php endforeach; ?>
 		</tbody>

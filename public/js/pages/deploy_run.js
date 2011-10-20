@@ -36,14 +36,14 @@ function fireStatusRequest()
 			var data = response.evalJSON();
 			
 			// Set overall status
-			$('deployment_status').innerHTML = data.OVERALL;
+			$('deployment_status').innerHTML = '<img src="/images/icons/' + data.OVERALL_ICON + '" alt="icon"> ' + data.OVERALL;
 
 			// Set status of each file
 			if(data.NUM_FILES > 0)
 			{
 				for(var x in data.FILES)
 				{
-					$('file_' + x + '_status').innerHTML = data.FILES[x];
+					$('file_' + x + '_status').innerHTML = '<img src="/images/icons/' + data.FILE_ICONS[x] + '" alt="icon"> ' + data.FILES[x];
 				}
 			}
 			
