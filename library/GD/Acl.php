@@ -31,8 +31,6 @@ class GD_Acl extends Zend_Acl
 {
 	public function __construct(Zend_Auth $auth)
 	{
-		#parent::__construct();
-
 		// Add resources
 		$this->add(new Zend_Acl_Resource('index'));
 		$this->add(new Zend_Acl_Resource('error'));

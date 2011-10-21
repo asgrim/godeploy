@@ -21,6 +21,12 @@
  * @author See AUTHORS file
  * @link http://www.godeploy.com/
  */
+
+/**
+ * Validate that a project name is unique by checking the slug against database
+ *
+ * @author jon
+ */
 class GD_Validate_UniqueName extends Zend_Validate_Abstract
 {
 	const ISUNIQUE = 'isunique';

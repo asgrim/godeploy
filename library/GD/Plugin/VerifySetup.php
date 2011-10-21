@@ -21,10 +21,26 @@
  * @author See AUTHORS file
  * @link http://www.godeploy.com/
  */
+
+/**
+ * This controller plugin automatically verifies the app is setup and the
+ * database is the correct version we are expecting
+ *
+ * @author james
+ */
 class GD_Plugin_VerifySetup extends Zend_Controller_Plugin_Abstract
 {
+	/**
+	 * Check if setup is complete. If not, start setup. If it is, check the
+	 * config and database version
+	 *
+	 * (non-PHPdoc)
+	 * @see Zend_Controller_Plugin_Abstract::preDispatch()
+	 */
 	public function preDispatch(Zend_Controller_Request_Abstract $request)
 	{
+		// If we are on the error controller, return immediately to prevent
+		// any database errors happening on error page
 		if($request->controller == "error") return;
 
 		if((GD_Config::get("setup_complete") === false || GD_Config::get("setup_complete") != "1") && $request->controller != "setup")
@@ -44,6 +60,10 @@ class GD_Plugin_VerifySetup extends Zend_Controller_Plugin_Abstract
 		}
 	}
 
+	/**
+	 * Set a session variable to allow setup process to begin, then redirect to
+	 * the setup controller to create a config
+	 */
 	protected function startInitialSetup()
 	{
 		$setup_session = new Zend_Session_Namespace('gd_setup_session');
@@ -64,6 +84,10 @@ class GD_Plugin_VerifySetup extends Zend_Controller_Plugin_Abstract
 		GD_Config::set("debug_level", "0", true);
 	}
 
+	/**
+	 * Check the database version is the version we are expecting. If it isn't,
+	 * attempt to automatically upgrade the database.
+	 */
 	protected function checkDatabaseVersion()
 	{
 		$version_conf = new Zend_Config_Ini(APPLICATION_PATH . '/configs/version.ini', 'version');

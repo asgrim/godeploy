@@ -22,9 +22,28 @@
  * @link http://www.godeploy.com/
  */
 
+/**
+ * Echo a translation directly of $s string
+ * @param string $s
+ */
 function _e($s) { echo GD_Translate::translate($s); }
+
+/**
+ * Return a translation of $s string
+ * @param string $s
+ * @return string Translated text
+ */
 function _r($s) { return GD_Translate::translate($s); }
 
+/**
+ * An easy-peasy class to handle translations using Zend_Translate
+ *
+ * Call GD_Translate::init("english") to initialise the language, and also
+ * declare the above _e and _r functions
+ *
+ * @author james
+ *
+ */
 class GD_Translate
 {
 	/**
@@ -32,8 +51,16 @@ class GD_Translate
 	 */
 	private static $_translate;
 
+	/**
+	 * @var string
+	 */
 	private static $_languages_path;
 
+	/**
+	 * Initialise the Zend_Translate object
+	 *
+	 * @param string $language Name of the language to use
+	 */
 	public static function init($language)
 	{
 		$langfile = self::getLanguagePath() . $language . '.mo';
@@ -51,11 +78,22 @@ class GD_Translate
 		);
 	}
 
+	/**
+	 * Use Zend_Translate object to translate the string specified
+	 *
+	 * @param string $string
+	 * @return string The translated string
+	 */
 	public static function translate($string)
 	{
 		return self::$_translate->_($string);
 	}
 
+	/**
+	 * Get a list of the available languages as an array of strings
+	 *
+	 * @return array
+	 */
 	public static function getAvailableLanguages()
 	{
 		$path = self::getLanguagePath();
@@ -85,6 +123,9 @@ class GD_Translate
 		return $langs;
 	}
 
+	/**
+	 * Get the current language path
+	 */
 	private static function getLanguagePath()
 	{
 		if(!isset(self::$_languages_path))
@@ -94,6 +135,12 @@ class GD_Translate
 		return self::$_languages_path;
 	}
 
+	/**
+	 * Set the current language path from the parameter, or set to default if
+	 * not specified
+	 *
+	 * @param string|null $path
+	 */
 	private static function setLanguagePath($path = null)
 	{
 		if(!is_null($path))

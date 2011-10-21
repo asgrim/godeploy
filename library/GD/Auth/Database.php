@@ -79,6 +79,8 @@ class GD_Auth_Database implements Zend_Auth_Adapter_Interface
 			return new Zend_Auth_Result(Zend_Auth_Result::FAILURE_IDENTITY_NOT_FOUND, $this->_username);
 		}
 
+		// The password is stored with the salt so we need to extract the salt
+		// to re-encrypt the user's password
 		$stored_fullhash = $user->getPassword();
 		$salt_len = strrpos($stored_fullhash, "$") + 1;
 		$salt = substr($stored_fullhash, 0, $salt_len);

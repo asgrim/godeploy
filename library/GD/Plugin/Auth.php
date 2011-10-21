@@ -21,29 +21,65 @@
  * @author See AUTHORS file
  * @link http://www.godeploy.com/
  */
+
+/**
+ * Authentication ACL plugin to ensure the current identity has access to the
+ * resource they requested
+ *
+ * @author james
+ */
 class GD_Plugin_Auth extends Zend_Controller_Plugin_Abstract
 {
+	/**
+	 * @var Zend_Auth
+	 */
 	private $_auth;
+
+	/**
+	 * @var Zend_Acl
+	 */
 	private $_acl;
 
+	/**
+	 * @var array Page to redirect to if no identity found (not logged in)
+	 */
 	private $_noauth = array('module' => 'default',
 							'controller' => 'index',
 							'action' => 'index');
 
+	/**
+	 * @var array Page to redirect to if access to resource is denied
+	 */
 	private $_noacl = array('module' => 'default',
 							'controller' => 'error',
 							'action' => 'privilege');
 
-	public function __construct($auth, $acl)
+	/**
+	 * Create the GD_Plugin_Auth controller plugin
+	 *
+	 * @param Zend_Auth $auth
+	 * @param Zend_Acl $acl
+	 */
+	public function __construct(Zend_Auth $auth, Zend_Acl $acl)
 	{
 		$this->_auth = $auth;
 		$this->_acl = $acl;
 	}
 
+	/**
+	 * Check that the user has an identity (is logged in) and that they have
+	 * sufficient access to the resource (page) requested.
+	 *
+	 * (non-PHPdoc)
+	 * @see Zend_Controller_Plugin_Abstract::preDispatch()
+	 */
 	public function preDispatch(Zend_Controller_Request_Abstract $request)
 	{
+		// If we are on the error controller, return immediately to prevent
+		// any database errors happening on error page
 		if($request->controller == "error") return;
 
+		// First determine what role we have (admin, member or guest)
 		if ($this->_auth->hasIdentity())
 		{
 			$username = Zend_Auth::getInstance()->getIdentity();
@@ -64,6 +100,7 @@ class GD_Plugin_Auth extends Zend_Controller_Plugin_Abstract
 			$role = 'guest';
 		}
 
+		// Set the initial request - these will be unmodified if access allowed
 		$controller = $request->controller;
 		$action = $request->action;
 		$module = $request->module;
@@ -73,6 +110,7 @@ class GD_Plugin_Auth extends Zend_Controller_Plugin_Abstract
 			$resource = null;
 		}
 
+		// Use Zend_Acl to check access permissions
 		if (!$this->_acl->isAllowed($role, $resource, $action))
 		{
 			if (!$this->_auth->hasIdentity())
@@ -89,6 +127,7 @@ class GD_Plugin_Auth extends Zend_Controller_Plugin_Abstract
 			}
 		}
 
+		// If the module/controller/action has changed, change the request
 		if($request->controller != $controller
 			|| $request->action != $action
 			|| $request->module != $module)

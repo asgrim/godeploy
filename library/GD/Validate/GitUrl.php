@@ -21,6 +21,13 @@
  * @author See AUTHORS file
  * @link http://www.godeploy.com/
  */
+
+/**
+ * Validate a git repository URL to make sure it is well formed (but not
+ * necessarily that it is a valid repository)
+ *
+ * @author james
+ */
 class GD_Validate_GitUrl extends Zend_Validate_Abstract
 {
 	const HTTP_NOT_SUPPORTED = 'http_not_supported';

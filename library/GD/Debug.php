@@ -21,15 +21,32 @@
  * @author See AUTHORS file
  * @link http://www.godeploy.com/
  */
+
+/**
+ * Debugging/logging class
+ *
+ * @author james
+ */
 class GD_Debug
 {
+	/**
+	 * @var resource File handle to an open file
+	 */
 	private static $_fh;
+
+	/**
+	 * @var int Current debug level
+	 */
 	private static $_current_debug_level;
 
 	const DEBUG_NONE = 0;
 	const DEBUG_BASIC = 1;
 	const DEBUG_FULL = 2;
 
+	/**
+	 * Set the current debug level or default. If debugging enabled then open
+	 * the file handle and allow logging.
+	 */
 	private static function initialise()
 	{
 		try
@@ -57,6 +74,14 @@ class GD_Debug
 		return true;
 	}
 
+	/**
+	 * Log some debug
+	 *
+	 * @param string $text String to output to debugging log
+	 * @param int $level Debugging level to show this debug on
+	 * @param bool $append_newline Append a \n newline on the end (default true)
+	 * @param bool $prepend_timestamp Prepend timestamp (default true)
+	 */
 	public static function Log($text, $level, $append_newline = true, $prepend_timestamp = true)
 	{
 		if(!self::initialise()) return false;

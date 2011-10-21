@@ -22,6 +22,13 @@
  * @link http://www.godeploy.com/
  */
 
+/**
+ * Base GD exception class - all GD-related exceptions should throw this class
+ * as an exception. It has a "string code" in addition to the standard
+ * exception integer code which is marginally more descriptive and useful.
+ *
+ * @author james
+ */
 class GD_Exception extends Zend_Exception
 {
 	private $_strCode;

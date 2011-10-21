@@ -21,6 +21,12 @@
  * @author See AUTHORS file
  * @link http://www.godeploy.com/
  */
+
+/**
+ * Validate that a user does not already exist in the database
+ *
+ * @author james
+ */
 class GD_Validate_UniqueUser extends Zend_Validate_Abstract
 {
 	const ISUNIQUE = 'isunique';
@@ -31,6 +37,9 @@ class GD_Validate_UniqueUser extends Zend_Validate_Abstract
 
 	private $_current_user;
 
+	/**
+	 * @param int|false $current_user User ID of the current user
+	 */
 	public function __construct($current_user = false)
 	{
 		$this->_current_user = $current_user;

@@ -21,6 +21,12 @@
  * @author See AUTHORS file
  * @link http://www.godeploy.com/
  */
+
+/**
+ * Validate a git branch exists in a real git repository
+ * @author james
+ *
+ */
 class GD_Validate_GitBranch extends Zend_Validate_Abstract
 {
 	const INVALID = 'invalid';
@@ -31,6 +37,9 @@ class GD_Validate_GitBranch extends Zend_Validate_Abstract
 		self::NO_REPO => "Repository did not exist or was not a valid repository",
 	);
 
+	/**
+	 * @var GD_Model_Project
+	 */
 	private $_project;
 
 	public function __construct(GD_Model_Project $project)

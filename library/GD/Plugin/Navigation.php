@@ -21,23 +21,45 @@
  * @author See AUTHORS file
  * @link http://www.godeploy.com/
  */
+
+/**
+ * Controller plugin to initialise the dynamic navigation system
+ * @author jon
+ */
 class GD_Plugin_Navigation extends Zend_Controller_Plugin_Abstract
 {
+	/**
+	 * @var Zend_View
+	 */
 	private $_view;
 
-	public function __construct($view)
+	/**
+	 * Create the navigation controller plugin
+	 *
+	 * @param Zend_View $view
+	 */
+	public function __construct(Zend_View $view)
 	{
 		$this->_view = $view;
 	}
 
+	/**
+	 * Initialise the navigation system
+	 *
+	 * (non-PHPdoc)
+	 * @see Zend_Controller_Plugin_Abstract::preDispatch()
+	 */
 	public function preDispatch(Zend_Controller_Request_Abstract $request)
 	{
+		// If we are on the error controller, return immediately to prevent
+		// any database errors happening on error page
 		if($request->controller == "error") return;
 
 		$nav = array();
 
 		if ($this->_view->logged_in)
 		{
+			// Always add home link
 			$nav[] = array(
 				"label" => "Home",
 				"id" => "home-link",
@@ -79,9 +101,9 @@ class GD_Plugin_Navigation extends Zend_Controller_Plugin_Abstract
 					"uri" => "/profile"
 				);
 
-				$username = Zend_Auth::getInstance()->getIdentity();
-				$userMapper = new GD_Model_UsersMapper();
-				$user = $userMapper->getUserByName($username);
+				// Get the logged in user - if they're an admin, add the admin
+				// menu
+				$user = GD_Auth_Database::GetLoggedInUser();
 
 				if($user->isAdmin())
 				{
@@ -102,9 +124,12 @@ class GD_Plugin_Navigation extends Zend_Controller_Plugin_Abstract
 			);
 		}
 
+		// Create a Zend_Navigation object from the above array
 		$nav = new Zend_Navigation($nav);
 		$this->_view->navigation($nav);
 
+		// This finds out if the current URL matches one of the menu items
+		// and sets the active page if it does.
 		$uri = $request->getRequestUri();
 		$page = $this->_view->navigation()->findOneBy("uri", $uri);
 		if ($page) $page->setActive();

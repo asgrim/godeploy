@@ -22,6 +22,11 @@
  * @link http://www.godeploy.com/
  */
 
+/**
+ * Manage configuration from the database
+ *
+ * @author james
+ */
 class GD_Config
 {
 	/**
@@ -29,8 +34,15 @@ class GD_Config
 	 */
 	private static $_db;
 
+	/**
+	 * @var string Database table name of the configuration table
+	 */
 	private static $_db_table;
 
+	/**
+	 * Should be called before doing any get/set operation to "connect" to the
+	 * database
+	 */
 	private static function initialise()
 	{
 		if(!isset(self::$_db))
@@ -46,6 +58,12 @@ class GD_Config
 		return true;
 	}
 
+	/**
+	 * Get a configuration setting from the database
+	 *
+	 * @param string $key Key of the setting to get
+	 * @return mixed Value of the setting
+	 */
 	public static function get($key)
 	{
 		if(!self::initialise()) return false;
@@ -57,6 +75,17 @@ class GD_Config
 		return self::$_db->fetchOne($select);
 	}
 
+	/**
+	 * Set a configuration setting in the database
+	 *
+	 * If the "$dont_update" parameter is true, if the value already exists,
+	 * don't update it, only insert it if it doesn't exist. Useful for setting
+	 * default configuration values.
+	 *
+	 * @param string $key Key of the setting to set
+	 * @param mixed $value Value of the setting to be set
+	 * @param bool $dont_update Don't update the value if it already exists
+	 */
 	public static function set($key, $value, $dont_update = false)
 	{
 		if(!self::initialise()) return false;

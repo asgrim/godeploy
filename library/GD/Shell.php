@@ -22,6 +22,11 @@
  * @link http://www.godeploy.com/
  */
 
+/**
+ * Extend MAL_Util_Shell to debug any shell commands run
+ *
+ * @author james
+ */
 class GD_Shell extends MAL_Util_Shell
 {
 	public function Exec($cmd, $noisy = false)
