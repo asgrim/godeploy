@@ -59,6 +59,16 @@ class GD_Git extends GD_Shell
 	 */
 	private $_base_gitdir;
 
+	/**
+	 * @var string Path to ssh private key
+	 */
+	private $_ssh_key;
+
+	/**
+	 * @var string Path to the GIT_SSH script
+	 */
+	private $_ssh_script;
+
 	const GIT_REPOTYPE_SSH = 'ssh'; // SSH (read/write)
 	const GIT_REPOTYPE_HTTP = 'http'; // HTTP (read/write)
 	const GIT_REPOTYPE_GIT = 'git'; // Git Read-Only
@@ -119,6 +129,18 @@ class GD_Git extends GD_Shell
 		$this->_current_branch = $this->getCurrentBranch(true);
 	}
 
+	public function __destruct()
+	{
+		if(isset($this->_ssh_key) && file_exists($this->_ssh_key))
+		{
+			unlink($this->_ssh_key);
+		}
+		if(isset($this->_ssh_script) && file_exists($this->_ssh_script))
+		{
+			unlink($this->_ssh_script);
+		}
+	}
+
 	/**
 	 * Overwrite the default SSH command that git uses so we can tell it to use
 	 * our own ssh key
@@ -131,29 +153,30 @@ class GD_Git extends GD_Shell
 		{
 			// Write the id_rsa key to the gitcache
 			$id_rsa = $this->_project->getSSHKey()->getPrivateKey();
+			$project_id = $this->_project->getId();
 
-			$keyfile = $this->_base_gitdir . "id_rsa";
+			$this->_ssh_key = $this->_base_gitdir . "id_rsa." . $project_id;
 
-			if(file_exists($keyfile))
+			if(file_exists($this->_ssh_key))
 			{
-				unlink($keyfile);
+				unlink($this->_ssh_key);
 			}
-			file_put_contents($keyfile, $id_rsa);
-			chmod($keyfile, 0600);
+			file_put_contents($this->_ssh_key, $id_rsa);
+			chmod($this->_ssh_key, 0600);
 
 			// Get the hostname part of the URL
 			$x = strrchr($this->_url, ':');
 			$host = substr($this->_url, 0, -strlen($x));
 			$host = preg_replace("/[^@0-9a-zA-Z-_.]/", "", $host);
 
-			$ssh_cmd = "ssh -T -o StrictHostKeyChecking=no -i {$keyfile} -o  UserKnownHostsFile=/dev/null ";
+			$ssh_cmd = "ssh -T -o StrictHostKeyChecking=no -i {$this->_ssh_key} -o  UserKnownHostsFile=/dev/null ";
 
 			// Use a script file
 			$script = "#!/bin/sh\n\n{$ssh_cmd} $*\n";
-			$script_file = $this->_base_gitdir . "ssh.sh";
-			file_put_contents($script_file, $script);
-			chmod($script_file, 0755);
-			putenv("GIT_SSH={$script_file}");
+			$this->_ssh_script = $this->_base_gitdir . "ssh." . $project_id . ".sh";
+			file_put_contents($this->_ssh_script, $script);
+			chmod($this->_ssh_script, 0755);
+			putenv("GIT_SSH={$this->_ssh_script}");
 
 			// Test the connection
 			$this->runShell("\$GIT_SSH -T -o StrictHostKeyChecking=no {$host}", false);
