@@ -64,7 +64,7 @@ class GDApp_Form_DeploymentSetup extends GD_Form_Abstract
 			->addFilter('StripTags')
 			->addFilter('StringTrim')
 			->addValidator('NotEmpty')
-			->setDescription('<a href="javascript:;" onclick="getLatestRevision();">Click to get latest revision</a><span id="get_latest_revision_status"></span>');$from_revision = new Zend_Form_Element_Text('fromRevision');
+			->setDescription('<a href="javascript:;" onclick="getLatestRevision();">Click to get latest revision</a><span id="get_latest_revision_status"></span>');
 
 		$comment = new Zend_Form_Element_Text('comment');
 		$comment->setLabel(_r('Comment (optional)'))
