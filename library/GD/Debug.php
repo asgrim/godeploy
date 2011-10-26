@@ -66,8 +66,7 @@ class GD_Debug
 		if(!self::$_fh)
 		{
 			$logfile = sys_get_temp_dir() . "/godeploy_log";
-			self::$_fh = fopen($logfile, "a");
-			//chmod($logfile, 0755);
+			self::$_fh = @fopen($logfile, "a");
 
 			if(!self::$_fh) return false;
 		}
