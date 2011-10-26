@@ -10,6 +10,34 @@ class AuthControllerTest extends ControllerTestCase
 		$this->assertQuery('input#password');
 	}
 
+	public function testPostRequestToLoginFormLogsInAndRedirects()
+	{
+		$post = array(
+			'username' => TESTUSER,
+			'password' => TESTPASSWORD,
+		);
+		$this->request->setMethod('POST')->setPost($post);
+
+		$this->dispatch('/auth/login');
+		$this->assertTrue(Zend_Auth::getInstance()->hasIdentity());
+		$this->assertRedirectTo('/home');
+	}
+
+	public function testPostRequestWithIncorrectLoginDoesNotWork()
+	{
+		$post = array(
+			'username' => TESTUSER,
+		);
+		$this->request->setMethod('POST')->setPost($post);
+
+		$this->dispatch('/auth/login');
+		$this->assertFalse(Zend_Auth::getInstance()->hasIdentity());
+		$this->assertNotRedirect();
+		$this->assertController('auth');
+		$this->assertAction('login');
+		$this->assertQuery('div#errors');
+	}
+
 	public function testLogoutRedirect()
 	{
 		$this->loginUser();
@@ -29,5 +57,15 @@ class AuthControllerTest extends ControllerTestCase
 
 		$auth = Zend_Auth::getInstance();
 		$this->assertFalse($auth->hasIdentity());
+	}
+
+	public function testGetAuthAdapterFunctionReturnsAuthAdapter()
+	{
+		$this->dispatch('/');
+
+		$auth_controller = new AuthController($this->request, $this->response, $this->request->getParams());
+		$return_value = $auth_controller->getAuthAdapter(array('username'=>'','password'=>''));
+
+		$this->assertTrue($return_value instanceof Zend_Auth_Adapter_Interface);
 	}
 }
