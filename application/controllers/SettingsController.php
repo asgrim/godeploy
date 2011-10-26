@@ -53,6 +53,7 @@ class SettingsController extends Zend_Controller_Action
 			$new_project = true;
 		}
 		$this->view->project = $project;
+		$this->view->new_project = $new_project;
 
 		// Populate list of servers for this project
 		if ($project->getId() > 0)
