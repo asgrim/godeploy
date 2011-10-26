@@ -51,4 +51,20 @@ class ControllerTestCase extends Zend_Test_PHPUnit_ControllerTestCase
 
 		$this->assertTrue($auth->hasIdentity(), "Failed to login. message='{$message}'");
 	}
+
+	/**
+	 * Return a ReflectionMethod of a private/protected method and make it
+	 * public for testing purposes
+	 *
+	 * @param string $method Name of the method
+	 * @param string $class Name of the class the method contains
+	 * @return ReflectionMethod
+	 */
+	protected static function getPrivateMethod($method, $class)
+	{
+		$class = new ReflectionClass($class);
+		$method = $class->getMethod($method);
+		$method->setAccessible(true);
+		return $method;
+	}
 }

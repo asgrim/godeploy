@@ -59,7 +59,7 @@ class AuthController extends Zend_Controller_Action
 		$this->view->headLink()->appendStylesheet("/css/pages/login.css");
     }
 
-    public function executeLogout()
+    private function executeLogout()
     {
     	$auth = Zend_Auth::getInstance();
 		$auth->clearIdentity();

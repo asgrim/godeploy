@@ -24,7 +24,8 @@ class AuthControllerTest extends ControllerTestCase
 		$this->dispatch('/');
 
 		$auth_controller = new AuthController($this->request, $this->response, $this->request->getParams());
-		$auth_controller->executeLogout();
+		$executeLogoutMethod = self::getPrivateMethod('executeLogout', 'AuthController');
+		$executeLogoutMethod->invokeArgs($auth_controller, array());
 
 		$auth = Zend_Auth::getInstance();
 		$this->assertFalse($auth->hasIdentity());
