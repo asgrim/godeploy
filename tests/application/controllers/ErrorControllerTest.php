@@ -4,20 +4,20 @@ class ErrorControllerTest extends ControllerTestCase
 {
 	public function test404Response()
 	{
-		$this->dispatch('/error/404');
+		$this->dispatch('/error/privilege');
 		$this->assertResponseCode(404);
 	}
 
 	public function test404RedirectResponseGuest()
 	{
-		$this->dispatch('/doesnt/exist');
+		$this->dispatch('/IfThisPageExistsUnitTestsWillFail');
 		$this->assertRedirectTo("/auth/login");
 	}
 
 	public function test404RedirectResponseLoggedIn()
 	{
 		$this->loginUser();
-		$this->dispatch('/ThisTestWillObviouslyFailAsThisPageDoesntExist');
+		$this->dispatch('/IfThisPageExistsUnitTestsWillFail');
 		$this->assertResponseCode(404);
 	}
 }
