@@ -28,7 +28,7 @@ class ControllerTestCase extends Zend_Test_PHPUnit_ControllerTestCase
 
 	public function loginUser()
 	{
-		$adapter = new GD_Auth_Database("testuser", "testpassword");
+		$adapter = new GD_Auth_Database(TESTUSER, TESTPASSWORD);
 		$auth = Zend_Auth::getInstance();
 		$result = $auth->authenticate($adapter);
 
