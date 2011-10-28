@@ -42,7 +42,8 @@
 
    <fileset dir="${basedir}">
     <include name="**/*.php" />
-    <exclude name="**/library/Zend/*.php,**/library/MAL/*.php" />
+    <exclude name="**/library/Zend/*.php" />
+    <exclude name="**/library/MAL/*.php" />
    </fileset>
 
    <fileset dir="${basedir}/tests">
