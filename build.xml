@@ -3,7 +3,7 @@
 <project name="godeploy" default="build">
 
  <target name="build"
-   depends="prepare,lint,phploc,pdepend,phpmd-ci,phpcs-ci,phpdoc,phpunit,phpcb"/>
+   depends="prepare,lint,phploc,pdepend,phpmd-ci,phpcs-ci,phpcpd,phpdoc,phpunit,phpcb"/>
  
  <target name="tools-parallel"
          description="Run tools in parallel">
@@ -95,9 +95,7 @@
 
  <target name="phpcpd" description="Find duplicate code using PHPCPD">
   <exec executable="phpcpd">
-   <arg value="--log-pmd" />
-   <arg value="${basedir}/build/logs/pmd-cpd.xml" />
-   <arg path="${basedir}" />
+   <arg  line="--log-pmd ${basedir}/build/logs/pmd-cpd.xml --exclude library/Zend --exclude library/MAL ${basedir}" />
   </exec>
  </target>
  
