@@ -131,7 +131,7 @@
  <target name="phpcb"
          description="Aggregate tool output with PHP_CodeBrowser">
   <exec executable="phpcb">
-   <arg line="-- log ${basedir}/build/logs --source ${basedir} --exclude library/Zend/ --exclude library/MAL/ --output ${basedir}/build/code-browser" />
+   <arg line="--log ${basedir}/build/logs --source ${basedir} --ignore library/Zend,library/MAL --output ${basedir}/build/code-browser" />
   </exec>
  </target>
 
