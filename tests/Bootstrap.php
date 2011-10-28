@@ -23,6 +23,7 @@ set_include_path(implode(PATH_SEPARATOR, array('.', $rootPath . '/library', get_
 require_once 'Zend/Loader/Autoloader.php';
 $loader = Zend_Loader_Autoloader::getInstance();
 $loader->registerNamespace('GD_');
+$loader->registerNamespace('MAL_');
 
 require_once $rootPath . '/tests/application/ControllerTestCase.php';
 
