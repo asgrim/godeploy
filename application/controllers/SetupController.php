@@ -125,11 +125,6 @@ class SetupController extends Zend_Controller_Action
 			"NOT_CRITICAL" => true,
 		);
 
-		$requirements[_r("HOME directory environment variable is set")] = array(
-			"ACTUAL" => getenv('HOME'),
-			"RESULT" => getenv('HOME') != '',
-		);
-
 		$cfg_test = APPLICATION_PATH . "/configs/config.ini";
 		$fh = @fopen($cfg_test, "a+");
 		$requirements[_r("Config file writable")] = array(
