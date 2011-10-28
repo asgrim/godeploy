@@ -24,14 +24,7 @@
  
  <target name="phpdoc" description="Generate API documentation using PHPDocumentor">
   <exec executable="phpdoc">
-   <arg value="--directory" />
-   <arg path="${basedir}" />
-   <arg value="--target" />
-   <arg path="${basedir}/build/api" />
-   <arg value="--ignore" />
-   <arg path="${basedir}/library/Zend/" />
-   <arg value="--ignore" />
-   <arg path="${basedir}/library/MAL/" />
+   <arg line="--directory ${basedir} --target ${basedir}/build/api --ignore ${basedir}/library/Zend/,${basedir}/library/MAL/" />
   </exec>
  </target>
 
