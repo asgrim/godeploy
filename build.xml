@@ -68,7 +68,7 @@
  <target name="phpmd"
          description="Perform project mess detection using PHPMD">
   <exec executable="phpmd">
-   <arg line="${basedir} text --exclude=library/Zend,library/MAL ${basedir}/phpmd.xml" />
+   <arg line="${basedir} text ${basedir}/phpmd.xml --exclude library/Zend,library/MAL" />
   </exec>
  </target>
 
