@@ -3,7 +3,7 @@
 <project name="godeploy" default="build">
 
  <target name="build"
-   depends="prepare,lint,phploc,phpdoc,phpunit,phpcb"/>
+   depends="prepare,lint,phploc,pdepend,phpdoc,phpunit,phpcb"/>
  
  <target name="tools-parallel"
          description="Run tools in parallel">
@@ -61,10 +61,7 @@
  <target name="pdepend"
          description="Calculate software metrics using PHP_Depend">
   <exec executable="pdepend">
-   <arg value="--jdepend-xml=${basedir}/build/logs/jdepend.xml" />
-   <arg value="--jdepend-chart=${basedir}/build/pdepend/dependencies.svg" />
-   <arg value="--overview-pyramid=${basedir}/build/pdepend/overview-pyramid.svg" />
-   <arg path="${basedir}" />
+   <arg line="--jdepend-xml=${basedir}/build/logs/jdepend.xml --jdepend-chart=${basedir}/build/pdepend/dependencies.svg --overview-pyramid=${basedir}/build/pdepend/overview-pyramid.svg --ignore=library/Zend,library/MAL ${basedir}" />
   </exec>
  </target>
 
