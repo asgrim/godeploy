@@ -28,6 +28,10 @@
    <arg path="${basedir}" />
    <arg value="--target" />
    <arg path="${basedir}/build/api" />
+   <arg value="--ignore" />
+   <arg path="${basedir}/library/Zend" />
+   <arg value="--ignore" />
+   <arg path="${basedir}/library/MAL" />
   </exec>
  </target>
 
