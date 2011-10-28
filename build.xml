@@ -3,7 +3,7 @@
 <project name="godeploy" default="build">
 
  <target name="build"
-   depends="prepare,phpunit"/>
+   depends="prepare,phpdoc,phpunit"/>
 
  <target name="clean" description="Cleanup build artifacts">
   <delete dir="${basedir}/build/api"/>
@@ -20,6 +20,15 @@
   <mkdir dir="${basedir}/build/coverage"/>
   <mkdir dir="${basedir}/build/logs"/>
   <mkdir dir="${basedir}/build/pdepend"/>
+ </target>
+ 
+ <target name="phpdoc" description="Generate API documentation using PHPDocumentor">
+  <exec executable="phpdoc">
+   <arg value="--directory" />
+   <arg path="${source}" />
+   <arg value="--target" />
+   <arg path="${basedir}/build/api" />
+  </exec>
  </target>
 
  <target name="phpunit" description="Run unit tests with PHPUnit">
