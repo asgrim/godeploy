@@ -3,7 +3,7 @@
 <project name="godeploy" default="build">
 
  <target name="build"
-   depends="prepare,lint,phpdoc,phpunit,phpcb"/>
+   depends="prepare,lint,phploc,phpdoc,phpunit,phpcb"/>
  
  <target name="tools-parallel"
          description="Run tools in parallel">
