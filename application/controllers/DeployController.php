@@ -375,7 +375,7 @@ class DeployController extends Zend_Controller_Action
 		);
 
 		// Output stuff
-		$this->_response->setHeader('Content-type','text/plain');
+		$this->_response->setHeader('Content-type', 'text/plain');
 		$this->_helper->viewRenderer->setNoRender();
 		$this->_helper->layout->disableLayout();
 
@@ -552,7 +552,7 @@ class DeployController extends Zend_Controller_Action
 			$from_rev = "";
 		}
 
-		$this->_response->setHeader('Content-type','text/plain');
+		$this->_response->setHeader('Content-type', 'text/plain');
 		$this->_helper->viewRenderer->setNoRender();
 		$this->_helper->layout->disableLayout();
 
@@ -587,7 +587,7 @@ class DeployController extends Zend_Controller_Action
 			$data['toRevision'] = $to_revision;
 		}
 
-		$this->_response->setHeader('Content-type','text/plain');
+		$this->_response->setHeader('Content-type', 'text/plain');
 		$this->_helper->viewRenderer->setNoRender();
 		$this->_helper->layout->disableLayout();
 
