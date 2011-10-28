@@ -60,7 +60,7 @@ class HistoryController extends Zend_Controller_Action
 		$this->populateView();
 
 		// Disable Zend view rendering and set content type
-		$this->_response->setHeader('Content-type','text/plain');
+		$this->_response->setHeader('Content-type', 'text/plain');
 		$this->_helper->viewRenderer->setNoRender();
 		$this->_helper->layout->disableLayout();
 
@@ -90,7 +90,7 @@ class HistoryController extends Zend_Controller_Action
 		$this->populateView();
 
 		// Disable Zend layout rendering and set content type
-		$this->_response->setHeader('Content-type','text/plain');
+		$this->_response->setHeader('Content-type', 'text/plain');
 		$this->_helper->layout->disableLayout();
 
 		$this->_helper->viewRenderer('csv');
@@ -109,7 +109,7 @@ class HistoryController extends Zend_Controller_Action
 		);
 
 		// Disable Zend view rendering and set content type
-		$this->_response->setHeader('Content-type','text/xml');
+		$this->_response->setHeader('Content-type', 'text/xml');
 		$this->_helper->viewRenderer->setNoRender();
 		$this->_helper->layout->disableLayout();
 

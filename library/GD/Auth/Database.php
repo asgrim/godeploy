@@ -91,12 +91,12 @@ class GD_Auth_Database implements Zend_Auth_Adapter_Interface
 		// If we passed the tests, then we successfully authenticated
 		if($this->_username == $user->getName() && $compare_hash == $user->getPassword())
 		{
-			return new Zend_Auth_Result(Zend_Auth_Result::SUCCESS,$this->_username);
+			return new Zend_Auth_Result(Zend_Auth_Result::SUCCESS, $this->_username);
 		}
 		else
 		{
 			GD_Debug::Log("Authentication failure - incorrect password for '{$this->_username}'.", GD_Debug::DEBUG_BASIC);
-			return new Zend_Auth_Result(Zend_Auth_Result::FAILURE_CREDENTIAL_INVALID,$this->_username);
+			return new Zend_Auth_Result(Zend_Auth_Result::FAILURE_CREDENTIAL_INVALID, $this->_username);
 		}
 	}
 

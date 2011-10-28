@@ -90,6 +90,6 @@ class GD_Crypt extends MAL_Crypt
 	 */
 	public function makeHash($password)
 	{
-		return crypt($password, '$6$rounds=5000$' . substr(md5(microtime().rand()),0,16) . '$');
+		return crypt($password, '$6$rounds=5000$' . substr(md5(microtime().rand()), 0, 16) . '$');
 	}
 }
