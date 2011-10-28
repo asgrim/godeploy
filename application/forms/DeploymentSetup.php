@@ -2,7 +2,7 @@
 
 /**
  * GoDeploy deployment application
- * Copyright (C) 2011 James Titcumb, Simon Wade
+ * Copyright (C) 2011 the authors listed in AUTHORS file
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @copyright 2011 GoDeploy
- * @author James Titcumb, Simon Wade
+ * @author See AUTHORS file
  * @link http://www.godeploy.com/
  */
 class GDApp_Form_DeploymentSetup extends GD_Form_Abstract
@@ -64,7 +64,7 @@ class GDApp_Form_DeploymentSetup extends GD_Form_Abstract
 			->addFilter('StripTags')
 			->addFilter('StringTrim')
 			->addValidator('NotEmpty')
-			->setDescription('<a href="javascript:;" onclick="getLatestRevision();">Click to get latest revision</a><span id="get_latest_revision_status"></span>');$from_revision = new Zend_Form_Element_Text('fromRevision');
+			->setDescription('<a href="javascript:;" onclick="getLatestRevision();">Click to get latest revision</a><span id="get_latest_revision_status"></span>');
 
 		$comment = new Zend_Form_Element_Text('comment');
 		$comment->setLabel(_r('Comment (optional)'))

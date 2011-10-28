@@ -2,7 +2,7 @@
 
 /**
  * GoDeploy deployment application
- * Copyright (C) 2011 James Titcumb, Simon Wade
+ * Copyright (C) 2011 the authors listed in AUTHORS file
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,24 +18,56 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @copyright 2011 GoDeploy
- * @author James Titcumb, Simon Wade
+ * @author See AUTHORS file
  * @link http://www.godeploy.com/
  */
 
 /**
- * Git wrapper, unwritten yet...
+ * Git wrapper - wrap standard git functions into a highl
  * @author james
  *
  */
 class GD_Git extends GD_Shell
 {
+	/**
+	 * @var string Remote repository URL
+	 */
 	private $_url;
+
+	/**
+	 * @var GD_Model_Project
+	 */
 	private $_project;
+
+	/**
+	 * @var string Path to this instance's git respository
+	 */
 	private $_gitdir;
+
+	/**
+	 * @var string Current branch of the repository
+	 */
 	private $_current_branch;
+
+	/**
+	 * @var string Type of the origin repository (ssh/git etc.)
+	 */
 	private $_repotype;
 
+	/**
+	 * @var string Base gitcache directory
+	 */
 	private $_base_gitdir;
+
+	/**
+	 * @var string Path to ssh private key
+	 */
+	private $_ssh_key;
+
+	/**
+	 * @var string Path to the GIT_SSH script
+	 */
+	private $_ssh_script;
 
 	const GIT_REPOTYPE_SSH = 'ssh'; // SSH (read/write)
 	const GIT_REPOTYPE_HTTP = 'http'; // HTTP (read/write)
@@ -74,10 +106,6 @@ class GD_Git extends GD_Shell
 		{
 			throw new GD_Exception("Repository type HTTP/HTTPS not supported yet.");
 		}
-		/*if($this->_repotype == self::GIT_REPOTYPE_SSH)
-		{
-			throw new GD_Exception("Repository type Git (read+write via SSH) not supported yet.");
-		}*/
 
 		if(!file_exists($this->_base_gitdir))
 		{
@@ -101,35 +129,54 @@ class GD_Git extends GD_Shell
 		$this->_current_branch = $this->getCurrentBranch(true);
 	}
 
+	public function __destruct()
+	{
+		if(isset($this->_ssh_key) && file_exists($this->_ssh_key))
+		{
+			unlink($this->_ssh_key);
+		}
+		if(isset($this->_ssh_script) && file_exists($this->_ssh_script))
+		{
+			unlink($this->_ssh_script);
+		}
+	}
+
+	/**
+	 * Overwrite the default SSH command that git uses so we can tell it to use
+	 * our own ssh key
+	 *
+	 * @throws GD_Exception
+	 */
 	private function sshKeys()
 	{
 		if($this->_repotype == self::GIT_REPOTYPE_SSH)
 		{
 			// Write the id_rsa key to the gitcache
 			$id_rsa = $this->_project->getSSHKey()->getPrivateKey();
+			$project_id = $this->_project->getId();
 
-			$keyfile = $this->_base_gitdir . "id_rsa";
+			$this->_ssh_key = $this->_base_gitdir . "id_rsa." . $project_id;
 
-			if(file_exists($keyfile))
+			if(file_exists($this->_ssh_key))
 			{
-				unlink($keyfile);
+				unlink($this->_ssh_key);
 			}
-			file_put_contents($keyfile, $id_rsa);
-			chmod($keyfile, 0600);
+			file_put_contents($this->_ssh_key, $id_rsa);
+			chmod($this->_ssh_key, 0600);
 
 			// Get the hostname part of the URL
 			$x = strrchr($this->_url, ':');
 			$host = substr($this->_url, 0, -strlen($x));
 			$host = preg_replace("/[^@0-9a-zA-Z-_.]/", "", $host);
 
-			$ssh_cmd = "ssh -T -o StrictHostKeyChecking=no -i {$keyfile} -o  UserKnownHostsFile=/dev/null ";
+			$ssh_cmd = "ssh -T -o StrictHostKeyChecking=no -i {$this->_ssh_key} -o  UserKnownHostsFile=/dev/null ";
 
 			// Use a script file
 			$script = "#!/bin/sh\n\n{$ssh_cmd} $*\n";
-			$script_file = $this->_base_gitdir . "ssh.sh";
-			file_put_contents($script_file, $script);
-			chmod($script_file, 0755);
-			putenv("GIT_SSH={$script_file}");
+			$this->_ssh_script = $this->_base_gitdir . "ssh." . $project_id . ".sh";
+			file_put_contents($this->_ssh_script, $script);
+			chmod($this->_ssh_script, 0755);
+			putenv("GIT_SSH={$this->_ssh_script}");
 
 			// Test the connection
 			$this->runShell("\$GIT_SSH -T -o StrictHostKeyChecking=no {$host}", false);
@@ -178,6 +225,14 @@ class GD_Git extends GD_Shell
 		}
 	}
 
+	/**
+	 * Determine the repository type of a URL
+	 *
+	 * Note this does not check for URL validity
+	 *
+	 * @param string $url
+	 * @return string
+	 */
 	private function parseRepoType($url)
 	{
 		if(substr($url, 0, 6) == "git://")
@@ -194,11 +249,18 @@ class GD_Git extends GD_Shell
 		}
 	}
 
+	/**
+	 * Get the local cached repository directory
+	 */
 	public function getGitDir()
 	{
 		return $this->_gitdir . "/";
 	}
 
+	/**
+	 * Delete a folder recursively on the local path
+	 * @param string $path Folder to delete
+	 */
 	private function deleteFolderRecursively($path)
 	{
 		if(is_dir($path))
@@ -228,11 +290,21 @@ class GD_Git extends GD_Shell
 		}
 	}
 
+	/**
+	 * Delete the current local git repository cache
+	 */
 	public function deleteRepository()
 	{
 		$this->deleteFolderRecursively($this->_gitdir);
 	}
 
+	/**
+	 * Probe the repository to determine what branch we are currently on
+	 *
+	 * @param bool $silent Do not throw exceptions if something goes wrong
+	 * @throws GD_Exception
+	 * @return string|false Branch name or false if failed
+	 */
 	public function getCurrentBranch($silent = false)
 	{
 		$this->runShell('git status');
@@ -245,6 +317,7 @@ class GD_Git extends GD_Shell
 				{
 					throw new GD_Exception("Git repository for {$this->_project->getName()} was not on a branch.", self::GIT_STATUS_ERROR_NOT_ON_BRANCH);
 				}
+				else return false;
 			}
 			else if(preg_match("/# On branch ([a-zA-Z0-9-.]*)/", $this->_last_output[0], $matches))
 			{
@@ -252,7 +325,11 @@ class GD_Git extends GD_Shell
 			}
 			else
 			{
-				throw new GD_Exception("Unhandled error in getCurrentBranch", self::GIT_STATUS_ERROR_UNKNOWN);
+				if(!$silent)
+				{
+					throw new GD_Exception("Unhandled error in getCurrentBranch", self::GIT_STATUS_ERROR_UNKNOWN);
+				}
+				else return false;
 			}
 		}
 		else
@@ -261,9 +338,16 @@ class GD_Git extends GD_Shell
 			{
 				throw new GD_Exception("Git status did not work.", self::GIT_STATUS_ERROR_UNKNOWN);
 			}
+			else return false;
 		}
 	}
 
+	/**
+	 * Change the currently checked out reference
+	 *
+	 * @param string $ref branch/commit etc.
+	 * @return bool True on successful checkout, false on failure
+	 */
 	public function gitCheckout($ref)
 	{
 		$this->runShell('git checkout ' . $this->sanitizeRef($ref));
@@ -278,6 +362,18 @@ class GD_Git extends GD_Shell
 		}
 	}
 
+	/**
+	 * Parse a single line of a --pretty=oneline git log command
+	 *
+	 * Returns an array like:
+	 *   array(
+	 *     "HASH" => "abc...",
+	 *     "MESSAGE" => "Commit message",
+	 *   )
+	 *
+	 * @param string $line Line to parse
+	 * @return array
+	 */
 	private function parsePrettyOneline($line)
 	{
 		$raw_commit_info = explode(" ", $line, 2);
@@ -287,6 +383,12 @@ class GD_Git extends GD_Shell
 		return $commit_info;
 	}
 
+	/**
+	 * Run a shell command and parse results parsePrettyOneline
+	 *
+	 * @param string $cmd
+	 * @return array|string Array on success, string on failure
+	 */
 	private function getSingleLog($cmd)
 	{
 		$this->runShell($cmd);
@@ -301,16 +403,33 @@ class GD_Git extends GD_Shell
 		}
 	}
 
+	/**
+	 * Fetch the last commit on the repository
+	 *
+	 * @return array|string Array on success, string on failure
+	 */
 	public function getLastCommit()
 	{
 		return $this->getSingleLog('git log -n1 --pretty=oneline');
 	}
 
+	/**
+	 * Fetch the first ever commit on the repository
+	 *
+	 * @return array|string Array on success, string on failure
+	 */
 	public function getFirstCommit()
 	{
 		return $this->getSingleLog('git log --pretty=oneline | tail -1');
 	}
 
+	/**
+	 * Convert a tag or short hash into a full commit hash
+	 *
+	 * @param string $ref tag or short hash
+	 * @throws GD_Exception
+	 * @return string Full commit hash
+	 */
 	public function getFullHash($ref)
 	{
 		$nice_ref = $this->sanitizeRef($ref);
@@ -332,6 +451,31 @@ class GD_Git extends GD_Shell
 		}
 	}
 
+	/**
+	 * Get a list of files changed in an array of files changed between two
+	 * revisions
+	 *
+	 * Returns an array of arrays like:
+	 *   array(
+	 *     array(
+	 *       'action' => 'D',
+	 *       'file' => 'path/to/file',
+	 *     ),
+	 *     array(
+	 *       'action' => 'M',
+	 *       'file' => 'path/to/file',
+	 *     ),
+	 *     array(
+	 *       'action' => 'A',
+	 *       'file' => 'path/to/file',
+	 *     ),
+	 *   )
+	 *
+	 * @param string $from_rev
+	 * @param string $to_rev
+	 * @throws GD_Exception
+	 * @return array
+	 */
 	public function getFilesChangedList($from_rev, $to_rev)
 	{
 		if($from_rev == "")
@@ -386,6 +530,13 @@ class GD_Git extends GD_Shell
 		return $file_list;
 	}
 
+	/**
+	 * Perform a git pull command
+	 *
+	 * @param string $branch
+	 * @param string $remote
+	 * @return bool|string True on success or string on failure
+	 */
 	public function gitPull($branch = "", $remote = "")
 	{
 		// TODO - Clean arguments (only accept valid branch/remote characters)
@@ -411,6 +562,9 @@ class GD_Git extends GD_Shell
 		}
 	}
 
+	/**
+	 * Clone a repository if it doesn't exist, or pull a repository if it exists
+	 */
 	public function gitCloneOrPull()
 	{
 		$clone_error = $this->gitClone();
@@ -424,6 +578,11 @@ class GD_Git extends GD_Shell
 		}
 	}
 
+	/**
+	 * Perform a git clone, reset and set up core.filemode false
+	 *
+	 * @return bool|string True on succes, string on failure
+	 */
 	public function gitClone()
 	{
 		$this->sshKeys();
@@ -461,6 +620,14 @@ class GD_Git extends GD_Shell
 		}
 	}
 
+	/**
+	 * Check the current repository is a valid Git repository
+	 *
+	 * Note - throws a GD_Exception if it is NOT a valid git repository
+	 *
+	 * @throws GD_Exception
+	 * @return boolean True on success
+	 */
 	public function checkValidRepository()
 	{
 		$this->runShell('git remote -v | grep origin | grep fetch', true);
@@ -487,6 +654,13 @@ class GD_Git extends GD_Shell
 		throw new GD_Exception("Unknown error", 0, self::GIT_STATUS_ERROR_UNKNOWN);
 	}
 
+	/**
+	 * Extend MAL_Shell to allow a chdir before running a Git command
+	 *
+	 * @param string $cmd Command to run
+	 * @param bool $chdir Change directory before running command
+	 * @param bool $noisy Whether to output debug
+	 */
 	private function runShell($cmd, $chdir = true, $noisy = false)
 	{
 		if($chdir)
@@ -501,6 +675,12 @@ class GD_Git extends GD_Shell
 		parent::Exec($cmd, $noisy);
 	}
 
+	/**
+	 * Sanitise a reference
+	 *
+	 * @param string $ref
+	 * @return string Sanitised reference
+	 */
 	private function sanitizeRef($ref)
 	{
 		$new_ref = $ref;

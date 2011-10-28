@@ -28,7 +28,7 @@
 
 	</div></div></div>
 
-	<?php if(!is_null($this->project->getId())): ?>
+	<?php if(!$this->new_project): ?>
 	<div class="padding_20"></div>
 	<div id="table"><div class="wrapper w_ededed"><div class="content">
 		<div class="padding_15"></div>
@@ -74,9 +74,11 @@
 </div>
 <div class="clear"></div>
 
+<?php if(!$this->new_project): ?>
 <div class="content align_right">
 	<a href="/project/<?php echo $this->project->getSlug(); ?>/settings/confirm-delete"><?php _e("Click here"); ?></a> <?php _e("to delete the project."); ?>
 </div>
+<?php endif; ?>
 
 <script type="text/JavaScript">
 /* <![CDATA[ */

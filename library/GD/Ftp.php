@@ -2,7 +2,7 @@
 
 /**
  * GoDeploy deployment application
- * Copyright (C) 2011 James Titcumb, Simon Wade
+ * Copyright (C) 2011 the authors listed in AUTHORS file
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,26 +18,56 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @copyright 2011 GoDeploy
- * @author James Titcumb, Simon Wade
+ * @author See AUTHORS file
  * @link http://www.godeploy.com/
  */
 
 /**
- * FTP wrapper
- * @author james
+ * FTP wrapper - handle uploading, deleting and FTP connections in OOP form
  *
+ * @author james
  */
 class GD_Ftp
 {
+	/**
+	 * @var string Hostname of the server to connect to
+	 */
 	private $_hostname;
+
+	/**
+	 * @var string Username to use to connect to the server
+	 */
 	private $_username;
+
+	/**
+	 * @var string Password to use to connect to the server
+	 */
 	private $_password;
+
+	/**
+	 * @var int Port number (default 21)
+	 */
 	private $_port;
+
+	/**
+	 * @var string Default remote path - absolute or relative to start in when
+	 *             connected
+	 */
 	private $_remote_path;
 
+	/**
+	 * @var resource Resource handle to the FTP server
+	 */
 	private $_handle;
+
+	/**
+	 * @var string Default present/current working directory
+	 */
 	private $_pwd;
 
+	/**
+	 * @var mixed Last error message
+	 */
 	private $_last_error;
 
 	public function __construct(GD_Model_Server $server)
@@ -59,6 +89,9 @@ class GD_Ftp
 		return $this->_last_error;
 	}
 
+	/**
+	 * Reset the pwd to the default pwd we set on connection
+	 */
 	private function resetPwd()
 	{
 		if(!$this->_handle)
@@ -68,6 +101,15 @@ class GD_Ftp
 		ftp_chdir($this->_handle, $this->_pwd);
 	}
 
+	/**
+	 * Do a connection test - connect, upload a file, delete it and disconnect.
+	 * Returns true on success, false on failure.
+	 *
+	 * If there was an error, we try to populate $this->_last_error which can
+	 * be fetched externally with $ftp->getLastError();
+	 *
+	 * @return bool
+	 */
 	public function testConnection()
 	{
 		try
@@ -96,6 +138,14 @@ class GD_Ftp
 		}
 	}
 
+	/**
+	 * Forcefully try to change to a directory by creating the path if it
+	 * doesn't exist on the remote server.
+	 *
+	 * @param string $dir Directory to change to on the remote server
+	 * @throws GD_Exception
+	 * @return bool True on success
+	 */
 	private function ftpChangeOrMakeDirectory($dir)
 	{
 		$folders = explode("/", $dir);
@@ -135,6 +185,13 @@ class GD_Ftp
 		return true;
 	}
 
+	/**
+	 * Upload a file to the FTP server
+	 *
+	 * @param string $local_file File to upload
+	 * @param string $remote_file File to upload to on remote server
+	 * @throws GD_Exception
+	 */
 	public function upload($local_file, $remote_file)
 	{
 		if(!$this->_handle)
@@ -153,6 +210,12 @@ class GD_Ftp
 		$this->resetPwd();
 	}
 
+	/**
+	 * Delete a file from the FTP server
+	 *
+	 * @param string $remote_file File to delete
+	 * @throws GD_Exception
+	 */
 	public function delete($remote_file)
 	{
 		if(!$this->_handle)
@@ -171,6 +234,11 @@ class GD_Ftp
 		$this->resetPwd();
 	}
 
+	/**
+	 * Connect to the FTP server using PHP's builtin FTP functions
+	 *
+	 * @throws GD_Exception
+	 */
 	public function connect()
 	{
 		$this->_handle = @ftp_connect($this->_hostname, $this->_port, 10);
@@ -190,6 +258,10 @@ class GD_Ftp
 		$this->_pwd = ftp_pwd($this->_handle);
 	}
 
+	/**
+	 * Disconnect from the currently connected FTP server, if currently
+	 * connected.
+	 */
 	public function disconnect()
 	{
 		if($this->_handle)

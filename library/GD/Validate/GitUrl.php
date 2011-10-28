@@ -2,7 +2,7 @@
 
 /**
  * GoDeploy deployment application
- * Copyright (C) 2011 James Titcumb, Simon Wade
+ * Copyright (C) 2011 the authors listed in AUTHORS file
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,8 +18,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @copyright 2011 GoDeploy
- * @author James Titcumb, Simon Wade, Jon Wigham
+ * @author See AUTHORS file
  * @link http://www.godeploy.com/
+ */
+
+/**
+ * Validate a git repository URL to make sure it is well formed (but not
+ * necessarily that it is a valid repository)
+ *
+ * @author james
  */
 class GD_Validate_GitUrl extends Zend_Validate_Abstract
 {
