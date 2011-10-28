@@ -68,18 +68,14 @@
  <target name="phpmd"
          description="Perform project mess detection using PHPMD">
   <exec executable="phpmd">
-   <arg line="${basedir} text --exclude=library/Zend,library/MAL ${basedir}/phpmd.xml" />
+   <arg line="${basedir} text ${basedir}/phpmd.xml --exclude library/Zend,library/MAL" />
   </exec>
  </target>
 
  <target name="phpmd-ci"
          description="Perform project mess detection using PHPMD">
   <exec executable="phpmd">
-   <arg path="${basedir}" />
-   <arg value="xml" />
-   <arg value="${basedir}/build/phpmd.xml" />
-   <arg value="--reportfile" />
-   <arg value="${basedir}/build/logs/pmd.xml" />
+   <arg line="${basedir} xml ${basedir}/phpmd.xml --exclude library/Zend,library/MAL --reportfile ${basedir}/build/logs/pmd.xml" />
   </exec>
  </target>
 
