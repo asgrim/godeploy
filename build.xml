@@ -39,21 +39,15 @@
  <target name="lint">
   <apply executable="php" failonerror="true">
    <arg value="-l" />
-
+   
    <fileset dir="${basedir}">
     <include name="**/*.php" />
+    <exclude name="library/Zend/**/*.php" />
+    <exclude name="library/MAL/**/*.php" />
    </fileset>
 
    <fileset dir="${basedir}/tests">
     <include name="**/*.php" />
-   </fileset>
-
-   <fileset dir="${basedir}/library/Zend">
-    <exclude name="**/*.php" />
-   </fileset>
-
-   <fileset dir="${basedir}/library/MAL">
-    <exclude name="**/*.php" />
    </fileset>
   </apply>
  </target>
