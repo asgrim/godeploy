@@ -4,6 +4,9 @@
 
  <target name="build"
    depends="prepare,lint,phploc,pdepend,phpmd-ci,phpcs-ci,phpcpd,phpdoc,phpunit,phpcb"/>
+
+ <target name="build-parallel"
+   depends="prepare,lint,tools-parallel,phpunit,phpcb"/>
  
  <target name="tools-parallel"
          description="Run tools in parallel">
@@ -44,6 +47,7 @@
     <include name="**/*.php" />
     <exclude name="library/Zend/**/*.php" />
     <exclude name="library/MAL/**/*.php" />
+    <exclude name="gitcache/**/*" />
    </fileset>
 
    <fileset dir="${basedir}/tests">
@@ -54,54 +58,54 @@
  
  <target name="phploc" description="Measure project size using PHPLOC">
   <exec executable="phploc">
-   <arg line="--log-csv ${basedir}/build/logs/phploc.csv --exclude library/Zend --exclude library/MAL ${basedir}" />
+   <arg line="--log-csv ${basedir}/build/logs/phploc.csv --exclude library/Zend --exclude library/MAL --exclude gitcache ${basedir}" />
   </exec>
  </target>
 
  <target name="pdepend"
          description="Calculate software metrics using PHP_Depend">
   <exec executable="pdepend">
-   <arg line="--jdepend-xml=${basedir}/build/logs/jdepend.xml --jdepend-chart=${basedir}/build/pdepend/dependencies.svg --overview-pyramid=${basedir}/build/pdepend/overview-pyramid.svg --ignore=library/Zend,library/MAL ${basedir}" />
+   <arg line="--jdepend-xml=${basedir}/build/logs/jdepend.xml --jdepend-chart=${basedir}/build/pdepend/dependencies.svg --overview-pyramid=${basedir}/build/pdepend/overview-pyramid.svg --ignore=library/Zend,library/MAL,gitcache ${basedir}" />
   </exec>
  </target>
 
  <target name="phpmd"
          description="Perform project mess detection using PHPMD">
   <exec executable="phpmd">
-   <arg line="${basedir} text ${basedir}/phpmd.xml --exclude library/Zend,library/MAL" />
+   <arg line="${basedir} text ${basedir}/phpmd.xml --exclude library/Zend,library/MAL,gitcache" />
   </exec>
  </target>
 
  <target name="phpmd-ci"
          description="Perform project mess detection using PHPMD">
   <exec executable="phpmd">
-   <arg line="${basedir} xml ${basedir}/phpmd.xml --exclude library/Zend,library/MAL --reportfile ${basedir}/build/logs/pmd.xml" />
+   <arg line="${basedir} xml ${basedir}/phpmd.xml --exclude library/Zend,library/MAL,gitcache --reportfile ${basedir}/build/logs/pmd.xml" />
   </exec>
  </target>
 
  <target name="phpcs"
          description="Find coding standard violations using PHP_CodeSniffer">
   <exec executable="phpcs">
-   <arg line="--standard=${basedir}/phpcs.xml --ignore=library/Zend,library/MAL --extensions=php ${basedir}" />
+   <arg line="--standard=${basedir}/phpcs.xml --ignore=library/Zend,library/MAL,gitcache --extensions=php ${basedir}" />
   </exec>
  </target>
 
  <target name="phpcs-ci"
          description="Find coding standard violations using PHP_CodeSniffer">
   <exec executable="phpcs" output="/dev/null">
-   <arg line="--report=checkstyle --report-file=${basedir}/build/logs/checkstyle.xml --standard=${basedir}/phpcs.xml --ignore=library/Zend,library/MAL --extensions=php ${basedir}" />
+   <arg line="--report=checkstyle --report-file=${basedir}/build/logs/checkstyle.xml --standard=${basedir}/phpcs.xml --ignore=library/Zend,library/MAL,gitcache --extensions=php ${basedir}" />
   </exec>
  </target>
 
  <target name="phpcpd" description="Find duplicate code using PHPCPD">
   <exec executable="phpcpd">
-   <arg  line="--log-pmd ${basedir}/build/logs/pmd-cpd.xml --exclude library/Zend --exclude library/MAL ${basedir}" />
+   <arg  line="--log-pmd ${basedir}/build/logs/pmd-cpd.xml --exclude library/Zend --exclude library/MAL --exclude gitcache ${basedir}" />
   </exec>
  </target>
  
  <target name="phpdoc" description="Generate API documentation using PHPDocumentor">
   <exec executable="phpdoc">
-   <arg line="--directory ${basedir} --target ${basedir}/build/api --quiet --ignore library/Zend/,library/MAL/" />
+   <arg line="--directory ${basedir} --target ${basedir}/build/api --quiet --ignore library/Zend/,library/MAL/,gitcache/" />
   </exec>
  </target>
 
@@ -114,7 +118,7 @@
  <target name="phpcb"
          description="Aggregate tool output with PHP_CodeBrowser">
   <exec executable="phpcb">
-   <arg line="--log ${basedir}/build/logs --source ${basedir} --ignore library/Zend,library/MAL --output ${basedir}/build/code-browser" />
+   <arg line="--log ${basedir}/build/logs --source ${basedir} --ignore library/Zend,library/MAL,gitcache --output ${basedir}/build/code-browser" />
   </exec>
  </target>
 
