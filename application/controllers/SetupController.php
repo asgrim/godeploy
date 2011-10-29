@@ -31,6 +31,7 @@ class SetupController extends Zend_Controller_Action
 		$this->view->show_navigation = false;
 		$this->view->prenavigation_header = "setup/header.phtml";
 		$this->view->available_languages = GD_Translate::getAvailableLanguages();
+		$this->view->language_form_return_uri = $this->_request->getRequestUri();
 
 		$setup_session = new Zend_Session_Namespace('gd_setup_session');
 

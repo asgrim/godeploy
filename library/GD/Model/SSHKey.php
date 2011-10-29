@@ -86,7 +86,7 @@ class GD_Model_SSHKey
 
 	public function generateKeyPair()
 	{
-		$comment = "godeploy@" . $_SERVER['SERVER_NAME'];
+		$comment = "godeploy@" . gethostname();
 
 		$filename = sys_get_temp_dir() . "/ssh_keygen_pair" . md5(microtime());
 

@@ -34,7 +34,7 @@ class ErrorController extends Zend_Controller_Action
 		$this->view->extended_information = $ext_inf;
 
 		// Log exception
-		GD_Debug::Log("ACL access denied for URL '{$_SERVER['REQUEST_URI']}'", GD_Debug::DEBUG_BASIC);
+		GD_Debug::Log("ACL access denied for URL '" . $this->_request->getRequestUri() . "'", GD_Debug::DEBUG_BASIC);
 	}
 
 	public function databaseAction()

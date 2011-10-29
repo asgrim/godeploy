@@ -1,7 +1,7 @@
 
 <div id="language">
 	<form action="/setup/language" method="POST" style="float: right;">
-		<input type="hidden" name="return" value="<?php echo $_SERVER['REQUEST_URI']; ?>" />
+		<input type="hidden" name="return" value="<?php echo $this->language_form_return_uri; ?>" />
 		<?php _e("Change Language"); ?>:
 		<select name="lang" id="lang">
 		<?php if(is_array($this->available_languages)) foreach($this->available_languages as $lang): ?>

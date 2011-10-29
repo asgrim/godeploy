@@ -26,5 +26,3 @@ $loader->registerNamespace('GD_');
 $loader->registerNamespace('MAL_');
 
 require_once $rootPath . '/tests/application/ControllerTestCase.php';
-
-$_SERVER['REQUEST_URI'] = '/';
