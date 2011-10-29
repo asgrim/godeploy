@@ -56,14 +56,11 @@ class GD_Plugin_Auth extends Zend_Controller_Plugin_Abstract
 
 	/**
 	 * Create the GD_Plugin_Auth controller plugin
-	 *
-	 * @param Zend_Auth $auth
-	 * @param Zend_Acl $acl
 	 */
-	public function __construct(Zend_Auth $auth, Zend_Acl $acl)
+	public function __construct()
 	{
-		$this->_auth = $auth;
-		$this->_acl = $acl;
+		$this->_auth = Zend_Auth::getInstance();
+		$this->_acl = new GD_Acl($this->_auth);
 	}
 
 	/**
