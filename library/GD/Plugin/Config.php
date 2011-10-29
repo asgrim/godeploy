@@ -72,28 +72,26 @@ class GD_Plugin_Config extends Zend_Controller_Plugin_Abstract
 
 			// If we're not on the /error/database page, do a DB test, else
 			// we return out to ensure no DB errors later in this Bootstrap fn.
-			/*if(stripos($_SERVER['REQUEST_URI'], '/error/database') === false)
+			if($request->controller != "error")
 			{
-				// Do a database test to ensure we can run queries on the DB. If not
-				// redirect to the error controller in a hacky way.
 				try
 				{
 					$adapter->query("SELECT 1");
-				}
-				catch(Zend_Db_Adapter_Exception $ex)
-				{
-					header("Location: /error/database");
-					die();
-				}
-			}
-			else return;*/
 
-			// If we can get the language from the database, use that language
-			$lang = GD_Config::get("language");
-			if($lang !== false)
-			{
-				$use_lang = $lang;
+					// If we can get the language from the database, use that language
+					$lang = GD_Config::get("language");
+					if($lang !== false)
+					{
+						$use_lang = $lang;
+					}
+				}
+				catch(Exception $ex)
+				{
+					$this->_response->setRedirect('/error/database');
+					$this->_response->sendResponse();
+				}
 			}
+
 		}
 
 		// If we can't set a language at all, default to english
