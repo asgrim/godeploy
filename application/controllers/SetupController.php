@@ -278,6 +278,7 @@ class SetupController extends Zend_Controller_Action
 			GD_Config::set("setup_complete", "1");
 			GD_Config::set("cryptkey", md5(microtime() . $setup_session->admin->username . $setup_session->admin->password));
 			GD_Config::set("install_date", date("d/m/Y H:i:s"));
+			GD_Config::set('logfile',sys_get_temp_dir() . "/godeploy_log");
 
 			// Create the first user in the database
 			$userMapper = new GD_Model_UsersMapper();
