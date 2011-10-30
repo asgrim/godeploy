@@ -65,7 +65,7 @@ class GD_Debug
 
 		if(!self::$_fh)
 		{
-			$logfile = sys_get_temp_dir() . "/godeploy_log";
+			$logfile = GD_Config::get('logfile');
 			self::$_fh = @fopen($logfile, "a");
 
 			if(!self::$_fh) return false;

@@ -82,6 +82,7 @@ class GD_Plugin_VerifySetup extends Zend_Controller_Plugin_Abstract
 	protected function checkConfig()
 	{
 		GD_Config::set("debug_level", "0", true);
+		GD_Config::set("logfile", sys_get_temp_dir() . "/godeploy_log", true);
 	}
 
 	/**
