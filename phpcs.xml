@@ -3,7 +3,22 @@
  <description>GoDeploy coding standards (a work in progress...)</description>
 
  <rule ref="Generic.Functions.FunctionCallArgumentSpacing"/>
+ <rule ref="Generic.Functions.OpeningFunctionBraceBsdAllman"/>
  <rule ref="Generic.PHP.DisallowShortOpenTag"/>
+ <!--<rule ref="Generic.WhiteSpace.DisallowTabIndent"/>-->
+ <rule ref="PEAR.Classes.ClassDeclaration"/>
+ <rule ref="PEAR.Functions.FunctionCallSignature">
+  <exclude name="PEAR.Functions.FunctionCallSignature.Indent" />
+ </rule>
+ <rule ref="PEAR.Functions.ValidDefaultValue"/>
+ <rule ref="PEAR.WhiteSpace.ScopeClosingBrace">
+  <exclude name="PEAR.WhiteSpace.ScopeClosingBrace.BreakIndent" />
+ </rule>
+ <rule ref="Squiz.Functions.GlobalFunction">
+  <exclude name="Squiz.Functions.GlobalFunction.Found" />
+ </rule>
+ <rule ref="Zend.Files.ClosingTag.NotAllowed" />
+ <rule ref="Zend.Debug.CodeAnalyzer" />
 
  <rule ref="Generic.Files.LineLength">
   <properties>

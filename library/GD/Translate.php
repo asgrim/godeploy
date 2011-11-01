@@ -26,14 +26,20 @@
  * Echo a translation directly of $s string
  * @param string $s
  */
-function _e($s) { echo GD_Translate::translate($s); }
+function _e($s)
+{
+	echo GD_Translate::translate($s);
+}
 
 /**
  * Return a translation of $s string
  * @param string $s
  * @return string Translated text
  */
-function _r($s) { return GD_Translate::translate($s); }
+function _r($s)
+{
+	return GD_Translate::translate($s);
+}
 
 /**
  * An easy-peasy class to handle translations using Zend_Translate
