@@ -342,7 +342,7 @@ class DeployController extends Zend_Controller_Action
 			$file_icons[$file->getId()] = $file->getDeploymentFileStatus()->getImageName();
 
 			if($file->getDeploymentFileStatus()->getCode() != "NEW"
-			    && $file->getDeploymentFileStatus()->getCode() != "IN_PROGRESS")
+				&& $file->getDeploymentFileStatus()->getCode() != "IN_PROGRESS")
 			{
 				$completed_count++;
 			}
