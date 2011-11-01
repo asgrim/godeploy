@@ -28,7 +28,7 @@ class AuthController extends Zend_Controller_Action
     	$this->view->headTitle('Login');
 
 		$form = new GDApp_Form_Login();
-    	if ($this->_request->isPost())
+		if ($this->_request->isPost())
 		{
 			if ($form->isValid($this->getRequest()->getParams()))
 			{
@@ -53,7 +53,7 @@ class AuthController extends Zend_Controller_Action
 			}
 		}
 
-    	$this->view->form = $form;
+		$this->view->form = $form;
 
 		$this->view->headLink()->appendStylesheet("/css/template/form.css");
 		$this->view->headLink()->appendStylesheet("/css/pages/login.css");
@@ -61,13 +61,13 @@ class AuthController extends Zend_Controller_Action
 
     private function executeLogout()
     {
-    	$auth = Zend_Auth::getInstance();
+	$auth = Zend_Auth::getInstance();
 		$auth->clearIdentity();
     }
 
     public function logoutAction()
     {
-    	$this->executeLogout();
+	$this->executeLogout();
 		$this->_redirect($this->getFrontController()->getBaseUrl() . "/auth/login");
     }
 
