@@ -5,20 +5,19 @@
  <rule ref="Generic.Functions.FunctionCallArgumentSpacing"/>
  <rule ref="Generic.Functions.OpeningFunctionBraceBsdAllman"/>
  <rule ref="Generic.PHP.DisallowShortOpenTag"/>
- <!--<rule ref="Generic.WhiteSpace.DisallowTabIndent"/>-->
  <rule ref="PEAR.Classes.ClassDeclaration"/>
- <rule ref="PEAR.Functions.FunctionCallSignature">
-  <exclude name="PEAR.Functions.FunctionCallSignature.Indent" />
- </rule>
+ <rule ref="PEAR.Functions.FunctionCallSignature"/>
  <rule ref="PEAR.Functions.ValidDefaultValue"/>
- <rule ref="PEAR.WhiteSpace.ScopeClosingBrace">
-  <exclude name="PEAR.WhiteSpace.ScopeClosingBrace.BreakIndent" />
- </rule>
- <rule ref="Squiz.Functions.GlobalFunction">
-  <exclude name="Squiz.Functions.GlobalFunction.Found" />
- </rule>
+ <rule ref="PEAR.WhiteSpace.ScopeClosingBrace"/>
  <rule ref="Zend.Files.ClosingTag.NotAllowed" />
  <rule ref="Zend.Debug.CodeAnalyzer" />
+
+ <!--
+   This is incorrect, we actually prefer tabs for indentation but it allows
+   us to use this rule in combination with the tab-space=4 phpcs option to check
+   correct indentation levels
+ -->
+ <rule ref="Generic.WhiteSpace.DisallowTabIndent"/>
 
  <rule ref="Generic.Files.LineLength">
   <properties>

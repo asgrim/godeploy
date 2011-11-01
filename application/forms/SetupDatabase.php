@@ -57,12 +57,14 @@ class GDApp_Form_SetupDatabase extends GD_Form_Abstract
 		$submit->setImage('/images/buttons/small/next.png')
 			->setAttrib('style', 'float: right;');
 
-		$this->addElements(array(
-			$hostname,
-			$username,
-			$password,
-			$dbname,
-			$submit,
-		));
+		$this->addElements(
+			array(
+				$hostname,
+				$username,
+				$password,
+				$dbname,
+				$submit,
+			)
+		);
 	}
 }
