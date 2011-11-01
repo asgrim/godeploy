@@ -94,7 +94,7 @@ class SettingsController extends Zend_Controller_Action
 				{
 					$this->view->valid_repository = false;
 					$form->repositoryUrl->addError("Check this git repository URL - is it correct?");
-					GD_Debug::Log("Reclone required for {$project->getName()} (project settings)", GD_Debug::DEBUG_BASIC);
+					GD_Debug::Log("Reclone required for {$project->getName()} (project settings) - reason [{$ex->getStringCode()}]", GD_Debug::DEBUG_BASIC);
 				}
 			}
 

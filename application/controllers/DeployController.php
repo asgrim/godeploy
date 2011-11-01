@@ -522,7 +522,7 @@ class DeployController extends Zend_Controller_Action
 			GD_Debug::Log("Extra content:\n\n{$buf}", GD_Debug::DEBUG_BASIC);
 		}
 
-		GD_Debug::EndDeploymentLog($this->_getParam("id"));
+		GD_Debug::EndDeploymentLog();
 		ob_end_clean();
 		flush();
 		die();

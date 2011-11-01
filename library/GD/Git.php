@@ -123,7 +123,7 @@ class GD_Git extends GD_Shell
 		}
 		catch(GD_Exception $ex)
 		{
-			$invalid = true;
+			return $ex->getStringCode();
 		}
 
 		$this->_current_branch = $this->getCurrentBranch(true);
@@ -187,7 +187,6 @@ class GD_Git extends GD_Shell
 				// Github returns: Hi [USER]! You've successfully authenticated, but GitHub does not provide shell access.
 				// Codebase returns: You've successfully uploaded your public key to Codebase and authenticated.
 				$valid_string = "You've successfully";
-				$is_valid = false;
 				foreach($this->_last_output as $o)
 				{
 					if(strpos($o, $valid_string) !== false)

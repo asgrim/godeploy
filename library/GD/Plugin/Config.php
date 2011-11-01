@@ -87,7 +87,7 @@ class GD_Plugin_Config extends Zend_Controller_Plugin_Abstract
 				}
 				catch(Exception $ex)
 				{
-					$this->_response->setRedirect('/error/database');
+					$this->_response->setRedirect('/error/database?e=' . $ex->getCode());
 					$this->_response->sendResponse();
 				}
 			}
@@ -101,6 +101,6 @@ class GD_Plugin_Config extends Zend_Controller_Plugin_Abstract
 		}
 
 		// Initialise translations now we should have a language to use
-		$translate = GD_Translate::init($use_lang);
+		GD_Translate::init($use_lang);
 	}
 }

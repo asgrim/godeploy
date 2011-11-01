@@ -68,6 +68,7 @@ class GD_Validate_GitBranch extends Zend_Validate_Abstract
 		}
 		catch(GD_Exception $ex)
 		{
+			GD_Debug::Log("Repository for {$this->_project->getName()} was not valid [{$ex->getStringCode()}]", GD_Debug::DEBUG_BASIC);
 			$this->_error(self::NO_REPO);
 			return false;
 		}

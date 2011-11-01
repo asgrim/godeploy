@@ -53,8 +53,9 @@ class GD_Debug
 		{
 			self::$_current_debug_level = GD_Config::get("debug_level");
 		}
-		catch(Zend_Db_Adapter_Exception $ex)
+		catch(Exception $ex)
 		{
+			error_log("Failed to get debug_level setting, error was: {$ex->getMessage()}", 0);
 			self::$_current_debug_level = self::DEBUG_NONE;
 		}
 
@@ -102,7 +103,7 @@ class GD_Debug
 		self::Log("===============================================================================", self::DEBUG_BASIC, true, false);
 	}
 
-	public static function EndDeploymentLog($deployment_id)
+	public static function EndDeploymentLog()
 	{
 		self::Log("===============================================================================", self::DEBUG_BASIC, true, false);
 	}

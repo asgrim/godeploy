@@ -84,7 +84,6 @@ class GD_Auth_Database implements Zend_Auth_Adapter_Interface
 		$stored_fullhash = $user->getPassword();
 		$salt_len = strrpos($stored_fullhash, "$") + 1;
 		$salt = substr($stored_fullhash, 0, $salt_len);
-		$stored_hash = substr($stored_fullhash, $salt_len, strlen($stored_fullhash) - $salt_len);
 
 		$compare_hash = crypt($this->_password, $salt);
 
