@@ -26,3 +26,4 @@ $loader->registerNamespace('GD_');
 $loader->registerNamespace('MAL_');
 
 require_once $rootPath . '/tests/application/ControllerTestCase.php';
+require_once $rootPath . '/tests/library/TestCase.php';

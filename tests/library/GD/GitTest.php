@@ -1,6 +1,6 @@
 <?php
 
-class GD_GitTest extends PHPUnit_Framework_TestCase
+class GD_GitTest extends GD_TestCase
 {
 	public function getMockProject()
 	{
