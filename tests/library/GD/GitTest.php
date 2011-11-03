@@ -18,7 +18,7 @@ class GD_GitTest extends GD_TestCase
 		return false;
 	}
 
-	public function testGitDirLooksCorrect()
+	public function testGeneratedDirectoryLooksCorrect()
 	{
 		$git = new GD_Git("unittest1", "git://github.com/asgrim/godeploy-test-project.git", "master", "");
 
@@ -28,7 +28,21 @@ class GD_GitTest extends GD_TestCase
 		$git->deleteRepository();
 	}
 
-	public function testGitCloneContainsFirstCommit()
+	public function testHttpReadonlyClone()
+	{
+		$git = new GD_Git("unittest1", "git://github.com/asgrim/godeploy-test-project.git", "master", "");
+		$git->deleteRepository();
+		$retval = $git->gitClone();
+
+		$this->assertTrue($retval, $git->getLastOutput());
+
+		$git->deleteRepository();
+	}
+
+	/**
+	 * @depends testHttpReadonlyClone
+	 */
+	public function testCloneContainsFirstCommit()
 	{
 		$git = new GD_Git("unittest1", "git://github.com/asgrim/godeploy-test-project.git", "master", "");
 		$git->deleteRepository();
@@ -41,7 +55,7 @@ class GD_GitTest extends GD_TestCase
 		$git->deleteRepository();
 	}
 
-	public function testGitSSHCommand()
+	public function testSSHCommand()
 	{
 		$rsa_key = $this->getRSAKey();
 
@@ -58,9 +72,22 @@ class GD_GitTest extends GD_TestCase
 		}
 
 		$git = new GD_Git("unittest2", "git@github.com:" . GITHUB_USER . "/godeploy-test-project.git", "master", "");
+		$sshKeysMethod = self::getPrivateMethod('sshKeys', 'GD_Git');
+
+		try
+		{
+			$sshKeysMethod->invokeArgs($git, array());
+		}
+		catch(GD_Exception $ex)
+		{
+			$this->fail("[" . $ex->getStringCode() . "] " . $ex->getMessage());
+		}
 	}
 
-	public function testGitSSHClone()
+	/**
+	 * @depends testSSHCommand
+	 */
+	public function testSSHClone()
 	{
 		$rsa_key = $this->getRSAKey();
 
