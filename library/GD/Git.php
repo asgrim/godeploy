@@ -35,9 +35,9 @@ class GD_Git extends GD_Shell
 	private $_url;
 
 	/**
-	 * @var GD_Model_Project
+	 * @var int A unique identifier ID
 	 */
-	private $_project;
+	private $_unique_id;
 
 	/**
 	 * @var string Path to this instance's git respository
@@ -48,6 +48,11 @@ class GD_Git extends GD_Shell
 	 * @var string Current branch of the repository
 	 */
 	private $_current_branch;
+
+	/**
+	 * @var string Branch to operate Git procedures from
+	 */
+	private $_operation_branch;
 
 	/**
 	 * @var string Type of the origin repository (ssh/git etc.)
@@ -68,6 +73,11 @@ class GD_Git extends GD_Shell
 	 * @var string Path to the GIT_SSH script
 	 */
 	private $_ssh_script;
+
+	/**
+	 * @var string The private RSA key
+	 */
+	private $_rsa_key;
 
 	const GIT_REPOTYPE_SSH = 'ssh'; // SSH (read/write)
 	const GIT_REPOTYPE_HTTP = 'http'; // HTTP (read/write)
@@ -94,12 +104,15 @@ class GD_Git extends GD_Shell
 	const GIT_SSH_ERROR_HOSTNME = "SSH_RESOLVE_HOSTNAME";
 	const GIT_SSH_ERROR_UNKNOWN = "SSH_UNKNOWN_ERROR";
 
-	public function __construct(GD_Model_Project &$project)
+	public function __construct($unique_id, $repository_url, $operation_branch, $id_rsa)
 	{
-		$this->_project = $project;
+		$this->_unique_id = $unique_id;
+		$this->_url = $repository_url;
+		$this->_operation_branch = $operation_branch;
+		$this->_rsa_key = $id_rsa;
+
 		$this->_base_gitdir = APPLICATION_PATH . "/../gitcache/";
-		$this->_gitdir = $this->_base_gitdir . $this->_project->getId();
-		$this->_url = $this->_project->getRepositoryUrl();
+		$this->_gitdir = $this->_base_gitdir . $this->_unique_id;
 		$this->_repotype = $this->parseRepoType($this->_url);
 
 		if($this->_repotype == self::GIT_REPOTYPE_HTTP)
@@ -113,12 +126,12 @@ class GD_Git extends GD_Shell
 			chdir($this->_base_gitdir);
 		}
 
-		// Check out the specified branch in the project if we're a valid repo
+		// Check out the specified operation branch if we're a valid repo
 		try
 		{
 			if($this->checkValidRepository())
 			{
-				$this->gitCheckout($project->getDeploymentBranch());
+				$this->gitCheckout($this->_operation_branch);
 			}
 		}
 		catch(GD_Exception $ex)
@@ -127,6 +140,22 @@ class GD_Git extends GD_Shell
 		}
 
 		$this->_current_branch = $this->getCurrentBranch(true);
+	}
+
+	/**
+	 * Generate a new GD_Git instance based on a GD_Model_Project object
+	 *
+	 * @param GD_Model_Project $project
+	 * @return GD_Git
+	 */
+	public static function FromProject(GD_Model_Project $project)
+	{
+		return new GD_Git(
+			$project->getId(),
+			$project->getRepositoryUrl(),
+			$project->getDeploymentBranch(),
+			$project->getSSHKey()->getPrivateKey()
+		);
 	}
 
 	public function __destruct()
@@ -152,16 +181,13 @@ class GD_Git extends GD_Shell
 		if($this->_repotype == self::GIT_REPOTYPE_SSH)
 		{
 			// Write the id_rsa key to the gitcache
-			$id_rsa = $this->_project->getSSHKey()->getPrivateKey();
-			$project_id = $this->_project->getId();
-
-			$this->_ssh_key = $this->_base_gitdir . "id_rsa." . $project_id;
+			$this->_ssh_key = $this->_base_gitdir . "id_rsa." . $this->_unique_id;
 
 			if(file_exists($this->_ssh_key))
 			{
 				unlink($this->_ssh_key);
 			}
-			file_put_contents($this->_ssh_key, $id_rsa);
+			file_put_contents($this->_ssh_key, $this->_rsa_key);
 			chmod($this->_ssh_key, 0600);
 
 			// Get the hostname part of the URL
@@ -173,13 +199,13 @@ class GD_Git extends GD_Shell
 
 			// Use a script file
 			$script = "#!/bin/sh\n\n{$ssh_cmd} $*\n";
-			$this->_ssh_script = $this->_base_gitdir . "ssh." . $project_id . ".sh";
+			$this->_ssh_script = $this->_base_gitdir . "ssh." . $this->_unique_id . ".sh";
 			file_put_contents($this->_ssh_script, $script);
 			chmod($this->_ssh_script, 0755);
 			putenv("GIT_SSH={$this->_ssh_script}");
 
 			// Test the connection
-			$this->runShell("\$GIT_SSH -T -o StrictHostKeyChecking=no {$host}", false);
+			$this->runShell("\$GIT_SSH -T -o StrictHostKeyChecking=no {$host}");
 
 			if($this->_last_errno != 0)
 			{
@@ -314,7 +340,7 @@ class GD_Git extends GD_Shell
 			{
 				if(!$silent)
 				{
-					throw new GD_Exception("Git repository for {$this->_project->getName()} was not on a branch.", self::GIT_STATUS_ERROR_NOT_ON_BRANCH);
+					throw new GD_Exception("Git repository {$this->_unique_id} ({$this->_url}) was not on a branch.", self::GIT_STATUS_ERROR_NOT_ON_BRANCH);
 				}
 				else return false;
 			}
@@ -640,7 +666,7 @@ class GD_Git extends GD_Shell
 
 			if($actual_url != $this->_url)
 			{
-				throw new GD_Exception("Repository cache does not match the project's URL", 0, self::GIT_STATUS_ERROR_DIFFERENT_REPOSITORY);
+				throw new GD_Exception("Repository cache does not match the expected Git URL", 0, self::GIT_STATUS_ERROR_DIFFERENT_REPOSITORY);
 			}
 
 			return true;

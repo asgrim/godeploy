@@ -1,13 +1,14 @@
 <?php
 
-define('TESTUSER', 'testuser');
-define('TESTPASSWORD', 'testpassword');
+define('TEST_USER', 'testuser');
+define('TEST_PASSWORD', 'testpassword');
+define('GITHUB_USER', 'youruser');
 
 error_reporting(E_ALL);
 ini_set('display_startup_errors', 1);
 ini_set('display_errors', 1);
 
-$rootPath = realpath(dirname(__DIR__));
+$rootPath = str_replace("Dropbox/Eclipse Workspace", "workspace", realpath(dirname(__DIR__)));
 
 if(!defined('APPLICATION_PATH'))
 {

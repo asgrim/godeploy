@@ -72,7 +72,7 @@ class DeployController extends Zend_Controller_Action
 					$from_rev = "";
 				}
 
-				$git = new GD_Git($project);
+				$git = GD_Git::FromProject($project);
 				$git->gitPull();
 
 				$input_to_rev = $this->_request->getParam('toRevision', false);
@@ -154,7 +154,7 @@ class DeployController extends Zend_Controller_Action
 		}
 		else
 		{
-			$git = new GD_Git($project);
+			$git = GD_Git::FromProject($project);
 
 			try
 			{
@@ -432,7 +432,7 @@ class DeployController extends Zend_Controller_Action
 		GD_Debug::Log("done.", GD_Debug::DEBUG_BASIC, true, false);
 
 		// Perform a git pull to check we're up to date
-		$git = new GD_Git($project);
+		$git = GD_Git::FromProject($project);
 		$git->gitPull();
 
 		// File list to action
@@ -575,7 +575,7 @@ class DeployController extends Zend_Controller_Action
 		}
 
 		// Git pull before anything
-		$git = new GD_Git($project);
+		$git = GD_Git::FromProject($project);
 		$git->gitPull();
 
 		$data = array();

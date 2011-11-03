@@ -13,3 +13,4 @@ Desktop.ini
 application/configs/config.ini
 gitcache/
 build/
+tests/id_rsa
