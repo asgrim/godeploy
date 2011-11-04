@@ -21,8 +21,8 @@ class GD_Model_ConnectionTypeTest extends GD_TestCase
 	public function testDefaultPortGetAndSet()
 	{
 		$obj = new GD_Model_ConnectionType();
-		$obj->setId(21);
+		$obj->setDefaultPort(21);
 
-		$this->assertSame(21, $obj->getId());
+		$this->assertSame(21, $obj->getDefaultPort());
 	}
 }

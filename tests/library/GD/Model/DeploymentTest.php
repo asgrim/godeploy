@@ -84,4 +84,44 @@ class GD_Model_DeploymentTest extends GD_TestCase
 
 		$this->assertSame(5, $obj->getDeploymentStatusesId());
 	}
+
+	public function testUserGetAndSet()
+	{
+		$test = new GD_Model_User();
+
+		$obj = new GD_Model_Deployment();
+		$obj->setUser($test);
+
+		$this->assertSame($test, $obj->getUser());
+	}
+
+	public function testProjectGetAndSet()
+	{
+		$test = new GD_Model_Project();
+
+		$obj = new GD_Model_Deployment();
+		$obj->setProject($test);
+
+		$this->assertSame($test, $obj->getProject());
+	}
+
+	public function testServerGetAndSet()
+	{
+		$test = new GD_Model_Server();
+
+		$obj = new GD_Model_Deployment();
+		$obj->setServer($test);
+
+		$this->assertSame($test, $obj->getServer());
+	}
+
+	public function testDeploymentStatusGetAndSet()
+	{
+		$test = new GD_Model_DeploymentStatus();
+
+		$obj = new GD_Model_Deployment();
+		$obj->setDeploymentStatus($test);
+
+		$this->assertSame($test, $obj->getDeploymentStatus());
+	}
 }
