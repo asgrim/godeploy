@@ -1,0 +1,47 @@
+
+<div class="content">
+	<div class="padding_20"></div>
+
+	<h1><?php echo $this->project->getName(); ?> &raquo; <?php _e("Configuration Management"); ?></h1>
+	<div class="padding_15"></div>
+
+	<div class="wrapper w_ededed"><div class="content">
+		<div class="padding_15"></div>
+
+<?php
+	if (is_array($this->configs) && count($this->configs) > 0)
+	{
+?>
+		<table>
+			<thead>
+				<tr>
+					<th><?php _e("Filename"); ?></th>
+					<th><?php _e("Updated"); ?></th>
+					<th><?php _e("File size"); ?></th>
+					<th class="empty">&nbsp;</th>
+				</tr>
+			</thead>
+			<tbody>
+			<?php foreach ($this->configs as $config) : ?>
+				<tr>
+					<td class="nowrap"><?php echo $config->getFilename(); ?></td>
+					<td class="nowrap"><?php echo $config->getDateUpdated("d/m/Y H:i"); ?> <?php _e("by"); ?> <?php echo $config->getUpdatedUser()->getName(); ?></td>
+					<td><?php echo strlen($config->getContent()); ?> bytes</td>
+
+					<td class="icon">
+						<a href="<?php echo $this->baseUrl(); ?>/project/<?php echo $this->project->getSlug(); ?>/configs/edit/<?php echo $config->getId(); ?>">
+							<img src="/images/icons/edit/16x16.png" alt="<?php _e("Edit"); ?> &raquo;" title="<?php _e("Click to edit this configuration file"); ?>" />
+						</a>
+					</td>
+				</tr>
+			<?php endforeach; ?>
+			</tbody>
+		</table>
+<?php } else { ?>
+		<h2 class="last"><?php _e("This project does not have any configuration files."); ?></h2>
+<?php } ?>
+		<div class="padding_15"></div>
+		<a href="<?php echo $this->baseUrl(); ?>/project/<?php echo $this->project->getSlug(); ?>/configs/edit" class="add_icon"><?php _e("Add another configuration file to this project"); ?> &raquo;</a>
+	</div></div>
+</div>
+

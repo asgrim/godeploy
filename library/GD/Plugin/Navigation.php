@@ -70,6 +70,12 @@ class GD_Plugin_Navigation extends Zend_Controller_Plugin_Abstract
 					);
 
 					$nav[] = array(
+						"label" => "Configs",
+						"id" => "configs-link",
+						"uri" => "/project/{$project_slug}/configs"
+					);
+
+					$nav[] = array(
 						"label" => "Settings",
 						"id" => "settings-link",
 						"uri" => "/project/{$project_slug}/settings"
