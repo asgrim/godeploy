@@ -21,17 +21,55 @@
  * @author See AUTHORS file
  * @link http://www.godeploy.com/
  */
-class GD_Model_DbTable_Projects extends Zend_Db_Table_Abstract
+class GD_Model_Config
 {
-	protected $_name = "projects";
+	protected $_servers_id;
+	protected $_configs_id;
 
-	protected $_referenceMap = array(
-		'GD_Model_DbTable_SSHKeys' => array(
-			'columns' => 'ssh_keys_id',  // the column in the 'projects' table which is used for the join
-			'refTableClass' => 'GD_Model_DbTable_SSHKeys',  // the ssh_keys table name
-			'refColumns' => 'id' // the primary key of the ssh_keys table
-		)
-	);
+	protected $_server;
+	protected $_config;
 
-	protected $_dependentTables = array('GD_Model_DbTable_Deployments','GD_Model_DbTable_Configs');
+	public function setServersId($value)
+	{
+		$this->_servers_id = (int)$value;
+		return $this;
+	}
+
+	public function getServersId()
+	{
+		return $this->_servers_id;
+	}
+
+	public function setConfigsId($value)
+	{
+		$this->_configs_id = (int)$value;
+		return $this;
+	}
+
+	public function getConfigsId()
+	{
+		return $this->_configs_id;
+	}
+
+	public function setServer(GD_Model_Server $obj)
+	{
+		$this->_server = $obj;
+		return $this;
+	}
+
+	public function getServer()
+	{
+		return $this->_server;
+	}
+
+	public function setConfig(GD_Model_Config $obj)
+	{
+		$this->_config = $obj;
+		return $this;
+	}
+
+	public function getConfig()
+	{
+		return $this->_config;
+	}
 }
