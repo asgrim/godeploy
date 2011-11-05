@@ -51,7 +51,7 @@ class GD_Validate_GitBranch extends Zend_Validate_Abstract
 	{
 		$this->_setValue($value);
 
-		$git = new GD_Git($this->_project);
+		$git = GD_Git::FromProject($this->_project);
 
 		try
 		{

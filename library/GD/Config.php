@@ -106,7 +106,7 @@ class GD_Config
 		}
 		else if(!$dont_update)
 		{
-			$where['key = ?']  = $key;
+			$where['`key` = ?']  = $key;
 			return self::$_db->update(self::$_db_table, $data, $where) == 1;
 		}
 		else if($dont_update)

@@ -13,8 +13,8 @@ class AuthControllerTest extends ControllerTestCase
 	public function testPostRequestToLoginFormLogsInAndRedirects()
 	{
 		$post = array(
-			'username' => TESTUSER,
-			'password' => TESTPASSWORD,
+			'username' => TEST_USER,
+			'password' => TEST_PASSWORD,
 		);
 		$this->request->setMethod('POST')->setPost($post);
 
@@ -26,7 +26,7 @@ class AuthControllerTest extends ControllerTestCase
 	public function testPostRequestWithIncorrectLoginDoesNotWork()
 	{
 		$post = array(
-			'username' => TESTUSER,
+			'username' => TEST_USER,
 		);
 		$this->request->setMethod('POST')->setPost($post);
 
