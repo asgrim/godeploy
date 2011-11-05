@@ -2,7 +2,7 @@
 <div class="content">
 	<div class="padding_20"></div>
 
-	<h1><?php _e("Oh dear - something went wrong&hellip;"); ?></h1>
+	<h1><?php _e("Oh dear - something went wrong"); ?>&hellip;</h1>
 	<div class="padding_15"></div>
 
 	<div id="form">
@@ -18,17 +18,17 @@
 			<?php if (isset($this->exception)): ?>
 				<div class="padding_10"></div>
 				<div style="background-color: #f0d1d1; padding: 20px; overflow: scroll;">
-					<h2>Debug Information (Developer Mode)</h2>
-					<h3>Exception information:</h3>
+					<h2><?php _e("Debug Information (Developer Mode)"); ?></h2>
+					<h3><?php _e("Exception information"); ?>:</h3>
 					<p>
-						<b>Message:</b> <?php echo $this->exception->getMessage() ?>
+						<b><?php _e("Message"); ?>:</b> <?php echo $this->exception->getMessage() ?>
 					</p>
 
-					<h3>Stack trace:</h3>
+					<h3><?php _e("Stack trace"); ?>:</h3>
 					<pre><?php echo $this->exception->getTraceAsString() ?>
 					</pre>
 
-					<h3>Request Parameters:</h3>
+					<h3><?php _e("Request Parameters"); ?>:</h3>
 					<pre><?php echo var_export($this->request->getParams(), true) ?>
 					</pre>
 				</div>

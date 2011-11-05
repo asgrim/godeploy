@@ -51,12 +51,12 @@
 						<td><?php echo $this->escape($server->getConnectionType()->getName()); ?></td>
 						<td class="icon">
 							<a href="<?php echo $this->baseUrl(); ?>/project/<?php echo $this->project->getSlug(); ?>/servers/edit/<?php echo $server->getId(); ?>">
-								<img src="/images/icons/edit/16x16.png" alt="Edit &raquo;" />
+								<img src="/images/icons/edit/16x16.png" alt="<?php _e("Edit"); ?> &raquo;" />
 							</a>
 						</td>
 						<td class="icon">
 							<a href="<?php echo $this->baseUrl(); ?>/project/<?php echo $this->project->getSlug(); ?>/servers/confirm-delete/<?php echo $server->getId(); ?>">
-								<img src="/images/icons/delete/16x16.png" alt="Delete &raquo;" />
+								<img src="/images/icons/delete/16x16.png" alt="<?php _e("Delete"); ?> &raquo;" />
 							</a>
 						</td>
 					</tr>
