@@ -25,10 +25,16 @@ class GD_Model_Config
 {
 	protected $_id;
 	protected $_projects_id;
+	protected $_date_added;
+	protected $_added_users_id;
+	protected $_date_updated;
+	protected $_updated_users_id;
 	protected $_filename;
 	protected $_content;
 
 	protected $_project;
+	protected $_added_user;
+	protected $_updated_user;
 
 	public function setId($id)
 	{
@@ -50,6 +56,50 @@ class GD_Model_Config
 	public function getProjectsId()
 	{
 		return $this->_projects_id;
+	}
+
+	public function setDateAdded($value)
+	{
+		$this->_date_added = strtotime($value);
+		return $this;
+	}
+
+	public function getDateAdded($format = 'Y-m-d H:i:s')
+	{
+		return date($format, $this->_date_added);
+	}
+
+	public function setAddedUsersId($value)
+	{
+		$this->_added_users_id = (int)$value;
+		return $this;
+	}
+
+	public function getAddedUsersId()
+	{
+		return $this->_added_users_id;
+	}
+
+	public function setDateUpdated($value)
+	{
+		$this->_date_updated = strtotime($value);
+		return $this;
+	}
+
+	public function getDateUpdated($format = 'Y-m-d H:i:s')
+	{
+		return date($format, $this->_date_updated);
+	}
+
+	public function setUpdatedUsersId($value)
+	{
+		$this->_updated_users_id = (int)$value;
+		return $this;
+	}
+
+	public function getUpdatedUsersId()
+	{
+		return $this->_updated_users_id;
 	}
 
 	public function setFilename($value)
@@ -83,5 +133,27 @@ class GD_Model_Config
 	public function getProject()
 	{
 		return $this->_project;
+	}
+
+	public function setAddedUser(GD_Model_User $obj)
+	{
+		$this->_added_user = $obj;
+		return $this;
+	}
+
+	public function getAddedUser()
+	{
+		return $this->_added_user;
+	}
+
+	public function setUpdatedUser(GD_Model_User $obj)
+	{
+		$this->_updated_user = $obj;
+		return $this;
+	}
+
+	public function getUpdatedUser()
+	{
+		return $this->_updated_user;
 	}
 }

@@ -31,6 +31,16 @@ class GD_Model_DbTable_Configs extends Zend_Db_Table_Abstract
 			'refTableClass' => 'GD_Model_DbTable_Projects',  // the projects table name
 			'refColumns' => 'id' // the primary key of the foreign table
 		),
+		'GD_Model_DbTable_Users+Added' => array(
+			'columns' => 'added_users_id',  // the column in the 'configs' table which is used for the join
+			'refTableClass' => 'GD_Model_DbTable_Users',  // the users table name
+			'refColumns' => 'id' // the primary key of the foreign table
+		),
+		'GD_Model_DbTable_Users+Updated' => array(
+			'columns' => 'updated_users_id',  // the column in the 'configs' table which is used for the join
+			'refTableClass' => 'GD_Model_DbTable_Users',  // the users table name
+			'refColumns' => 'id' // the primary key of the foreign table
+		),
 	);
 
 	protected $_dependentTables = array('GD_Model_DbTable_ConfigsServers');

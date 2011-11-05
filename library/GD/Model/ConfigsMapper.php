@@ -56,6 +56,10 @@ class GD_Model_ConfigsMapper extends MAL_Model_MapperAbstract
 	{
 		$data = array(
 			'projects_id' => $obj->getProjectsId(),
+			'date_added' => $obj->getDateAdded(),
+			'added_users_id' => $obj->getAddedUsersId(),
+			'date_updated' => date('Y-m-d H:i:s'),
+			'updated_users_id' => $obj->getUpdatedUsersId(),
 			'filename' => $obj->getFilename(),
 			'content' => $obj->getContent(),
 		);
@@ -71,6 +75,10 @@ class GD_Model_ConfigsMapper extends MAL_Model_MapperAbstract
 	{
 		$obj->setId($row->id)
 			->setProjectsId($row->projects_id)
+			->setDateAdded($row->date_added)
+			->setAddedUsersId($row->added_users_id)
+			->setDateUpdated($row->date_updated)
+			->setUpdatedUsersId($row->updated_users_id)
 			->setFilename($row->filename)
 			->setContent($row->content);
 
@@ -78,6 +86,14 @@ class GD_Model_ConfigsMapper extends MAL_Model_MapperAbstract
 		$project = new GD_Model_Project();
 		$p_map->populateObjectFromRow($project, $row->findParentRow('GD_Model_DbTable_Projects'));
 		$obj->setProject($project);
+
+		$u_map = new GD_Model_UsersMapper();
+		$added_user = new GD_Model_User();
+		$u_map->populateObjectFromRow($added_user, $row->findParentRow('GD_Model_DbTable_Users', 'GD_Model_DbTable_Users+Added'));
+
+		$updated_user = new GD_Model_User();
+		$u_map->populateObjectFromRow($updated_user, $row->findParentRow('GD_Model_DbTable_Users', 'GD_Model_DbTable_Users+Updated'));
+		$obj->setUpdatedUser($updated_user);
 	}
 
 	/**

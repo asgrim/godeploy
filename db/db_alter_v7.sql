@@ -11,6 +11,10 @@ DROP TABLE IF EXISTS `configs` ;
 CREATE TABLE `configs` (
   `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,
   `projects_id` INT NOT NULL ,
+  `date_added` DATETIME NOT NULL ,
+  `added_users_id` INT NOT NULL ,
+  `date_updated` DATETIME NOT NULL ,
+  `updated_users_id` INT NOT NULL ,
   `filename` VARCHAR( 512 ) NOT NULL ,
   `content` LONGTEXT NOT NULL ,
   INDEX (  `projects_id` )
