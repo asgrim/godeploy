@@ -33,19 +33,19 @@
 				if($test["RESULT"])
 				{
 					$r = _r("Pass");
-					$i = _r("complete");
+					$i = "complete";
 				}
 				else
 				{
 					if(isset($test["NOT_CRITICAL"]) && $test["NOT_CRITICAL"])
 					{
 						$r = _r("Warning");
-						$i = _r("warning");
+						$i = "warning";
 					}
 					else
 					{
 						$r = _r("Fail");
-						$i = _r("failed");
+						$i = "failed";
 					}
 				}
 			?>

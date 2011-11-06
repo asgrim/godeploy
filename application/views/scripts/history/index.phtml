@@ -8,16 +8,22 @@
 	<div class="wrapper w_ededed"><div class="content">
 		<div class="padding_15"></div>
 
-<?php
-	if (is_array($this->deployments) && count($this->deployments) > 0)
-	{
+<?php if (is_array($this->deployments) && count($this->deployments) > 0): ?>
+	
+	<h2><?php _e("Deployment history"); ?></h2>
+		
+	<?php 
 		$count = count($this->deployments);
-		$ess = $count == "1" ? "" : "s";
-		$are = $count == "1" ? _r("is") : _r("are");
-		$recent = $count == "1" ? "" : _r(", with the most recent at the top");
-?>
-		<h2><?php _e("Deployment history"); ?></h2>
-		<p><?php _e("There"); ?> <?php echo $are; ?> <?php echo $count; ?> <?php _e("deployment"); ?><?php echo $ess; ?> <?php _e("shown"); ?><?php echo $recent; ?>.</p>
+		if($count == "1"): 
+	?>
+		
+		<p><?php _e("There is 1 deployment shown."); ?></p>
+		
+	<?php else: ?>
+		
+		<p><?php _e("There are"); echo " ".$count." "; _e("deployments shown, with the most recent at the top."); ?></p>
+		
+	<?php endif; ?>
 
 		<div id="feed_icons">
 			<a href="<?php echo $this->baseUrl(); ?>/project/<?php echo $this->project->getSlug(); ?>/history/rss">
@@ -70,9 +76,9 @@
 			<?php endforeach; ?>
 			</tbody>
 		</table>
-<?php } else { ?>
+<?php else: ?>
 		<h2 class="last"><?php _e("This project is yet to be deployed."); ?></h2>
-<?php } ?>
+<?php endif; ?>
 	</div></div>
 </div>
 
