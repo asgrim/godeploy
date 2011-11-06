@@ -14,7 +14,7 @@
 
 			<div id="menu_heading">
 			<?php if ($this->project): ?>
-				Current Project: <strong><?php echo $this->project->getName(); ?></strong>
+				<?php _e("Current Project"); ?>: <strong><?php echo $this->project->getName(); ?></strong>
 			<?php else: ?>
 				&nbsp;
 			<?php endif; ?>
@@ -24,7 +24,7 @@
 
 			<span id="logged_in_status">
 			<?php if ($this->logged_in): ?>
-				<?php echo Zend_Auth::getInstance()->getIdentity(); ?> (<a href="/auth/logout" title="Logout"><?php _e("Log out"); ?></a>)
+				<?php echo Zend_Auth::getInstance()->getIdentity(); ?> (<a href="/auth/logout" title="<?php _e("Logout"); ?>"><?php _e("Logout"); ?></a>)
 			<?php else: ?>
 				<?php _e("Not logged in."); ?>
 			<?php endif; ?>
