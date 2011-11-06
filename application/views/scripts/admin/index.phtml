@@ -8,10 +8,8 @@
 	<div class="wrapper w_ededed"><div class="content">
 		<div class="padding_15"></div>
 
-<?php
-	if (is_array($this->users) && count($this->users) > 0)
-	{
-?>
+<?php if (is_array($this->users) && count($this->users) > 0): ?>
+		
 		<h2>Deployment history</h2>
 
 		<table>
@@ -27,20 +25,20 @@
 			<?php foreach ($this->users as $user) : ?>
 				<tr>
 					<td><?php echo $user->getName(); ?></td>
-					<td><?php echo $user->isAdmin() ? "Yes" : "No"; ?></td>
-					<td><?php echo $user->isActive() ? "Yes" : "No"; ?></td>
+					<td><?php echo $user->isAdmin() ? _r("Yes") : _r("No"); ?></td>
+					<td><?php echo $user->isActive() ? _r("Yes") : _r("No"); ?></td>
 					<td class="icon">
 						<a href="<?php echo $this->baseUrl(); ?>/admin/user?id=<?php echo $user->getId(); ?>">
-							<img src="/images/icons/edit/16x16.png" alt="Edit &raquo;" />
+							<img src="/images/icons/edit/16x16.png" alt="<?php _e("Edit"); ?> &raquo;" />
 						</a>
 					</td>
 				</tr>
 			<?php endforeach; ?>
 			</tbody>
 		</table>
-<?php } else { ?>
+<?php else: ?>
 		<h2 class="last"><?php _e("There are no users... somehow?!"); ?></h2>
-<?php } ?>
+<?php endif; ?>
 		<div class="padding_15"></div>
 		<p class="last"><a href="<?php echo $this->baseUrl(); ?>/admin/user" class="add_icon"><?php _e("Add a user"); ?></a></p>
 	</div></div>
