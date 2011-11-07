@@ -78,7 +78,7 @@
 		<tbody>
 			<?php foreach($this->file_list as $file): ?>
 			<tr>
-				<td><?php echo $file->getDetails(); ?></td>
+				<td><?php echo preg_replace('/(!CFG!\d+!)(.*)/', '$2 <strong>(Configuration File)</strong>', $file->getDetails()); ?></td>
 				<td><?php echo $file->getDeploymentFileAction()->getName(); ?></td>
 				<td id="file_<?php echo $file->getId(); ?>_status">
 					<img src="/images/icons/<?php echo $file->getDeploymentFileStatus()->getImageName(); ?>" alt="icon" />

@@ -78,3 +78,9 @@ a {
 		h1 a:hover {
 			text-decoration: underline;
 			}
+
+.monospace {
+	font-family: monospace;
+	background-color: #cdcdcd;
+	padding: 1px 4px;
+	}
