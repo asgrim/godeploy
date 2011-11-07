@@ -41,4 +41,51 @@ class ConfigsController extends Zend_Controller_Action
 		$configs = new GD_Model_ConfigsMapper();
 		$this->view->configs = $configs->getConfigsByProject($project->getId());
 	}
+
+	public function editAction()
+	{
+		$this->view->headTitle('Configuration Management');
+		$this->view->headLink()->appendStylesheet("/css/template/form.css");
+		$this->view->headLink()->appendStylesheet("/css/pages/configs_edit.css");
+
+		$projects = new GD_Model_ProjectsMapper();
+		$project_slug = $this->_getParam("project");
+		if($project_slug != "")
+		{
+			$project = $projects->getProjectBySlug($project_slug);
+		}
+
+		$this->view->project = $project;
+
+		$configs = new GD_Model_ConfigsMapper();
+		$config = new GD_Model_Config();
+		$config_id = $this->_getParam("id");
+
+		$user = GD_Auth_Database::GetLoggedInUser();
+
+		if($config_id > 0)
+		{
+			$configs->find($config_id, $config);
+		}
+		else
+		{
+			$config->setProjectsId($project->getId());
+			$config->setDateAdded(date("Y-m-d H:i:s"));
+			$config->setAddedUsersId($user->getId());
+		}
+
+		if($this->getRequest()->isPost())
+		{
+			$config->setFilename($this->_getParam("filename", ""));
+			$config->setContent($this->_getParam("configContent", ""));
+			$config->setUpdatedUsersId($user->getId());
+			$configs->save($config);
+
+			$this->_redirect($this->getFrontController()->getBaseUrl() . "/project/" . $this->_getParam("project") . "/configs");
+		}
+		else
+		{
+			$this->view->config = $config;
+		}
+	}
 }

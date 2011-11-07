@@ -106,7 +106,7 @@ class GD_Model_ConfigsMapper extends MAL_Model_MapperAbstract
 		$select = $this->getDbTable()
 			->select()
 			->where("projects_id = ?", $project_id)
-			->order("filename DESC");
+			->order("filename ASC");
 
 		return $this->fetchAll($select);
 	}

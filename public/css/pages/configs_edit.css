@@ -1,0 +1,38 @@
+/* CSS Document */
+
+#filepath {
+	width: 400px;
+	}
+	
+#configContent {
+	width: 100%;
+	height: 300px;
+	}
+
+#configEditor li.submit {
+	padding: 10px 0 0 205px;
+	float: left;
+	width: 600px;
+	}
+
+	#configEditor li.submit input {
+		float: left;
+		}
+
+#linkBack {
+	display: block;
+	float: left;
+	line-height: 44px;
+	margin-left: 15px;
+	}
+	
+#form #configServerCheckboxes {
+	width: 300px;
+	}
+	#configServerCheckboxes ul {
+		padding: 0;
+		}
+	#configServerCheckboxes ul li {
+		padding: 0;
+		border-bottom: none;
+		}

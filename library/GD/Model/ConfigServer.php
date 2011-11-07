@@ -21,7 +21,7 @@
  * @author See AUTHORS file
  * @link http://www.godeploy.com/
  */
-class GD_Model_Config
+class GD_Model_ConfigServer
 {
 	protected $_servers_id;
 	protected $_configs_id;
