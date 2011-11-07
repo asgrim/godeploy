@@ -2,7 +2,7 @@
 
 define('TEST_USER', 'testuser');
 define('TEST_PASSWORD', 'testpassword');
-define('GITHUB_USER', 'youruser');
+//define('GITHUB_USER', 'youruser');
 
 error_reporting(E_ALL);
 ini_set('display_startup_errors', 1);
