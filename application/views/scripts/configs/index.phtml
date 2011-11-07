@@ -16,6 +16,7 @@
 			<thead>
 				<tr>
 					<th><?php _e("Filename"); ?></th>
+					<th><?php _e("Created"); ?></th>
 					<th><?php _e("Updated"); ?></th>
 					<th><?php _e("Upload to Servers"); ?></th>
 					<th><?php _e("File size"); ?></th>
@@ -31,6 +32,7 @@
 			?>
 				<tr>
 					<td <?php echo $rowspan; ?> class="nowrap"><?php echo $config->getFilename(); ?></td>
+					<td <?php echo $rowspan; ?> class="nowrap"><?php echo $config->getDateAdded("d/m/Y H:i"); ?> <?php _e("by"); ?> <?php echo $config->getAddedUser()->getName(); ?></td>
 					<td <?php echo $rowspan; ?> class="nowrap"><?php echo $config->getDateUpdated("d/m/Y H:i"); ?> <?php _e("by"); ?> <?php echo $config->getUpdatedUser()->getName(); ?></td>
 					<td><?php echo $config->servers[0]->getServer()->getName(); ?></td>
 					<td <?php echo $rowspan; ?>><?php echo strlen($config->getContent()); ?> bytes</td>

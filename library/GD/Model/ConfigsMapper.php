@@ -90,6 +90,7 @@ class GD_Model_ConfigsMapper extends MAL_Model_MapperAbstract
 		$u_map = new GD_Model_UsersMapper();
 		$added_user = new GD_Model_User();
 		$u_map->populateObjectFromRow($added_user, $row->findParentRow('GD_Model_DbTable_Users', 'GD_Model_DbTable_Users+Added'));
+		$obj->setAddedUser($added_user);
 
 		$updated_user = new GD_Model_User();
 		$u_map->populateObjectFromRow($updated_user, $row->findParentRow('GD_Model_DbTable_Users', 'GD_Model_DbTable_Users+Updated'));

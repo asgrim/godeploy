@@ -85,7 +85,7 @@ class GD_Model_ConfigsServersMapper extends MAL_Model_MapperAbstract
 
 	/**
 	 * Get a list of the servers for a configuration file
-	 * @param int $config_id
+	 * @param int $id config ID
 	 * @return array of GD_Model_Server objects
 	 */
 	public function getAllServersForConfig($id)
@@ -93,6 +93,20 @@ class GD_Model_ConfigsServersMapper extends MAL_Model_MapperAbstract
 		$select = $this->getDbTable()
 			->select()
 			->where("configs_id = ?", $id);
+
+		return $this->fetchAll($select);
+	}
+
+	/**
+	 * Get a list of the configuration files for a server
+	 * @param int $id server ID
+	 * @return array of GD_Model_Config objects
+	 */
+	public function getAllConfigsForServer($id)
+	{
+		$select = $this->getDbTable()
+			->select()
+			->where("servers_id = ?", $id);
 
 		return $this->fetchAll($select);
 	}

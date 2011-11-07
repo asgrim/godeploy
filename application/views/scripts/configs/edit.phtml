@@ -17,7 +17,7 @@
 						<span class="field">
 							<input type="text" id="filename" name="filename" value="<?php echo $this->config->getFilename(); ?>" />
 							<span class="extras">
-								<span class="description">This must be a path relative to the folder in which <?php echo $this->project->getName(); ?> will be deployed, e.g. <span class="monospace">config/db.ini</span></span>
+								<span class="description"><?php _e("This must be a path relative to the folder in which"); ?> <?php echo $this->project->getName(); ?> <?php _e("will be deployed, e.g."); ?> <span class="monospace">config/db.ini</span></span>
 							</span>
 						</span>
 						<div class="clear"></div>
@@ -41,7 +41,7 @@
 								<?php endforeach; ?>
 								</ul>
 							<?php else: ?>
-								<strong>Oh dear! Looks like you have not configured any servers yet...</strong>
+								<strong><?php _e("Oh dear! Looks like you have not configured any servers yet..."); ?></strong>
 							<?php endif; ?>
 						</span>
 						<div class="clear"></div>
