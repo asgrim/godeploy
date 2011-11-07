@@ -30,18 +30,19 @@
 					<li>
 						<label><span><?php _e("Upload to servers"); ?></span></label>
 						<span class="field" id="configServerCheckboxes">
-							<ul>
-								<li>
-									<input type="checkbox" name="server[]" id="server_all" value="all" checked="checked" />
-									<label for="server_all">All servers</label>
-									<div class="clear"></div>
-								</li>
-								<li>
-									<input type="checkbox" name="server[]" id="server_first" value="first" />
-									<label for="server_first">First server</label>
-									<div class="clear"></div>
-								</li>
-							</ul>
+							<?php if(is_array($this->servers) && count($this->servers) > 0): ?>
+								<ul>
+								<?php foreach($this->servers as $server): ?>
+									<li>
+										<input type="checkbox" name="servers[]" id="server_<?php echo $server->getId(); ?>" value="<?php echo $server->getId(); ?>"<?php echo in_array($server->getId(), $this->config_server_ids) ? " checked=\"checked\"" : ""; ?> />
+										<label for="server_<?php echo $server->getId(); ?>"><?php echo $server->getDisplayName(); ?></label>
+										<div class="clear"></div>
+									</li>
+								<?php endforeach; ?>
+								</ul>
+							<?php else: ?>
+								<strong>Oh dear! Looks like you have not configured any servers yet...</strong>
+							<?php endif; ?>
 						</span>
 						<div class="clear"></div>
 					</li>

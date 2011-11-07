@@ -82,4 +82,37 @@ class GD_Model_ConfigsServersMapper extends MAL_Model_MapperAbstract
 		$c_map->populateObjectFromRow($config, $row->findParentRow('GD_Model_DbTable_Configs'));
 		$obj->setConfig($config);
 	}
+
+	/**
+	 * Get a list of the servers for a configuration file
+	 * @param int $config_id
+	 * @return array of GD_Model_Server objects
+	 */
+	public function getAllServersForConfig($id)
+	{
+		$select = $this->getDbTable()
+			->select()
+			->where("configs_id = ?", $id);
+
+		return $this->fetchAll($select);
+	}
+
+	/**
+	 * Delete all servers for a configuration file
+	 * @param int $id
+	 * @return boolean
+	 */
+	public function deleteAllServersForConfig($id)
+	{
+		$id = (int)$id;
+
+		if($id > 0)
+		{
+			return $this->getDbTable()->delete(array('configs_id = ?' => $id));
+		}
+		else
+		{
+			return false;
+		}
+	}
 }

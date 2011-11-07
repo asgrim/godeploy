@@ -27,7 +27,7 @@
 	}
 	
 #form #configServerCheckboxes {
-	width: 300px;
+	width: 600px;
 	}
 	#configServerCheckboxes ul {
 		padding: 0;
@@ -36,3 +36,6 @@
 		padding: 0;
 		border-bottom: none;
 		}
+		#configServerCheckboxes ul li label {
+			width: 550px;
+			}

@@ -40,6 +40,13 @@ class ConfigsController extends Zend_Controller_Action
 
 		$configs = new GD_Model_ConfigsMapper();
 		$this->view->configs = $configs->getConfigsByProject($project->getId());
+
+		$configs_servers_map = new GD_Model_ConfigsServersMapper();
+
+		foreach($this->view->configs as $config)
+		{
+			$config->servers = $configs_servers_map->getAllServersForConfig($config->getId());
+		}
 	}
 
 	public function editAction()
@@ -57,29 +64,64 @@ class ConfigsController extends Zend_Controller_Action
 
 		$this->view->project = $project;
 
-		$configs = new GD_Model_ConfigsMapper();
+		$configs_map = new GD_Model_ConfigsMapper();
 		$config = new GD_Model_Config();
 		$config_id = $this->_getParam("id");
+
+		$configs_servers_map = new GD_Model_ConfigsServersMapper();
+		$config_server_ids = array();
+
+		$servers_map = new GD_Model_ServersMapper();
+		$servers = $servers_map->getServersByProject($project->getId());
+		$this->view->servers = $servers;
 
 		$user = GD_Auth_Database::GetLoggedInUser();
 
 		if($config_id > 0)
 		{
-			$configs->find($config_id, $config);
+			$configs_map->find($config_id, $config);
+
+			$config_servers = $configs_servers_map->getAllServersForConfig($config->getId());
+
+			foreach($config_servers as $cs)
+			{
+				$config_server_ids[] = $cs->getServersId();
+			}
 		}
 		else
 		{
 			$config->setProjectsId($project->getId());
 			$config->setDateAdded(date("Y-m-d H:i:s"));
 			$config->setAddedUsersId($user->getId());
+
+			foreach($servers as $server)
+			{
+				$config_server_ids[] = $server->getId();
+			}
 		}
+
+		$this->view->config_server_ids = $config_server_ids;
 
 		if($this->getRequest()->isPost())
 		{
+			// First save the config file itself
 			$config->setFilename($this->_getParam("filename", ""));
 			$config->setContent($this->_getParam("configContent", ""));
 			$config->setUpdatedUsersId($user->getId());
-			$configs->save($config);
+			$configs_map->save($config);
+
+			// Then loop through the config_servers and update
+			$configs_servers_map->deleteAllServersForConfig($config->getId());
+
+			$add_to_servers = $this->_getParam("servers", array());
+
+			foreach($add_to_servers as $server_id)
+			{
+				$cs = new GD_Model_ConfigServer();
+				$cs->setConfigsId($config->getId());
+				$cs->setServersId($server_id);
+				$configs_servers_map->save($cs);
+			}
 
 			$this->_redirect($this->getFrontController()->getBaseUrl() . "/project/" . $this->_getParam("project") . "/configs");
 		}

@@ -23,11 +23,23 @@
  */
 class GD_Model_ConfigServer
 {
+	protected $_id;
 	protected $_servers_id;
 	protected $_configs_id;
 
 	protected $_server;
 	protected $_config;
+
+	public function setId($id)
+	{
+		$this->_id = (int)$id;
+		return $this;
+	}
+
+	public function getId()
+	{
+		return $this->_id;
+	}
 
 	public function setServersId($value)
 	{
