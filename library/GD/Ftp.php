@@ -70,13 +70,30 @@ class GD_Ftp
 	 */
 	private $_last_error;
 
-	public function __construct(GD_Model_Server $server)
+	public function __construct($hostname, $username, $password, $remote_path, $port = 21)
 	{
-		$this->_hostname = $server->getHostname();
-		$this->_username = $server->getUsername();
-		$this->_password = $server->getPassword();
-		$this->_port = $server->getPort() ? $server->getPort() : 21;
-		$this->_remote_path = $server->getRemotePath();
+		$this->_hostname = $hostname;
+		$this->_username = $username;
+		$this->_password = $password;
+		$this->_port = $port;
+		$this->_remote_path = $remote_path;
+	}
+
+	/**
+	 * Generate a new GD_Ftp instance based on a GD_Model_Server object
+	 *
+	 * @param GD_Model_Server $server
+	 * @return GD_Ftp
+	 */
+	public static function FromServer(GD_Model_Server $server)
+	{
+		return new GD_Ftp(
+				$server->getHostname(),
+				$server->getUsername(),
+				$server->getPassword(),
+				$server->getRemotePath(),
+				$server->getPort() ? $server->getPort() : 21
+		);
 	}
 
 	public function __destruct()

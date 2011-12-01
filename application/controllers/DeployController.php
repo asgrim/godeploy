@@ -471,7 +471,7 @@ class DeployController extends Zend_Controller_Action
 
 		// Do the upload
 		GD_Debug::Log("Actioning files now.", GD_Debug::DEBUG_BASIC);
-		$ftp = new GD_Ftp($server);
+		$ftp = GD_Ftp::FromServer($server);
 		try
 		{
 			$ftp->connect();
