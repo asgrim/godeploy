@@ -30,6 +30,16 @@
 						<span class="value"><span class="monospace"><?php echo $this->deployment->getToRevision(); ?></span></span>
 					</li>
 					<li>
+						<label><?php _e("Comment"); ?></label>
+						<span class="value">
+						<?php if($this->deployment->getComment() != ""): ?>
+							<?php echo $this->escape($this->deployment->getComment()); ?>
+						<?php else: ?>
+							<small><em>No comment for this deployment</em></small>
+						<?php endif; ?>
+						</span>
+					</li>
+					<li>
 						<label><?php _e("Status"); ?></label>
 						<span class="value" id="deployment_status">
 							<img src="/images/icons/<?php echo $this->deployment->getDeploymentStatus()->getImageName(); ?>" alt="icon" />
