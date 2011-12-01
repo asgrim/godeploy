@@ -16,6 +16,10 @@
 	#fromRevision, #toRevision, #comment {
 		width: 400px;
 		}
+		
+	#fromRevision, #toRevision {
+		font-family: monospace;
+	}
 
 #get_latest_revision_status {
 	padding-left: 5px;

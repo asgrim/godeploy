@@ -22,12 +22,12 @@
 				<?php if($this->deployment->getFromRevision() != ""): ?>
 					<li>
 						<label><?php _e("From"); ?></label>
-						<span class="value"><?php echo $this->deployment->getFromRevision(); ?></span>
+						<span class="value"><span class="monospace"><?php echo $this->deployment->getFromRevision(); ?></span></span>
 					</li>
 				<?php endif; ?>
 					<li>
 						<label><?php _e("To"); ?></label>
-						<span class="value"><?php echo $this->deployment->getToRevision(); ?></span>
+						<span class="value"><span class="monospace"><?php echo $this->deployment->getToRevision(); ?></span></span>
 					</li>
 					<li>
 						<label><?php _e("Status"); ?></label>

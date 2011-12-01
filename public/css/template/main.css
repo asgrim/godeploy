@@ -81,6 +81,9 @@ a {
 
 .monospace {
 	font-family: monospace;
-	background-color: #cdcdcd;
+	background-color: #ddffdd;
 	padding: 1px 4px;
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
 	}
