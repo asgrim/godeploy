@@ -1,4 +1,4 @@
-#!/bin/bash -x
+#!/bin/bash
 # GPLv3 License - see LICENSE
 # Copyright (C) 2011 - James Titcumb
 # Official GoDeploy setup script
@@ -13,6 +13,17 @@ fi
 
 # Prerequisite - git
 hash git 2>&- || { echo >&2 "git not installed and is a requirement for GoDeploy. Aborting installation."; exit 1; }
+
+# Warn of system requirements
+echo ""
+echo "Please read the system requirements before continuing."
+echo "If your system does not have one of the required components, we are unable to help you."
+echo ""
+echo "https://github.com/asgrim/godeploy/wiki/Requirements"
+echo ""
+echo "Please also read the LICENSE. This is GPL'd software."
+echo "Thanks for downloading GoDeploy - visit our site to stay updated - www.godeploy.com"
+echo ""
 
 # Capture install location
 DEFAULT_INSTALL=`pwd`
@@ -75,3 +86,8 @@ chmod 775 godeploy/application/configs
 echo "Done."
 
 echo "You now need to point your Apache virtual host to $SETUP_DIR/godeploy/public"
+echo ""
+echo "If you need help setting up an Apache virtual host, please visit:"
+echo "https://github.com/asgrim/godeploy/wiki/Installation"
+echo ""
+echo "Thanks..."
