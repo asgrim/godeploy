@@ -103,11 +103,6 @@ class HistoryController extends Zend_Controller_Action
 
 		// Basic information
 		$url = $this->_request->getScheme() . "://" . $this->getRequest()->getHttpHost() . $this->getRequest()->getRequestUri();
-		$author = array(
-			'name'  => 'GoDeploy RSS Generator',
-			'email' => 'info@godeploy.com',
-			'uri'   => $url,
-		);
 
 		// Disable Zend view rendering and set content type
 		$this->_response->setHeader('Content-type', 'text/xml');

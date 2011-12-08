@@ -88,11 +88,11 @@ class GD_Ftp
 	public static function FromServer(GD_Model_Server $server)
 	{
 		return new GD_Ftp(
-				$server->getHostname(),
-				$server->getUsername(),
-				$server->getPassword(),
-				$server->getRemotePath(),
-				$server->getPort() ? $server->getPort() : 21
+			$server->getHostname(),
+			$server->getUsername(),
+			$server->getPassword(),
+			$server->getRemotePath(),
+			$server->getPort() ? $server->getPort() : 21
 		);
 	}
 

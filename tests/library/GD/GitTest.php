@@ -83,24 +83,16 @@ class GD_GitTest extends GD_TestCase
 		$git->deleteRepository();
 	}
 
+	/**
+	 * @expectedException GD_Exception
+	 */
 	public function testGetCommitsBetweenExceptionThrownWhenInvalidRefsPassed()
 	{
 		$git = new GD_Git("unittest1", "git://github.com/asgrim/godeploy-test-project.git", "master", "");
 		$git->deleteRepository();
 		$git->gitClone();
 
-		try
-		{
-			$o = $git->getCommitsBetween('', '');
-		}
-		catch(GD_Exception $expected)
-		{
-			$git->deleteRepository();
-			return;
-		}
-
-		$git->deleteRepository();
-		$this->fail('Expected a GD_Exception for getCommitsBetween invalid arguments but was not raised.');
+		$git->getCommitsBetween('', '');
 	}
 
 	public function testSSHCommand()

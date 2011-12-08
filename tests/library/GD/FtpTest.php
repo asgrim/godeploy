@@ -35,7 +35,7 @@ class GD_FtpTest extends GD_TestCase
 		}
 		catch(GD_Exception $ex)
 		{
-			$this->fail("Failed to connect to FTP server");
+			$this->fail("Failed to connect to FTP server - {$ex->getMessage()}");
 		}
 	}
 }
