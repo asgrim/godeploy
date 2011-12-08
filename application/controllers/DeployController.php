@@ -229,6 +229,9 @@ class DeployController extends Zend_Controller_Action
 		$deployment_files = new GD_Model_DeploymentFilesMapper();
 		$file_list = $deployment_files->getDeploymentFilesByDeployment($deployment->getId());
 		$this->view->file_list = $file_list;
+
+		$git = GD_Git::FromProject($project);
+		$this->view->commit_log = $git->getCommitsBetween($deployment->getFromRevision(), $deployment->getToRevision());
 	}
 
 	public function previewAction()
