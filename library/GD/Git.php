@@ -35,9 +35,9 @@ class GD_Git extends GD_Shell
 	private $_url;
 
 	/**
-	 * @var GD_Model_Project
+	 * @var int A unique identifier ID
 	 */
-	private $_project;
+	private $_unique_id;
 
 	/**
 	 * @var string Path to this instance's git respository
@@ -48,6 +48,11 @@ class GD_Git extends GD_Shell
 	 * @var string Current branch of the repository
 	 */
 	private $_current_branch;
+
+	/**
+	 * @var string Branch to operate Git procedures from
+	 */
+	private $_operation_branch;
 
 	/**
 	 * @var string Type of the origin repository (ssh/git etc.)
@@ -68,6 +73,11 @@ class GD_Git extends GD_Shell
 	 * @var string Path to the GIT_SSH script
 	 */
 	private $_ssh_script;
+
+	/**
+	 * @var string The private RSA key
+	 */
+	private $_rsa_key;
 
 	const GIT_REPOTYPE_SSH = 'ssh'; // SSH (read/write)
 	const GIT_REPOTYPE_HTTP = 'http'; // HTTP (read/write)
@@ -94,12 +104,15 @@ class GD_Git extends GD_Shell
 	const GIT_SSH_ERROR_HOSTNME = "SSH_RESOLVE_HOSTNAME";
 	const GIT_SSH_ERROR_UNKNOWN = "SSH_UNKNOWN_ERROR";
 
-	public function __construct(GD_Model_Project &$project)
+	public function __construct($unique_id, $repository_url, $operation_branch, $id_rsa)
 	{
-		$this->_project = $project;
+		$this->_unique_id = $unique_id;
+		$this->_url = $repository_url;
+		$this->_operation_branch = $operation_branch;
+		$this->_rsa_key = $id_rsa;
+
 		$this->_base_gitdir = APPLICATION_PATH . "/../gitcache/";
-		$this->_gitdir = $this->_base_gitdir . $this->_project->getId();
-		$this->_url = $this->_project->getRepositoryUrl();
+		$this->_gitdir = $this->_base_gitdir . $this->_unique_id;
 		$this->_repotype = $this->parseRepoType($this->_url);
 
 		if($this->_repotype == self::GIT_REPOTYPE_HTTP)
@@ -113,20 +126,36 @@ class GD_Git extends GD_Shell
 			chdir($this->_base_gitdir);
 		}
 
-		// Check out the specified branch in the project if we're a valid repo
+		// Check out the specified operation branch if we're a valid repo
 		try
 		{
 			if($this->checkValidRepository())
 			{
-				$this->gitCheckout($project->getDeploymentBranch());
+				$this->gitCheckout($this->_operation_branch);
 			}
 		}
 		catch(GD_Exception $ex)
 		{
-			$invalid = true;
+			return $ex->getStringCode();
 		}
 
 		$this->_current_branch = $this->getCurrentBranch(true);
+	}
+
+	/**
+	 * Generate a new GD_Git instance based on a GD_Model_Project object
+	 *
+	 * @param GD_Model_Project $project
+	 * @return GD_Git
+	 */
+	public static function FromProject(GD_Model_Project $project)
+	{
+		return new GD_Git(
+			$project->getId(),
+			$project->getRepositoryUrl(),
+			$project->getDeploymentBranch(),
+			$project->getSSHKey()->getPrivateKey()
+		);
 	}
 
 	public function __destruct()
@@ -152,16 +181,13 @@ class GD_Git extends GD_Shell
 		if($this->_repotype == self::GIT_REPOTYPE_SSH)
 		{
 			// Write the id_rsa key to the gitcache
-			$id_rsa = $this->_project->getSSHKey()->getPrivateKey();
-			$project_id = $this->_project->getId();
-
-			$this->_ssh_key = $this->_base_gitdir . "id_rsa." . $project_id;
+			$this->_ssh_key = $this->_base_gitdir . "id_rsa." . $this->_unique_id;
 
 			if(file_exists($this->_ssh_key))
 			{
 				unlink($this->_ssh_key);
 			}
-			file_put_contents($this->_ssh_key, $id_rsa);
+			file_put_contents($this->_ssh_key, $this->_rsa_key);
 			chmod($this->_ssh_key, 0600);
 
 			// Get the hostname part of the URL
@@ -173,13 +199,13 @@ class GD_Git extends GD_Shell
 
 			// Use a script file
 			$script = "#!/bin/sh\n\n{$ssh_cmd} $*\n";
-			$this->_ssh_script = $this->_base_gitdir . "ssh." . $project_id . ".sh";
+			$this->_ssh_script = $this->_base_gitdir . "ssh." . $this->_unique_id . ".sh";
 			file_put_contents($this->_ssh_script, $script);
 			chmod($this->_ssh_script, 0755);
 			putenv("GIT_SSH={$this->_ssh_script}");
 
 			// Test the connection
-			$this->runShell("\$GIT_SSH -T -o StrictHostKeyChecking=no {$host}", false);
+			$this->runShell("\$GIT_SSH -T -o StrictHostKeyChecking=no {$host}");
 
 			if($this->_last_errno != 0)
 			{
@@ -187,7 +213,6 @@ class GD_Git extends GD_Shell
 				// Github returns: Hi [USER]! You've successfully authenticated, but GitHub does not provide shell access.
 				// Codebase returns: You've successfully uploaded your public key to Codebase and authenticated.
 				$valid_string = "You've successfully";
-				$is_valid = false;
 				foreach($this->_last_output as $o)
 				{
 					if(strpos($o, $valid_string) !== false)
@@ -315,7 +340,7 @@ class GD_Git extends GD_Shell
 			{
 				if(!$silent)
 				{
-					throw new GD_Exception("Git repository for {$this->_project->getName()} was not on a branch.", self::GIT_STATUS_ERROR_NOT_ON_BRANCH);
+					throw new GD_Exception("Git repository {$this->_unique_id} ({$this->_url}) was not on a branch.", self::GIT_STATUS_ERROR_NOT_ON_BRANCH);
 				}
 				else return false;
 			}
@@ -421,6 +446,91 @@ class GD_Git extends GD_Shell
 	public function getFirstCommit()
 	{
 		return $this->getSingleLog('git log --pretty=oneline | tail -1');
+	}
+
+	/**
+	 * Return a key/value list of each commit $ref1 up to and including $ref2.
+	 * Arguments can be in *any* order, but if in the "wrong" order, the
+	 * Swapped member variable of the returned object will be set to true.
+	 *
+	 * Return value is a stdClass object something like:
+	 *
+	 * @example
+	 * $ret = getCommitsBetween('d34d', 'c0f4');
+	 *
+	 * $ret->swapped = true if $ref1..$ref2 , or false for $ref2..$ref1
+	 * $ret->commits = array(
+	 *     array('HASH' => 'c0f4..395c', 'AUTHOR' => 'some@email.com', 'MESSAGE' => 'Commit message 1'),
+	 *     array('HASH' => 'd34d..b33f', 'AUTHOR' => 'some@email.com', 'MESSAGE' => 'Commit message 2'),
+	 * );
+	 *
+	 * @throws GD_Exception
+	 *
+	 * @param string $ref1
+	 * @param string $ref2
+	 *
+	 * @return stdClass
+	 */
+	public function getCommitsBetween($ref1, $ref2)
+	{
+		$nice_ref1 = $this->getFullHash($ref1);
+		$nice_ref2 = $this->getFullHash($ref2);
+
+		// git merge-base will give us whichever commit comes first, handy
+		$this->runShell("git merge-base {$nice_ref1} {$nice_ref2}");
+
+		if($this->_last_errno == 0)
+		{
+			$first_ref = $this->_last_output[0];
+
+			$retval = new stdClass();
+			$retval->swapped = null;
+			$retval->commits = array();
+
+			if($first_ref == $nice_ref1)
+			{
+				$retval->swapped = false;
+			}
+			else if($first_ref == $nice_ref2)
+			{
+				$retval->swapped = true;
+
+				// Swap them round with XOR. Mind blown = true.
+				$nice_ref1 = $nice_ref1 ^ $nice_ref2;
+				$nice_ref2 = $nice_ref1 ^ $nice_ref2;
+				$nice_ref1 = $nice_ref1 ^ $nice_ref2;
+			}
+			else
+			{
+				throw new GD_Exception("Could not tell whether '{$first_ref}' was '{$nice_ref1}' or '{$nice_ref2}' in getCommitsBetween", 0, self::GIT_GENERAL_INVALID_REF);
+			}
+
+			$this->runShell("git --no-pager log --pretty=format:'%H,%an,%s' {$nice_ref1}..{$nice_ref2}");
+
+			if($this->_last_errno == 0)
+			{
+				foreach($this->_last_output as $line)
+				{
+					$raw_commit_info = explode(",", $line, 3);
+
+					$retval->commits[] = array(
+						'HASH' => $raw_commit_info[0],
+						'AUTHOR' => $raw_commit_info[1],
+						'MESSAGE' => $raw_commit_info[2],
+					);
+				}
+
+				return $retval;
+			}
+			else
+			{
+				throw new GD_Exception("Could not git log for commits between '{$nice_ref1}' and '{$nice_ref2}'", self::GIT_GENERAL_INVALID_REF);
+			}
+		}
+		else
+		{
+			throw new GD_Exception("Could not get commits between '{$nice_ref1}' or '{$nice_ref2}' (merge-base)", self::GIT_GENERAL_INVALID_REF);
+		}
 	}
 
 	/**
@@ -641,7 +751,7 @@ class GD_Git extends GD_Shell
 
 			if($actual_url != $this->_url)
 			{
-				throw new GD_Exception("Repository cache does not match the project's URL", 0, self::GIT_STATUS_ERROR_DIFFERENT_REPOSITORY);
+				throw new GD_Exception("Repository cache does not match the expected Git URL", 0, self::GIT_STATUS_ERROR_DIFFERENT_REPOSITORY);
 			}
 
 			return true;

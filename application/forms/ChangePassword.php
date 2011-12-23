@@ -46,10 +46,12 @@ class GDApp_Form_ChangePassword extends GD_Form_Abstract
 		$submit = new Zend_Form_Element_Image('btn_submit');
 		$submit->setImage('/images/buttons/small/save-changes.png');
 
-		$this->addElements(array(
-			$password,
-			$passwordConfirm,
-			$submit
-		));
+		$this->addElements(
+			array(
+				$password,
+				$passwordConfirm,
+				$submit
+			)
+		);
 	}
 }

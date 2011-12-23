@@ -53,11 +53,13 @@ class GDApp_Form_SetupAdmin extends GD_Form_Abstract
 		$submit->setImage('/images/buttons/small/next.png')
 			->setAttrib('style', 'float: right;');
 
-		$this->addElements(array(
-			$username,
-			$password,
-			$passwordConfirm,
-			$submit,
-		));
+		$this->addElements(
+			array(
+				$username,
+				$password,
+				$passwordConfirm,
+				$submit,
+			)
+		);
 	}
 }

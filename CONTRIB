@@ -1,55 +1,35 @@
 CONTRIBUTION NOTES
 ------------------
-GoDeploy requirements:
- * MAL (https://github.com/asgrim/mal)
- * Zend Framework (http://framework.zend.com)
- * PHP 5.3.2 (not tested with other versions)
- * MySQL 5.1.41 (not tested with other versions)
+See https://github.com/asgrim/godeploy/wiki/Contributing-to-GoDeploy for latest version of this document
 
-Not extensively tested in various environments yet, so YMMV.
+See https://github.com/asgrim/godeploy/wiki/Requirements for latest requirements
 
-GIT-FLOW RECOMMENDATION
------------------------
+We recommend using git-flow for your fork.
 See: https://github.com/nvie/gitflow
 
-It is recommended to use git-flow to manage your repository.
-All pull requests will be merged into the develop branch.
+REQUIREMENTS
+------------
+Linux, PHP 5.3.2, MySQL, php5_mcrypt, php5_ftp, git, openssh
+We recommend Ubuntu Server 10.04 LTS.
+Disable PHP safe mode, ensure Suhosin is permissive.
 
-To add a feature:
-1. git flow feature start <feature-name>
-2. Make changes
-3. Make pull request from branch feature/<feature-name>
-4. When pull request complete: git flow feature finish <feature-name>
-
-This is new so we might find a better way of working on it, please leave
-feedback on how this could be improved. Read up on git-flow as well!
-
-http://nvie.com/posts/a-successful-git-branching-model/
-http://vimeo.com/16018419
-
-SETTING UP ENVIRONMENT FOR GITHUB PULL REQUESTS
------------------------------------------------
+FORKING AND INSTALLING
+----------------------
 1. Fork https://github.com/asgrim/godeploy on GitHub
 2. git clone git@github.com:[YOURUSER]/godeploy.git
 2. cd library
 3. git clone git://github.com/asgrim/mal.git MAL
-4. svn co http://framework.zend.com/svn/framework/standard/tags/release-1.10.8/library/Zend Zend
-5. Run latest db/db_create_v?.sql script on your DB
-6. Run db/test_data.sql
-7. Set up DB settings in application/configs/application.ini
+4. svn co --quiet http://framework.zend.com/svn/framework/standard/tags/release-1.10.8/library/Zend Zend
+5. cd ..
+6. mkdir gitcache
+7. chgrp -R www-data godeploy
+8. chmod 775 gitcache
+9. chmod 775 application/configs
+10. Run setup script
 
-SETTING UP ENVIRONMENT (READ-ONLY - FOR TESTING ETC.)
------------------------------------------------------
-1. git clone git://github.com/asgrim/godeploy.git
-2. cd library
-3. git clone git://github.com/asgrim/mal.git MAL
-4. svn co http://framework.zend.com/svn/framework/standard/tags/release-1.10.8/library/Zend Zend
-5. Run latest db/db_create_v?.sql script
-6. Set up DB settings in application/configs/application.ini
-
-UPDATING IN THE FUTURE (FOR ALL DEVELOPERS)
--------------------------------------------
+UPDATING IN THE FUTURE
+----------------------
 1. git remote add upstream git://github.com/asgrim/godeploy.git
 2. git fetch upstream
 3. git merge upstream/develop
-(alternatively if you are daring/careless, you can `git pull upstream` to combine fetch and merge)
+

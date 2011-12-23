@@ -23,16 +23,16 @@
  */
 class HomeController extends Zend_Controller_Action
 {
-    public function indexAction()
-    {
-    	$mprojects = new GD_Model_ProjectsMapper();
+	public function indexAction()
+	{
+		$mprojects = new GD_Model_ProjectsMapper();
 
-    	$projects = $mprojects->fetchAll();
+		$projects = $mprojects->fetchAll();
 
-    	$this->view->projects = $projects;
+		$this->view->projects = $projects;
 
-    	$this->view->headTitle('Home');
+		$this->view->headTitle('Home');
 		$this->view->headLink()->appendStylesheet("/css/pages/home.css");
 		$this->view->headLink()->appendStylesheet("/css/template/table.css");
-    }
+	}
 }

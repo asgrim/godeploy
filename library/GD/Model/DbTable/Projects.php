@@ -33,5 +33,5 @@ class GD_Model_DbTable_Projects extends Zend_Db_Table_Abstract
 		)
 	);
 
-	protected $_dependentTables = array('GD_Model_DbTable_Deployments');
+	protected $_dependentTables = array('GD_Model_DbTable_Deployments','GD_Model_DbTable_Configs');
 }

@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<ruleset name="GoDeploy">
+ <description>GoDeploy coding standards (a work in progress...)</description>
+
+ <rule ref="Generic.Functions.FunctionCallArgumentSpacing"/>
+ <rule ref="Generic.Functions.OpeningFunctionBraceBsdAllman"/>
+ <rule ref="Generic.PHP.DisallowShortOpenTag"/>
+ <rule ref="PEAR.Classes.ClassDeclaration"/>
+ <rule ref="PEAR.Functions.FunctionCallSignature"/>
+ <rule ref="PEAR.Functions.ValidDefaultValue"/>
+ <rule ref="PEAR.WhiteSpace.ScopeClosingBrace"/>
+ <rule ref="Zend.Files.ClosingTag.NotAllowed" />
+ <rule ref="Zend.Debug.CodeAnalyzer" />
+
+ <!--
+   This is incorrect, we actually prefer tabs for indentation but it allows
+   us to use this rule in combination with the tab-space=4 phpcs option to check
+   correct indentation levels
+ -->
+ <rule ref="Generic.WhiteSpace.DisallowTabIndent"/>
+
+ <rule ref="Generic.Files.LineLength">
+  <properties>
+   <property name="lineLimit" value="250"/>
+   <property name="absoluteLineLimit" value="250"/>
+  </properties>
+ </rule>
+
+ <rule ref="Generic.Files.LineEndings">
+  <properties>
+   <property name="eolChar" value="\n"/>
+  </properties>
+ </rule>
+
+</ruleset>

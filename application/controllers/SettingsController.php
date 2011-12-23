@@ -83,7 +83,7 @@ class SettingsController extends Zend_Controller_Action
 		{
 			if(!$new_project)
 			{
-				$git = new GD_Git($project);
+				$git = GD_Git::FromProject($project);
 
 				try
 				{
@@ -94,7 +94,7 @@ class SettingsController extends Zend_Controller_Action
 				{
 					$this->view->valid_repository = false;
 					$form->repositoryUrl->addError("Check this git repository URL - is it correct?");
-					GD_Debug::Log("Reclone required for {$project->getName()} (project settings)", GD_Debug::DEBUG_BASIC);
+					GD_Debug::Log("Reclone required for {$project->getName()} (project settings) - reason [{$ex->getStringCode()}]", GD_Debug::DEBUG_BASIC);
 				}
 			}
 
@@ -155,7 +155,7 @@ class SettingsController extends Zend_Controller_Action
 		}
 
 		// Delete the project's git repo.
-		$git = new GD_Git($project);
+		$git = GD_Git::FromProject($project);
 		$git->deleteRepository();
 
 		// Delete the project
@@ -179,7 +179,7 @@ class SettingsController extends Zend_Controller_Action
 		// Save the project
 		$projects->save($project);
 
-		$git = new GD_Git($project);
+		$git = GD_Git::FromProject($project);
 
 		$branch_changed = false;
 
@@ -220,7 +220,7 @@ class SettingsController extends Zend_Controller_Action
 
 		$project = $projects->getProjectBySlug($project_slug);
 
-		$git = new GD_Git($project);
+		$git = GD_Git::FromProject($project);
 
 		$git->deleteRepository();
 

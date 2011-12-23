@@ -82,6 +82,7 @@ class GD_Plugin_VerifySetup extends Zend_Controller_Plugin_Abstract
 	protected function checkConfig()
 	{
 		GD_Config::set("debug_level", "0", true);
+		GD_Config::set("logfile", sys_get_temp_dir() . "/godeploy_log", true);
 	}
 
 	/**
@@ -99,9 +100,10 @@ class GD_Plugin_VerifySetup extends Zend_Controller_Plugin_Abstract
 
 			if($current_db_version < $expected_db_version)
 			{
-				if($_SESSION["UPGRADE_ATTEMPTS"] >= 1)
+				$session = new Zend_Session_Namespace('gd_session');
+				if($session->upgrade_attempts >= 1)
 				{
-					$_SESSION["UPGRADE_ATTEMPTS"] = 0;
+					$session->upgrade_attempts = 0;
 					die("Database upgrade failed.");
 				}
 				else
@@ -110,13 +112,13 @@ class GD_Plugin_VerifySetup extends Zend_Controller_Plugin_Abstract
 					$db_adm = new GD_Db_Admin($cfg["host"], $cfg["username"], $cfg["password"], $cfg["dbname"]);
 					$db_adm->upgradeDatabase($current_db_version, $expected_db_version);
 
-					if(isset($_SESSION["UPGRADE_ATTEMPTS"]))
+					if(isset($session->upgrade_attempts))
 					{
-						$_SESSION["UPGRADE_ATTEMPTS"]++;
+						$session->upgrade_attempts++;
 					}
 					else
 					{
-						$_SESSION["UPGRADE_ATTEMPTS"] = 1;
+						$session->upgrade_attempts = 1;
 					}
 
 					$this->_response->setRedirect('/');

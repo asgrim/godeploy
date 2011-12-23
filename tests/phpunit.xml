@@ -1,0 +1,19 @@
+<phpunit bootstrap="./Bootstrap.php">
+	<testsuite name="GoDeploy Test Suite">
+		<directory>./</directory>
+	</testsuite>
+	<filter>
+		<whitelist>
+			<directory suffix=".php">../library/GD</directory>
+			<directory suffix=".php">../application/</directory>
+			<exclude>
+				<directory suffix=".phtml">../application/</directory>
+			</exclude>
+		</whitelist>
+		<blacklist>
+			<directory suffix=".php">../library/Zend</directory>
+			<directory suffix=".php">../library/MAL</directory>
+		</blacklist>
+	</filter>
+</phpunit>
+

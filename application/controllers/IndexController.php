@@ -23,9 +23,9 @@
  */
 class IndexController extends Zend_Controller_Action
 {
-    public function indexAction()
-    {
-    	// Check to see if they're logged in first...
+	public function indexAction()
+	{
+		// Check to see if they're logged in first...
 		$auth = Zend_Auth::getInstance();
 		if ($auth->hasIdentity())
 		{
@@ -35,5 +35,5 @@ class IndexController extends Zend_Controller_Action
 		{
 			$this->_redirect($this->getFrontController()->getBaseUrl() . "/auth/login");
 		}
-    }
+	}
 }

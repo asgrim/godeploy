@@ -83,12 +83,14 @@ class GDApp_Form_ProjectSettings extends GD_Form_Abstract
 		$submit->setImage('/images/buttons/small/save-changes.png');
 		$submit->class = "processing_btn size_small";
 
-		$this->addElements(array(
-			$project_name,
-			$repository_url,
-			$deployment_branch,
-			$public_key,
-			$submit,
-		));
+		$this->addElements(
+			array(
+				$project_name,
+				$repository_url,
+				$deployment_branch,
+				$public_key,
+				$submit,
+			)
+		);
 	}
 }

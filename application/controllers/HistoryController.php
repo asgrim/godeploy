@@ -60,7 +60,7 @@ class HistoryController extends Zend_Controller_Action
 		$this->populateView();
 
 		// Disable Zend view rendering and set content type
-		$this->_response->setHeader('Content-type','text/plain');
+		$this->_response->setHeader('Content-type', 'text/plain');
 		$this->_helper->viewRenderer->setNoRender();
 		$this->_helper->layout->disableLayout();
 
@@ -76,6 +76,7 @@ class HistoryController extends Zend_Controller_Action
 				$item["server"] = $deployment->getServer()->getDisplayName();
 				$item["from_rev"] = $deployment->getFromRevision();
 				$item["to_rev"] = $deployment->getToRevision();
+				$item["author"] = $deployment->getUser()->getName();
 				$item["comment"] = $deployment->getComment();
 				$item["status"] = $deployment->getDeploymentStatus()->getShortName();
 				$output[$deployment->getId()] = $item;
@@ -90,7 +91,7 @@ class HistoryController extends Zend_Controller_Action
 		$this->populateView();
 
 		// Disable Zend layout rendering and set content type
-		$this->_response->setHeader('Content-type','text/plain');
+		$this->_response->setHeader('Content-type', 'text/plain');
 		$this->_helper->layout->disableLayout();
 
 		$this->_helper->viewRenderer('csv');
@@ -102,14 +103,9 @@ class HistoryController extends Zend_Controller_Action
 
 		// Basic information
 		$url = $this->_request->getScheme() . "://" . $this->getRequest()->getHttpHost() . $this->getRequest()->getRequestUri();
-		$author = array(
-			'name'  => 'GoDeploy RSS Generator',
-			'email' => 'info@godeploy.com',
-			'uri'   => $url,
-		);
 
 		// Disable Zend view rendering and set content type
-		$this->_response->setHeader('Content-type','text/xml');
+		$this->_response->setHeader('Content-type', 'text/xml');
 		$this->_helper->viewRenderer->setNoRender();
 		$this->_helper->layout->disableLayout();
 
@@ -119,7 +115,6 @@ class HistoryController extends Zend_Controller_Action
 		$feed->setDescription('GoDeploy deployment history');
 		$feed->setLink($url);
 		$feed->setFeedLink($url, 'rss');
-		$feed->addAuthor($author);
 		$feed->setDateModified(time());
 
 		if(is_array($this->view->deployments) && count($this->view->deployments) > 0)
@@ -131,12 +126,13 @@ class HistoryController extends Zend_Controller_Action
 				$content .= "From: " .  substr($deployment->getFromRevision(), 0, 7) . "<br />";
 				$content .= "To: " .  substr($deployment->getToRevision(), 0, 7) . "<br />";
 				$content .= "Comment: " . $deployment->getComment() . "<br />";
+				$content .= "Author: " . $deployment->getUser()->getName() . "<br />";
 				$content .= "Status: " . $deployment->getDeploymentStatus()->getShortName() . "<br />";
 
 				$entry = $feed->createEntry();
 				$entry->setTitle("Deployment " . $deployment->getWhen("d/m/Y H:i:s"));
 				$entry->setLink(str_replace("/history/rss", "/deploy/result/" . $deployment->getId(), $url));
-				$entry->addAuthor($author);
+				$entry->addAuthor($deployment->getUser()->getName(), $deployment->getUser()->getName() . '@' . $this->getRequest()->getHttpHost());
 				$entry->setDateModified(time());
 				$entry->setDateCreated(new Zend_Date($deployment->getWhen("Y-m-d H:i:s"), Zend_Date::ISO_8601));
 				$entry->setDescription('GoDeploy deployment ' . $deployment->getId());

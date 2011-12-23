@@ -50,17 +50,17 @@ class ServersController extends Zend_Controller_Action
 
 	public function indexAction()
 	{
-    	$form = new GDApp_Form_ServerSettings();
-    	$this->view->form = $form;
+		$form = new GDApp_Form_ServerSettings();
+		$this->view->form = $form;
 
 		$this->view->headLink()->appendStylesheet("/css/template/form.css");
 		$this->view->headLink()->appendStylesheet("/css/pages/project_servers.css");
 
 		// Grab the project so we can add it to the title
-    	$project_slug = $this->_getParam("project");
-    	$projects = new GD_Model_ProjectsMapper();
-   		$project = $projects->getProjectBySlug($project_slug);
-    	$this->view->project = $project;
+		$project_slug = $this->_getParam("project");
+		$projects = new GD_Model_ProjectsMapper();
+		$project = $projects->getProjectBySlug($project_slug);
+		$this->view->project = $project;
 
 		$servers = new GD_Model_ServersMapper();
 		$server = new GD_Model_Server();
@@ -76,7 +76,7 @@ class ServersController extends Zend_Controller_Action
 		{
 			$this->view->headTitle('Add Server');
 			$server->setProjectsId($project->getId());
-    		$server->setName("New Server");
+			$server->setName("New Server");
 			$server->setPort(21);
 		}
 		$this->view->server = $server;
@@ -99,7 +99,7 @@ class ServersController extends Zend_Controller_Action
 				}
 
 				// Test the connection first
-				$ftp = new GD_Ftp($server);
+				$ftp = GD_Ftp::FromServer($server);
 				$result = $ftp->testConnection();
 
 				if(!$result)
@@ -128,28 +128,28 @@ class ServersController extends Zend_Controller_Action
 				'remotePath' => $server->getRemotePath(),
 			);
 
-    		$form->populate($data);
+			$form->populate($data);
 		}
 	}
 
-    public function confirmDeleteAction()
-    {
-    	$projects = new GD_Model_ProjectsMapper();
-    	$project_slug = $this->_getParam("project");
-    	$project = $projects->getProjectBySlug($project_slug);
+	public function confirmDeleteAction()
+	{
+		$projects = new GD_Model_ProjectsMapper();
+		$project_slug = $this->_getParam("project");
+		$project = $projects->getProjectBySlug($project_slug);
 
 		$servers = new GD_Model_ServersMapper();
 		$server = new GD_Model_Server();
 		$server_id = $this->_request->getParam('id', 0);
 		$servers->find($server_id, $server);
 
-    	$this->view->project = $project;
-    	$this->view->server = $server;
+		$this->view->project = $project;
+		$this->view->server = $server;
 
-    	$this->view->headTitle('Confirm Server Delete');
+		$this->view->headTitle('Confirm Server Delete');
 		$this->view->headLink()->appendStylesheet("/css/template/table.css");
 		$this->view->headLink()->appendStylesheet("/css/pages/confirm_delete.css");
-    }
+	}
 
 	public function deleteAction()
 	{

@@ -84,12 +84,14 @@ abstract class GD_Form_Abstract extends Zend_Form
 	 */
 	public function loadDefaultDecorators()
 	{
-		$this->setDecorators(array(
-			'FormElements',
-			array('Fieldset', array('')),
-			array('HtmlTag', array('tag' => 'ol')),
-			'Form',
-		));
+		$this->setDecorators(
+			array(
+				'FormElements',
+				array('Fieldset', array('')),
+				array('HtmlTag', array('tag' => 'ol')),
+				'Form',
+			)
+		);
 	}
 
 	/**

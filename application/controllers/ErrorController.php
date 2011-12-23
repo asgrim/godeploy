@@ -34,7 +34,7 @@ class ErrorController extends Zend_Controller_Action
 		$this->view->extended_information = $ext_inf;
 
 		// Log exception
-		GD_Debug::Log("ACL access denied for URL '{$_SERVER['REQUEST_URI']}'", GD_Debug::DEBUG_BASIC);
+		GD_Debug::Log("ACL access denied for URL '" . $this->_request->getRequestUri() . "'", GD_Debug::DEBUG_BASIC);
 	}
 
 	public function databaseAction()
@@ -45,7 +45,7 @@ class ErrorController extends Zend_Controller_Action
 		$ext_inf = '<p>' . _r("The most likely cause is the settings in the configuration are incorrect or the database server is unavailable. One of the following solutions may help to fix this problem:") . '</p>';
 		$ext_inf .= '<ol>';
 		$ext_inf .= '<li>' . _r("Ensure the database is running") . '</li>';
-		$ext_inf .= '<li>' . _r("Check the settings in") . ' <span style="font-family: monospace;">' . realpath(APPLICATION_PATH . "/configs/config.ini") . '</span> ' . _r("are correct") . '</li>';
+		$ext_inf .= '<li>' . _r("Check the settings in") . ' <span class="monospace">' . realpath(APPLICATION_PATH . "/configs/config.ini") . '</span> ' . _r("are correct") . '</li>';
 		$ext_inf .= '</ol>';
 
 		$this->view->message = _r("Error establishing database connection");

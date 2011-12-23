@@ -23,10 +23,10 @@
  */
 class ProfileController extends Zend_Controller_Action
 {
-    public function indexAction()
-    {
+	public function indexAction()
+	{
 		$this->_redirect('/profile/changepassword/');
-    }
+	}
 
 	public function changepasswordAction()
 	{

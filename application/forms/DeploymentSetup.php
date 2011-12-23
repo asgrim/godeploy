@@ -80,13 +80,15 @@ class GDApp_Form_DeploymentSetup extends GD_Form_Abstract
 		$submitPreview->setImage('/images/buttons/small/inverted/preview.png');
 		$submitPreview->class = "preview processing_btn size_small";
 
-		$this->addElements(array(
-			$server_id,
-			$from_revision,
-			$to_revision,
-			$comment,
-			$submitRun,
-			$submitPreview,
-		));
+		$this->addElements(
+			array(
+				$server_id,
+				$from_revision,
+				$to_revision,
+				$comment,
+				$submitRun,
+				$submitPreview,
+			)
+		);
 	}
 }

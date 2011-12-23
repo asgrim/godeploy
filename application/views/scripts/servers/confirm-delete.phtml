@@ -29,8 +29,8 @@
 		<div class="padding_15"></div>
 
 		<p class="options last">
-			<a href="<?php echo $this->baseUrl(); ?>/project/<?php echo $this->project->getSlug(); ?>/settings" title="No" class="no"><?php _e("No, get me out of here!"); ?></a>
-			<a href="<?php echo $this->baseUrl(); ?>/project/<?php echo $this->project->getSlug(); ?>/servers/delete/<?php echo $this->server->getId(); ?>" title="Yes, delete it" class="yes"><img src="/images/buttons/small/delete-server.png" alt="Yes, delete it" /></a>
+			<a href="<?php echo $this->baseUrl(); ?>/project/<?php echo $this->project->getSlug(); ?>/settings" title="<?php _e("No"); ?>" class="no"><?php _e("No, get me out of here!"); ?></a>
+			<a href="<?php echo $this->baseUrl(); ?>/project/<?php echo $this->project->getSlug(); ?>/servers/delete/<?php echo $this->server->getId(); ?>" title="<?php _e("Yes, delete it"); ?>" class="yes"><img src="/images/buttons/small/delete-server.png" alt="<?php _e("Yes, delete it"); ?>" /></a>
 		</p>
 	</div></div>
 

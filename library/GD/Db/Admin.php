@@ -71,45 +71,45 @@ class GD_Db_Admin extends GD_Shell
 	 * @param int $version
 	 * @throws GD_Exception
 	 */
-    public function installDatabase($version = null)
-    {
-    	if(is_null($version))
-    	{
+	public function installDatabase($version = null)
+	{
+		if(is_null($version))
+		{
 			$version_conf = new Zend_Config_Ini(APPLICATION_PATH . '/configs/version.ini', 'version');
 			$version = (int)$version_conf->gd->expect_db_version;
-    	}
-    	else
-    	{
-    		$version = (int)$version;
-    	}
+		}
+		else
+		{
+			$version = (int)$version;
+		}
 
-    	if($version <= 0)
-    	{
-    		throw new GD_Exception("Version '{$version}' was not a valid version");
-    	}
+		if($version <= 0)
+		{
+			throw new GD_Exception("Version '{$version}' was not a valid version");
+		}
 
-    	$script = APPLICATION_PATH . "/../db/db_create_v{$version}.sql";
+		$script = APPLICATION_PATH . "/../db/db_create_v{$version}.sql";
 
-    	$this->Exec("mysql -u{$this->_username} -p{$this->_password} --database={$this->_database} < \"{$script}\"");
-    }
+		$this->Exec("mysql -u{$this->_username} -p{$this->_password} -h{$this->_hostname} --database={$this->_database} < \"{$script}\"");
+	}
 
-    /**
-     * Upgrade an existing database by running incremental db_alter scripts
-     *
-     * @param int $from_version
-     * @param int $to_version
-     */
-    public function upgradeDatabase($from_version, $to_version)
-    {
+	/**
+	 * Upgrade an existing database by running incremental db_alter scripts
+	 *
+	 * @param int $from_version
+	 * @param int $to_version
+	 */
+	public function upgradeDatabase($from_version, $to_version)
+	{
 		$v = $from_version;
 
 		while($v < $to_version)
 		{
 			// do upgrade
 			$script = APPLICATION_PATH . "/../db/db_alter_v" . ($v + 1) . ".sql";
-			$this->Exec("mysql -u{$this->_username} -p{$this->_password} --database={$this->_database} < \"{$script}\"");
+			$this->Exec("mysql -u{$this->_username} -p{$this->_password} -h{$this->_hostname} --database={$this->_database} < \"{$script}\"");
 
 			$v++;
 		}
-    }
+	}
 }

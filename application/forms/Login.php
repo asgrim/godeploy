@@ -53,10 +53,12 @@ class GDApp_Form_Login extends GD_Form_Abstract
 		$submit = new Zend_Form_Element_Image('btn_submit');
 		$submit->setImage('/images/buttons/small/login.png');
 
-		$this->addElements(array(
-			$username,
-			$password,
-			$submit,
-		));
+		$this->addElements(
+			array(
+				$username,
+				$password,
+				$submit,
+			)
+		);
 	}
 }

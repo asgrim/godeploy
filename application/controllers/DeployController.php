@@ -72,7 +72,7 @@ class DeployController extends Zend_Controller_Action
 					$from_rev = "";
 				}
 
-				$git = new GD_Git($project);
+				$git = GD_Git::FromProject($project);
 				$git->gitPull();
 
 				$input_to_rev = $this->_request->getParam('toRevision', false);
@@ -122,6 +122,24 @@ class DeployController extends Zend_Controller_Action
 						$deployment_files->save($deployment_file);
 					}
 
+					// Add any additional configuration files
+					$config_servers_map = new GD_Model_ConfigsServersMapper();
+					$configs = $config_servers_map->getAllConfigsForServer($server_id);
+
+					foreach($configs as $config)
+					{
+						$c = $config->getConfig();
+						$cfile = "!CFG!{$c->getId()}!{$c->getFilename()}";
+
+						$deployment_file = new GD_Model_DeploymentFile();
+						$deployment_file->setDeploymentsId($deployment->getId());
+						$deployment_file->setDeploymentFileActionsId($deployment_file_actions->getDeploymentFileActionByGitStatus('M')->getId());
+						$deployment_file->setDeploymentFileStatusesId($deployment_file_statuses->getDeploymentFileStatusByCode('NEW')->getId());
+						$deployment_file->setDetails($cfile);
+
+						$deployment_files->save($deployment_file);
+					}
+
 					// Forward to either run or preview page...
 					if($this->_request->getParam('submitRun_x') > 0)
 					{
@@ -154,7 +172,7 @@ class DeployController extends Zend_Controller_Action
 		}
 		else
 		{
-			$git = new GD_Git($project);
+			$git = GD_Git::FromProject($project);
 
 			try
 			{
@@ -165,7 +183,7 @@ class DeployController extends Zend_Controller_Action
 				if($ex->getStringCode() == GD_Git::GIT_STATUS_ERROR_NOT_A_REPOSITORY
 					|| $ex->getStringCode() == GD_Git::GIT_STATUS_ERROR_DIFFERENT_REPOSITORY)
 				{
-					$return_url = base64_encode($_SERVER['SCRIPT_URI']);
+					$return_url = base64_encode($this->_request->getRequestUri());
 					$this->_redirect($this->getFrontController()->getBaseUrl() . "/error/reclone?project=" . $this->_getParam("project") . "&return=" . $return_url);
 				}
 				else
@@ -211,6 +229,9 @@ class DeployController extends Zend_Controller_Action
 		$deployment_files = new GD_Model_DeploymentFilesMapper();
 		$file_list = $deployment_files->getDeploymentFilesByDeployment($deployment->getId());
 		$this->view->file_list = $file_list;
+
+		$git = GD_Git::FromProject($project);
+		$this->view->commit_log = $git->getCommitsBetween($deployment->getFromRevision(), $deployment->getToRevision());
 	}
 
 	public function previewAction()
@@ -342,7 +363,7 @@ class DeployController extends Zend_Controller_Action
 			$file_icons[$file->getId()] = $file->getDeploymentFileStatus()->getImageName();
 
 			if($file->getDeploymentFileStatus()->getCode() != "NEW"
-			    && $file->getDeploymentFileStatus()->getCode() != "IN_PROGRESS")
+				&& $file->getDeploymentFileStatus()->getCode() != "IN_PROGRESS")
 			{
 				$completed_count++;
 			}
@@ -375,7 +396,7 @@ class DeployController extends Zend_Controller_Action
 		);
 
 		// Output stuff
-		$this->_response->setHeader('Content-type','text/plain');
+		$this->_response->setHeader('Content-type', 'text/plain');
 		$this->_helper->viewRenderer->setNoRender();
 		$this->_helper->layout->disableLayout();
 
@@ -432,7 +453,7 @@ class DeployController extends Zend_Controller_Action
 		GD_Debug::Log("done.", GD_Debug::DEBUG_BASIC, true, false);
 
 		// Perform a git pull to check we're up to date
-		$git = new GD_Git($project);
+		$git = GD_Git::FromProject($project);
 		$git->gitPull();
 
 		// File list to action
@@ -453,7 +474,7 @@ class DeployController extends Zend_Controller_Action
 
 		// Do the upload
 		GD_Debug::Log("Actioning files now.", GD_Debug::DEBUG_BASIC);
-		$ftp = new GD_Ftp($server);
+		$ftp = GD_Ftp::FromServer($server);
 		try
 		{
 			$ftp->connect();
@@ -462,33 +483,61 @@ class DeployController extends Zend_Controller_Action
 		{
 			GD_Debug::Log("FTP Connect failed: {$ex->getMessage()}", GD_Debug::DEBUG_BASIC);
 		}
+
+		$config_map = new GD_Model_ConfigsMapper();
+
 		foreach($file_list as $file)
 		{
 			GD_Debug::Log("Actioning '{$file->getDetails()}'... ", GD_Debug::DEBUG_BASIC, false);
 			$file->setDeploymentFileStatusesId($deployment_files_statuses->getDeploymentFileStatusByCode('IN_PROGRESS')->getId());
 			$deployment_files->save($file);
 
+			$matches = array();
+			$is_config_file = preg_match('/^!CFG!(\d+)!(.*)$/', $file->getDetails(), $matches);
+
 			try
 			{
-				switch($file->getDeploymentFileAction()->getGitStatus())
+				if($is_config_file == 1)
 				{
-					case 'A':
-					case 'M':
-						$ftp->upload($git->getGitDir() . $file->getDetails(), $file->getDetails());
-						break;
-					case 'D':
-						$ftp->delete($file->getDetails());
-						break;
-					default:
-						throw GD_Exception("Warning, unhandled action: '" . $file->getDeploymentFileAction()->getGitStatus() . "' ({$file->getDetails()}");
-						break;
+					// Configuration file - store in temp dir from DB then upload
+					$tmpfile = tempnam(sys_get_temp_dir(), 'gdcfg');
+
+					$config = new GD_Model_Config();
+					$config_map->find($matches[1], $config);
+
+					file_put_contents($tmpfile, $config->getContent());
+
+					GD_Debug::Log(" >> to '{$matches[2]}'", GD_Debug::DEBUG_BASIC, false, false);
+					$ftp->upload($tmpfile, $matches[2]);
+				}
+				else
+				{
+					// Regular file - upload as normal
+					switch($file->getDeploymentFileAction()->getGitStatus())
+					{
+						case 'A':
+						case 'M':
+							$ftp->upload($git->getGitDir() . $file->getDetails(), $file->getDetails());
+							break;
+						case 'D':
+							$ftp->delete($file->getDetails());
+							break;
+						default:
+							throw GD_Exception("Warning, unhandled action: '" . $file->getDeploymentFileAction()->getGitStatus() . "' ({$file->getDetails()}");
+							break;
+					}
 				}
 				$file->setDeploymentFileStatusesId($deployment_files_statuses->getDeploymentFileStatusByCode('COMPLETE')->getId());
 				GD_Debug::Log("done.", GD_Debug::DEBUG_BASIC, true, false);
 			}
 			catch(GD_Exception $ex)
 			{
-				$errors = true;
+				// Only fail the whole deployment if we're not a delete action
+				if($file->getDeploymentFileAction()->getGitStatus() != 'D')
+				{
+					$errors = true;
+				}
+
 				$file->setDeploymentFileStatusesId($deployment_files_statuses->getDeploymentFileStatusByCode('FAILED')->getId());
 				GD_Debug::Log("FAILED [" . $ex->getMessage() . "].", GD_Debug::DEBUG_BASIC, true, false);
 			}
@@ -522,7 +571,7 @@ class DeployController extends Zend_Controller_Action
 			GD_Debug::Log("Extra content:\n\n{$buf}", GD_Debug::DEBUG_BASIC);
 		}
 
-		GD_Debug::EndDeploymentLog($this->_getParam("id"));
+		GD_Debug::EndDeploymentLog();
 		ob_end_clean();
 		flush();
 		die();
@@ -552,7 +601,7 @@ class DeployController extends Zend_Controller_Action
 			$from_rev = "";
 		}
 
-		$this->_response->setHeader('Content-type','text/plain');
+		$this->_response->setHeader('Content-type', 'text/plain');
 		$this->_helper->viewRenderer->setNoRender();
 		$this->_helper->layout->disableLayout();
 
@@ -575,7 +624,7 @@ class DeployController extends Zend_Controller_Action
 		}
 
 		// Git pull before anything
-		$git = new GD_Git($project);
+		$git = GD_Git::FromProject($project);
 		$git->gitPull();
 
 		$data = array();
@@ -587,7 +636,7 @@ class DeployController extends Zend_Controller_Action
 			$data['toRevision'] = $to_revision;
 		}
 
-		$this->_response->setHeader('Content-type','text/plain');
+		$this->_response->setHeader('Content-type', 'text/plain');
 		$this->_helper->viewRenderer->setNoRender();
 		$this->_helper->layout->disableLayout();
 

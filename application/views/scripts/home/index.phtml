@@ -2,7 +2,12 @@
 <div class="content">
 	<div class="padding_20"></div>
 
-	<h1>Welcome <?php if (count($this->projects) > 0) echo "back "; ?> to Godeploy</h1>
+	<?php if(count($this->projects) > 0): ?>
+	<h1><? _e("Welcome back to GoDeploy"); ?></h1>
+	<?php else: ?>
+	<h1><? _e("Welcome to GoDeploy"); ?></h1>
+	<?php endif; ?>
+	
 	<div class="padding_15"></div>
 
 	<div id="projects"><div class="wrapper w_ededed"><div class="content">
@@ -10,8 +15,8 @@
 
 	<?php if (is_array($this->projects) && count($this->projects) > 0): ?>
 
-		<h2>We've missed you - how have you been?</h2>
-		<p>Now you're back, here's your list of current projects - you can deploy or update any of them, or add a whole new one.</p>
+		<h2><?php _e("We've missed you - how have you been?"); ?></h2>
+		<p><?php _e("Now you're back, here's your list of current projects - you can deploy or update any of them, or add a whole new one."); ?></p>
 		<div class="padding_5"></div>
 
 		<table>
@@ -25,8 +30,8 @@
 			</thead>
 			<tbody>
 			<?php
-				foreach ($this->projects as $project)
-				{
+				foreach ($this->projects as $project):
+				
 					$last_deployment = $project->getLastDeployment();
 					$num_deployments = $project->getNumDeployments();
 			?>
@@ -36,31 +41,29 @@
 					<?php if ($last_deployment instanceof GD_Model_Deployment): ?>
 						<?php echo $last_deployment->getWhen("jS M 'y @ G:i"); ?>
 					<?php else: ?>
-						<strong>This project is yet to be deployed.</strong>
+						<strong><?php _e("This project is yet to be deployed."); ?></strong>
 					<?php endif; ?>
 					</td>
 					<td>
 					<?php if ($num_deployments > 0): ?>
-						<p>Deployed <?php echo ($num_deployments > 1) ? $num_deployments . " times" : "once"; ?></p>
-						<p><a href="<?php echo $this->baseUrl(); ?>/project/<?php echo $project->getSlug(); ?>/history" class="view_icon">View history</a></p>
+						<p><?php _e("Deployed");?> <?php echo ($num_deployments > 1) ? $num_deployments . _r(" times") : _r("once"); ?></p>
+						<p><a href="<?php echo $this->baseUrl(); ?>/project/<?php echo $project->getSlug(); ?>/history" class="view_icon"><?php _e("View history"); ?></a></p>
 					<?php else: ?>
 						0 deployments
 					<?php endif; ?>
 					</td>
 					<td class="icon">
 						<a href="<?php echo $this->baseUrl(); ?>/project/<?php echo $project->getSlug(); ?>/deploy">
-							<img src="/images/buttons/small/deploy-project.png" alt="Deploy project &raquo;" />
+							<img src="/images/buttons/small/deploy-project.png" alt="<?php _e("Deploy project"); ?> &raquo" />
 						</a>
 					</td>
 					<td class="icon">
 						<a href="<?php echo $this->baseUrl(); ?>/project/<?php echo $project->getSlug(); ?>/settings">
-							<img src="/images/icons/edit/16x16.png" alt="Edit &raquo;" />
+							<img src="/images/icons/edit/16x16.png" alt="<?php _e("Edit"); ?> &raquo" />
 						</a>
 					</td>
 				</tr>
-			<?php
-				}
-			?>
+			<?php endforeach; ?>
 			</tbody>
 		</table>
 		<div class="padding_15"></div>
@@ -69,7 +72,7 @@
 
 	<?php else: ?>
 
-		<h2>You haven't set any projects up to deploy yet.</h2>
+		<h2><?php _e("You haven't set any projects up to deploy yet."); ?></h2>
 		<p class="last"><a href="<?php echo $this->baseUrl(); ?>/project/new/settings" class="add_icon"><?php _e("Add the first project"); ?></a></p>
 
 	<?php endif; ?>
