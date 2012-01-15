@@ -45,7 +45,7 @@ class ErrorController extends Zend_Controller_Action
 		$ext_inf = '<p>' . _r("The most likely cause is the settings in the configuration are incorrect or the database server is unavailable. One of the following solutions may help to fix this problem:") . '</p>';
 		$ext_inf .= '<ol>';
 		$ext_inf .= '<li>' . _r("Ensure the database is running") . '</li>';
-		$ext_inf .= '<li>' . _r("Check the settings in") . ' <span style="font-family: monospace;">' . realpath(APPLICATION_PATH . "/configs/config.ini") . '</span> ' . _r("are correct") . '</li>';
+		$ext_inf .= '<li>' . _r("Check the settings in") . ' <span class="monospace">' . realpath(APPLICATION_PATH . "/configs/config.ini") . '</span> ' . _r("are correct") . '</li>';
 		$ext_inf .= '</ol>';
 
 		$this->view->message = _r("Error establishing database connection");

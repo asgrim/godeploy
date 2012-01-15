@@ -22,12 +22,66 @@
 				<?php if($this->deployment->getFromRevision() != ""): ?>
 					<li>
 						<label><?php _e("From"); ?></label>
-						<span class="value"><?php echo $this->deployment->getFromRevision(); ?></span>
+						<span class="value"><span class="monospace"><?php echo $this->deployment->getFromRevision(); ?></span></span>
 					</li>
 				<?php endif; ?>
 					<li>
 						<label><?php _e("To"); ?></label>
-						<span class="value"><?php echo $this->deployment->getToRevision(); ?></span>
+						<span class="value"><span class="monospace"><?php echo $this->deployment->getToRevision(); ?></span></span>
+					</li>
+					<li>
+						<label><?php _e("Comment"); ?></label>
+						<span class="value">
+						<?php if($this->deployment->getComment() != ""): ?>
+							<?php echo $this->escape($this->deployment->getComment()); ?>
+						<?php else: ?>
+							<small><em>No comment for this deployment</em></small>
+						<?php endif; ?>
+						</span>
+					</li>
+					<li>
+						<label><?php _e("List of commits"); ?></label>
+						<?php if(is_array($this->commit_log->commits) && count($this->commit_log->commits) > 0): ?>
+						<span class="value">
+							<a href="javascript:;" onclick="$('commit_list').toggle();" id="commit_list_link">Click to show or hide commit list</a>
+							<div id="commit_list" style=" display: none;">
+								<?php if($this->commit_log->swapped): ?>
+									<p><strong><?php _e("Note"); ?>:-</strong>
+									<?php
+									if(count($this->commit_log->commits) == 1)
+									{
+										_e("this commit is being reversed by this deployment.");
+									}
+									else
+									{
+										_e("these commits are being reversed by this deployment.");
+									}
+									?>
+									</p>
+								<?php endif; ?>
+								<table style="width: auto;">
+									<thead>
+										<tr>
+											<th>Hash</th>
+											<th>Author</th>
+											<th>Message</th>
+										</tr>
+									</thead>
+									<tbody>
+									<?php foreach($this->commit_log->commits as $scommit): ?>
+										<tr>
+											<td><span class="monospace"><?php echo $this->escape(substr($scommit['HASH'], 0, 7)); ?></span></td>
+											<td><?php echo $this->escape($scommit['AUTHOR']); ?></td>
+											<td><?php echo $this->escape($scommit['MESSAGE']); ?></td>
+										</tr>
+									<?php endforeach; ?>
+									</tbody>
+								</table>
+							</div>
+						</span>
+						<?php else: ?>
+						<span class="value">There are no commits to be deployed.</span>
+						<?php endif; ?>
 					</li>
 					<li>
 						<label><?php _e("Status"); ?></label>
@@ -78,9 +132,9 @@
 		<tbody>
 			<?php foreach($this->file_list as $file): ?>
 			<tr>
-				<td><?php echo $file->getDetails(); ?></td>
-				<td><?php echo $file->getDeploymentFileAction()->getName(); ?></td>
-				<td id="file_<?php echo $file->getId(); ?>_status">
+				<td><?php echo preg_replace('/(!CFG!\d+!)(.*)/', '$2 <strong>(Configuration File)</strong>', $file->getDetails()); ?></td>
+				<td class="nowrap"><?php echo $file->getDeploymentFileAction()->getName(); ?></td>
+				<td id="file_<?php echo $file->getId(); ?>_status" class="nowrap">
 					<img src="/images/icons/<?php echo $file->getDeploymentFileStatus()->getImageName(); ?>" alt="icon" />
 					<?php echo $file->getDeploymentFileStatus()->getName(); ?>
 				</td>

@@ -21,17 +21,20 @@
  * @author See AUTHORS file
  * @link http://www.godeploy.com/
  */
-class GD_Model_DbTable_Projects extends Zend_Db_Table_Abstract
+class GD_Model_DbTable_ConfigsServers extends Zend_Db_Table_Abstract
 {
-	protected $_name = "projects";
+	protected $_name = "configs_servers";
 
 	protected $_referenceMap = array(
-		'GD_Model_DbTable_SSHKeys' => array(
-			'columns' => 'ssh_keys_id',  // the column in the 'projects' table which is used for the join
-			'refTableClass' => 'GD_Model_DbTable_SSHKeys',  // the ssh_keys table name
-			'refColumns' => 'id' // the primary key of the ssh_keys table
-		)
+		'GD_Model_DbTable_Servers' => array(
+			'columns' => 'servers_id',  // the column in the 'configs_servers' table which is used for the join
+			'refTableClass' => 'GD_Model_DbTable_Servers',  // the servers table name
+			'refColumns' => 'id' // the primary key of the foreign table
+		),
+		'GD_Model_DbTable_Configs' => array(
+			'columns' => 'configs_id',  // the column in the 'configs_servers' table which is used for the join
+			'refTableClass' => 'GD_Model_DbTable_Configs',  // the configs table name
+			'refColumns' => 'id' // the primary key of the foreign table
+		),
 	);
-
-	protected $_dependentTables = array('GD_Model_DbTable_Deployments','GD_Model_DbTable_Configs');
 }

@@ -1,0 +1,61 @@
+
+<div class="content">
+<div class="padding_20"></div>
+<h1><?php echo $this->project->getName(); ?> &raquo; <?php _e("Configuration Management"); ?></h1>
+<div class="padding_15"></div>
+
+<div class="wrapper w_ededed"><div class="content">
+	<div class="padding_15"></div>
+	<h2><?php _e("Configuration Editor"); ?></h2>
+	<div id="form">
+		<form id="configEditor" enctype="application/x-www-form-urlencoded" action="" method="post">
+			<input type="hidden" name="id" value="<?php echo $this->config->getId(); ?>" />
+			<fieldset>
+				<ol>
+					<li>
+						<label><span><?php _e("Path to file"); ?></span></label>
+						<span class="field">
+							<input type="text" id="filename" name="filename" value="<?php echo $this->config->getFilename(); ?>" />
+							<span class="extras">
+								<span class="description"><?php _e("This must be a path relative to the folder in which"); ?> <?php echo $this->project->getName(); ?> <?php _e("will be deployed, e.g."); ?> <span class="monospace">config/db.ini</span></span>
+							</span>
+						</span>
+						<div class="clear"></div>
+					</li>
+					<li>
+						<label><span><?php _e("Content of file to be uploaded"); ?></span></label>
+						<textarea name="configContent" id="configContent"><?php echo $this->config->getContent(); ?></textarea>
+						<div class="clear"></div>
+					</li>
+					<li>
+						<label><span><?php _e("Upload to servers"); ?></span></label>
+						<span class="field" id="configServerCheckboxes">
+							<?php if(is_array($this->servers) && count($this->servers) > 0): ?>
+								<ul>
+								<?php foreach($this->servers as $server): ?>
+									<li>
+										<input type="checkbox" name="servers[]" id="server_<?php echo $server->getId(); ?>" value="<?php echo $server->getId(); ?>"<?php echo in_array($server->getId(), $this->config_server_ids) ? " checked=\"checked\"" : ""; ?> />
+										<label for="server_<?php echo $server->getId(); ?>"><?php echo $server->getDisplayName(); ?></label>
+										<div class="clear"></div>
+									</li>
+								<?php endforeach; ?>
+								</ul>
+							<?php else: ?>
+								<strong><?php _e("Oh dear! Looks like you have not configured any servers yet..."); ?></strong>
+							<?php endif; ?>
+						</span>
+						<div class="clear"></div>
+					</li>
+					<li class="submit">
+						<input type="image" name="btnSave" id="btnSave" src="/images/buttons/small/save-changes.png" />
+						<span id="linkBack"><a href="<?php echo $this->baseUrl(); ?>/project/<?php echo $this->project->getSlug(); ?>/configs"><?php _e("&hellip;or go back"); ?></a></span>
+						<div class="clear"></div>
+					</li>
+				</ol>
+			</fieldset>
+		</form>
+	</div>
+</div></div>
+
+<div class="padding_20"></div>
+

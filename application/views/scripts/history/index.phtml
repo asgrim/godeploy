@@ -9,20 +9,20 @@
 		<div class="padding_15"></div>
 
 <?php if (is_array($this->deployments) && count($this->deployments) > 0): ?>
-	
+
 	<h2><?php _e("Deployment history"); ?></h2>
-		
-	<?php 
+
+	<?php
 		$count = count($this->deployments);
-		if($count == "1"): 
+		if($count == "1"):
 	?>
-		
+
 		<p><?php _e("There is 1 deployment shown."); ?></p>
-		
+
 	<?php else: ?>
-		
+
 		<p><?php _e("There are"); echo " ".$count." "; _e("deployments shown, with the most recent at the top."); ?></p>
-		
+
 	<?php endif; ?>
 
 		<div id="feed_icons">
@@ -59,8 +59,8 @@
 						</a>
 					</td>
 					<td title="<?php echo $deployment->getServer()->getDisplayName(); ?>" class="nowrap"><?php echo $deployment->getServer()->getName(); ?></td>
-					<td title="<?php echo $deployment->getFromRevision(); ?>"><?php echo $deployment->getFromRevision() ? substr($deployment->getFromRevision(), 0, 7) : _r("None"); ?></td>
-					<td title="<?php echo $deployment->getToRevision(); ?>"><?php echo substr($deployment->getToRevision(), 0, 7); ?></td>
+					<td title="<?php echo $deployment->getFromRevision(); ?>"><?php echo $deployment->getFromRevision() ? ('<span class="monospace">' . substr($deployment->getFromRevision(), 0, 7) . '</span') : _r("None"); ?></span></td>
+					<td title="<?php echo $deployment->getToRevision(); ?>"><span class="monospace"><?php echo substr($deployment->getToRevision(), 0, 7); ?></span></td>
 					<td><?php echo $deployment->getComment(); ?></td>
 					<td><?php echo $deployment->getUser()->getName(); ?></td>
 					<td class="nowrap">

@@ -1,4 +1,4 @@
-DateTime,Server,From,To,Comment,Status
+DateTime,Server,From,To,Comment,Author,Status
 <?php
 if (is_array($this->deployments) && count($this->deployments) > 0)
 {
@@ -9,6 +9,7 @@ if (is_array($this->deployments) && count($this->deployments) > 0)
 		echo $deployment->getFromRevision() . ',';
 		echo $deployment->getToRevision() . ',';
 		echo '"' . str_replace('"', '', $deployment->getComment()) . '",';
+		echo '"' . str_replace('"', '', $deployment->getUser()->getName()) . '",';
 		echo $deployment->getDeploymentStatus()->getShortName() . "\n";
 	}
 }

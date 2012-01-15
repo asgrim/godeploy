@@ -55,6 +55,46 @@ class GD_GitTest extends GD_TestCase
 		$git->deleteRepository();
 	}
 
+	public function testGetCommitsBetweenForwards()
+	{
+		$git = new GD_Git("unittest1", "git://github.com/asgrim/godeploy-test-project.git", "master", "");
+		$git->deleteRepository();
+		$git->gitClone();
+
+		$o = $git->getCommitsBetween('381164ffebefeacfce47091becf5dc94244616a7', 'ab88b53fd200167dc47efc0b0177ce4f0288a1d8');
+
+		$this->assertFalse($o->swapped);
+		$this->assertEquals($o->commits[0]['HASH'], 'ab88b53fd200167dc47efc0b0177ce4f0288a1d8');
+
+		$git->deleteRepository();
+	}
+
+	public function testGetCommitsBetweenReversed()
+	{
+		$git = new GD_Git("unittest1", "git://github.com/asgrim/godeploy-test-project.git", "master", "");
+		$git->deleteRepository();
+		$git->gitClone();
+
+		$o = $git->getCommitsBetween('ab88b53fd200167dc47efc0b0177ce4f0288a1d8', '381164ffebefeacfce47091becf5dc94244616a7');
+
+		$this->assertTrue($o->swapped);
+		$this->assertEquals($o->commits[0]['HASH'], 'ab88b53fd200167dc47efc0b0177ce4f0288a1d8');
+
+		$git->deleteRepository();
+	}
+
+	/**
+	 * @expectedException GD_Exception
+	 */
+	public function testGetCommitsBetweenExceptionThrownWhenInvalidRefsPassed()
+	{
+		$git = new GD_Git("unittest1", "git://github.com/asgrim/godeploy-test-project.git", "master", "");
+		$git->deleteRepository();
+		$git->gitClone();
+
+		$git->getCommitsBetween('', '');
+	}
+
 	public function testSSHCommand()
 	{
 		$rsa_key = $this->getRSAKey();

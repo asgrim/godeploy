@@ -2,7 +2,12 @@
 
 define('TEST_USER', 'testuser');
 define('TEST_PASSWORD', 'testpassword');
-define('GITHUB_USER', 'youruser');
+//define('TEST_FTP_HOSTNAME', 'hostname');
+//define('TEST_FTP_USERNAME', 'username');
+//define('TEST_FTP_PASSWORD', 'password');
+//define('TEST_FTP_PORT', 21);
+//define('TEST_FTP_REMOTE_PATH', 'public_html/');
+//define('GITHUB_USER', 'asgrim');
 
 error_reporting(E_ALL);
 ini_set('display_startup_errors', 1);

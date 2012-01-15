@@ -449,6 +449,91 @@ class GD_Git extends GD_Shell
 	}
 
 	/**
+	 * Return a key/value list of each commit $ref1 up to and including $ref2.
+	 * Arguments can be in *any* order, but if in the "wrong" order, the
+	 * Swapped member variable of the returned object will be set to true.
+	 *
+	 * Return value is a stdClass object something like:
+	 *
+	 * @example
+	 * $ret = getCommitsBetween('d34d', 'c0f4');
+	 *
+	 * $ret->swapped = true if $ref1..$ref2 , or false for $ref2..$ref1
+	 * $ret->commits = array(
+	 *     array('HASH' => 'c0f4..395c', 'AUTHOR' => 'some@email.com', 'MESSAGE' => 'Commit message 1'),
+	 *     array('HASH' => 'd34d..b33f', 'AUTHOR' => 'some@email.com', 'MESSAGE' => 'Commit message 2'),
+	 * );
+	 *
+	 * @throws GD_Exception
+	 *
+	 * @param string $ref1
+	 * @param string $ref2
+	 *
+	 * @return stdClass
+	 */
+	public function getCommitsBetween($ref1, $ref2)
+	{
+		$nice_ref1 = $this->getFullHash($ref1);
+		$nice_ref2 = $this->getFullHash($ref2);
+
+		// git merge-base will give us whichever commit comes first, handy
+		$this->runShell("git merge-base {$nice_ref1} {$nice_ref2}");
+
+		if($this->_last_errno == 0)
+		{
+			$first_ref = $this->_last_output[0];
+
+			$retval = new stdClass();
+			$retval->swapped = null;
+			$retval->commits = array();
+
+			if($first_ref == $nice_ref1)
+			{
+				$retval->swapped = false;
+			}
+			else if($first_ref == $nice_ref2)
+			{
+				$retval->swapped = true;
+
+				// Swap them round with XOR. Mind blown = true.
+				$nice_ref1 = $nice_ref1 ^ $nice_ref2;
+				$nice_ref2 = $nice_ref1 ^ $nice_ref2;
+				$nice_ref1 = $nice_ref1 ^ $nice_ref2;
+			}
+			else
+			{
+				throw new GD_Exception("Could not tell whether '{$first_ref}' was '{$nice_ref1}' or '{$nice_ref2}' in getCommitsBetween", 0, self::GIT_GENERAL_INVALID_REF);
+			}
+
+			$this->runShell("git --no-pager log --pretty=format:'%H,%an,%s' {$nice_ref1}..{$nice_ref2}");
+
+			if($this->_last_errno == 0)
+			{
+				foreach($this->_last_output as $line)
+				{
+					$raw_commit_info = explode(",", $line, 3);
+
+					$retval->commits[] = array(
+						'HASH' => $raw_commit_info[0],
+						'AUTHOR' => $raw_commit_info[1],
+						'MESSAGE' => $raw_commit_info[2],
+					);
+				}
+
+				return $retval;
+			}
+			else
+			{
+				throw new GD_Exception("Could not git log for commits between '{$nice_ref1}' and '{$nice_ref2}'", self::GIT_GENERAL_INVALID_REF);
+			}
+		}
+		else
+		{
+			throw new GD_Exception("Could not get commits between '{$nice_ref1}' or '{$nice_ref2}' (merge-base)", self::GIT_GENERAL_INVALID_REF);
+		}
+	}
+
+	/**
 	 * Convert a tag or short hash into a full commit hash
 	 *
 	 * @param string $ref tag or short hash

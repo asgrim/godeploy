@@ -99,7 +99,7 @@ class ServersController extends Zend_Controller_Action
 				}
 
 				// Test the connection first
-				$ftp = new GD_Ftp($server);
+				$ftp = GD_Ftp::FromServer($server);
 				$result = $ftp->testConnection();
 
 				if(!$result)
