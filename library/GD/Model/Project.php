@@ -47,7 +47,6 @@ class GD_Model_Project
 	public function setName($value)
 	{
 		$this->_name = (string)$value;
-		$this->setSlug(MAL_Util_TextFormatting::MakeSlug($value));
 
 		return $this;
 	}

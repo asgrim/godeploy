@@ -100,6 +100,7 @@ class SettingsController extends Zend_Controller_Action
 
 			$data = array(
 				'name' => $project->getName(),
+				'slug' => MAL_Util_TextFormatting::UnmakeSlug($project->getSlug()),
 				'repositoryUrl' => $project->getRepositoryUrl(),
 				'deploymentBranch' => $project->getDeploymentBranch(),
 				'publicKey' => $project->getSSHKey()->getPublicKey(),
@@ -169,6 +170,7 @@ class SettingsController extends Zend_Controller_Action
 		$repo_before = $project->getRepositoryUrl();
 		$branch_before = $project->getDeploymentBranch();
 		$project->setName($this->_request->getParam('name', false));
+		$project->setSlug(MAL_Util_TextFormatting::MakeSlug($this->_request->getParam('slug', false)));
 		$project->setRepositoryUrl($this->_request->getParam('repositoryUrl', false));
 		$project->setDeploymentBranch($this->_request->getParam('deploymentBranch', false));
 		$project->setRepositoryTypesId(1);
