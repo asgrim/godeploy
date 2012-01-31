@@ -473,6 +473,24 @@ class GD_Git extends GD_Shell
 	 */
 	public function getCommitsBetween($ref1, $ref2)
 	{
+		if($ref1 == "" && $ref2 == "")
+		{
+			throw new GD_Exception("getCommitsBetween expects at least one valid reference." . self::GIT_GENERAL_EMPTY_REF, 0, self::GIT_GENERAL_EMPTY_REF);
+		}
+
+		if($ref1 == "")
+		{
+			// This verifies that the commit is at least valid
+			$nice_ref2 = $this->getFullHash($ref2);
+
+			// Return an empty object
+			$retval = new stdClass();
+			$retval->swapped = false;
+			$retval->commits = array();
+
+			return $retval;
+		}
+
 		$nice_ref1 = $this->getFullHash($ref1);
 		$nice_ref2 = $this->getFullHash($ref2);
 

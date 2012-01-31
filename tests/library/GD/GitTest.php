@@ -77,16 +77,51 @@ class GD_GitTest extends GD_TestCase
 
 		$o = $git->getCommitsBetween('ab88b53fd200167dc47efc0b0177ce4f0288a1d8', '381164ffebefeacfce47091becf5dc94244616a7');
 
+		$this->assertInstanceOf('stdClass', $o);
+		$this->assertInternalType('array', $o->commits);
 		$this->assertTrue($o->swapped);
 		$this->assertEquals($o->commits[0]['HASH'], 'ab88b53fd200167dc47efc0b0177ce4f0288a1d8');
 
 		$git->deleteRepository();
 	}
 
+	public function testCommitsBetweenWithEmptyFirstHash()
+	{
+		$git = new GD_Git("unittest1", "git://github.com/asgrim/godeploy-test-project.git", "master", "");
+		$git->deleteRepository();
+		$git->gitClone();
+
+		$git->getCommitsBetween('', 'ab88b53fd200167dc47efc0b0177ce4f0288a1d8');
+	}
+
+	/**
+	 * @expectedException GD_Exception
+	 */
+	public function testCommitsBetweenWithEmptySecondHashFails()
+	{
+		$git = new GD_Git("unittest1", "git://github.com/asgrim/godeploy-test-project.git", "master", "");
+		$git->deleteRepository();
+		$git->gitClone();
+
+		$git->getCommitsBetween('381164ffebefeacfce47091becf5dc94244616a7', '');
+	}
+
 	/**
 	 * @expectedException GD_Exception
 	 */
 	public function testGetCommitsBetweenExceptionThrownWhenInvalidRefsPassed()
+	{
+		$git = new GD_Git("unittest1", "git://github.com/asgrim/godeploy-test-project.git", "master", "");
+		$git->deleteRepository();
+		$git->gitClone();
+
+		$git->getCommitsBetween('x', 'x');
+	}
+
+	/**
+	 * @expectedException GD_Exception
+	 */
+	public function testGetCommitsBetweenExceptionThrownWhenEmptyRefsPassed()
 	{
 		$git = new GD_Git("unittest1", "git://github.com/asgrim/godeploy-test-project.git", "master", "");
 		$git->deleteRepository();
