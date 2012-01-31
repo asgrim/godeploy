@@ -39,6 +39,7 @@
 						<?php endif; ?>
 						</span>
 					</li>
+				<?php if($this->deployment->getFromRevision() != ""): ?>
 					<li>
 						<label><?php _e("List of commits"); ?></label>
 						<?php if(is_array($this->commit_log->commits) && count($this->commit_log->commits) > 0): ?>
@@ -83,6 +84,7 @@
 						<span class="value">There are no commits to be deployed.</span>
 						<?php endif; ?>
 					</li>
+				<?php endif; ?>
 					<li>
 						<label><?php _e("Status"); ?></label>
 						<span class="value" id="deployment_status">
