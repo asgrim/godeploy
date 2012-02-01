@@ -45,6 +45,15 @@ class GDApp_Form_ProjectSettings extends GD_Form_Abstract
 			$project_name->addValidators(array($unique_name));
 		}
 
+		$slug_name = new Zend_Form_Element_Text('slug');
+		$slug_name->setLabel(_r('Project Slug'))
+			->setRequired(true)
+			->addFilter('StripTags')
+			->addFilter('StringTrim');
+		$not_empty = new Zend_Validate_NotEmpty();
+		$not_empty->setMessage(_r('Please enter the project slug'));
+		$slug_name->addValidators(array($not_empty));
+		
 		$git_validator = new GD_Validate_GitUrl();
 
 		$repository_url = new Zend_Form_Element_Text('repositoryUrl');
@@ -86,6 +95,7 @@ class GDApp_Form_ProjectSettings extends GD_Form_Abstract
 		$this->addElements(
 			array(
 				$project_name,
+				$slug_name,
 				$repository_url,
 				$deployment_branch,
 				$public_key,
