@@ -212,10 +212,11 @@ class GD_Git extends GD_Shell
 				// First check if we're a Github sort of repo
 				// Github returns: Hi [USER]! You've successfully authenticated, but GitHub does not provide shell access.
 				// Codebase returns: You've successfully uploaded your public key to Codebase and authenticated.
-				$valid_string = "You've successfully";
+				// Beanstalk returns: You were successfully authenticated as <user email> in <host>.
+				$valid_string = "#You('ve| were) successfully#";
 				foreach($this->_last_output as $o)
 				{
-					if(strpos($o, $valid_string) !== false)
+					if(preg_match($valid_string, $o) !== false)
 					{
 						return;
 					}
