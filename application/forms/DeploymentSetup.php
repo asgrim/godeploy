@@ -66,11 +66,23 @@ class GDApp_Form_DeploymentSetup extends GD_Form_Abstract
 			->addValidator('NotEmpty')
 			->setDescription('<a href="javascript:;" onclick="getLatestRevision();">Click to get latest revision</a><span id="get_latest_revision_status"></span>');
 
-		$comment = new Zend_Form_Element_Text('comment');
-		$comment->setLabel(_r('Comment (optional)'))
-			->setRequired(false)
-			->addFilter('StripTags')
-			->addFilter('StringTrim');
+		if(GD_Config::get("require_comments") == '1')
+		{
+			$comment = new Zend_Form_Element_Text('comment');
+			$comment->setLabel(_r('Comment'))
+				->setRequired(true)
+				->addFilter('StripTags')
+				->addFilter('StringTrim')
+				->addValidator('NotEmpty');
+		}
+		else
+		{
+			$comment = new Zend_Form_Element_Text('comment');
+			$comment->setLabel(_r('Comment (optional)'))
+				->setRequired(false)
+				->addFilter('StripTags')
+				->addFilter('StringTrim');
+		}
 
 		$submitPreview = new Zend_Form_Element_Image('submitPreview');
 		$submitPreview->setImage('/images/buttons/small/preview.png');
