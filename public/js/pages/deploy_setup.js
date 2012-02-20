@@ -68,6 +68,18 @@ function getLatestRevision()
 				var data = response.evalJSON();				
 				$('toRevision').value = data.toRevision;
 				
+				if($('comment').value == '')
+				{
+					if($('fromRevision').value == '')
+					{
+						$('comment').value = 'Initial deployment';
+					}
+					else
+					{
+						$('comment').value = data.autoComment;
+					}
+				}
+				
 				$('get_latest_revision_status').innerHTML = '';
 				fetching_latest_revision = false;
 			},
