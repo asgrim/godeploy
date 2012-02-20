@@ -633,7 +633,14 @@ class DeployController extends Zend_Controller_Action
 		if(is_array($last_commit))
 		{
 			$data['toRevision'] = $last_commit['HASH'];
-			$data['autoComment'] = $last_commit['MESSAGE'];
+			if(GD_Config::get("autofill_comments") == '1')
+			{
+				$data['autoComment'] = $last_commit['MESSAGE'];
+			}
+			else
+			{
+				$data['autoComment'] = '';
+			}
 		}
 
 		$this->_response->setHeader('Content-type', 'text/plain');
