@@ -72,13 +72,13 @@ class GDApp_Form_DeploymentSetup extends GD_Form_Abstract
 			->addFilter('StripTags')
 			->addFilter('StringTrim');
 
-		$submitRun = new Zend_Form_Element_Image('submitRun');
-		$submitRun->setImage('/images/buttons/small/deploy.png');
-		$submitRun->class = "processing_btn size_small";
-
 		$submitPreview = new Zend_Form_Element_Image('submitPreview');
-		$submitPreview->setImage('/images/buttons/small/inverted/preview.png');
+		$submitPreview->setImage('/images/buttons/small/preview.png');
 		$submitPreview->class = "preview processing_btn size_small";
+
+		$submitRun = new Zend_Form_Element_Image('submitRun');
+		$submitRun->setImage('/images/buttons/small/inverted/deploy.png');
+		$submitRun->class = "processing_btn size_small";
 
 		$this->addElements(
 			array(
