@@ -86,6 +86,8 @@ class GD_Plugin_VerifySetup extends Zend_Controller_Plugin_Abstract
 		GD_Config::set("autofill_comments", "0", true); // Default this to off to not impact existing upgraded installations
 		GD_Config::set("require_comments", "0", true); // Default this to off to not impact existing upgraded installations
 		GD_Config::set("rows_per_history_page", "20", true);
+		GD_Config::set("enable_usage_stats", "1", true);
+		GD_Config::set("unique_install_id", uniqid("gd_", true), true);
 	}
 
 	/**
@@ -96,9 +98,18 @@ class GD_Plugin_VerifySetup extends Zend_Controller_Plugin_Abstract
 	{
 		$version_conf = new Zend_Config_Ini(APPLICATION_PATH . '/configs/version.ini', 'version');
 		$expected_db_version = (int)$version_conf->gd->expect_db_version;
+		$expected_sw_version = $version_conf->gd->version;
 
 		try
 		{
+			// Update software version in DB
+			$current_sw_version = (int)GD_Config::get("sw_version");
+			if($current_sw_version != $expected_sw_version)
+			{
+				GD_Config::set("sw_version", $expected_sw_version);
+				GD_Usage::logUpgrade();
+			}
+
 			$current_db_version = (int)GD_Config::get("db_version");
 
 			if($current_db_version < $expected_db_version)
