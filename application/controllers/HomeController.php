@@ -27,7 +27,7 @@ class HomeController extends Zend_Controller_Action
 	{
 		$mprojects = new GD_Model_ProjectsMapper();
 
-		$projects = $mprojects->fetchAll();
+		$projects = $mprojects->fetchAll(null, 'name ASC');
 
 		$this->view->projects = $projects;
 
