@@ -374,6 +374,6 @@ COMMIT;
 -- Data for table `configuration`
 -- -----------------------------------------------------
 SET AUTOCOMMIT=0;
-insert into `configuration` (`id`, `key`, `value`) values (1, 'db_version', '6');
+insert into `configuration` (`id`, `key`, `value`) values (1, 'db_version', '7');
 
 COMMIT;

@@ -632,8 +632,15 @@ class DeployController extends Zend_Controller_Action
 		$last_commit = $git->getLastCommit();
 		if(is_array($last_commit))
 		{
-			$to_revision = $last_commit['HASH'];
-			$data['toRevision'] = $to_revision;
+			$data['toRevision'] = $last_commit['HASH'];
+			if(GD_Config::get("autofill_comments") == '1')
+			{
+				$data['autoComment'] = $last_commit['MESSAGE'];
+			}
+			else
+			{
+				$data['autoComment'] = '';
+			}
 		}
 
 		$this->_response->setHeader('Content-type', 'text/plain');

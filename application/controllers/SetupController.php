@@ -69,6 +69,14 @@ class SetupController extends Zend_Controller_Action
 
 	public function step1Action()
 	{
+		if($this->getRequest()->isPost())
+		{
+			$setup_session = new Zend_Session_Namespace('gd_setup_session');
+			$setup_session->enable_usage = ($this->_getParam('enable_usage')) ? 1 : 0;
+			$url = "/setup/step2";
+			$this->_redirect($url);
+		}
+
 		$this->view->headTitle('Step 1');
 		$this->view->headLink()->appendStylesheet("/css/template/table.css");
 
@@ -270,10 +278,12 @@ class SetupController extends Zend_Controller_Action
 			$db_adm->installDatabase();
 
 			// Set the other config values into database
+			GD_Config::set("unique_install_id", uniqid("gd_", true), true);
 			GD_Config::set("language", $setup_session->language ? $setup_session->language : "english");
 			GD_Config::set("setup_complete", "1");
 			GD_Config::set("cryptkey", md5(microtime() . $setup_session->admin->username . $setup_session->admin->password));
 			GD_Config::set("install_date", date("d/m/Y H:i:s"));
+			GD_Config::set("enable_usage_stats", $setup_session->enable_usage);
 
 			// Create the first user in the database
 			$userMapper = new GD_Model_UsersMapper();
@@ -298,6 +308,8 @@ class SetupController extends Zend_Controller_Action
 			$ssh_key_id = $ssh_keys_map->save($ssh_key);
 
 			GD_Config::set("ssh_key_id", $ssh_key_id);
+
+			GD_Usage::logInstall();
 
 			$setup_session->complete = true;
 		}

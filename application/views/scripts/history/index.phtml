@@ -21,7 +21,15 @@
 
 	<?php else: ?>
 
-		<p><?php _e("There are"); echo " ".$count." "; _e("deployments shown, with the most recent at the top."); ?></p>
+		<p>
+			<?php
+				echo _r("There are");
+				echo " " . $count . " ";
+				echo _r(" of ");
+				echo " " . $this->total_deployments . " ";
+				echo _r(" deployments shown, with the most recent at the top.");
+			?>
+		</p>
 
 	<?php endif; ?>
 
@@ -37,6 +45,25 @@
 			</a>
 		</div>
 		<p><?php _e("The feeds are also available in RSS, JSON or CSV. Click the icon on the right for a feed of the deployment history..."); ?></p>
+
+	<?php if($this->last_page > 1): ?>
+		<div class="sep"></div>
+
+		<div id="page_nav">
+			<p><?php _e("Pages:"); ?></p>
+			<ul>
+			<?php for($i = 1; $i <= $this->last_page; $i++): ?>
+				<li>
+					<?php if($i == $this->current_page): ?>
+						<?php echo $i; ?>
+					<?php else: ?>
+						<a href="history?page=<?php echo $i; ?>"><?php echo $i; ?></a>
+					<?php endif; ?>
+				</li>
+			<?php endfor; ?>
+			</ul>
+		</div>
+	<?php endif; ?>
 		<table>
 			<thead>
 				<tr>
@@ -45,7 +72,7 @@
 					<th><?php _e("From"); ?></th>
 					<th><?php _e("To"); ?></th>
 					<th><?php _e("Comment"); ?></th>
-					<th><?php _e("Deployed By"); ?></th>
+					<th><?php _e("By"); ?></th>
 					<th><?php _e("Status"); ?></th>
 					<th class="empty">&nbsp;</th>
 				</tr>

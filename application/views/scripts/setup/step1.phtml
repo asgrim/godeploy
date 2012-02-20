@@ -61,9 +61,13 @@
 		<div class="padding_10"></div>
 
 		<?php if($this->passed): ?>
-		<a href="/setup/step2" style="float: right">
-			<img src="/images/buttons/small/next.png" alt="<?php _e("Go to the next step"); ?>" title="<?php _e("Go to the next step"); ?>" />
-		</a>
+		<form action="" method="POST" style="float: right; width: 100%;">
+			<div style="height: 44px; vertical-align: middle; line-height: 44px; display: table-cell; float: left; padding-right: 5px;">
+				<input type="checkbox" id="enable_usage" name="enable_usage" checked="checked" />
+				<label for="enable_usage">Send anonymous usage statistics (install ID/date, language, GD versions)</label>
+			</div>
+			<input type="image" name="btn_submit" id="btn_submit" src="/images/buttons/small/next.png" style="float: right;" >
+		</form>
 		<?php else: ?>
 		<span style="float: right;">
 			<?php _e("You cannot proceed with setup until the above items marked 'Failed' are corrected."); ?>
