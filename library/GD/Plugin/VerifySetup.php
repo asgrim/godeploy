@@ -85,6 +85,7 @@ class GD_Plugin_VerifySetup extends Zend_Controller_Plugin_Abstract
 		GD_Config::set("logfile", sys_get_temp_dir() . "/godeploy_log", true);
 		GD_Config::set("autofill_comments", "0", true); // Default this to off to not impact existing upgraded installations
 		GD_Config::set("require_comments", "0", true); // Default this to off to not impact existing upgraded installations
+		GD_Config::set("rows_per_history_page", "20", true);
 	}
 
 	/**

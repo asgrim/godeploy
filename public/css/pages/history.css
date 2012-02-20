@@ -6,3 +6,25 @@
 	#feed_icons a {
 		text-decoration: none;
 		}
+		
+#page_nav {
+	width: 100%;
+	padding: 5px 0;
+	}
+	#page_nav p {
+		display: block;
+		float: left;
+		padding: 0;
+		}
+	#page_nav ul {
+		}
+		#page_nav ul li {
+			float: left;
+			margin-left: 5px;
+			}
+			
+			
+.sep {
+	width: 100%;
+	border-top: 1px solid #bdbdbd;
+}

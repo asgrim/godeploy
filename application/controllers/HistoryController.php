@@ -29,7 +29,7 @@ class HistoryController extends Zend_Controller_Action
 		/* Initialize action controller here */
 	}
 
-	public function populateView()
+	public function populateView($page = 0)
 	{
 		$projects = new GD_Model_ProjectsMapper();
 		$project_slug = $this->_getParam("project");
@@ -38,15 +38,45 @@ class HistoryController extends Zend_Controller_Action
 			$project = $projects->getProjectBySlug($project_slug);
 		}
 
+		// Load the mapper class
 		$deployments_map = new GD_Model_DeploymentsMapper();
-		$this->view->deployments = $deployments_map->getDeploymentsByProject($project->getId());
+
+		$items_per_page = GD_Config::get("rows_per_history_page");
+
+		// Pagination is enabled if greater than zero
+		if($page > 0)
+		{
+			$total_deployments = $deployments_map->getNumDeployments($project->getId());
+			$last_page = ceil($total_deployments/$items_per_page);
+
+			if($page > $last_page)
+			{
+				$page = $last_page;
+			}
+
+			$limit = $items_per_page;
+			$offset = ($page - 1) * $items_per_page;
+
+			$this->view->current_page = $page;
+			$this->view->last_page = $last_page;
+			$this->view->total_deployments = $total_deployments;
+		}
+		else
+		{
+			$limit = $items_per_page;
+			$offset = 0;
+		}
+
+		$this->view->deployments = $deployments_map->getDeploymentsByProject($project->getId(), $offset, $limit);
 
 		$this->view->project = $project;
 	}
 
 	public function indexAction()
 	{
-		$this->populateView();
+		$page = (int)$this->_getParam("page", 1);
+
+		$this->populateView($page);
 
 		$this->_helper->viewRenderer('index');
 		$this->view->headTitle('History');
