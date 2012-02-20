@@ -103,7 +103,7 @@ class GD_Plugin_VerifySetup extends Zend_Controller_Plugin_Abstract
 		try
 		{
 			// Update software version in DB
-			$current_sw_version = (int)GD_Config::get("sw_version");
+			$current_sw_version = GD_Config::get("sw_version");
 			if($current_sw_version != $expected_sw_version)
 			{
 				GD_Config::set("sw_version", $expected_sw_version);
