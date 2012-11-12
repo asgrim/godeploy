@@ -95,21 +95,14 @@ class GD_Model_SSHKey
 		$shell = new GD_Shell();
 		$shell->Exec($cmd);
 
-		if($return_value == 0)
-		{
-			$id_rsa = file_get_contents($filename);
-			$id_rsa_pub = file_get_contents($filename . ".pub");
-			unlink($filename);
-			unlink($filename . ".pub");
+		$id_rsa = file_get_contents($filename);
+		$id_rsa_pub = file_get_contents($filename . ".pub");
+		unlink($filename);
+		unlink($filename . ".pub");
 
-			$this->setPrivateKey($id_rsa);
-			$this->setPublicKey($id_rsa_pub);
-			$this->setComment($comment);
-			$this->setSSHKeyTypesId(1);
-		}
-		else
-		{
-			throw new GD_Exception("Failed to generate ssh key pair: " . nl2br($output));
-		}
+		$this->setPrivateKey($id_rsa);
+		$this->setPublicKey($id_rsa_pub);
+		$this->setComment($comment);
+		$this->setSSHKeyTypesId(1);
 	}
 }
