@@ -1,0 +1,16 @@
+language: php
+
+php:
+  - 5.3
+  - 5.4
+
+before_script:
+  - cd library
+  - wget https://github.com/downloads/asgrim/godeploy/gd-libraries.tgz
+  - tar zxf gd-libraries.tgz
+  - rm gd-libraries.tgz
+
+script:
+  - cd tests
+  - phpunit --coverage-text
+
