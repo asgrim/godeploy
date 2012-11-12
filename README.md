@@ -15,8 +15,8 @@ Contributing
 ------------
 We appreciate any [contribution](https://github.com/asgrim/godeploy/wiki/Contributing-to-GoDeploy) no matter how small! :)
 
-License Summary
----------------
+License
+-------
 GoDeploy deployment application
 Copyright (C) 2011-2013 James Titcumb, Simon Wade, Jon Wigham
 
