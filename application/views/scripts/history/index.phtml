@@ -74,7 +74,7 @@
 					<th><?php _e("Comment"); ?></th>
 					<th><?php _e("By"); ?></th>
 					<th><?php _e("Status"); ?></th>
-					<th class="empty">&nbsp;</th>
+					<th class="empty" colspan="2">&nbsp;</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -93,6 +93,11 @@
 					<td class="nowrap">
 						<img src="/images/icons/<?php echo $deployment->getDeploymentStatus()->getImageName(); ?>" alt="icon" />
 						<?php echo $deployment->getDeploymentStatus()->getShortName(); ?>
+					</td>
+					<td class="icon">
+						<a href="<?php echo $this->baseUrl(); ?>/project/<?php echo $this->project->getSlug(); ?>/deploy?to=<?php echo $deployment->getFromRevision(); ?>">
+							<img src="/images/icons/undo/16x16.png" alt="<?php _e("Roll back"); ?> &raquo;" title="<?php _e("Click to start a roll back to the from revision of this deployment"); ?>" />
+						</a>
 					</td>
 					<td class="icon">
 						<a href="<?php echo $this->baseUrl(); ?>/project/<?php echo $this->project->getSlug(); ?>/deploy/result/<?php echo $deployment->getId(); ?>">

@@ -194,6 +194,11 @@ class DeployController extends Zend_Controller_Action
 
 			$data = array();
 
+			if ($this->_getParam("to"))
+			{
+				$data["toRevision"] = $this->_getParam("to");
+			}
+
 			if(count($data) > 0)
 			{
 				$form->populate($data);

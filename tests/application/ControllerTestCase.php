@@ -53,6 +53,55 @@ class ControllerTestCase extends Zend_Test_PHPUnit_ControllerTestCase
 	}
 
 	/**
+	 * @return GD_Model_Project
+	 */
+	public function createTestProject()
+	{
+		$projects = new GD_Model_ProjectsMapper();
+		$project = new GD_Model_Project();
+		$project->setName("Unit Test Project");
+		$project->setDeploymentBranch('master');
+		$project->setRepositoryTypesId(1);
+		$project->setRepositoryUrl('git://github.com/asgrim/godeploy-test-project.git');
+		$project->setSSHKeysId(1);
+		$projects->save($project);
+
+		$servers = new GD_Model_ServersMapper();
+		$server = new GD_Model_Server();
+		$server->setProjectsId($project->getId());
+		$server->setConnectionTypesId(1);
+		$server->setHostname("localhost");
+		$server->setName("Unit Test Server");
+		$servers->save($server);
+
+		return $project;
+	}
+
+	public function cloneTestProject(GD_Model_Project $project)
+	{
+		$git = GD_Git::FromProject($project);
+		$git->gitCloneOrPull();
+	}
+
+	public function deleteTestProject(GD_Model_Project $project)
+	{
+		$git = GD_Git::FromProject($project);
+		$git->deleteRepository();
+
+		$servers_map = new GD_Model_ServersMapper();
+		$servers = $servers_map->getServersByProject($project->getId());
+
+		foreach ($servers as $server)
+		{
+			/* @var $server GD_Model_Server */
+			$servers_map->delete($server);
+		}
+
+		$projects = new GD_Model_ProjectsMapper();
+		$projects->delete($project);
+	}
+
+	/**
 	 * Return a ReflectionMethod of a private/protected method and make it
 	 * public for testing purposes
 	 *
@@ -97,11 +146,17 @@ class ControllerTestCase extends Zend_Test_PHPUnit_ControllerTestCase
 		$this->assertEquals($expectedUrl, $actualUrl, $message);
 	}
 
-	public function assertDomQuery($path, $message = '')
+	public function getDomQuery($path)
 	{
 		$content = $this->response->outputBody();
 		$domQuery = new Zend_Dom_Query($content);
 		$result = $domQuery->query($path);
+		return $result;
+	}
+
+	public function assertDomQuery($path, $message = '')
+	{
+		$result = $this->getDomQuery($path);
 
 		$this->assertGreaterThan(0, count($result), $message);
 	}

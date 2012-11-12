@@ -30,7 +30,7 @@ var fetching_latest_revision = false;
 function setCurrentRevision()
 {
 	var serverId = $('serverId').options[$('serverId').selectedIndex].value;
-	var url = document.location.href + '/get-last-deployment-revision?server_id=' + serverId;
+	var url = location.protocol + '//' + location.host + location.pathname + '/get-last-deployment-revision?server_id=' + serverId;
 	url = url.replace(/deploy\/\//, 'deploy/').replace(/#/, '');
 	new Ajax.Request(url, {
 			method: 'get',
@@ -59,7 +59,7 @@ function getLatestRevision()
 	
 	fetching_latest_revision = true;
 	
-	var url = document.location.href + '/get-latest-revision';
+	var url = location.protocol + '//' + location.host + location.pathname + '/get-latest-revision';
 	url = url.replace(/deploy\/\//, 'deploy/').replace(/#/, '');
 	new Ajax.Request(url, {
 			method: 'get',
