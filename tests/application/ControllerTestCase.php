@@ -21,7 +21,7 @@ class ControllerTestCase extends Zend_Test_PHPUnit_ControllerTestCase
 		$this->request->setQuery(array());
 	}
 
-	public function dispatch($url)
+	public function dispatch($url = null)
 	{
 		parent::dispatch($url);
 	}
@@ -66,5 +66,33 @@ class ControllerTestCase extends Zend_Test_PHPUnit_ControllerTestCase
 		$method = $class->getMethod($method);
 		$method->setAccessible(true);
 		return $method;
+	}
+
+	/**
+	 * @param string $expectedCode
+	 * @param string $message
+	 */
+	public function assertResponseCode($expectedCode, $message = '')
+	{
+		$this->assertEquals($expectedCode, $this->getResponse()->getHttpResponseCode(), $message);
+	}
+
+	/**
+	 * @param string $expectedUrl
+	 * @param string $message
+	 */
+	public function assertRedirectTo($expectedUrl, $message = '')
+	{
+		$headers = $this->getResponse()->getHeaders();
+		$actualUrl = '';
+
+		foreach($headers as $header)
+		{
+			if ($header['name'] === 'Location') {
+				$actualUrl = $header['value'];
+			}
+		}
+
+		$this->assertEquals($expectedUrl, $actualUrl, $message);
 	}
 }

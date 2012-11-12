@@ -1,6 +1,14 @@
 #!/bin/bash -x
 # Create a test environment (database etc.) for Travis
 
+# Prevent anyone but travis running this - it's destructive!
+if [ -z "$TRAVIS" ]
+then
+  echo "Exiting - not running on Travis."
+  exit 1
+fi
+
+# Configure these to Travis' MySQL credentials
 DB_HOST='localhost'
 DB_USER='root'
 DB_PASS=''
@@ -21,7 +29,7 @@ mysql -e "DROP DATABASE IF EXISTS godeploy";
 mysql -e "CREATE DATABASE godeploy";
 mysql --database $DB_NAME < db/db_create_v7.sql
 
-# Populate the database
+# Populate the database with the minimum data
 CRYPT_KEY="7fd94c5365361a5ab30911dd65178090"
 INSTALL_DATE="10/10/2011 20:36:52"
 mysql --database $DB_NAME -e "INSERT INTO configuration (\`key\`, \`value\`) VALUES('unique_install_id', 'travis');"
