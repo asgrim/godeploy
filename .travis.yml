@@ -10,6 +10,8 @@ before_script:
   - tar zxf gd-libraries.tgz
   - rm gd-libraries.tgz
   - cd ..
+  - chmod +x tests/travis-environment.sh
+  - tests/travis-environment.sh
 
 script:
   - cd tests
