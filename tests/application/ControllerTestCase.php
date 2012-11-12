@@ -88,11 +88,21 @@ class ControllerTestCase extends Zend_Test_PHPUnit_ControllerTestCase
 
 		foreach($headers as $header)
 		{
-			if ($header['name'] === 'Location') {
+			if ($header['name'] === 'Location')
+			{
 				$actualUrl = $header['value'];
 			}
 		}
 
 		$this->assertEquals($expectedUrl, $actualUrl, $message);
+	}
+
+	public function assertDomQuery($path, $message = '')
+	{
+		$content = $this->response->outputBody();
+		$domQuery = new Zend_Dom_Query($content);
+		$result = $domQuery->query($path);
+
+		$this->assertGreaterThan(0, count($result), $message);
 	}
 }
