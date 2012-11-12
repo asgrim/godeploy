@@ -9,6 +9,7 @@ before_script:
   - wget https://github.com/downloads/asgrim/godeploy/gd-libraries.tgz
   - tar zxf gd-libraries.tgz
   - rm gd-libraries.tgz
+  - cd ..
 
 script:
   - cd tests
