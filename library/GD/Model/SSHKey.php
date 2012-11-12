@@ -90,30 +90,10 @@ class GD_Model_SSHKey
 
 		$filename = sys_get_temp_dir() . "/ssh_keygen_pair" . md5(microtime());
 
-		$ds = array(
-			0 => array("pipe", "r"),
-			1 => array("pipe", "w"),
-			2 => array("pipe", "a"),
-		);
-		$cmd = 'ssh-keygen -t rsa -C "' . $comment . '" ';
+		$cmd = 'ssh-keygen -t rsa -N "" -C "' . $comment . '" -f ' . $filename;
 
-		$pid = proc_open($cmd, $ds, $pipes);
-		if(is_resource($pid))
-		{
-			fwrite($pipes[0], "{$filename}\n");
-			fwrite($pipes[0], "\n");
-			fwrite($pipes[0], "\n");
-			fclose($pipes[0]);
-
-			$output = stream_get_contents($pipes[1]);
-			fclose($pipes[1]);
-
-			$return_value = proc_close($pid);
-		}
-		else
-		{
-			throw new GD_Exception("Failed to start ssh-keygen to generate ssh key pair.");
-		}
+		$shell = new GD_Shell();
+		$shell->Exec($cmd);
 
 		if($return_value == 0)
 		{
