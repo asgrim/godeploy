@@ -63,7 +63,7 @@ class ControllerTestCase extends Zend_Test_PHPUnit_ControllerTestCase
 		$project->setDeploymentBranch('master');
 		$project->setRepositoryTypesId(1);
 		$project->setRepositoryUrl('git://github.com/asgrim/godeploy-test-project.git');
-		$project->setSSHKeysId(1);
+		$project->setSSHKeysId($this->getSSHKeyId());
 		$projects->save($project);
 
 		$servers = new GD_Model_ServersMapper();
@@ -75,6 +75,26 @@ class ControllerTestCase extends Zend_Test_PHPUnit_ControllerTestCase
 		$servers->save($server);
 
 		return $project;
+	}
+
+	public function getSSHKeyId()
+	{
+		$ssh_key_id = (int)GD_Config::get("ssh_key_id");
+
+		if ($ssh_key_id <= 0)
+		{
+			// Setup the SSH keypair
+			$ssh_key = new GD_Model_SSHKey();
+			$ssh_key->setSSHKeyTypesId(1);
+			$ssh_key->generateKeyPair();
+
+			$ssh_keys_map = new GD_Model_SSHKeysMapper();
+			$ssh_key_id = $ssh_keys_map->save($ssh_key);
+
+			GD_Config::set("ssh_key_id", $ssh_key_id);
+		}
+
+		return $ssh_key_id;
 	}
 
 	public function cloneTestProject(GD_Model_Project $project)
