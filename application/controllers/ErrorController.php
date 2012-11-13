@@ -63,10 +63,10 @@ class ErrorController extends Zend_Controller_Action
 		$proj = $this->_getParam('project');
 		$return = $this->_getParam('return');
 
-		$ext_inf = "<p>The repository cache for '{$proj}' has gone wrong somehow and needs re-cloning.</p>";
-		$ext_inf .= "<p>To reclone the repository, <strong><a href=\"/project/{$proj}/settings/reclone?return={$return}\">click this link now</a></strong> and this will hopefully fix the problem.";
+		$ext_inf = "<p>" . _r("The repository cache for") . $proj . _r(" has gone wrong somehow and needs re-cloning.") . "</p>";
+		$ext_inf .= "<p>" . _r("To reclone the repository,") . " <strong><a href=\"/project/{$proj}/settings/reclone?return={$return}\">" . _r("click this link now") . "</a></strong> " . _r("and this will hopefully fix the problem.");
 
-		$this->view->message = _r("Local repository cache is out of sync.");
+		$this->view->message = _r("GoDeploy's repository cache has gone wrong!");
 		$this->view->extended_information = $ext_inf;
 
 		// Log exception
@@ -78,7 +78,7 @@ class ErrorController extends Zend_Controller_Action
 		$errors = $this->_getParam('error_handler');
 
 		if (!$errors) {
-			$this->view->message = 'You have reached the error page';
+			$this->view->message = _r('You have reached the error page');
 			return;
 		}
 

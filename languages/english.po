@@ -2,10 +2,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GoDeploy\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-10-10 09:00+0100\n"
+"POT-Creation-Date: 2012-11-13 23:06+0100\n"
 "PO-Revision-Date: \n"
-"Last-Translator: James Titcumb <james@asgrim.com>\n"
+"Last-Translator: James Titcumb <hello@jamestitcumb.com>\n"
 "Language-Team: \n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,43 +15,177 @@ msgstr ""
 "X-Poedit-KeywordsList: _e;_r\n"
 "X-Poedit-Basepath: ../\n"
 "X-Poedit-SearchPath-0: application\n"
+"X-Poedit-SearchPath-1: languages\n"
 
-#: application/forms/DeploymentSetup.php:41
-msgid "Server"
-msgstr "Server"
+#: application/controllers/ErrorController.php:33
+#: application/controllers/ErrorController.php:92
+msgid "Could not find the page you were looking for..."
+msgstr "Could not find the page you were looking for..."
 
-#: application/forms/DeploymentSetup.php:53
-msgid "Current revision"
-msgstr "Current revision"
+#: application/controllers/ErrorController.php:45
+msgid "The most likely cause is the settings in the configuration are incorrect or the database server is unavailable. One of the following solutions may help to fix this problem:"
+msgstr "The most likely cause is the settings in the configuration are incorrect or the database server is unavailable. One of the following solutions may help to fix this problem:"
 
-#: application/forms/DeploymentSetup.php:62
-msgid "Deploy revision or tag"
-msgstr "Deploy revision or tag"
+#: application/controllers/ErrorController.php:47
+msgid "Ensure the database is running"
+msgstr "Ensure the database is running"
 
-#: application/forms/DeploymentSetup.php:70
-msgid "Comment (optional)"
-msgstr "Comment (optional)"
+#: application/controllers/ErrorController.php:48
+msgid "Check the settings in"
+msgstr "Check the settings in"
 
-#: application/forms/Login.php:35
-#: application/forms/SetupDatabase.php:39
-#: application/forms/SetupAdmin.php:33
-#: application/forms/ServerSettings.php:77
+#: application/controllers/ErrorController.php:48
+msgid "are correct"
+msgstr "are correct"
+
+#: application/controllers/ErrorController.php:51
+msgid "Error establishing database connection"
+msgstr "Error establishing database connection"
+
+#: application/controllers/ErrorController.php:66
+msgid "The repository cache for"
+msgstr "The repository cache for"
+
+#: application/controllers/ErrorController.php:66
+msgid " has gone wrong somehow and needs re-cloning."
+msgstr " has gone wrong somehow and needs re-cloning."
+
+#: application/controllers/ErrorController.php:67
+msgid "To reclone the repository,"
+msgstr "To reclone the repository,"
+
+#: application/controllers/ErrorController.php:67
+msgid "click this link now"
+msgstr "click this link now"
+
+#: application/controllers/ErrorController.php:67
+msgid "and this will hopefully fix the problem."
+msgstr "and this will hopefully fix the problem."
+
+#: application/controllers/ErrorController.php:69
+msgid "GoDeploy's repository cache has gone wrong!"
+msgstr "GoDeploy's repository cache has gone wrong!"
+
+#: application/controllers/ErrorController.php:81
+msgid "You have reached the error page"
+msgstr "You have reached the error page"
+
+#: application/controllers/SetupController.php:86
+msgid "PHP version greater than 5.3.2"
+msgstr "PHP version greater than 5.3.2"
+
+#: application/controllers/SetupController.php:91
+msgid "PHP mcrypt module installed"
+msgstr "PHP mcrypt module installed"
+
+#: application/controllers/SetupController.php:92
+#: application/controllers/SetupController.php:97
+#: application/controllers/SetupController.php:107
+#: application/controllers/SetupController.php:113
+msgid "OK"
+msgstr "OK"
+
+#: application/controllers/SetupController.php:92
+#: application/controllers/SetupController.php:97
+#: application/controllers/SetupController.php:107
+msgid "Not installed"
+msgstr "Not installed"
+
+#: application/controllers/SetupController.php:96
+msgid "PHP ftp module installed"
+msgstr "PHP ftp module installed"
+
+#: application/controllers/SetupController.php:101
+msgid "PHP Safe mode is disabled"
+msgstr "PHP Safe mode is disabled"
+
+#: application/controllers/SetupController.php:102
+msgid "Not set"
+msgstr "Not set"
+
+#: application/controllers/SetupController.php:106
+msgid "MySQL installed"
+msgstr "MySQL installed"
+
+#: application/controllers/SetupController.php:112
+msgid "Permission to run 'exec' function"
+msgstr "Permission to run 'exec' function"
+
+#: application/controllers/SetupController.php:113
+msgid "Could not run"
+msgstr "Could not run"
+
+#: application/controllers/SetupController.php:119
+msgid "OpenSSH installed"
+msgstr "OpenSSH installed"
+
+#: application/controllers/SetupController.php:126
+msgid "Git installed"
+msgstr "Git installed"
+
+#: application/controllers/SetupController.php:131
+msgid "May not work with Suhosin"
+msgstr "May not work with Suhosin"
+
+#: application/controllers/SetupController.php:132
+msgid "Suhosin is enabled"
+msgstr "Suhosin is enabled"
+
+#: application/controllers/SetupController.php:132
+msgid "GoDeploy may not function correctly"
+msgstr "GoDeploy may not function correctly"
+
+#: application/controllers/SetupController.php:132
+msgid "Suhosin not enabled"
+msgstr "Suhosin not enabled"
+
+#: application/controllers/SetupController.php:139
+msgid "Config file writable"
+msgstr "Config file writable"
+
+#: application/controllers/SetupController.php:140
+#: application/controllers/SetupController.php:153
+msgid "is"
+msgstr "is"
+
+#: application/controllers/SetupController.php:140
+#: application/controllers/SetupController.php:153
+msgid "not writable"
+msgstr "not writable"
+
+#: application/controllers/SetupController.php:140
+#: application/controllers/SetupController.php:153
+msgid "writable"
+msgstr "writable"
+
+#: application/controllers/SetupController.php:152
+msgid "gitcache directory writable"
+msgstr "gitcache directory writable"
+
+#: application/forms/User.php:31
 msgid "Username"
 msgstr "Username"
 
-#: application/forms/Login.php:40
-msgid "Please enter your User Name"
-msgstr "Please enter your User Name"
-
-#: application/forms/Login.php:45
-#: application/forms/SetupDatabase.php:45
-#: application/forms/SetupAdmin.php:40
+#: application/forms/User.php:39
 msgid "Password"
 msgstr "Password"
 
-#: application/forms/Login.php:49
-msgid "Please enter your Password"
-msgstr "Please enter your Password"
+#: application/forms/User.php:44
+#: application/forms/ChangePassword.php:40
+msgid "Confirm Password"
+msgstr "Confirm Password"
+
+#: application/forms/User.php:49
+msgid "Is this user an admin?"
+msgstr "Is this user an admin?"
+
+#: application/forms/User.php:52
+msgid "Is this user active?"
+msgstr "Is this user active?"
+
+#: application/forms/ChangePassword.php:33
+msgid "New Password"
+msgstr "New Password"
 
 #: application/forms/ProjectSettings.php:33
 msgid "Project Name"
@@ -68,21 +203,49 @@ msgstr "Repository URL"
 msgid "Please enter the Repository URL"
 msgstr "Please enter the Repository URL"
 
-#: application/forms/ProjectSettings.php:61
+#: application/forms/ProjectSettings.php:60
 msgid "Deployment Branch"
 msgstr "Deployment Branch"
 
-#: application/forms/ProjectSettings.php:66
+#: application/forms/ProjectSettings.php:65
 msgid "Please enter the name of the Deployment Branch"
 msgstr "Please enter the name of the Deployment Branch"
 
-#: application/forms/ProjectSettings.php:70
+#: application/forms/ProjectSettings.php:74
 msgid "Public Key"
 msgstr "Public Key"
 
-#: application/forms/ProjectSettings.php:74
+#: application/forms/ProjectSettings.php:78
 msgid "Please enter the Public Key"
 msgstr "Please enter the Public Key"
+
+#: application/forms/Login.php:40
+msgid "Please enter your User Name"
+msgstr "Please enter your User Name"
+
+#: application/forms/Login.php:49
+msgid "Please enter your Password"
+msgstr "Please enter your Password"
+
+#: application/forms/DeploymentSetup.php:41
+msgid "Server"
+msgstr "Server"
+
+#: application/forms/DeploymentSetup.php:53
+msgid "Current revision"
+msgstr "Current revision"
+
+#: application/forms/DeploymentSetup.php:62
+msgid "Deploy revision or tag"
+msgstr "Deploy revision or tag"
+
+#: application/forms/DeploymentSetup.php:72
+msgid "Comment"
+msgstr "Comment"
+
+#: application/forms/DeploymentSetup.php:81
+msgid "Comment (optional)"
+msgstr "Comment (optional)"
 
 #: application/forms/SetupDatabase.php:33
 #: application/forms/ServerSettings.php:42
@@ -93,14 +256,40 @@ msgstr "Hostname"
 msgid "Database Name"
 msgstr "Database Name"
 
-#: application/forms/ChangePassword.php:33
-msgid "New Password"
-msgstr "New Password"
+#: application/forms/AppSettings.php:31
+#: application/views/scripts/admin/index.phtml:41
+msgid "Language"
+msgstr "Language"
 
-#: application/forms/ChangePassword.php:40
-#: application/forms/SetupAdmin.php:46
-msgid "Confirm Password"
-msgstr "Confirm Password"
+#: application/forms/AppSettings.php:42
+#: application/views/scripts/admin/index.phtml:69
+msgid "Require deployment comments"
+msgstr "Require deployment comments"
+
+#: application/forms/AppSettings.php:49
+#: application/views/scripts/admin/index.phtml:73
+msgid "Attempt comment autofill"
+msgstr "Attempt comment autofill"
+
+#: application/forms/AppSettings.php:56
+#: application/views/scripts/admin/index.phtml:77
+msgid "Rows per history page"
+msgstr "Rows per history page"
+
+#: application/forms/AppSettings.php:75
+#: application/views/scripts/admin/index.phtml:65
+msgid "Enable usage stats"
+msgstr "Enable usage stats"
+
+#: application/forms/AppSettings.php:82
+#: application/views/scripts/admin/index.phtml:57
+msgid "Debug Level"
+msgstr "Debug Level"
+
+#: application/forms/AppSettings.php:90
+#: application/views/scripts/admin/index.phtml:61
+msgid "Logfile Path"
+msgstr "Logfile Path"
 
 #: application/forms/ServerSettings.php:33
 msgid "Name"
@@ -142,277 +331,104 @@ msgstr "Please enter the Password"
 msgid "Remote Path"
 msgstr "Remote Path"
 
-#: application/controllers/SetupController.php:75
-msgid "PHP version greater than 5.3.2"
-msgstr "PHP version greater than 5.3.2"
+#: languages/languages.php:2
+msgid "english"
+msgstr "English"
 
-#: application/controllers/SetupController.php:80
-msgid "PHP mcrypt module installed"
-msgstr "PHP mcrypt module installed"
+#: languages/languages.php:3
+msgid "german"
+msgstr "Deutsch"
 
-#: application/controllers/SetupController.php:81
-#: application/controllers/SetupController.php:86
-#: application/controllers/SetupController.php:96
-#: application/controllers/SetupController.php:102
-msgid "OK"
-msgstr "OK"
+#: application/views/scripts/configs/index.phtml:5
+#: application/views/scripts/configs/edit.phtml:4
+msgid "Configuration Management"
+msgstr "Configuration Management"
 
-#: application/controllers/SetupController.php:81
-#: application/controllers/SetupController.php:86
-#: application/controllers/SetupController.php:96
-msgid "Not installed"
-msgstr "Not installed"
+#: application/views/scripts/configs/index.phtml:18
+msgid "Filename"
+msgstr "Filename"
 
-#: application/controllers/SetupController.php:85
-msgid "PHP ftp module installed"
-msgstr "PHP ftp module installed"
+#: application/views/scripts/configs/index.phtml:19
+msgid "Created"
+msgstr "Created"
 
-#: application/controllers/SetupController.php:90
-msgid "PHP Safe mode is disabled"
-msgstr "PHP Safe mode is disabled"
+#: application/views/scripts/configs/index.phtml:20
+msgid "Updated"
+msgstr "Updated"
 
-#: application/controllers/SetupController.php:91
-msgid "Not set"
-msgstr "Not set"
+#: application/views/scripts/configs/index.phtml:21
+msgid "Upload to Servers"
+msgstr "Upload to Servers"
 
-#: application/controllers/SetupController.php:95
-msgid "MySQL installed"
-msgstr "MySQL installed"
+#: application/views/scripts/configs/index.phtml:22
+msgid "File size"
+msgstr "File size"
 
-#: application/controllers/SetupController.php:101
-msgid "Permission to run 'exec' function"
-msgstr "Permission to run 'exec' function"
+#: application/views/scripts/configs/index.phtml:35
+#: application/views/scripts/configs/index.phtml:36
+msgid "by"
+msgstr "by"
 
-#: application/controllers/SetupController.php:102
-msgid "Could not run"
-msgstr "Could not run"
+#: application/views/scripts/configs/index.phtml:42
+#: application/views/scripts/admin/users.phtml:32
+msgid "Edit"
+msgstr "Edit"
 
-#: application/controllers/SetupController.php:108
-msgid "OpenSSH installed"
-msgstr "OpenSSH installed"
+#: application/views/scripts/configs/index.phtml:42
+msgid "Click to edit this configuration file"
+msgstr "Click to edit this configuration file"
 
-#: application/controllers/SetupController.php:115
-msgid "Git installed"
-msgstr "Git installed"
+#: application/views/scripts/configs/index.phtml:55
+msgid "This project does not have any configuration files."
+msgstr "This project does not have any configuration files."
 
-#: application/controllers/SetupController.php:120
-msgid "May not work with Suhosin"
-msgstr "May not work with Suhosin"
+#: application/views/scripts/configs/index.phtml:58
+msgid "Add another configuration file to this project"
+msgstr "Add another configuration file to this project"
 
-#: application/controllers/SetupController.php:121
-msgid "Suhosin is enabled"
-msgstr "Suhosin is enabled"
+#: application/views/scripts/configs/edit.phtml:9
+msgid "Configuration Editor"
+msgstr "Configuration Editor"
 
-#: application/controllers/SetupController.php:121
-msgid "GoDeploy may not function correctly"
-msgstr "GoDeploy may not function correctly"
+#: application/views/scripts/configs/edit.phtml:16
+msgid "Path to file"
+msgstr "Path to file"
 
-#: application/controllers/SetupController.php:121
-msgid "Suhosin not enabled"
-msgstr "Suhosin not enabled"
+#: application/views/scripts/configs/edit.phtml:20
+msgid "This must be a path relative to the folder in which"
+msgstr "This must be a path relative to the folder in which"
 
-#: application/controllers/SetupController.php:126
-msgid "HOME directory environment variable is set"
-msgstr "HOME directory environment variable is set"
+#: application/views/scripts/configs/edit.phtml:20
+msgid "will be deployed, e.g."
+msgstr "will be deployed, e.g."
 
-#: application/controllers/SetupController.php:133
-msgid "Config file writable"
-msgstr "Config file writable"
+#: application/views/scripts/configs/edit.phtml:26
+msgid "Content of file to be uploaded"
+msgstr "Content of file to be uploaded"
 
-#: application/controllers/SetupController.php:134
-#: application/controllers/SetupController.php:143
-msgid "is"
-msgstr "is"
+#: application/views/scripts/configs/edit.phtml:31
+msgid "Upload to servers"
+msgstr "Upload to servers"
 
-#: application/controllers/SetupController.php:134
-#: application/controllers/SetupController.php:143
-msgid "not writable"
-msgstr "not writable"
+#: application/views/scripts/configs/edit.phtml:44
+msgid "Oh dear! Looks like you have not configured any servers yet..."
+msgstr "Oh dear! Looks like you have not configured any servers yet..."
 
-#: application/controllers/SetupController.php:134
-#: application/controllers/SetupController.php:143
-msgid "writable"
-msgstr "writable"
-
-#: application/controllers/SetupController.php:142
-msgid "gitcache directory writable"
-msgstr "gitcache directory writable"
-
-#: application/views/scripts/settings/index.phtml:11
-msgid "Project Settings"
-msgstr "Project Settings"
-
-#: application/views/scripts/settings/index.phtml:15
-#: application/views/scripts/deploy/index.phtml:15
-#: application/views/scripts/servers/index.phtml:35
-#: application/views/scripts/profile/changepassword.phtml:13
-#: application/views/scripts/auth/login.phtml:26
-msgid "There was a problem with your submission. Please check the fields highlighted below."
-msgstr "There was a problem with your submission. Please check the fields highlighted below."
-
-#: application/views/scripts/settings/index.phtml:20
-msgid "GoDeploy's repository cache has gone wrong!"
-msgstr "GoDeploy's repository cache has gone wrong!"
-
-#: application/views/scripts/settings/index.phtml:21
-msgid "Before you can deploy this project you will need to reclone the repository."
-msgstr "Before you can deploy this project you will need to reclone the repository."
-
-#: application/views/scripts/settings/index.phtml:22
-msgid "Click here"
-msgstr "Click here"
-
-#: application/views/scripts/settings/index.phtml:22
-msgid "to reclone the repository now."
-msgstr "to reclone the repository now."
-
-#: application/views/scripts/settings/index.phtml:35
-msgid "Servers"
-msgstr "Servers"
-
-#: application/views/scripts/settings/index.phtml:42
-#: application/views/scripts/servers/confirm-delete.phtml:18
-msgid "Type"
-msgstr "Type"
-
-#: application/views/scripts/settings/index.phtml:68
-msgid "There are no servers currently configured for this project!"
-msgstr "There are no servers currently configured for this project!"
-
-#: application/views/scripts/settings/index.phtml:70
-msgid "Add another server to this project"
-msgstr "Add another server to this project"
-
-#: application/views/scripts/settings/confirm-delete.phtml:5
-msgid "Delete the"
-msgstr "Delete the"
-
-#: application/views/scripts/settings/confirm-delete.phtml:5
-#: application/views/scripts/servers/confirm-delete.phtml:5
-msgid "project"
-msgstr "project"
-
-#: application/views/scripts/settings/confirm-delete.phtml:11
-#: application/views/scripts/servers/confirm-delete.phtml:11
-msgid "This cannot be undone. Are you sure you want to continue?"
-msgstr "This cannot be undone. Are you sure you want to continue?"
-
-#: application/views/scripts/settings/confirm-delete.phtml:14
-#: application/views/scripts/servers/confirm-delete.phtml:32
-msgid "No, get me out of here!"
-msgstr "No, get me out of here!"
-
-#: application/views/scripts/deploy/index.phtml:11
-msgid "Start Deployment"
-msgstr "Start Deployment"
-
-#: application/views/scripts/deploy/main.phtml:4
-msgid "Deployment"
-msgstr "Deployment"
-
-#: application/views/scripts/deploy/main.phtml:9
-msgid "Summary"
-msgstr "Summary"
-
-#: application/views/scripts/deploy/main.phtml:15
-msgid "Deploy to"
-msgstr "Deploy to"
-
-#: application/views/scripts/deploy/main.phtml:24
-#: application/views/scripts/history/index.phtml:36
-msgid "From"
-msgstr "From"
-
-#: application/views/scripts/deploy/main.phtml:29
-#: application/views/scripts/history/index.phtml:37
-msgid "To"
-msgstr "To"
-
-#: application/views/scripts/deploy/main.phtml:33
-#: application/views/scripts/deploy/main.phtml:72
-#: application/views/scripts/history/index.phtml:39
-msgid "Status"
-msgstr "Status"
-
-#: application/views/scripts/deploy/main.phtml:64
-msgid "Deployment Details"
-msgstr "Deployment Details"
-
-#: application/views/scripts/deploy/main.phtml:70
-msgid "File"
-msgstr "File"
-
-#: application/views/scripts/deploy/main.phtml:71
-msgid "Action"
-msgstr "Action"
-
-#: application/views/scripts/deploy/main.phtml:86
-msgid "There are no files to deploy."
-msgstr "There are no files to deploy."
-
-#: application/views/scripts/history/index.phtml:5
-msgid "Deployment History"
-msgstr "Deployment History"
-
-#: application/views/scripts/history/index.phtml:16
-msgid "This is a list of the deployments that have been run on this project."
-msgstr "This is a list of the deployments that have been run on this project."
-
-#: application/views/scripts/history/index.phtml:30
-msgid "The feeds are also available in RSS, JSON or CSV. Click the icon on the right for a feed of the deployment history..."
-msgstr "The feeds are also available in RSS, JSON or CSV. Click the icon on the right for a feed of the deployment history..."
-
-#: application/views/scripts/history/index.phtml:34
-msgid "Date"
-msgstr "Date"
-
-#: application/views/scripts/history/index.phtml:34
-msgid "Time"
-msgstr "Time"
-
-#: application/views/scripts/history/index.phtml:38
-msgid "Comment"
-msgstr "Comment"
-
-#: application/views/scripts/history/index.phtml:63
-msgid "This project has not yet been deployed."
-msgstr "This project has not yet been deployed."
-
-#: application/views/scripts/servers/index.phtml:14
-msgid "Server Details"
-msgstr "Server Details"
-
-#: application/views/scripts/servers/index.phtml:22
-msgid "There was a problem connecting to the FTP server with the information you provided."
-msgstr "There was a problem connecting to the FTP server with the information you provided."
-
-#: application/views/scripts/servers/index.phtml:24
-msgid "Please check the username and password, and ensure the user has permissions to create and delete files on the FTP server."
-msgstr "Please check the username and password, and ensure the user has permissions to create and delete files on the FTP server."
-
-#: application/views/scripts/servers/index.phtml:29
-msgid "More information that might be useful: "
-msgstr "More information that might be useful: "
-
-#: application/views/scripts/servers/confirm-delete.phtml:5
-msgid "Delete server from the"
-msgstr "Delete server from the"
-
-#: application/views/scripts/profile/changepassword.phtml:4
-msgid "Change Your Password"
-msgstr "Change Your Password"
-
-#: application/views/scripts/profile/changepassword.phtml:17
-msgid "Success! Your password was changed."
-msgstr "Success! Your password was changed."
+#: application/views/scripts/configs/edit.phtml:51
+msgid "&hellip;or go back"
+msgstr "&hellip;or go back"
 
 #: application/views/scripts/auth/login.phtml:6
 msgid "Easy Code Deployment"
 msgstr "Easy Code Deployment"
 
 #: application/views/scripts/auth/login.phtml:8
-msgid "GoDeploy is an installable tool that enables you to deploy changes from a Git repository to an FTP or SFTP server. It works with any Git server (not just GitHub!). GoDeploy is Open Source software which means you can help us make the software better."
-msgstr "GoDeploy is an installable tool that enables you to deploy changes from a Git repository to an FTP or SFTP server. It works with any Git server (not just GitHub!). GoDeploy is Open Source software which means you can help us make the software better."
+msgid "GoDeploy is an installable tool that enables you to deploy changes from a Git repository to an FTP server. It works with any Git server (not just GitHub!). GoDeploy is Open Source software which means you can help us make the software better."
+msgstr "GoDeploy is an installable tool that enables you to deploy changes from a Git repository to an FTP server. It works with any Git server (not just GitHub!). GoDeploy is Open Source software which means you can help us make the software better."
+
+#: application/views/scripts/auth/login.phtml:9
+msgid "Contribute"
+msgstr "Contribute"
 
 #: application/views/scripts/auth/login.phtml:9
 msgid "Visit the Contribute page to find out more"
@@ -422,33 +438,92 @@ msgstr "Visit the Contribute page to find out more"
 msgid "Login to GoDeploy"
 msgstr "Login to GoDeploy"
 
-#: application/views/scripts/template/form_field.phtml:17
-msgid "This field has an error"
-msgstr "This field has an error"
+#: application/views/scripts/auth/login.phtml:26
+#: application/views/scripts/admin/user.phtml:13
+#: application/views/scripts/admin/settings.phtml:13
+msgid "There was a problem with your submission. Please check the fields highlighted below."
+msgstr "There was a problem with your submission. Please check the fields highlighted below."
 
-#: application/views/scripts/template/header.phtml:18
-msgid "Logged in as"
-msgstr "Logged in as"
+#: application/views/scripts/admin/index.phtml:17
+msgid "Administration"
+msgstr "Administration"
 
-#: application/views/scripts/template/header.phtml:20
-msgid "Not logged in."
-msgstr "Not logged in."
+#: application/views/scripts/admin/index.phtml:23
+msgid "Actions"
+msgstr "Actions"
 
-#: application/views/scripts/template/footer.phtml:6
-msgid "Update"
-msgstr "Update"
+#: application/views/scripts/admin/index.phtml:26
+#: application/views/scripts/admin/index.phtml:30
+#: application/views/scripts/admin/settings.phtml:4
+msgid "Settings"
+msgstr "Settings"
 
-#: application/views/scripts/template/footer.phtml:7
-msgid "Docs"
-msgstr "Docs"
+#: application/views/scripts/admin/index.phtml:27
+#: application/views/scripts/admin/users.phtml:5
+msgid "User Management"
+msgstr "User Management"
 
-#: application/views/scripts/template/footer.phtml:8
-msgid "Contribute"
-msgstr "Contribute"
+#: application/views/scripts/admin/index.phtml:34
+msgid "Setting"
+msgstr "Setting"
 
-#: application/views/scripts/template/footer.phtml:10
-msgid "Change Password"
-msgstr "Change Password"
+#: application/views/scripts/admin/index.phtml:35
+msgid "Value"
+msgstr "Value"
+
+#: application/views/scripts/admin/index.phtml:45
+msgid "Install Date"
+msgstr "Install Date"
+
+#: application/views/scripts/admin/index.phtml:49
+msgid "Unique Install Identifier"
+msgstr "Unique Install Identifier"
+
+#: application/views/scripts/admin/index.phtml:53
+msgid "Software Version"
+msgstr "Software Version"
+
+#: application/views/scripts/admin/index.phtml:81
+msgid "SSH Deployment Key"
+msgstr "SSH Deployment Key"
+
+#: application/views/scripts/admin/user.phtml:4
+msgid "User Details"
+msgstr "User Details"
+
+#: application/views/scripts/admin/users.phtml:19
+msgid "Admin"
+msgstr "Admin"
+
+#: application/views/scripts/admin/users.phtml:20
+msgid "Active"
+msgstr "Active"
+
+#: application/views/scripts/admin/users.phtml:28
+#: application/views/scripts/admin/users.phtml:29
+msgid "Yes"
+msgstr "Yes"
+
+#: application/views/scripts/admin/users.phtml:28
+#: application/views/scripts/admin/users.phtml:29
+msgid "No"
+msgstr "No"
+
+#: application/views/scripts/admin/users.phtml:40
+msgid "There are no users... somehow?!"
+msgstr "There are no users... somehow?!"
+
+#: application/views/scripts/admin/users.phtml:43
+msgid "Add a user"
+msgstr "Add a user"
+
+#: application/views/scripts/setup/header.phtml:5
+msgid "Change Language"
+msgstr "Change Language"
+
+#: application/views/scripts/setup/header.phtml:11
+msgid "Change"
+msgstr "Change"
 
 #: application/views/scripts/setup/dosetup.phtml:4
 msgid "Nearly done!"
@@ -486,10 +561,6 @@ msgstr "GoDeploy needs to check that your system is set up correctly to be able 
 msgid "Requirement"
 msgstr "Requirement"
 
-#: application/views/scripts/setup/step1.phtml:16
-msgid "Value"
-msgstr "Value"
-
 #: application/views/scripts/setup/step1.phtml:17
 msgid "Result"
 msgstr "Result"
@@ -512,7 +583,7 @@ msgstr "Fail"
 msgid "Warning"
 msgstr "Warning"
 
-#: application/views/scripts/setup/step1.phtml:69
+#: application/views/scripts/setup/step1.phtml:73
 msgid "You cannot proceed with setup until the above items marked 'Failed' are corrected."
 msgstr "You cannot proceed with setup until the above items marked 'Failed' are corrected."
 
@@ -528,31 +599,345 @@ msgstr "There was a problem connecting to the database server with the informati
 msgid "Please check the details you entered and try again."
 msgstr "Please check the details you entered and try again."
 
-#: application/views/scripts/setup/header.phtml:5
-msgid "Change Language"
-msgstr "Change Language"
+#: application/views/scripts/profile/changepassword.phtml:4
+msgid "Change Your Password"
+msgstr "Change Your Password"
 
-#: application/views/scripts/home/index.phtml:11
+#: application/views/scripts/profile/changepassword.phtml:17
+msgid "Success! Your password was changed."
+msgstr "Success! Your password was changed."
+
+#: application/views/scripts/template/form_field.phtml:17
+msgid "This field has an error"
+msgstr "This field has an error"
+
+#: application/views/scripts/template/header.phtml:17
+msgid "Current Project"
+msgstr "Current Project"
+
+#: application/views/scripts/template/header.phtml:27
+msgid "Logout"
+msgstr "Logout"
+
+#: application/views/scripts/template/header.phtml:29
+msgid "Not logged in."
+msgstr "Not logged in."
+
+#: application/views/scripts/template/footer.phtml:6
+msgid "Update"
+msgstr "Update"
+
+#: application/views/scripts/template/footer.phtml:7
+msgid "Docs"
+msgstr "Docs"
+
+#: application/views/scripts/template/footer.phtml:10
+msgid "Change Password"
+msgstr "Change Password"
+
+#: application/views/scripts/home/index.phtml:6
+msgid "Welcome back to GoDeploy"
+msgstr "Welcome back to GoDeploy"
+
+#: application/views/scripts/home/index.phtml:8
+msgid "Welcome to GoDeploy"
+msgstr "Welcome to GoDeploy"
+
+#: application/views/scripts/home/index.phtml:18
+msgid "We've missed you - how have you been?"
+msgstr "We've missed you - how have you been?"
+
+#: application/views/scripts/home/index.phtml:19
+msgid "Now you're back, here's your list of current projects - you can deploy or update any of them, or add a whole new one."
+msgstr "Now you're back, here's your list of current projects - you can deploy or update any of them, or add a whole new one."
+
+#: application/views/scripts/home/index.phtml:25
+msgid "Project name"
+msgstr "Project name"
+
+#: application/views/scripts/home/index.phtml:26
+msgid "Last deployed"
+msgstr "Last deployed"
+
+#: application/views/scripts/home/index.phtml:27
 msgid "Deployments"
 msgstr "Deployments"
 
-#: application/views/scripts/home/index.phtml:12
-msgid "Settings"
-msgstr "Settings"
+#: application/views/scripts/home/index.phtml:44
+#: application/views/scripts/history/index.phtml:112
+msgid "This project is yet to be deployed."
+msgstr "This project is yet to be deployed."
 
-#: application/views/scripts/home/index.phtml:13
-msgid "Delete"
-msgstr "Delete"
+#: application/views/scripts/home/index.phtml:49
+msgid "Deployed"
+msgstr "Deployed"
 
-#: application/views/scripts/home/index.phtml:20
-msgid "No projects set up yet."
-msgstr "No projects set up yet."
+#: application/views/scripts/home/index.phtml:49
+msgid " times"
+msgstr " times"
 
-#: application/views/scripts/home/index.phtml:24
+#: application/views/scripts/home/index.phtml:49
+msgid "once"
+msgstr "once"
+
+#: application/views/scripts/home/index.phtml:50
+msgid "View history"
+msgstr "View history"
+
+#: application/views/scripts/home/index.phtml:57
+msgid "Deploy project"
+msgstr "Deploy project"
+
+#: application/views/scripts/home/index.phtml:71
 msgid "Add another project"
 msgstr "Add another project"
 
-#: application/views/scripts/home/index.phtml:26
+#: application/views/scripts/home/index.phtml:75
+msgid "You haven't set any projects up to deploy yet."
+msgstr "You haven't set any projects up to deploy yet."
+
+#: application/views/scripts/home/index.phtml:76
 msgid "Add the first project"
 msgstr "Add the first project"
+
+#: application/views/scripts/history/index.phtml:5
+msgid "Deployment History"
+msgstr "Deployment History"
+
+#: application/views/scripts/history/index.phtml:13
+msgid "Deployment history"
+msgstr "Deployment history"
+
+#: application/views/scripts/history/index.phtml:20
+msgid "There is 1 deployment shown."
+msgstr "There is 1 deployment shown."
+
+#: application/views/scripts/history/index.phtml:26
+msgid "There are"
+msgstr "There are"
+
+#: application/views/scripts/history/index.phtml:28
+msgid " of "
+msgstr " of "
+
+#: application/views/scripts/history/index.phtml:30
+msgid " deployments shown, with the most recent at the top."
+msgstr " deployments shown, with the most recent at the top."
+
+#: application/views/scripts/history/index.phtml:38
+msgid "RSS Feed"
+msgstr "RSS Feed"
+
+#: application/views/scripts/history/index.phtml:41
+msgid "JSON Feed"
+msgstr "JSON Feed"
+
+#: application/views/scripts/history/index.phtml:44
+msgid "CSV Feed"
+msgstr "CSV Feed"
+
+#: application/views/scripts/history/index.phtml:47
+msgid "The feeds are also available in RSS, JSON or CSV. Click the icon on the right for a feed of the deployment history..."
+msgstr "The feeds are also available in RSS, JSON or CSV. Click the icon on the right for a feed of the deployment history..."
+
+#: application/views/scripts/history/index.phtml:53
+msgid "Pages:"
+msgstr "Pages:"
+
+#: application/views/scripts/history/index.phtml:70
+msgid "Date"
+msgstr "Date"
+
+#: application/views/scripts/history/index.phtml:70
+msgid "Time"
+msgstr "Time"
+
+#: application/views/scripts/history/index.phtml:72
+msgid "From"
+msgstr "From"
+
+#: application/views/scripts/history/index.phtml:73
+msgid "To"
+msgstr "To"
+
+#: application/views/scripts/history/index.phtml:75
+msgid "By"
+msgstr "By"
+
+#: application/views/scripts/history/index.phtml:76
+msgid "Status"
+msgstr "Status"
+
+#: application/views/scripts/history/index.phtml:89
+msgid "None"
+msgstr "None"
+
+#: application/views/scripts/history/index.phtml:99
+msgid "Roll back"
+msgstr "Roll back"
+
+#: application/views/scripts/history/index.phtml:99
+msgid "Click to start a roll back to the from revision of this deployment"
+msgstr "Click to start a roll back to the from revision of this deployment"
+
+#: application/views/scripts/history/index.phtml:104
+msgid "View"
+msgstr "View"
+
+#: application/views/scripts/history/index.phtml:104
+msgid "Click to view this deployment"
+msgstr "Click to view this deployment"
+
+#: application/views/scripts/error/error.phtml:5
+msgid "Oh dear - something went wrong&hellip;"
+msgstr "Oh dear - something went wrong&hellip;"
+
+#: application/views/scripts/error/error.phtml:21
+msgid "Debug Information (Developer Mode)"
+msgstr "Debug Information (Developer Mode)"
+
+#: application/views/scripts/error/error.phtml:22
+msgid "Exception information"
+msgstr "Exception information"
+
+#: application/views/scripts/error/error.phtml:24
+msgid "Message"
+msgstr "Message"
+
+#: application/views/scripts/error/error.phtml:27
+msgid "Stack trace"
+msgstr "Stack trace"
+
+#: application/views/scripts/error/error.phtml:31
+msgid "Request Parameters"
+msgstr "Request Parameters"
+
+#: application/views/scripts/settings/index.phtml:11
+msgid "Project Settings"
+msgstr "Project Settings"
+
+#: application/views/scripts/settings/index.phtml:21
+msgid "Before you can deploy this project you will need to reclone the repository."
+msgstr "Before you can deploy this project you will need to reclone the repository."
+
+#: application/views/scripts/settings/index.phtml:22
+#: application/views/scripts/settings/index.phtml:79
+msgid "Click here"
+msgstr "Click here"
+
+#: application/views/scripts/settings/index.phtml:22
+msgid "to reclone the repository now."
+msgstr "to reclone the repository now."
+
+#: application/views/scripts/settings/index.phtml:35
+msgid "Servers"
+msgstr "Servers"
+
+#: application/views/scripts/settings/index.phtml:42
+msgid "Type"
+msgstr "Type"
+
+#: application/views/scripts/settings/index.phtml:59
+msgid "Delete"
+msgstr "Delete"
+
+#: application/views/scripts/settings/index.phtml:68
+msgid "There are no servers currently configured for this project!"
+msgstr "There are no servers currently configured for this project!"
+
+#: application/views/scripts/settings/index.phtml:70
+msgid "Add another server to this project"
+msgstr "Add another server to this project"
+
+#: application/views/scripts/settings/index.phtml:79
+msgid "to delete the project."
+msgstr "to delete the project."
+
+#: application/views/scripts/settings/confirm-delete.phtml:5
+msgid "Delete the"
+msgstr "Delete the"
+
+#: application/views/scripts/settings/confirm-delete.phtml:5
+msgid "project"
+msgstr "project"
+
+#: application/views/scripts/settings/confirm-delete.phtml:11
+msgid "This cannot be undone. Are you sure you want to continue?"
+msgstr "This cannot be undone. Are you sure you want to continue?"
+
+#: application/views/scripts/settings/confirm-delete.phtml:14
+msgid "No, get me out of here!"
+msgstr "No, get me out of here!"
+
+#: application/views/scripts/settings/confirm-delete.phtml:15
+msgid "Yes, delete it"
+msgstr "Yes, delete it"
+
+#: application/views/scripts/servers/index.phtml:14
+msgid "Server Details"
+msgstr "Server Details"
+
+#: application/views/scripts/servers/index.phtml:22
+msgid "There was a problem connecting to the FTP server with the information you provided."
+msgstr "There was a problem connecting to the FTP server with the information you provided."
+
+#: application/views/scripts/servers/index.phtml:24
+msgid "Please check the username and password, and ensure the user has permissions to create and delete files on the FTP server."
+msgstr "Please check the username and password, and ensure the user has permissions to create and delete files on the FTP server."
+
+#: application/views/scripts/servers/index.phtml:29
+msgid "More information that might be useful: "
+msgstr "More information that might be useful: "
+
+#: application/views/scripts/servers/confirm-delete.phtml:5
+msgid "Delete server from the"
+msgstr "Delete server from the"
+
+#: application/views/scripts/deploy/main.phtml:4
+msgid "Deployment"
+msgstr "Deployment"
+
+#: application/views/scripts/deploy/main.phtml:9
+msgid "Summary"
+msgstr "Summary"
+
+#: application/views/scripts/deploy/main.phtml:15
+msgid "Deploy to"
+msgstr "Deploy to"
+
+#: application/views/scripts/deploy/main.phtml:44
+msgid "List of commits"
+msgstr "List of commits"
+
+#: application/views/scripts/deploy/main.phtml:50
+msgid "Note"
+msgstr "Note"
+
+#: application/views/scripts/deploy/main.phtml:54
+msgid "this commit is being reversed by this deployment."
+msgstr "this commit is being reversed by this deployment."
+
+#: application/views/scripts/deploy/main.phtml:58
+msgid "these commits are being reversed by this deployment."
+msgstr "these commits are being reversed by this deployment."
+
+#: application/views/scripts/deploy/main.phtml:123
+msgid "Deployment Details"
+msgstr "Deployment Details"
+
+#: application/views/scripts/deploy/main.phtml:129
+msgid "File"
+msgstr "File"
+
+#: application/views/scripts/deploy/main.phtml:130
+msgid "Action"
+msgstr "Action"
+
+#: application/views/scripts/deploy/main.phtml:148
+msgid "There are no files to deploy."
+msgstr "There are no files to deploy."
+
+#: application/views/scripts/deploy/index.phtml:11
+msgid "Start Deployment"
+msgstr "Start Deployment"
 
