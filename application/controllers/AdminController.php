@@ -28,6 +28,55 @@ class AdminController extends Zend_Controller_Action
 		$this->view->headTitle('Administration');
 		$this->view->headLink()->appendStylesheet("/css/template/table.css");
 
+		$settings = GD_Config::getAll();
+		$this->view->settings = $settings;
+
+		$ssh_keys = new GD_Model_SSHKeysMapper();
+		$ssh_key = new GD_Model_SSHKey();
+		$ssh_keys->find($settings['ssh_key_id'], $ssh_key);
+		$this->view->sshKey = $ssh_key;
+	}
+
+	public function settingsAction()
+	{
+		$this->view->headTitle('Administration')->prepend('User Management');
+		$this->view->headLink()->appendStylesheet("/css/template/form.css");
+
+		$form = new GDApp_Form_AppSettings();
+
+		$this->view->form = $form;
+
+		if ($this->getRequest()->isPost())
+		{
+			if ($form->isValid($this->getRequest()->getParams()))
+			{
+				$save_fields = array_keys($form->getElements());
+
+				foreach($save_fields as $field)
+				{
+					if ($field == 'btn_submit')
+					{
+						continue;
+					}
+					GD_Config::set($field, $this->_getParam($field));
+				}
+
+				$this->_redirect('/admin');
+			}
+		}
+		else
+		{
+			$settings = GD_Config::getAll();
+
+			$form->populate($settings);
+		}
+	}
+
+	public function usersAction()
+	{
+		$this->view->headTitle('Administration')->prepend('User Management');
+		$this->view->headLink()->appendStylesheet("/css/template/table.css");
+
 		$userMapper = new GD_Model_UsersMapper();
 		$users = $userMapper->fetchAll(null, 'name');
 
@@ -86,7 +135,7 @@ class AdminController extends Zend_Controller_Action
 
 				$users->save($user);
 
-				$this->_redirect('/admin');
+				$this->_redirect('/admin/users');
 			}
 		}
 		else

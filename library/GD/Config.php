@@ -75,6 +75,16 @@ class GD_Config
 		return self::$_db->fetchOne($select);
 	}
 
+	public static function getAll()
+	{
+		if(!self::initialise()) return false;
+
+		$select = self::$_db->select()
+				->from(self::$_db_table, array('key', 'value'));
+
+		return self::$_db->fetchPairs($select);
+	}
+
 	/**
 	 * Set a configuration setting in the database
 	 *

@@ -1,4 +1,16 @@
 
+<?php
+function echoDebugLevel($level)
+{
+	switch($level)
+	{
+		case 2: echo 'Full'; break;
+		case 1: echo 'Basic'; break;
+		case 0: echo 'None'; break;
+	}
+}
+?>
+
 <div class="content">
 	<div class="padding_20"></div>
 
@@ -8,39 +20,70 @@
 	<div class="wrapper w_ededed"><div class="content">
 		<div class="padding_15"></div>
 
-<?php if (is_array($this->users) && count($this->users) > 0): ?>
-		
-		<h2>GoDeploy Users</h2>
+		<h2 class=""><?php _e("Actions"); ?></h2>
 
+		<ul>
+			<li><a href="<?php echo $this->baseUrl(); ?>/admin/settings">GoDeploy <?php _e("Settings"); ?></a></li>
+			<li><a href="<?php echo $this->baseUrl(); ?>/admin/users"><?php _e("User Management"); ?></a></li>
+		</ul>
+
+		<h2><?php _e("Settings"); ?></h2>
 		<table>
 			<thead>
 				<tr>
-					<th><?php _e("Username"); ?></th>
-					<th><?php _e("Admin"); ?></th>
-					<th><?php _e("Active"); ?></th>
+					<th><?php _e("Setting"); ?></th>
+					<th><?php _e("Value"); ?></th>
 					<th class="empty">&nbsp;</th>
 				</tr>
 			</thead>
 			<tbody>
-			<?php foreach ($this->users as $user) : ?>
 				<tr>
-					<td><?php echo $user->getName(); ?></td>
-					<td><?php echo $user->isAdmin() ? _r("Yes") : _r("No"); ?></td>
-					<td><?php echo $user->isActive() ? _r("Yes") : _r("No"); ?></td>
-					<td class="icon">
-						<a href="<?php echo $this->baseUrl(); ?>/admin/user?id=<?php echo $user->getId(); ?>">
-							<img src="/images/icons/edit/16x16.png" alt="<?php _e("Edit"); ?> &raquo;" />
-						</a>
-					</td>
+					<td><?php _e("Language"); ?></td>
+					<td><?php echo ucwords($this->settings['language']) . " (" . _r($this->settings['language']) . ")"; ?></td>
 				</tr>
-			<?php endforeach; ?>
+				<tr>
+					<td><?php _e("Install Date"); ?></td>
+					<td><?php echo date("r", strtotime($this->settings['install_date'])); ?></td>
+				</tr>
+				<tr>
+					<td><?php _e("Unique Install Identifier"); ?></td>
+					<td><?php echo $this->settings['unique_install_id']; ?></td>
+				</tr>
+				<tr>
+					<td><?php _e("Software Version"); ?></td>
+					<td><?php echo $this->settings['sw_version']; ?></td>
+				</tr>
+				<tr>
+					<td><?php _e("Debug Level"); ?></td>
+					<td><?php echo $this->settings['debug_level'] . " - "; echoDebugLevel($this->settings['debug_level']); ?></td>
+				</tr>
+				<tr>
+					<td><?php _e("Logfile Path"); ?></td>
+					<td><?php echo $this->settings['logfile']; ?></td>
+				</tr>
+				<tr>
+					<td><?php _e("Enable usage stats"); ?></td>
+					<td><?php echo $this->settings['autofill_comments'] == 1 ? 'Yes' : 'No'; ?></td>
+				</tr>
+				<tr>
+					<td><?php _e("Require deployment comments"); ?></td>
+					<td><?php echo $this->settings['require_comments'] == 1 ? 'Yes' : 'No'; ?></td>
+				</tr>
+				<tr>
+					<td><?php _e("Attempt comment autofill"); ?></td>
+					<td><?php echo $this->settings['autofill_comments'] == 1 ? 'Yes' : 'No'; ?></td>
+				</tr>
+				<tr>
+					<td><?php _e("Rows per history page"); ?></td>
+					<td><?php echo $this->settings['rows_per_history_page']; ?></td>
+				</tr>
+				<tr>
+					<td><?php _e("SSH Deployment Key"); ?></td>
+					<td><textarea rows="8" cols="80" readonly="readonly"><?php echo $this->sshKey->getPublicKey(); ?></textarea></td>
+				</tr>
 			</tbody>
 		</table>
-<?php else: ?>
-		<h2 class="last"><?php _e("There are no users... somehow?!"); ?></h2>
-<?php endif; ?>
-		<div class="padding_15"></div>
-		<p class="last"><a href="<?php echo $this->baseUrl(); ?>/admin/user" class="add_icon"><?php _e("Add a user"); ?></a></p>
+
 	</div></div>
 </div>
 
