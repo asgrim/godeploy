@@ -667,5 +667,149 @@ class DeployController extends Zend_Controller_Action
 		$jsonData = Zend_Json::encode($data);
 		$this->_response->appendBody($jsonData);
 	}
+
+	private function parseMime($mime)
+	{
+		if (strpos($mime, ';') !== false)
+		{
+			$mime = substr($mime, 0, strpos($mime, ';'));
+		}
+
+		switch (strtolower($mime))
+		{
+			case 'json':
+			case 'application/json':
+				return 'json';
+			case 'xml':
+			case 'text/xml':
+				return 'xml';
+			case 'text':
+			case 'text/plain':
+				return 'text';
+			default:
+				return null;
+		}
+	}
+
+	public function apiAction()
+	{
+		// Try getting the request format from Content-type header, then URL ?format=xxx
+		if (isset($_SERVER['CONTENT_TYPE']))
+		{
+			$req_format = $this->parseMime($_SERVER['CONTENT_TYPE']);
+		}
+		else if (isset($_GET['format']))
+		{
+			$req_format = $this->parseMime($_GET['format']);
+		}
+		else
+		{
+			// 415 = Unsupported media format
+			return $this->apiSendResponse(415, 'text');
+		}
+
+		// If they've set an Accept header, use it, otherwise respond in the
+		// same format as the request
+		if (isset($_SERVER['HTTP_ACCEPT']))
+		{
+			$res_format = $this->parseMime($_SERVER['HTTP_ACCEPT']);
+		}
+		else
+		{
+			$res_format = $req_format;
+		}
+
+		// First check if the API is enabled...
+		$enabled = GD_Config::get('enable_url_trigger') == '1';
+
+		if (!$enabled)
+		{
+			return $this->apiSendResponse(503, $res_format);
+		}
+
+		// Attempt to parse the payload in the expected format.
+		// If it fails, respond with 400 (bad request)
+		try
+		{
+			$payload_raw = file_get_contents('php://input');
+			$payload = $this->apiParsePayload($payload_raw, $req_format);
+		}
+		catch(Exception $e)
+		{
+			return $this->apiSendResponse(400, $res_format);
+		}
+
+		// Check the requested token matches what we have
+		$our_token = GD_Config::get("url_trigger_token");
+
+		if ($our_token != $payload['token'])
+		{
+			return $this->apiSendResponse(403, $res_format);
+		}
+
+		// We'll now accept this request. Create the deployment and run
+		// it in the background @todo
+		return $this->apiSendResponse(501, $res_format);
+
+		return $this->apiSendResponse(200, $res_format);
+	}
+
+	private function apiParsePayload($request, $expected_format)
+	{
+		switch ($expected_format)
+		{
+			case 'json':
+				return Zend_Json::decode($request, Zend_Json::TYPE_ARRAY);
+			case 'xml':
+				libxml_use_internal_errors(true);
+				$xml = simplexml_load_string($request);
+				if (!$xml)
+				{
+					// If we wanted we could use libxml_get_errors to get the errors...
+					throw Exception("Not xml");
+				}
+				return array(
+					'token' => (string)$xml->token,
+					'to' => (string)$xml->to,
+					'comment' => (string)$xml->comment,
+				);
+			default:
+				parse_str($request, $output);
+				return $output;
+		}
+	}
+
+	private function apiSendResponse($http_status, $format)
+	{
+		$this->_helper->viewRenderer->setNoRender();
+		$this->_helper->layout->disableLayout();
+
+		$this->_response->setHttpResponseCode($http_status);
+
+		$result = ($http_status == 200 ? 'success' : 'failed');
+		$data = array(
+			"result" => $result,
+		);
+
+		switch($format)
+		{
+			case 'json':
+				$this->_response->setHeader('Content-type', 'application/json');
+				$response = Zend_Json::encode($data);
+				break;
+			case 'xml':
+				$this->_response->setHeader('Content-type', 'text/xml');
+				$xml = new SimpleXMLElement('<deployment/>');
+				array_walk_recursive(array_flip($data), array($xml, 'addChild'));
+				$response = $xml->asXML();
+				break;
+			default:
+				$this->_response->setHeader('Content-type', 'text/plain');
+				$response = $result;
+				break;
+		}
+
+		$this->_response->appendBody($response . "\n");
+	}
 }
 
