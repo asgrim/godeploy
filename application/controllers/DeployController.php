@@ -510,10 +510,22 @@ class DeployController extends Zend_Controller_Action
 					$config = new GD_Model_Config();
 					$config_map->find($matches[1], $config);
 
-					file_put_contents($tmpfile, $config->getContent());
+					$config_content = $config->getContent();
+					$config_content = str_replace("{{FROM_REV_LONG}}", $deployment->getFromRevision(), $config_content);
+					$config_content = str_replace("{{FROM_REV_SHORT}}", substr($deployment->getFromRevision(), 0, 7), $config_content);
+					$config_content = str_replace("{{TO_REV_LONG}}", $deployment->getToRevision(), $config_content);
+					$config_content = str_replace("{{TO_REV_SHORT}}", substr($deployment->getToRevision(), 0, 7), $config_content);
+					$config_content = str_replace("{{DATE}}", $deployment->getWhen(), $config_content);
+					$config_content = str_replace("{{SERVER}}", $server->getHostname(), $config_content);
+					$config_content = str_replace("{{USER}}", $deployment->getUser()->getName(), $config_content);
+					$config_content = str_replace("{{COMMENT}}", $deployment->getComment(), $config_content);
+
+					file_put_contents($tmpfile, $config_content);
 
 					GD_Debug::Log(" >> to '{$matches[2]}'", GD_Debug::DEBUG_BASIC, false, false);
 					$ftp->upload($tmpfile, $matches[2]);
+
+					unlink($tmpfile);
 				}
 				else
 				{
