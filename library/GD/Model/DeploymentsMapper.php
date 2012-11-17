@@ -172,4 +172,12 @@ class GD_Model_DeploymentsMapper extends MAL_Model_MapperAbstract
 
 		return $this->getDbTable()->getDefaultAdapter()->fetchOne($select);
 	}
+
+	public static function get($deployment_id)
+	{
+		$deployment = new GD_Model_Deployment();
+		$deployments = new self;
+		$deployments->find((int)$deployment_id, $deployment);
+		return $deployment;
+	}
 }

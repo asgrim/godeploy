@@ -35,17 +35,7 @@ class DeployController extends Zend_Controller_Action
 		$this->view->headLink()->appendStylesheet("/css/template/form.css");
 		$this->view->headLink()->appendStylesheet("/css/pages/deploy.css");
 
-		$projects = new GD_Model_ProjectsMapper();
-		$project_slug = $this->_getParam("project");
-		if($project_slug != "")
-		{
-			$project = $projects->getProjectBySlug($project_slug);
-		}
-
-		if(is_null($project))
-		{
-			throw new GD_Exception("Project '{$project_slug}' was not set up.");
-		}
+		$project = $this->_helper->getProjectFromUrl();
 
 		$this->view->project = $project;
 
@@ -61,84 +51,15 @@ class DeployController extends Zend_Controller_Action
 				$user = GD_Auth_Database::GetLoggedInUser();
 
 				$server_id = $this->_request->getParam('serverId', false);
-
-				$last_deployment = $deployments->getLastSuccessfulDeployment($project->getId(), $server_id);
-				if(!is_null($last_deployment))
-				{
-					$from_rev = $last_deployment->getToRevision();
-				}
-				else
-				{
-					$from_rev = "";
-				}
-
-				$git = GD_Git::FromProject($project);
-				$git->gitPull();
+				$server = GD_Model_ServersMapper::get($server_id);
 
 				$input_to_rev = $this->_request->getParam('toRevision', false);
 				$comment = $this->_request->getParam('comment', '');
 
 				try
 				{
-					$to_rev = $git->getFullHash($input_to_rev);
-
-					$deployment = new GD_Model_Deployment();
-					$deployment->setUsersId($user->getId())
-							->setProjectsId($project->getId())
-							->setWhen(date("Y-m-d H:i:s"))
-							->setServersId($server_id)
-							->setFromRevision($from_rev)
-							->setToRevision($to_rev)
-							->setComment($comment)
-							->setDeploymentStatusesId(1);
-
-					$deployments->save($deployment);
-
-					// Generate the list of files to deploy and save in deployment_files table
-					try
-					{
-						$files_changed = $git->getFilesChangedList($deployment->getFromRevision(), $deployment->getToRevision());
-					}
-					catch(GD_Exception $ex)
-					{
-						if($ex->getStringCode() == GD_Git::GIT_GENERAL_NO_FILES_CHANGED)
-						{
-							$files_changed = array();
-						}
-						else throw $ex;
-					}
-
-					$deployment_files = new GD_Model_DeploymentFilesMapper();
-					$deployment_file_statuses = new GD_Model_DeploymentFileStatusesMapper();
-					$deployment_file_actions = new GD_Model_DeploymentFileActionsMapper();
-					foreach($files_changed as $fc)
-					{
-						$deployment_file = new GD_Model_DeploymentFile();
-						$deployment_file->setDeploymentsId($deployment->getId());
-						$deployment_file->setDeploymentFileActionsId($deployment_file_actions->getDeploymentFileActionByGitStatus($fc['action'])->getId());
-						$deployment_file->setDeploymentFileStatusesId($deployment_file_statuses->getDeploymentFileStatusByCode('NEW')->getId());
-						$deployment_file->setDetails($fc['file']);
-
-						$deployment_files->save($deployment_file);
-					}
-
-					// Add any additional configuration files
-					$config_servers_map = new GD_Model_ConfigsServersMapper();
-					$configs = $config_servers_map->getAllConfigsForServer($server_id);
-
-					foreach($configs as $config)
-					{
-						$c = $config->getConfig();
-						$cfile = "!CFG!{$c->getId()}!{$c->getFilename()}";
-
-						$deployment_file = new GD_Model_DeploymentFile();
-						$deployment_file->setDeploymentsId($deployment->getId());
-						$deployment_file->setDeploymentFileActionsId($deployment_file_actions->getDeploymentFileActionByGitStatus('M')->getId());
-						$deployment_file->setDeploymentFileStatusesId($deployment_file_statuses->getDeploymentFileStatusByCode('NEW')->getId());
-						$deployment_file->setDetails($cfile);
-
-						$deployment_files->save($deployment_file);
-					}
+					$deploy_service = GD_Service_DeployFactory::factoryFromModels($user, $server, $project);
+					$deployment = $deploy_service->createDeployment($input_to_rev, $comment);
 
 					// Forward to either run or preview page...
 					if($this->_request->getParam('submitRun_x') > 0)
@@ -206,34 +127,28 @@ class DeployController extends Zend_Controller_Action
 		}
 	}
 
-	private function prepareStandardDeployInformation()
+	private function getDeployServiceFromParam()
+	{
+		$deployment = GD_Model_DeploymentsMapper::get($this->_getParam('id'));
+
+		$deploy_service = GD_Service_DeployFactory::factoryFromDeployment($deployment);
+		return $deploy_service;
+	}
+
+	private function commonSetup()
 	{
 		$this->_helper->viewRenderer('main');
 		$this->view->headLink()->appendStylesheet("/css/template/table.css");
 		$this->view->headLink()->appendStylesheet("/css/template/form.css");
 		$this->view->headLink()->appendStylesheet("/css/pages/deploy.css");
 
-		$projects = new GD_Model_ProjectsMapper();
-		$project_slug = $this->_getParam("project");
-		if($project_slug != "")
-		{
-			$project = $projects->getProjectBySlug($project_slug);
-		}
+		$deploy_service = $this->getDeployServiceFromParam();
+		$project = $deploy_service->getProject();
+		$deployment = $deploy_service->getDeployment();
 
-		if(is_null($project))
-		{
-			throw new GD_Exception("Project '{$project_slug}' was not set up.");
-		}
-		$this->view->project = $project;
-
-		$deployments = new GD_Model_DeploymentsMapper();
-		$deployment = new GD_Model_Deployment();
-		$deployments->find($this->_getParam('id'), $deployment);
 		$this->view->deployment = $deployment;
-
-		$deployment_files = new GD_Model_DeploymentFilesMapper();
-		$file_list = $deployment_files->getDeploymentFilesByDeployment($deployment->getId());
-		$this->view->file_list = $file_list;
+		$this->view->project = $project;
+		$this->view->file_list = $deployment->getDeploymentFiles();
 
 		$git = GD_Git::FromProject($project);
 		$this->view->commit_log = $git->getCommitsBetween($deployment->getFromRevision(), $deployment->getToRevision());
@@ -253,7 +168,7 @@ class DeployController extends Zend_Controller_Action
 			}
 		}
 
-		$this->prepareStandardDeployInformation();
+		$this->commonSetup();
 
 		$status = $this->view->deployment->getDeploymentStatusesId();
 
@@ -275,7 +190,7 @@ class DeployController extends Zend_Controller_Action
 
 	public function runAction()
 	{
-		$this->prepareStandardDeployInformation();
+		$this->commonSetup();
 
 		$status = $this->view->deployment->getDeploymentStatusesId();
 
@@ -309,7 +224,7 @@ class DeployController extends Zend_Controller_Action
 			}
 		}
 
-		$this->prepareStandardDeployInformation();
+		$this->commonSetup();
 
 		$status = $this->view->deployment->getDeploymentStatusesId();
 
@@ -330,78 +245,13 @@ class DeployController extends Zend_Controller_Action
 
 	public function executeDeploymentStatusAction()
 	{
-		// Project information
-		$projects = new GD_Model_ProjectsMapper();
-		$project_slug = $this->_getParam("project");
-		if($project_slug != "")
-		{
-			$project = $projects->getProjectBySlug($project_slug);
-		}
+		$deployment = GD_Model_DeploymentsMapper::get($this->_getParam('id'));
+		$deploy_service = GD_Service_DeployFactory::factoryFromDeployment($deployment);
 
-		if(is_null($project))
-		{
-			throw new GD_Exception("Project '{$project_slug}' was not set up.");
-		}
-
-		$deployments = new GD_Model_DeploymentsMapper();
-		$deployment = new GD_Model_Deployment();
-		$deployments->find($this->_getParam('id'), $deployment);
-
-		$deployment_files = new GD_Model_DeploymentFilesMapper();
-		$file_list = $deployment_files->getDeploymentFilesByDeployment($deployment->getId());
-
-		$file_statuses = array();
-		$file_icons = array();
-
-		$completed_count = 0;
-		foreach($file_list as $file)
-		{
-			if($file->getDeploymentFileStatus()->getCode() == "IN_PROGRESS")
-			{
-				$file_statuses[$file->getId()] = $file->getDeploymentFileAction()->getVerb();
-			}
-			else
-			{
-				$file_statuses[$file->getId()] = $file->getDeploymentFileStatus()->getName();
-			}
-
-			$file_icons[$file->getId()] = $file->getDeploymentFileStatus()->getImageName();
-
-			if($file->getDeploymentFileStatus()->getCode() != "NEW"
-				&& $file->getDeploymentFileStatus()->getCode() != "IN_PROGRESS")
-			{
-				$completed_count++;
-			}
-		}
-
-		$deployment_status = $deployment->getDeploymentStatus()->getName();
-
-		if(in_array($deployment->getDeploymentStatusesId(), array(3, 4)))
-		{
-			$complete = true;
-		}
-		else
-		{
-			$complete = false;
-		}
-
-		$num_files = count($file_statuses);
-		if($num_files > 0)
-		{
-			$cmp_text = " (" . ceil(($completed_count / $num_files) * 100) . "%)";
-		}
-
-		$data = array(
-			"FILES" => $file_statuses,
-			"FILE_ICONS" => $file_icons,
-			"NUM_FILES" => $num_files,
-			"OVERALL" => $deployment_status . $cmp_text,
-			"OVERALL_ICON" => $deployment->getDeploymentStatus()->getImageName(),
-			"COMPLETE" => $complete,
-		);
+		$data = $deploy_service->getDeploymentStatus();
 
 		// Output stuff
-		$this->_response->setHeader('Content-type', 'text/plain');
+		$this->_response->setHeader('Content-type', 'application/json');
 		$this->_helper->viewRenderer->setNoRender();
 		$this->_helper->layout->disableLayout();
 
@@ -415,216 +265,33 @@ class DeployController extends Zend_Controller_Action
 		// status AJAX request to work
 		Zend_Session::writeClose();
 
-		ob_start();
-		GD_Debug::StartDeploymentLog($this->_getParam("id"));
+		$deployment = GD_Model_DeploymentsMapper::get($this->_getParam('id'));
+		$deploy_service = GD_Service_DeployFactory::factoryFromDeployment($deployment);
 
-		GD_Debug::Log("Setting time limit... ", GD_Debug::DEBUG_BASIC, false);
-		set_time_limit(0);
-		GD_Debug::Log("done.", GD_Debug::DEBUG_BASIC, true, false);
+		$deploy_service->runDeployment();
 
-		// Project information
-		GD_Debug::Log("Loading project... ", GD_Debug::DEBUG_BASIC, false);
-		$projects = new GD_Model_ProjectsMapper();
-		$project_slug = $this->_getParam("project");
-		if($project_slug != "")
-		{
-			$project = $projects->getProjectBySlug($project_slug);
-		}
-
-		if(is_null($project))
-		{
-			throw new GD_Exception("Project '{$project_slug}' was not set up.");
-		}
-		GD_Debug::Log("done.", GD_Debug::DEBUG_BASIC, true, false);
-
-		// Deployment information
-		GD_Debug::Log("Loading deployment information... ", GD_Debug::DEBUG_BASIC, false);
-		$deployments = new GD_Model_DeploymentsMapper();
-		$deployment = new GD_Model_Deployment();
-		$deployments->find($this->_getParam('id'), $deployment);
-		GD_Debug::Log("done.", GD_Debug::DEBUG_BASIC, true, false);
-
-		// Server information
-		GD_Debug::Log("Loading server information... ", GD_Debug::DEBUG_BASIC, false);
-		$servers = new GD_Model_ServersMapper();
-		$server = new GD_Model_Server();
-		$servers->find($deployment->getServersId(), $server);
-		GD_Debug::Log("done.", GD_Debug::DEBUG_BASIC, true, false);
-
-		// Update the deployment status to show we're now running
-		GD_Debug::Log("Updating deployment status to running... ", GD_Debug::DEBUG_BASIC, false);
-		$deployment->setDeploymentStatusesId(2); // Running
-		$deployments->save($deployment);
-		GD_Debug::Log("done.", GD_Debug::DEBUG_BASIC, true, false);
-
-		// Perform a git pull to check we're up to date
-		$git = GD_Git::FromProject($project);
-		$git->gitPull();
-
-		// File list to action
-		GD_Debug::Log("Getting file list... ", GD_Debug::DEBUG_BASIC, false);
-		$deployment_files = new GD_Model_DeploymentFilesMapper();
-		$deployment_files_statuses = new GD_Model_DeploymentFileStatusesMapper();
-		$file_list = $deployment_files->getDeploymentFilesByDeployment($deployment->getId());
-		GD_Debug::Log("done.", GD_Debug::DEBUG_BASIC, true, false);
-
-		// Check out the revision we want to upload from
-		GD_Debug::Log("Checking out revision {$deployment->getToRevision()}... ", GD_Debug::DEBUG_BASIC, false);
-		$previous_ref = $git->getCurrentBranch(true);
-		$res = $git->gitCheckout($deployment->getToRevision());
-		if(!$res) GD_Debug::Log("FAILED.", GD_Debug::DEBUG_BASIC, true, false);
-		else GD_Debug::Log("done.", GD_Debug::DEBUG_BASIC, true, false);
-
-		$errors = false;
-
-		// Do the upload
-		GD_Debug::Log("Actioning files now.", GD_Debug::DEBUG_BASIC);
-		$ftp = GD_Ftp::FromServer($server);
-		try
-		{
-			$ftp->connect();
-		}
-		catch(GD_Exception $ex)
-		{
-			GD_Debug::Log("FTP Connect failed: {$ex->getMessage()}", GD_Debug::DEBUG_BASIC);
-		}
-
-		$config_map = new GD_Model_ConfigsMapper();
-
-		foreach($file_list as $file)
-		{
-			GD_Debug::Log("Actioning '{$file->getDetails()}'... ", GD_Debug::DEBUG_BASIC, false);
-			$file->setDeploymentFileStatusesId($deployment_files_statuses->getDeploymentFileStatusByCode('IN_PROGRESS')->getId());
-			$deployment_files->save($file);
-
-			$matches = array();
-			$is_config_file = preg_match('/^!CFG!(\d+)!(.*)$/', $file->getDetails(), $matches);
-
-			try
-			{
-				if($is_config_file == 1)
-				{
-					// Configuration file - store in temp dir from DB then upload
-					$tmpfile = tempnam(sys_get_temp_dir(), 'gdcfg');
-
-					$config = new GD_Model_Config();
-					$config_map->find($matches[1], $config);
-
-					$config_content = $config->getContent();
-					$config_content = str_replace("{{FROM_REV_LONG}}", $deployment->getFromRevision(), $config_content);
-					$config_content = str_replace("{{FROM_REV_SHORT}}", substr($deployment->getFromRevision(), 0, 7), $config_content);
-					$config_content = str_replace("{{TO_REV_LONG}}", $deployment->getToRevision(), $config_content);
-					$config_content = str_replace("{{TO_REV_SHORT}}", substr($deployment->getToRevision(), 0, 7), $config_content);
-					$config_content = str_replace("{{DATE}}", $deployment->getWhen(), $config_content);
-					$config_content = str_replace("{{SERVER}}", $server->getHostname(), $config_content);
-					$config_content = str_replace("{{USER}}", $deployment->getUser()->getName(), $config_content);
-					$config_content = str_replace("{{COMMENT}}", $deployment->getComment(), $config_content);
-
-					file_put_contents($tmpfile, $config_content);
-
-					GD_Debug::Log(" >> to '{$matches[2]}'", GD_Debug::DEBUG_BASIC, false, false);
-					$ftp->upload($tmpfile, $matches[2]);
-
-					unlink($tmpfile);
-				}
-				else
-				{
-					// Regular file - upload as normal
-					switch($file->getDeploymentFileAction()->getGitStatus())
-					{
-						case 'A':
-						case 'M':
-							$ftp->upload($git->getGitDir() . $file->getDetails(), $file->getDetails());
-							break;
-						case 'D':
-							$ftp->delete($file->getDetails());
-							break;
-						default:
-							throw GD_Exception("Warning, unhandled action: '" . $file->getDeploymentFileAction()->getGitStatus() . "' ({$file->getDetails()}");
-							break;
-					}
-				}
-				$file->setDeploymentFileStatusesId($deployment_files_statuses->getDeploymentFileStatusByCode('COMPLETE')->getId());
-				GD_Debug::Log("done.", GD_Debug::DEBUG_BASIC, true, false);
-			}
-			catch(GD_Exception $ex)
-			{
-				// Only fail the whole deployment if we're not a delete action
-				if($file->getDeploymentFileAction()->getGitStatus() != 'D')
-				{
-					$errors = true;
-				}
-
-				$file->setDeploymentFileStatusesId($deployment_files_statuses->getDeploymentFileStatusByCode('FAILED')->getId());
-				GD_Debug::Log("FAILED [" . $ex->getMessage() . "].", GD_Debug::DEBUG_BASIC, true, false);
-			}
-			$deployment_files->save($file);
-		}
-
-		// Revert to previous revision
-		GD_Debug::Log("Checking out revision {$previous_ref}... ", GD_Debug::DEBUG_BASIC, false);
-		$res = $git->gitCheckout($previous_ref);
-		if(!$res) GD_Debug::Log("FAILED.", GD_Debug::DEBUG_BASIC, true, false);
-		else GD_Debug::Log("done.", GD_Debug::DEBUG_BASIC, true, false);
-
-		GD_Debug::Log("Setting deployment status " . ($errors ? "[errors]" : "[success]") . "... ", GD_Debug::DEBUG_BASIC, false);
-		if($errors)
-		{
-			$deployment->setDeploymentStatusesId(4); // Failed
-			$deployments->save($deployment);
-		}
-		else
-		{
-			$deployment->setDeploymentStatusesId(3); // Complete
-			$deployments->save($deployment);
-		}
-		GD_Debug::Log("done.", GD_Debug::DEBUG_BASIC, true, false);
-
-		GD_Debug::Log("All finished.", GD_Debug::DEBUG_BASIC);
-
-		$buf = ob_get_contents();
-		if($buf)
-		{
-			GD_Debug::Log("Extra content:\n\n{$buf}", GD_Debug::DEBUG_BASIC);
-		}
-
-		GD_Debug::EndDeploymentLog();
-		ob_end_clean();
-		flush();
-		die();
+		$this->_helper->viewRenderer->setNoRender();
+		$this->_helper->layout->disableLayout();
 	}
 
 	public function getLastDeploymentRevisionAction()
 	{
-		// Get server ID from url
-		$server_id = $this->_getParam("server_id");
+		$server = GD_Model_ServersMapper::get($this->_getParam("server_id"));
 
-		// Get project ID from url
-		$projects = new GD_Model_ProjectsMapper();
-		$project_slug = $this->_getParam("project");
-		if($project_slug != "")
-		{
-			$project = $projects->getProjectBySlug($project_slug);
-		}
+		$project = $this->_helper->getProjectFromUrl();
 
-		$deployments = new GD_Model_DeploymentsMapper();
-		$last_deployment = $deployments->getLastSuccessfulDeployment($project->getId(), $server_id);
-		if(!is_null($last_deployment))
-		{
-			$from_rev = $last_deployment->getToRevision();
-		}
-		else
-		{
-			$from_rev = "";
-		}
+		$user = GD_Auth_Database::GetLoggedInUser();
 
-		$this->_response->setHeader('Content-type', 'text/plain');
-		$this->_helper->viewRenderer->setNoRender();
-		$this->_helper->layout->disableLayout();
+		$deploy_service = GD_Service_DeployFactory::factoryFromModels($user, $server, $project);
+		$from_rev = $deploy_service->getLastDeployedRevision();
 
 		$data = array(
 			'fromRevision' => $from_rev,
 		);
+
+		$this->_response->setHeader('Content-type', 'application/json');
+		$this->_helper->viewRenderer->setNoRender();
+		$this->_helper->layout->disableLayout();
 
 		$jsonData = Zend_Json::encode($data);
 		$this->_response->appendBody($jsonData);
@@ -633,12 +300,7 @@ class DeployController extends Zend_Controller_Action
 	public function getLatestRevisionAction()
 	{
 		// Get project ID from url
-		$projects = new GD_Model_ProjectsMapper();
-		$project_slug = $this->_getParam("project");
-		if($project_slug != "")
-		{
-			$project = $projects->getProjectBySlug($project_slug);
-		}
+		$project = $this->_helper->getProjectFromUrl();
 
 		// Git pull before anything
 		$git = GD_Git::FromProject($project);
@@ -650,6 +312,7 @@ class DeployController extends Zend_Controller_Action
 		if(is_array($last_commit))
 		{
 			$data['toRevision'] = $last_commit['HASH'];
+
 			if(GD_Config::get("autofill_comments") == '1')
 			{
 				$data['autoComment'] = $last_commit['MESSAGE'];
@@ -660,12 +323,46 @@ class DeployController extends Zend_Controller_Action
 			}
 		}
 
-		$this->_response->setHeader('Content-type', 'text/plain');
+		$this->_response->setHeader('Content-type', 'application/json');
 		$this->_helper->viewRenderer->setNoRender();
 		$this->_helper->layout->disableLayout();
 
 		$jsonData = Zend_Json::encode($data);
 		$this->_response->appendBody($jsonData);
+	}
+
+	public function apiAction()
+	{
+		$payload = $this->_helper->api();
+
+		$server_id = (int)$payload['server'];
+
+		if ($server_id <= 0)
+		{
+			return $this->_helper->api->respond(400, "Server ID '{$server_id}' was invalid");
+		}
+
+		GD_Debug::Log("API triggered deployment to commit '{$payload['to']}' on server {$server_id}", GD_Debug::DEBUG_FULL);
+
+		$user = new GD_Model_User();
+		$user->setId(0);
+
+		$server = GD_Model_ServersMapper::get($server_id);
+
+		$project = $this->_helper->getProjectFromUrl();
+
+		$deploy_service = GD_Service_DeployFactory::factoryFromModels($user, $server, $project);
+		$deploy_service->createDeployment("latest", $payload['comment']);
+		$result = $deploy_service->runDeployment();
+
+		if ($result)
+		{
+			return $this->_helper->api->respond(200);
+		}
+		else
+		{
+			return $this->_helper->api->respond(500);
+		}
 	}
 }
 

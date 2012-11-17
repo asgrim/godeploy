@@ -51,7 +51,7 @@ $(document).observe("dom:loaded", function(){
 	
 	
 	// Smash an event onto the onsubmit of the form so we can catch it however it's submitted
-	$(form).observe("submit", function() {
+	$('form').observe("submit", function() {
 
 		// If the unique submit button isn't set, grab the first one and use that
 		if (!$(active_submit_button))

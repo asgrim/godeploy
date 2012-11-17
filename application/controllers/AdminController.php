@@ -48,6 +48,14 @@ class AdminController extends Zend_Controller_Action
 
 		if ($this->getRequest()->isPost())
 		{
+			if ($this->_getParam('enable_url_trigger') == '1')
+			{
+				$not_empty = new Zend_Validate_NotEmpty();
+				$not_empty->setMessage(_r('If you enable the URL trigger, you must set a token for the trigger.'));
+				$form->url_trigger_token->addValidators(array($not_empty));
+				$form->url_trigger_token->setRequired(true);
+			}
+
 			if ($form->isValid($this->getRequest()->getParams()))
 			{
 				$save_fields = array_keys($form->getElements());
