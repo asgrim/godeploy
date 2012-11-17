@@ -31,12 +31,7 @@ class HistoryController extends Zend_Controller_Action
 
 	public function populateView($page = 0)
 	{
-		$projects = new GD_Model_ProjectsMapper();
-		$project_slug = $this->_getParam("project");
-		if($project_slug != "")
-		{
-			$project = $projects->getProjectBySlug($project_slug);
-		}
+		$project = $this->_helper->getProjectFromUrl();
 
 		// Load the mapper class
 		$deployments_map = new GD_Model_DeploymentsMapper();

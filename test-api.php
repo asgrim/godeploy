@@ -4,6 +4,7 @@ $payload_raw = array(
 	"token" => "foobar",
 	"to" => "latest",
 	"comment" => "Comment lols!",
+	"server" => "1",
 );
 
 $type = "text/xml";
@@ -31,7 +32,7 @@ $url = "http://godeploy.localhost/project/agodeploy-test-project/deploy/api";
 $ch = curl_init($url);
 curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 curl_setopt($ch, CURLOPT_HEADER, 1);
-curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+curl_setopt($ch, CURLOPT_TIMEOUT, 100);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
 curl_setopt($ch, CURLOPT_POST, 1);

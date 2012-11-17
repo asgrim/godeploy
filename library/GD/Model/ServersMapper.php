@@ -109,4 +109,12 @@ class GD_Model_ServersMapper extends MAL_Model_MapperAbstract
 
 		return $this->fetchAll($select);
 	}
+
+	public static function get($server_id)
+	{
+		$server = new GD_Model_Server();
+		$servers = new self;
+		$servers->find((int)$server_id, $server);
+		return $server;
+	}
 }
