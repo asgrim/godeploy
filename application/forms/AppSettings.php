@@ -52,6 +52,16 @@ class GDApp_Form_AppSettings extends GD_Form_Abstract
 		$autofill_comments->addMultiOption(0, "No");
 		$autofill_comments->addMultiOption(1, "Yes");
 
+		$enable_url_trigger = new Zend_Form_Element_Select('enable_url_trigger');
+		$enable_url_trigger->setLabel(_r('Enable URL trigger'))
+			->setRequired(true)
+			->addValidator('NotEmpty');
+		$enable_url_trigger->addMultiOption(0, "No");
+		$enable_url_trigger->addMultiOption(1, "Yes");
+
+		$url_trigger_token = new Zend_Form_Element_Text('url_trigger_token');
+		$url_trigger_token->setLabel(_r('URL trigger token'));
+
 		$rows_per_history_page = new Zend_Form_Element_Select('rows_per_history_page');
 		$rows_per_history_page->setLabel(_r('Rows per history page'))
 			->setRequired(true)
@@ -99,6 +109,8 @@ class GDApp_Form_AppSettings extends GD_Form_Abstract
 				$language,
 				$require_comments,
 				$autofill_comments,
+				$enable_url_trigger,
+				$url_trigger_token,
 				$rows_per_history_page,
 				$enable_usage_stats,
 				$debug_level,

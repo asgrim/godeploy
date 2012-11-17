@@ -34,7 +34,7 @@ class SettingsController extends Zend_Controller_Action
 		if ($project_slug != "new")
 		{
 			$this->view->headTitle('Edit Project');
-			$project = $projects->getProjectBySlug($project_slug);
+			$project = $this->_helper->getProjectFromUrl();
 			$new_project = false;
 		}
 		else
@@ -111,9 +111,7 @@ class SettingsController extends Zend_Controller_Action
 
 	public function confirmDeleteAction()
 	{
-		$projects = new GD_Model_ProjectsMapper();
-		$project_slug = $this->_getParam("project");
-		$project = $projects->getProjectBySlug($project_slug);
+		$project = $this->_helper->getProjectFromUrl();
 
 		$this->view->project = $project;
 
@@ -123,10 +121,7 @@ class SettingsController extends Zend_Controller_Action
 
 	public function deleteAction()
 	{
-		$projects = new GD_Model_ProjectsMapper();
-		$project_slug = $this->_getParam("project");
-
-		$project = $projects->getProjectBySlug($project_slug);
+		$project = $this->_helper->getProjectFromUrl();
 
 		// Initialise the mapper objects we'll need
 		$deploymentsMapper = new GD_Model_DeploymentsMapper();
@@ -215,10 +210,7 @@ class SettingsController extends Zend_Controller_Action
 
 	public function recloneAction()
 	{
-		$projects = new GD_Model_ProjectsMapper();
-		$project_slug = $this->_getParam("project");
-
-		$project = $projects->getProjectBySlug($project_slug);
+		$project = $this->_helper->getProjectFromUrl();
 
 		$git = GD_Git::FromProject($project);
 
@@ -236,7 +228,7 @@ class SettingsController extends Zend_Controller_Action
 		}
 		else
 		{
-			$this->_redirect("/project/{$project_slug}/settings");
+			$this->_redirect("/project/{$project->getSlug()}/settings");
 		}
 	}
 }

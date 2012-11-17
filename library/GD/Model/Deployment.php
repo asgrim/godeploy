@@ -180,4 +180,14 @@ class GD_Model_Deployment
 	{
 		return $this->_deployment_status;
 	}
+
+	/**
+	 * @return array of GD_Model_DeploymentFile objects
+	 */
+	public function getDeploymentFiles()
+	{
+		$deployment_files = new GD_Model_DeploymentFilesMapper();
+		$file_list = $deployment_files->getDeploymentFilesByDeployment($this->getId());
+		return $file_list;
+	}
 }

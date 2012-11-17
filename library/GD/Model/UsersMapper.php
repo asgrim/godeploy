@@ -71,8 +71,17 @@ class GD_Model_UsersMapper extends MAL_Model_MapperAbstract
 	 * @param GD_Model_User $obj
 	 * @param Zend_Db_Table_Row_Abstract $row
 	 */
-	protected function populateObjectFromRow(&$obj, Zend_Db_Table_Row_Abstract $row)
+	protected function populateObjectFromRow(&$obj, Zend_Db_Table_Row_Abstract $row = null)
 	{
+		if (is_null($row))
+		{
+			$obj->setId(0)
+				->setName("GoDeploy")
+				->setActive(0)
+				->setAdmin(0);
+			return;
+		}
+
 		$obj->setId($row->id)
 			->setName($row->name)
 			->setPassword($row->password)

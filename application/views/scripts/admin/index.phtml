@@ -54,6 +54,64 @@ function echoDebugLevel($level)
 					<td><?php echo $this->settings['sw_version']; ?></td>
 				</tr>
 				<tr>
+					<td><?php _e("Enable URL trigger"); ?></td>
+					<td><?php echo $this->settings['enable_url_trigger'] == 1 ? 'Yes' : 'No'; ?></td>
+				</tr>
+			<?php if ($this->settings['enable_url_trigger'] == 1): ?>
+				<tr>
+					<td><?php _e("URL trigger token"); ?></td>
+					<td>
+						<?php echo $this->settings['url_trigger_token']; ?>
+						<div class="padding_10"></div>
+						<p class="last">
+							Your URL is: <span class="monospace"><?php echo $this->baseUrl(); ?>/project/<strong>project-slug</strong>/deploy/api</span><br />
+							You may replace the commit hash with the keyword <span class="monospace">latest</span> to automatically deploy the latest revision).<br />
+							Instead of using headers to determine payload types, you may specify the parameter <span class="monospace">?format=json|xml|text</span><br />
+							Additionally, the response header will conform to HTTP status codes, e.g.:<br />
+							200=OK, 403=Wrong token, 500=Server error, 400=Bad request (payload had error), 415=Content-type not understood etc.</span><br />
+						</p>
+						<div class="padding_5"></div>
+						<p class="monospace">
+							// JSON request<br />
+							<br />// Use headers: "Accept: application/json" and "Content-type: application/json"<br />
+							{<br />
+							&nbsp;&nbsp;"token": "<?php echo $this->settings['url_trigger_token']; ?>",<br />
+							&nbsp;&nbsp;"to": "54a8a7d36a08ac3772c49d993b91c0d39abfff48",<br />
+							&nbsp;&nbsp;"comment": "A description of the deployment"<br />
+							}<br />
+							<br />// Response will a JSON payload with a result of success/failed e.g.:<br />
+							{<br />
+							&nbsp;&nbsp;"result": "success"<br />
+							}
+						</p>
+						<div class="padding_5"></div>
+						<p class="monospace">
+							// XML request<br />
+							<br />// Use headers: "Accept: text/xml" and "Content-type: text/xml"<br />
+							&lt;?xml version="1.0" encoding="UTF-8"?&gt;<br />
+							&lt;deployment&gt;<br />
+							&nbsp;&nbsp;&lt;token&gt;<?php echo $this->settings['url_trigger_token']; ?>&lt;/token&gt;<br />
+							&nbsp;&nbsp;&lt;to&gt;54a8a7d36a08ac3772c49d993b91c0d39abfff48&lt;/to&gt;<br />
+							&nbsp;&nbsp;&lt;comment&gt;A description of the deployment&lt;/comment&gt;<br />
+							&lt;/deployment&gt;<br />
+							<br />// Response will an XML document with a result of success/failed e.g.:<br />
+							&lt;?xml version="1.0" encoding="UTF-8"?&gt;<br />
+							&lt;deployment&gt;<br />
+							&nbsp;&nbsp;&lt;result&gt;success&lt;/result&gt;<br />
+							&lt;/deployment&gt;<br />
+						</p>
+						<div class="padding_5"></div>
+						<p class="monospace">
+							// POST or GET key=value pairs<br />
+							<br />// Use headers: "Accept: text/plain" and "Content-type: text/plain"<br />
+							token=<?php echo $this->settings['url_trigger_token']; ?>&amp;to=54a8a7d36a08ac3772c49d993b91c0d39abfff48&amp;comment=A+description+of+the+deployment<br />
+							<br />// Response will be the text "success" or "failed", e.g.: <br />
+							success<br />
+						</p>
+					</td>
+				</tr>
+			<?php endif; ?>
+				<tr>
 					<td><?php _e("Debug Level"); ?></td>
 					<td><?php echo $this->settings['debug_level'] . " - "; echoDebugLevel($this->settings['debug_level']); ?></td>
 				</tr>

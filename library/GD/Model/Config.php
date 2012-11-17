@@ -124,6 +124,24 @@ class GD_Model_Config
 		return $this->_content;
 	}
 
+	public function getProcessedConfig(GD_Service_Deploy $deploy_service)
+	{
+		$deployment = $deploy_service->getDeployment();
+		$server = $deploy_service->getServer();
+
+		$config_content = $this->getContent();
+		$config_content = str_replace("{{FROM_REV_LONG}}", $deployment->getFromRevision(), $config_content);
+		$config_content = str_replace("{{FROM_REV_SHORT}}", substr($deployment->getFromRevision(), 0, 7), $config_content);
+		$config_content = str_replace("{{TO_REV_LONG}}", $deployment->getToRevision(), $config_content);
+		$config_content = str_replace("{{TO_REV_SHORT}}", substr($deployment->getToRevision(), 0, 7), $config_content);
+		$config_content = str_replace("{{DATE}}", $deployment->getWhen(), $config_content);
+		$config_content = str_replace("{{SERVER}}", $server->getHostname(), $config_content);
+		$config_content = str_replace("{{USER}}", $deployment->getUser()->getName(), $config_content);
+		$config_content = str_replace("{{COMMENT}}", $deployment->getComment(), $config_content);
+
+		return $config_content;
+	}
+
 	public function setProject(GD_Model_Project $obj)
 	{
 		$this->_project = $obj;
