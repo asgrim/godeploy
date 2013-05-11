@@ -5,6 +5,7 @@
 	"homepage": "http://www.godeploy.com/",
 	"license": "GPL-3.0",
 	"require": {
+		"php": ">= 5.3.2",
 		"zendframework/zendframework1": "1.12.3",
 		"asgrim/mal": "0.1.1"
 	}
