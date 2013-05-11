@@ -33,6 +33,7 @@ class DeployController extends Zend_Controller_Action
 		$this->view->headTitle('New Deployment');
 		$this->view->headScript()->appendFile($this->getFrontController()->getBaseUrl() . "/js/pages/deploy_setup.js");
 		$this->view->headLink()->appendStylesheet("/css/template/form.css");
+		$this->view->headLink()->appendStylesheet("/css/template/table.css");
 		$this->view->headLink()->appendStylesheet("/css/pages/deploy.css");
 
 		$project = $this->_helper->getProjectFromUrl();
@@ -341,6 +342,34 @@ class DeployController extends Zend_Controller_Action
 			}
 
 			$data['autoComment'] = implode(', ', $included_commit_messages);
+		}
+
+		$this->_response->setHeader('Content-type', 'application/json');
+		$this->_helper->viewRenderer->setNoRender();
+		$this->_helper->layout->disableLayout();
+
+		$jsonData = Zend_Json::encode($data);
+		$this->_response->appendBody($jsonData);
+	}
+
+	public function getCommitListAction()
+	{
+		// Get project ID from url
+		$project = $this->_helper->getProjectFromUrl();
+
+		// Git pull before anything
+		$git = GD_Git::FromProject($project);
+
+		$data = array();
+
+		$data['fromRevision'] = $git->getFullHash($this->_getParam("from_revision"));
+		$data['toRevision'] = $git->getFullHash($this->_getParam("to_revision"));
+
+		$commits = $git->getCommitsBetween($data['fromRevision'], $data['toRevision']);
+
+		foreach ($commits->commits as $commit)
+		{
+			$data['commits'][] = $commit;
 		}
 
 		$this->_response->setHeader('Content-type', 'application/json');

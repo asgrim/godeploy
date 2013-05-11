@@ -84,6 +84,10 @@ class GDApp_Form_DeploymentSetup extends GD_Form_Abstract
 				->addFilter('StringTrim');
 		}
 
+		$commit_list = new Zend_Form_Element_Note('commitList');
+		$commit_list->setLabel(_r('List of commits'))
+			->setDescription('<a href="javascript:;" onclick="getCommitList();">Refresh the commit list</a><div id="pre_commit_list"></div>');
+
 		$submitPreview = new Zend_Form_Element_Image('submitPreview');
 		$submitPreview->setImage('/images/buttons/small/preview.png');
 		$submitPreview->class = "preview processing_btn size_small";
@@ -98,6 +102,7 @@ class GDApp_Form_DeploymentSetup extends GD_Form_Abstract
 				$from_revision,
 				$to_revision,
 				$comment,
+				$commit_list,
 				$submitRun,
 				$submitPreview,
 			)

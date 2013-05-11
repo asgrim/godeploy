@@ -48,3 +48,11 @@
 #commit_list {
 	margin: 10px 0 10px 220px;
 	}
+
+#pre_commit_list {
+	margin: 10px 0;
+	}
+
+form #item_commitList span.extras {
+	width: 700px;
+}
