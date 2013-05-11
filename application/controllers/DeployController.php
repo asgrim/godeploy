@@ -320,15 +320,27 @@ class DeployController extends Zend_Controller_Action
 		if(is_array($last_commit))
 		{
 			$data['toRevision'] = $last_commit['HASH'];
+		}
 
-			if(GD_Config::get("autofill_comments") == '1')
+		$data['autoComment'] = '';
+
+		if(GD_Config::get("autofill_comments") == '1')
+		{
+			$data['fromRevision'] = $git->getFullHash($this->_getParam("from_revision"));
+
+			$commits = $git->getCommitsBetween($data['fromRevision'], $data['toRevision']);
+
+			$included_commit_messages = array();
+
+			foreach ($commits->commits as $commit)
 			{
-				$data['autoComment'] = $last_commit['MESSAGE'];
+				if (substr($commit['MESSAGE'], 0, 5) != 'Merge')
+				{
+					$included_commit_messages[] = $commit['MESSAGE'];
+				}
 			}
-			else
-			{
-				$data['autoComment'] = '';
-			}
+
+			$data['autoComment'] = implode(', ', $included_commit_messages);
 		}
 
 		$this->_response->setHeader('Content-type', 'application/json');

@@ -61,6 +61,7 @@ function getLatestRevision()
 	
 	var url = location.protocol + '//' + location.host + location.pathname + '/get-latest-revision';
 	url = url.replace(/deploy\/\//, 'deploy/').replace(/#/, '');
+	url = url + '?from_revision=' + $('fromRevision').value;
 	new Ajax.Request(url, {
 			method: 'get',
 			onSuccess: function(transport){
