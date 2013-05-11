@@ -105,16 +105,18 @@ class GD_Controller_Action_Helper_Api extends Zend_Controller_Action_Helper_Abst
 					// If we wanted we could use libxml_get_errors to get the errors...
 					throw Exception("Not xml");
 				}
-				var_dump($xml);
-				die();
 				return array(
-						'token' => (string)$xml->token,
-						'server' => (int)$xml->server,
-						'to' => (string)$xml->to,
-						'comment' => (string)$xml->comment,
+					'token' => (string)$xml->token,
+					'server' => (int)$xml->server,
+					'to' => (string)$xml->to,
+					'comment' => (string)$xml->comment,
 				);
 
 			default:
+				if ($request == '')
+				{
+					$request = $_SERVER['QUERY_STRING'];
+				}
 				parse_str($request, $output);
 				return $output;
 		}
