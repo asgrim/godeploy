@@ -159,6 +159,17 @@ class ServersController extends Zend_Controller_Action
 		if($server_id > 0)
 		{
 			$servers->find($server_id, $server);
+
+			// Delete deployments for the server
+			$deployments = new GD_Model_DeploymentsMapper();
+
+			$server_deployments = $deployments->getDeploymentsByServer($server->getId(), true);
+
+			foreach ($server_deployments as $deployment)
+			{
+				$deployments->delete($deployment);
+			}
+
 			$servers->delete($server);
 			$this->_redirect($this->getFrontController()->getBaseUrl() . "/project/" . $project->getSlug() . "/settings");
 		}

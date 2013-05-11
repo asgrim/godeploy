@@ -141,7 +141,7 @@ class GD_Model_DeploymentsMapper extends MAL_Model_MapperAbstract
 	/**
 	 * Get a list of the deployments for a project
 	 * @param int $project_id
-	 * @return array of GD_Model_Server objects
+	 * @return array of GD_Model_Deployment objects
 	 */
 	public function getDeploymentsByProject($project_id, $offset = 0, $limit = 15, $include_previews = false)
 	{
@@ -150,6 +150,26 @@ class GD_Model_DeploymentsMapper extends MAL_Model_MapperAbstract
 			->where("projects_id = ?", $project_id)
 			->order("when DESC")
 			->limit($limit, $offset);
+
+		if(!$include_previews)
+		{
+			$select->where("deployment_statuses_id != 1");
+		}
+
+		return $this->fetchAll($select);
+	}
+
+	/**
+	 * Get a list of the deployments for a server
+	 * @param int $server_id
+	 * @return array of GD_Model_Deployment objects
+	 */
+	public function getDeploymentsByServer($server_id, $include_previews = false)
+	{
+		$select = $this->getDbTable()
+			->select()
+			->where("servers_id = ?", $server_id)
+			->order("when DESC");
 
 		if(!$include_previews)
 		{
