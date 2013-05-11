@@ -57,7 +57,6 @@ echo -n "Installing application..."
 git clone --quiet git://github.com/asgrim/godeploy.git godeploy
 cd godeploy
 git checkout -b master origin/master > /dev/null 2>&1
-git branch -D develop > /dev/null 2>&1
 cd ..
 echo "Done."
 
