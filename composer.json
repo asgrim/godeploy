@@ -6,6 +6,8 @@
 	"license": "GPL-3.0",
 	"require": {
 		"php": ">= 5.3.2",
+		"ext-mcrypt": "*",
+		"ext-ftp": "*",
 		"zendframework/zendframework1": "1.12.3",
 		"asgrim/mal": "0.1.1"
 	}
