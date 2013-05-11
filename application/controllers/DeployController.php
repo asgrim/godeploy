@@ -40,6 +40,14 @@ class DeployController extends Zend_Controller_Action
 		$this->view->project = $project;
 
 		$form = new GDApp_Form_DeploymentSetup($project->getId());
+
+		if (GD_Config::get('force_preview') == '1')
+		{
+			$form->removeElement('submitRun');
+			$previewElement = $form->getElement('submitPreview');
+			$previewElement->class .= ' preview_only';
+		}
+
 		$this->view->form = $form;
 
 		$deployments = new GD_Model_DeploymentsMapper();

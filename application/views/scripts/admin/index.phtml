@@ -132,6 +132,10 @@ function echoDebugLevel($level)
 					<td><?php echo $this->settings['autofill_comments'] == 1 ? 'Yes' : 'No'; ?></td>
 				</tr>
 				<tr>
+					<td><?php _e("Force preview when deploying"); ?></td>
+					<td><?php echo $this->settings['force_preview'] == 1 ? 'Yes' : 'No'; ?></td>
+				</tr>
+				<tr>
 					<td><?php _e("Rows per history page"); ?></td>
 					<td><?php echo $this->settings['rows_per_history_page']; ?></td>
 				</tr>

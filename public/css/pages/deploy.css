@@ -13,6 +13,10 @@
 		margin-left: -190px;
 		}
 
+	#deploymentSetup li.submit .preview.preview_only {
+		margin-left: 0;
+		}
+
 	#fromRevision, #toRevision, #comment {
 		width: 400px;
 		}

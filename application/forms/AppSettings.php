@@ -52,6 +52,13 @@ class GDApp_Form_AppSettings extends GD_Form_Abstract
 		$autofill_comments->addMultiOption(0, "No");
 		$autofill_comments->addMultiOption(1, "Yes");
 
+		$autofill_comments = new Zend_Form_Element_Select('force_preview');
+		$autofill_comments->setLabel(_r('Force preview when deploying'))
+			->setRequired(true)
+			->addValidator('NotEmpty');
+		$autofill_comments->addMultiOption(0, "No");
+		$autofill_comments->addMultiOption(1, "Yes");
+
 		$enable_url_trigger = new Zend_Form_Element_Select('enable_url_trigger');
 		$enable_url_trigger->setLabel(_r('Enable URL trigger'))
 			->setRequired(true)
