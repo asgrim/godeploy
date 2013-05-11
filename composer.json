@@ -1,0 +1,11 @@
+{
+	"name": "asgrim/godeploy",
+	"description": "Simple Git to FTP deployment application",
+	"keywords": [ "git", "ftp", "deployment" ],
+	"homepage": "http://www.godeploy.com/",
+	"license": "GPL-3.0",
+	"require": {
+		"zendframework/zendframework1": "1.12.3",
+		"asgrim/mal": "0.1.1"
+	}
+}
