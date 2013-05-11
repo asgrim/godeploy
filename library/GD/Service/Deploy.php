@@ -285,7 +285,7 @@ class GD_Service_Deploy
 
 		// Do the upload
 		GD_Debug::Log("Starting upload. ", GD_Debug::DEBUG_BASIC);
-		$ftp = GD_Ftp::FromServer($this->getServer());
+		$ftp = GD_Deployment_Adapter_Ftp::FromServer($this->getServer());
 		try
 		{
 			$ftp->connect();
@@ -339,7 +339,7 @@ class GD_Service_Deploy
 		}
 	}
 
-	private function deployConfigFile(GD_Ftp $ftp, GD_Model_Config $config, $remote_path)
+	private function deployConfigFile(GD_Deployment_Adapter_Ftp $ftp, GD_Model_Config $config, $remote_path)
 	{
 		// Configuration file - store in temp dir from DB then upload
 		$tmpfile = tempnam(sys_get_temp_dir(), 'gdcfg');
@@ -353,7 +353,7 @@ class GD_Service_Deploy
 		unlink($tmpfile);
 	}
 
-	private function deployRegularFile(GD_Ftp $ftp, GD_Git $git, GD_Model_DeploymentFile $file)
+	private function deployRegularFile(GD_Deployment_Adapter_Ftp $ftp, GD_Git $git, GD_Model_DeploymentFile $file)
 	{
 		// Regular file - upload as normal
 		switch($file->getDeploymentFileAction()->getGitStatus())
@@ -371,7 +371,7 @@ class GD_Service_Deploy
 		}
 	}
 
-	private function deployFile(GD_Ftp $ftp, GD_Git $git, GD_Model_DeploymentFile $file)
+	private function deployFile(GD_Deployment_Adapter_Ftp $ftp, GD_Git $git, GD_Model_DeploymentFile $file)
 	{
 		GD_Debug::Log("Uploading - " . $file->getDetails(), GD_Debug::DEBUG_BASIC);
 
