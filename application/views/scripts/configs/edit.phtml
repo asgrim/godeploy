@@ -25,7 +25,21 @@
 					<li>
 						<label><span><?php _e("Content of file to be uploaded"); ?></span></label>
 						<textarea name="configContent" id="configContent"><?php echo $this->config->getContent(); ?></textarea>
+						<span class="extras" style="width: auto;">
+							<span class="description">
+								<?php _e("You may use the following variables which are replaced when deploying the project:"); ?><br />
+								<span class="monospace">{{FROM_REV_SHORT}}</span>
+								<span class="monospace">{{FROM_REV_LONG}}</span>
+								<span class="monospace">{{TO_REV_SHORT}}</span>
+								<span class="monospace">{{TO_REV_LONG}}</span>
+								<span class="monospace">{{DATE}}</span>
+								<span class="monospace">{{SERVER}}</span>
+								<span class="monospace">{{USER}}</span>
+								<span class="monospace">{{COMMENT}}</span>
+							</span>
+						</span>
 						<div class="clear"></div>
+						<div class="padding_10"></div>
 					</li>
 					<li>
 						<label><span><?php _e("Upload to servers"); ?></span></label>
@@ -59,3 +73,4 @@
 
 <div class="padding_20"></div>
 
+</div>

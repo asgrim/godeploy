@@ -104,7 +104,7 @@ class ErrorController extends Zend_Controller_Action
 		}
 
 		// Log exception
-		GD_Debug::Log("Exception: " . $this->view->message, GD_Debug::DEBUG_BASIC);
+		GD_Debug::Log("Exception: " . $errors->exception->getMessage(), GD_Debug::DEBUG_BASIC);
 
 		// conditionally display exceptions
 		if ($this->getInvokeArg('displayExceptions') == true) {

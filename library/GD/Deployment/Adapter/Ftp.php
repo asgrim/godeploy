@@ -27,7 +27,7 @@
  *
  * @author james
  */
-class GD_Ftp
+class GD_Deployment_Adapter_Ftp implements GD_Deployment_AdapterInterface
 {
 	/**
 	 * @var string Hostname of the server to connect to
@@ -80,14 +80,14 @@ class GD_Ftp
 	}
 
 	/**
-	 * Generate a new GD_Ftp instance based on a GD_Model_Server object
+	 * Generate a new GD_Deployment_Adapter_Ftp instance based on a GD_Model_Server object
 	 *
 	 * @param GD_Model_Server $server
-	 * @return GD_Ftp
+	 * @return GD_Deployment_Adapter_Ftp
 	 */
 	public static function FromServer(GD_Model_Server $server)
 	{
-		return new GD_Ftp(
+		return new self(
 			$server->getHostname(),
 			$server->getUsername(),
 			$server->getPassword(),

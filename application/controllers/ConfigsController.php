@@ -29,13 +29,7 @@ class ConfigsController extends Zend_Controller_Action
 
 		$this->view->headLink()->appendStylesheet("/css/template/table.css");
 
-		$projects = new GD_Model_ProjectsMapper();
-		$project_slug = $this->_getParam("project");
-		if($project_slug != "")
-		{
-			$project = $projects->getProjectBySlug($project_slug);
-		}
-
+		$project = $this->_helper->getProjectFromUrl();
 		$this->view->project = $project;
 
 		$configs = new GD_Model_ConfigsMapper();
@@ -55,13 +49,7 @@ class ConfigsController extends Zend_Controller_Action
 		$this->view->headLink()->appendStylesheet("/css/template/form.css");
 		$this->view->headLink()->appendStylesheet("/css/pages/configs_edit.css");
 
-		$projects = new GD_Model_ProjectsMapper();
-		$project_slug = $this->_getParam("project");
-		if($project_slug != "")
-		{
-			$project = $projects->getProjectBySlug($project_slug);
-		}
-
+		$project = $this->_helper->getProjectFromUrl();
 		$this->view->project = $project;
 
 		$configs_map = new GD_Model_ConfigsMapper();

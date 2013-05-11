@@ -6,8 +6,8 @@ class AuthControllerTest extends ControllerTestCase
 	{
 		$this->dispatch('/auth/login');
 		$this->assertResponseCode(200);
-		$this->assertQuery('input#username');
-		$this->assertQuery('input#password');
+		$this->assertDomQuery('input#username');
+		$this->assertDomQuery('input#password');
 	}
 
 	public function testPostRequestToLoginFormLogsInAndRedirects()
@@ -35,7 +35,7 @@ class AuthControllerTest extends ControllerTestCase
 		$this->assertNotRedirect();
 		$this->assertController('auth');
 		$this->assertAction('login');
-		$this->assertQuery('div#errors');
+		$this->assertDomQuery('div#errors');
 	}
 
 	public function testLogoutRedirect()

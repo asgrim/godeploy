@@ -57,24 +57,15 @@ echo -n "Installing application..."
 git clone --quiet git://github.com/asgrim/godeploy.git godeploy
 cd godeploy
 git checkout -b master origin/master > /dev/null 2>&1
-git branch -D develop > /dev/null 2>&1
 cd ..
 echo "Done."
 
 # Download Zend + MAL
 echo -n "Downloading libraries..."
 cd godeploy/library
-wget --quiet https://github.com/downloads/asgrim/godeploy/gd-libraries.tgz
-# TODO - check the libraries downloaded OK (sha sum or something maybe?)
+rm -Rf Zend MAL
 cd ../..
-echo "Done."
-
-# Extract Zend + MAL
-echo -n "Extracting libraries..."
-cd godeploy/library
-tar zxf gd-libraries.tgz
-rm gd-libraries.tgz
-cd ../..
+php composer.phar install > /dev/null 2>&1
 echo "Done."
 
 # Cleanup operations

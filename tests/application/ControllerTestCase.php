@@ -21,7 +21,7 @@ class ControllerTestCase extends Zend_Test_PHPUnit_ControllerTestCase
 		$this->request->setQuery(array());
 	}
 
-	public function dispatch($url)
+	public function dispatch($url = null)
 	{
 		parent::dispatch($url);
 	}
@@ -53,6 +53,75 @@ class ControllerTestCase extends Zend_Test_PHPUnit_ControllerTestCase
 	}
 
 	/**
+	 * @return GD_Model_Project
+	 */
+	public function createTestProject()
+	{
+		$projects = new GD_Model_ProjectsMapper();
+		$project = new GD_Model_Project();
+		$project->setName("Unit Test Project");
+		$project->setDeploymentBranch('master');
+		$project->setRepositoryTypesId(1);
+		$project->setRepositoryUrl('git://github.com/asgrim/godeploy-test-project.git');
+		$project->setSSHKeysId($this->getSSHKeyId());
+		$projects->save($project);
+
+		$servers = new GD_Model_ServersMapper();
+		$server = new GD_Model_Server();
+		$server->setProjectsId($project->getId());
+		$server->setConnectionTypesId(1);
+		$server->setHostname("localhost");
+		$server->setName("Unit Test Server");
+		$servers->save($server);
+
+		return $project;
+	}
+
+	public function getSSHKeyId()
+	{
+		$ssh_key_id = (int)GD_Config::get("ssh_key_id");
+
+		if ($ssh_key_id <= 0)
+		{
+			// Setup the SSH keypair
+			$ssh_key = new GD_Model_SSHKey();
+			$ssh_key->setSSHKeyTypesId(1);
+			$ssh_key->generateKeyPair();
+
+			$ssh_keys_map = new GD_Model_SSHKeysMapper();
+			$ssh_key_id = $ssh_keys_map->save($ssh_key);
+
+			GD_Config::set("ssh_key_id", $ssh_key_id);
+		}
+
+		return $ssh_key_id;
+	}
+
+	public function cloneTestProject(GD_Model_Project $project)
+	{
+		$git = GD_Git::FromProject($project);
+		$git->gitCloneOrPull();
+	}
+
+	public function deleteTestProject(GD_Model_Project $project)
+	{
+		$git = GD_Git::FromProject($project);
+		$git->deleteRepository();
+
+		$servers_map = new GD_Model_ServersMapper();
+		$servers = $servers_map->getServersByProject($project->getId());
+
+		foreach ($servers as $server)
+		{
+			/* @var $server GD_Model_Server */
+			$servers_map->delete($server);
+		}
+
+		$projects = new GD_Model_ProjectsMapper();
+		$projects->delete($project);
+	}
+
+	/**
 	 * Return a ReflectionMethod of a private/protected method and make it
 	 * public for testing purposes
 	 *
@@ -66,5 +135,49 @@ class ControllerTestCase extends Zend_Test_PHPUnit_ControllerTestCase
 		$method = $class->getMethod($method);
 		$method->setAccessible(true);
 		return $method;
+	}
+
+	/**
+	 * @param string $expectedCode
+	 * @param string $message
+	 */
+	public function assertResponseCode($expectedCode, $message = '')
+	{
+		$this->assertEquals($expectedCode, $this->getResponse()->getHttpResponseCode(), $message);
+	}
+
+	/**
+	 * @param string $expectedUrl
+	 * @param string $message
+	 */
+	public function assertRedirectTo($expectedUrl, $message = '')
+	{
+		$headers = $this->getResponse()->getHeaders();
+		$actualUrl = '';
+
+		foreach($headers as $header)
+		{
+			if ($header['name'] === 'Location')
+			{
+				$actualUrl = $header['value'];
+			}
+		}
+
+		$this->assertEquals($expectedUrl, $actualUrl, $message);
+	}
+
+	public function getDomQuery($path)
+	{
+		$content = $this->response->outputBody();
+		$domQuery = new Zend_Dom_Query($content);
+		$result = $domQuery->query($path);
+		return $result;
+	}
+
+	public function assertDomQuery($path, $message = '')
+	{
+		$result = $this->getDomQuery($path);
+
+		$this->assertGreaterThan(0, count($result), $message);
 	}
 }

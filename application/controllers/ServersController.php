@@ -57,9 +57,7 @@ class ServersController extends Zend_Controller_Action
 		$this->view->headLink()->appendStylesheet("/css/pages/project_servers.css");
 
 		// Grab the project so we can add it to the title
-		$project_slug = $this->_getParam("project");
-		$projects = new GD_Model_ProjectsMapper();
-		$project = $projects->getProjectBySlug($project_slug);
+		$project = $this->_helper->getProjectFromUrl();
 		$this->view->project = $project;
 
 		$servers = new GD_Model_ServersMapper();
@@ -99,7 +97,7 @@ class ServersController extends Zend_Controller_Action
 				}
 
 				// Test the connection first
-				$ftp = GD_Ftp::FromServer($server);
+				$ftp = GD_Deployment_Adapter_Ftp::FromServer($server);
 				$result = $ftp->testConnection();
 
 				if(!$result)
@@ -134,9 +132,7 @@ class ServersController extends Zend_Controller_Action
 
 	public function confirmDeleteAction()
 	{
-		$projects = new GD_Model_ProjectsMapper();
-		$project_slug = $this->_getParam("project");
-		$project = $projects->getProjectBySlug($project_slug);
+		$project = $this->_helper->getProjectFromUrl();
 
 		$servers = new GD_Model_ServersMapper();
 		$server = new GD_Model_Server();
@@ -153,7 +149,7 @@ class ServersController extends Zend_Controller_Action
 
 	public function deleteAction()
 	{
-		$project_slug = $this->_getParam("project");
+		$project = $this->_helper->getProjectFromUrl();
 
 		$servers = new GD_Model_ServersMapper();
 		$server = new GD_Model_Server();
@@ -163,8 +159,19 @@ class ServersController extends Zend_Controller_Action
 		if($server_id > 0)
 		{
 			$servers->find($server_id, $server);
+
+			// Delete deployments for the server
+			$deployments = new GD_Model_DeploymentsMapper();
+
+			$server_deployments = $deployments->getDeploymentsByServer($server->getId(), true);
+
+			foreach ($server_deployments as $deployment)
+			{
+				$deployments->delete($deployment);
+			}
+
 			$servers->delete($server);
-			$this->_redirect($this->getFrontController()->getBaseUrl() . "/project/" . $project_slug . "/settings");
+			$this->_redirect($this->getFrontController()->getBaseUrl() . "/project/" . $project->getSlug() . "/settings");
 		}
 		else
 		{

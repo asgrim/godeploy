@@ -56,57 +56,62 @@ class GD_Plugin_Navigation extends Zend_Controller_Plugin_Abstract
 			);
 
 			// If we're in a project, add in the things you can do
-			if ($project_slug = $request->getParam("project"))
+			$getProjectFromUrl = Zend_Controller_Action_HelperBroker::getStaticHelper('GetProjectFromUrl');
+
+			try
 			{
-				$projects = new GD_Model_ProjectsMapper();
-				$project = $projects->getProjectBySlug($project_slug);
+				$project = $getProjectFromUrl->direct();
 
-				if ($project instanceof GD_Model_Project)
-				{
-					$nav[] = array(
-						"label" => "History",
-						"id" => "deployments-link",
-						"uri" => "/project/{$project_slug}/history"
-					);
-
-					$nav[] = array(
-						"label" => "Configs",
-						"id" => "configs-link",
-						"uri" => "/project/{$project_slug}/configs"
-					);
-
-					$nav[] = array(
-						"label" => "Settings",
-						"id" => "settings-link",
-						"uri" => "/project/{$project_slug}/settings"
-					);
-
-					$nav[] = array(
-						"label" => "Deploy",
-						"id" => "deploy-link",
-						"uri" => "/project/{$project_slug}/deploy"
-					);
-				}
-			}
-			else
-			{
 				$nav[] = array(
-					"label" => "Profile",
-					"id" => "profile-link",
-					"uri" => "/profile"
+					"label" => "History",
+					"id" => "deployments-link",
+					"uri" => "/project/{$project->getSlug()}/history"
 				);
 
-				// Get the logged in user - if they're an admin, add the admin
-				// menu
-				$user = GD_Auth_Database::GetLoggedInUser();
+				$nav[] = array(
+					"label" => "Configs",
+					"id" => "configs-link",
+					"uri" => "/project/{$project->getSlug()}/configs"
+				);
 
-				if($user->isAdmin())
+				$nav[] = array(
+					"label" => "Settings",
+					"id" => "settings-link",
+					"uri" => "/project/{$project->getSlug()}/settings"
+				);
+
+				$nav[] = array(
+					"label" => "Deploy",
+					"id" => "deploy-link",
+					"uri" => "/project/{$project->getSlug()}/deploy"
+				);
+			}
+			catch(GD_Exception $e)
+			{
+				if ($e->getMessage() == "Project '' was not set up.")
 				{
 					$nav[] = array(
-						"label" => "Admin",
-						"id" => "admin-link",
-						"uri" => "/admin"
+						"label" => "Profile",
+						"id" => "profile-link",
+						"uri" => "/profile"
 					);
+
+					// Get the logged in user - if they're an admin, add the admin
+					// menu
+					$user = GD_Auth_Database::GetLoggedInUser();
+
+					if($user->isAdmin())
+					{
+						$nav[] = array(
+							"label" => "Admin",
+							"id" => "admin-link",
+							"uri" => "/admin"
+						);
+					}
+				}
+				else
+				{
+					throw $e;
 				}
 			}
 		}

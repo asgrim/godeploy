@@ -1,4 +1,16 @@
 
+<?php
+function echoDebugLevel($level)
+{
+	switch($level)
+	{
+		case 2: echo 'Full'; break;
+		case 1: echo 'Basic'; break;
+		case 0: echo 'None'; break;
+	}
+}
+?>
+
 <div class="content">
 	<div class="padding_20"></div>
 
@@ -8,39 +20,132 @@
 	<div class="wrapper w_ededed"><div class="content">
 		<div class="padding_15"></div>
 
-<?php if (is_array($this->users) && count($this->users) > 0): ?>
-		
-		<h2>GoDeploy Users</h2>
+		<h2 class=""><?php _e("Actions"); ?></h2>
 
+		<ul>
+			<li><a href="<?php echo $this->baseUrl(); ?>/admin/settings">GoDeploy <?php _e("Settings"); ?></a></li>
+			<li><a href="<?php echo $this->baseUrl(); ?>/admin/users"><?php _e("User Management"); ?></a></li>
+		</ul>
+
+		<h2><?php _e("Settings"); ?></h2>
 		<table>
 			<thead>
 				<tr>
-					<th><?php _e("Username"); ?></th>
-					<th><?php _e("Admin"); ?></th>
-					<th><?php _e("Active"); ?></th>
+					<th><?php _e("Setting"); ?></th>
+					<th><?php _e("Value"); ?></th>
 					<th class="empty">&nbsp;</th>
 				</tr>
 			</thead>
 			<tbody>
-			<?php foreach ($this->users as $user) : ?>
 				<tr>
-					<td><?php echo $user->getName(); ?></td>
-					<td><?php echo $user->isAdmin() ? _r("Yes") : _r("No"); ?></td>
-					<td><?php echo $user->isActive() ? _r("Yes") : _r("No"); ?></td>
-					<td class="icon">
-						<a href="<?php echo $this->baseUrl(); ?>/admin/user?id=<?php echo $user->getId(); ?>">
-							<img src="/images/icons/edit/16x16.png" alt="<?php _e("Edit"); ?> &raquo;" />
-						</a>
+					<td><?php _e("Language"); ?></td>
+					<td><?php echo ucwords($this->settings['language']) . " (" . _r($this->settings['language']) . ")"; ?></td>
+				</tr>
+				<tr>
+					<td><?php _e("Install Date"); ?></td>
+					<td><?php echo date("r", strtotime($this->settings['install_date'])); ?></td>
+				</tr>
+				<tr>
+					<td><?php _e("Unique Install Identifier"); ?></td>
+					<td><?php echo $this->settings['unique_install_id']; ?></td>
+				</tr>
+				<tr>
+					<td><?php _e("Software Version"); ?></td>
+					<td><?php echo $this->settings['sw_version']; ?></td>
+				</tr>
+				<tr>
+					<td><?php _e("Enable URL trigger"); ?></td>
+					<td><?php echo $this->settings['enable_url_trigger'] == 1 ? 'Yes' : 'No'; ?></td>
+				</tr>
+			<?php if ($this->settings['enable_url_trigger'] == 1): ?>
+				<tr>
+					<td><?php _e("URL trigger token"); ?></td>
+					<td>
+						<?php echo $this->settings['url_trigger_token']; ?>
+						<div class="padding_10"></div>
+						<p class="last">
+							Your URL is: <span class="monospace"><?php echo $this->baseUrl(); ?>/project/<strong>project-slug</strong>/deploy/api</span><br />
+							You may replace the commit hash with the keyword <span class="monospace">latest</span> to automatically deploy the latest revision).<br />
+							Instead of using headers to determine payload types, you may specify the parameter <span class="monospace">?format=json|xml|text</span><br />
+							Additionally, the response header will conform to HTTP status codes, e.g.:<br />
+							200=OK, 403=Wrong token, 500=Server error, 400=Bad request (payload had error), 415=Content-type not understood etc.</span><br />
+						</p>
+						<div class="padding_5"></div>
+						<p class="monospace">
+							// JSON request<br />
+							<br />// Use headers: "Accept: application/json" and "Content-type: application/json"<br />
+							{<br />
+							&nbsp;&nbsp;"token": "<?php echo $this->settings['url_trigger_token']; ?>",<br />
+							&nbsp;&nbsp;"to": "54a8a7d36a08ac3772c49d993b91c0d39abfff48",<br />
+							&nbsp;&nbsp;"comment": "A description of the deployment"<br />
+							}<br />
+							<br />// Response will a JSON payload with a result of success/failed e.g.:<br />
+							{<br />
+							&nbsp;&nbsp;"result": "success"<br />
+							}
+						</p>
+						<div class="padding_5"></div>
+						<p class="monospace">
+							// XML request<br />
+							<br />// Use headers: "Accept: text/xml" and "Content-type: text/xml"<br />
+							&lt;?xml version="1.0" encoding="UTF-8"?&gt;<br />
+							&lt;deployment&gt;<br />
+							&nbsp;&nbsp;&lt;token&gt;<?php echo $this->settings['url_trigger_token']; ?>&lt;/token&gt;<br />
+							&nbsp;&nbsp;&lt;to&gt;54a8a7d36a08ac3772c49d993b91c0d39abfff48&lt;/to&gt;<br />
+							&nbsp;&nbsp;&lt;comment&gt;A description of the deployment&lt;/comment&gt;<br />
+							&lt;/deployment&gt;<br />
+							<br />// Response will an XML document with a result of success/failed e.g.:<br />
+							&lt;?xml version="1.0" encoding="UTF-8"?&gt;<br />
+							&lt;deployment&gt;<br />
+							&nbsp;&nbsp;&lt;result&gt;success&lt;/result&gt;<br />
+							&lt;/deployment&gt;<br />
+						</p>
+						<div class="padding_5"></div>
+						<p class="monospace">
+							// POST or GET key=value pairs<br />
+							<br />// Use headers: "Accept: text/plain" and "Content-type: text/plain"<br />
+							token=<?php echo $this->settings['url_trigger_token']; ?>&amp;to=54a8a7d36a08ac3772c49d993b91c0d39abfff48&amp;comment=A+description+of+the+deployment<br />
+							<br />// Response will be the text "success" or "failed", e.g.: <br />
+							success<br />
+						</p>
 					</td>
 				</tr>
-			<?php endforeach; ?>
+			<?php endif; ?>
+				<tr>
+					<td><?php _e("Debug Level"); ?></td>
+					<td><?php echo $this->settings['debug_level'] . " - "; echoDebugLevel($this->settings['debug_level']); ?></td>
+				</tr>
+				<tr>
+					<td><?php _e("Logfile Path"); ?></td>
+					<td><?php echo $this->settings['logfile']; ?></td>
+				</tr>
+				<tr>
+					<td><?php _e("Enable usage stats"); ?></td>
+					<td><?php echo $this->settings['autofill_comments'] == 1 ? 'Yes' : 'No'; ?></td>
+				</tr>
+				<tr>
+					<td><?php _e("Require deployment comments"); ?></td>
+					<td><?php echo $this->settings['require_comments'] == 1 ? 'Yes' : 'No'; ?></td>
+				</tr>
+				<tr>
+					<td><?php _e("Attempt comment autofill"); ?></td>
+					<td><?php echo $this->settings['autofill_comments'] == 1 ? 'Yes' : 'No'; ?></td>
+				</tr>
+				<tr>
+					<td><?php _e("Force preview when deploying"); ?></td>
+					<td><?php echo $this->settings['force_preview'] == 1 ? 'Yes' : 'No'; ?></td>
+				</tr>
+				<tr>
+					<td><?php _e("Rows per history page"); ?></td>
+					<td><?php echo $this->settings['rows_per_history_page']; ?></td>
+				</tr>
+				<tr>
+					<td><?php _e("SSH Deployment Key"); ?></td>
+					<td><textarea rows="8" cols="80" readonly="readonly"><?php echo $this->sshKey->getPublicKey(); ?></textarea></td>
+				</tr>
 			</tbody>
 		</table>
-<?php else: ?>
-		<h2 class="last"><?php _e("There are no users... somehow?!"); ?></h2>
-<?php endif; ?>
-		<div class="padding_15"></div>
-		<p class="last"><a href="<?php echo $this->baseUrl(); ?>/admin/user" class="add_icon"><?php _e("Add a user"); ?></a></p>
+
 	</div></div>
 </div>
 
