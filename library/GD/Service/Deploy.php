@@ -382,8 +382,6 @@ class GD_Service_Deploy
 		$file->setDeploymentFileStatusesId($deployment_files_statuses->getDeploymentFileStatusByCode('IN_PROGRESS')->getId());
 		$deployment_files->save($file);
 
-		sleep(5);
-
 		$matches = array();
 		$is_config_file = preg_match('/^!CFG!(\d+)!(.*)$/', $file->getDetails(), $matches);
 
