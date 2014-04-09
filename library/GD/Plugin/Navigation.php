@@ -88,7 +88,7 @@ class GD_Plugin_Navigation extends Zend_Controller_Plugin_Abstract
 			}
 			catch(GD_Exception $e)
 			{
-				if ($e->getMessage() == "Project '' was not set up.")
+				if ($e->getMessage() == "Project '' was not set up." || $e->getMessage() == "Project 'new' was not set up.")
 				{
 					$nav[] = array(
 						"label" => "Profile",
