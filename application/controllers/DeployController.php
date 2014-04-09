@@ -325,7 +325,7 @@ class DeployController extends Zend_Controller_Action
 
 		$data['autoComment'] = '';
 
-		if(GD_Config::get("autofill_comments") == '1')
+		if(GD_Config::get("autofill_comments") == '1' && $this->_getParam("from_revision") != '')
 		{
 			$data['fromRevision'] = $git->getFullHash($this->_getParam("from_revision"));
 
@@ -362,8 +362,16 @@ class DeployController extends Zend_Controller_Action
 
 		$data = array();
 
-		$data['fromRevision'] = $git->getFullHash($this->_getParam("from_revision"));
 		$data['toRevision'] = $git->getFullHash($this->_getParam("to_revision"));
+
+		if ($this->_getParam("from_revision") != '')
+		{
+			$data['fromRevision'] = $git->getFullHash($this->_getParam("from_revision"));
+		}
+		else
+		{
+			$data['fromRevision'] = $data['toRevision'];
+		}
 
 		$commits = $git->getCommitsBetween($data['fromRevision'], $data['toRevision']);
 
