@@ -1,0 +1,25 @@
+{
+  "name": "godeploy",
+  "version": "1.0.0",
+  "homepage": "https://github.com/asgrim/godeploy",
+  "authors": [
+    "James Titcumb <james@asgrim.com>"
+  ],
+  "description": "Deployment tool",
+  "main": "public/css/styles.css",
+  "keywords": [
+    "git"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "~3.2.0"
+  }
+}

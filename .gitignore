@@ -1,0 +1,11 @@
+/vendor
+.buildpath
+.project
+.settings
+*~
+nbproject
+.vimrc
+.projectOptions
+.DS_Store
+Thumbs.db
+Desktop.ini
