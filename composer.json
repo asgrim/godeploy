@@ -6,6 +6,7 @@
     "license": "MIT",
     "require": {
         "php": ">= 5.5",
+        "ext-ssh2": "*",
         "zendframework/zendframework": "2.3.*"
     },
     "require-dev": {

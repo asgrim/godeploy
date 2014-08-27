@@ -1,2 +1,24 @@
-<h1>Hello!</h1>
-<p>Welcome to GoDeploy...</p>
+<h1>Welcome to GoDeploy!</h1>
+
+<?php if (is_array($projects) && count($projects) > 0): ?>
+<table class="table table-striped table-hover">
+    <thead>
+        <tr>
+            <th>Project</th>
+            <th>Git URL</th>
+            <th>Deploy</th>
+        </tr>
+    </thead>
+    <tbody>
+    <?php foreach ($projects as $project): /* @var $project \Deploy\Entity\Project */ ?>
+        <tr>
+            <td><?php echo $project->getName(); ?></td>
+            <td><?php echo $project->getGitUrl(); ?></td>
+            <td><a href="<?php echo $this->url('create-deployment', ['project' => $project->getName()]); ?>">GoDeploy!</a></td>
+        </tr>
+    <?php endforeach; ?>
+    </tbody>
+</table>
+<?php else: ?>
+<p class="bg-danger" style="padding: 15px;"><strong>Warning -</strong> there are no projects defined...</p>
+<?php endif; ?>

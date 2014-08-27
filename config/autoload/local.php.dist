@@ -1,3 +1,40 @@
 <?php
 
-return [];
+return [
+    'deploy' => [
+        'projects' => [
+            'godeploy-test-project' => [
+                'git-url' => 'https://github.com/asgrim/godeploy-test-project',
+                'targets' => [
+                    'server-1' => [
+                        'hostname' => 'server-1.godeploy.com',
+                        'username' => 'deployuser',
+                        'public-key' => '/opt/godeploy/data/ssh/id_rsa.pub',
+                        'private-key' => '/opt/godeploy/data/ssh/id_rsa',
+                        'directory' => '/var/www/gd-test',
+                    ],
+                    'server-2' => [
+                        'hostname' => 'server-2.godeploy.com',
+                        'username' => 'deployuser',
+                        'public-key' => '/opt/godeploy/data/ssh/id_rsa.pub',
+                        'private-key' => '/opt/godeploy/data/ssh/id_rsa',
+                        'directory' => '/var/www/gd-test',
+                    ],
+                    'server-3' => [
+                        'hostname' => 'server-3.godeploy.com',
+                        'username' => 'deployuser',
+                        'public-key' => '/opt/godeploy/data/ssh/id_rsa.pub',
+                        'private-key' => '/opt/godeploy/data/ssh/id_rsa',
+                        'directory' => '/var/www/gd-test',
+                    ],
+                ],
+                'tasks' => [
+                    ['command' => 'git pull'],
+                    ['command' => 'composer install --no-dev --optimize-autoloader'],
+                    ['command' => 'supervisorctl restart all', 'not-on' => ['server-3']],
+                    ['command' => './send-notifications.sh', 'only-on' => ['server-1'], 'directory' => '/home/deployuser'],
+                ],
+            ],
+        ],
+    ],
+];
