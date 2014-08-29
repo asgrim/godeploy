@@ -29,4 +29,13 @@ class Deployment extends AbstractDbMapper
         $hydrator->hydrate(['deployment_id' => $result->getGeneratedValue()], $entity);
         return $result;
     }
+
+    public function update($entity, $where = null, $tableName = null, Hydrator $hydrator = null)
+    {
+        if (!$where) {
+            $where = ['id' => $entity->getId()];
+        }
+
+        return parent::update($entity, $where, $tableName, $hydrator);
+    }
 }

@@ -19,7 +19,14 @@ class DeploymentService
 
     public function persist(Deployment $deployment)
     {
-        return $this->deploymentMapper->insert($deployment);
+        if ($deployment->getId() > 0)
+        {
+            return $this->deploymentMapper->update($deployment);
+        }
+        else
+        {
+            return $this->deploymentMapper->insert($deployment);
+        }
     }
 
     public function findById($id)
