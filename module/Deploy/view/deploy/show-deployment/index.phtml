@@ -1,3 +1,25 @@
 
-<h1><?php echo $project->getName(); ?> : Deployment #<?php echo $deployment->getId(); ?></h1>
+<?php $this->headScript()->appendFile('/js/show-deployment.js'); ?>
 
+<h1><?php echo $project->getDisplayName(); ?> : Deployment #<span id="deploy-id"><?php echo $deployment->getId(); ?></span></h1>
+
+<dl>
+    <dt>User:</dt>
+        <dd><?php echo '#' . $deployment->getUserId(); ?></dd>
+    <dt>Date:</dt>
+        <dd><?php echo $deployment->getDateAdded('d/m/Y H:i:s'); ?></dd>
+    <dt>Revision:</dt>
+        <dd><?php echo $deployment->getRevision(); ?></dd>
+    <dt>Comment:</dt>
+        <dd><?php echo $deployment->getComment(); ?></dd>
+    <dt>Status:</dt>
+        <dd id="deploy-status"><?php echo $deployment->getStatus(); ?></dd>
+</dl>
+
+<h3>Actions</h3>
+<button class="btn btn-success" id="btn-deploy" disabled>Deploy</button>
+
+<div id="deploy-result">
+    <h3>Result</h3>
+    <pre id="deploy-result-content"></pre>
+</div>

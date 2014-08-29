@@ -6,6 +6,7 @@ return array(
             'Deploy\Controller\Index' => 'Deploy\Controller\IndexControllerFactory',
             'Deploy\Controller\CreateDeployment' => 'Deploy\Controller\CreateDeploymentControllerFactory',
             'Deploy\Controller\ShowDeployment' => 'Deploy\Controller\ShowDeploymentControllerFactory',
+            'Deploy\Controller\RunDeployment' => 'Deploy\Controller\RunDeploymentControllerFactory',
             'Deploy\Controller\AddUser' => 'Deploy\Controller\AddUserControllerFactory',
         ],
     ],
@@ -58,6 +59,20 @@ return array(
                     'defaults' => [
                         '__NAMESPACE__' => 'Deploy\Controller',
                         'controller' => 'ShowDeployment',
+                        'action' => 'index',
+                    ],
+                ],
+            ],
+            'run-deployment' => [
+                'type' => 'Segment',
+                'options' => [
+                    'route'    => '/run-deployment/:deployment',
+                    'constraints' => [
+                        'deployment' => '[0-9]+',
+                    ],
+                    'defaults' => [
+                        '__NAMESPACE__' => 'Deploy\Controller',
+                        'controller' => 'RunDeployment',
                         'action' => 'index',
                     ],
                 ],
