@@ -1,4 +1,17 @@
 
 <h1>Create Deployment : <?php echo $project->getName(); ?></h1>
 
-<pre><?php echo implode("\n", $output); ?></pre>
+<?php
+
+echo $this->form()->openTag($form);
+
+$latestRevisionLink = '<a href="javascript:;" onclick="$(\'#deploy-revision\').val(\'master\');">Use latest on master</a>';
+
+echo $this->btsFormRow($form->get('revision'), $latestRevisionLink);
+echo $this->btsFormRow($form->get('comment'));
+
+echo $this->formElement($form->get('submit'));
+
+echo $this->form()->closeTag();
+
+?>

@@ -12,8 +12,8 @@ class CreateDeploymentControllerFactory implements FactoryInterface
         $serviceManager = $serviceLocator->getServiceLocator();
 
         $projectService = $serviceManager->get('\Deploy\Service\ProjectService');
-        $deployService = $serviceManager->get('\Deploy\Service\DeployService');
+        $deploymentService = $serviceManager->get('\Deploy\Service\DeploymentService');
 
-        return new CreateDeploymentController($projectService, $deployService);
+        return new CreateDeploymentController($projectService, $deploymentService);
     }
 }
