@@ -18,15 +18,15 @@ class Deployment extends AbstractDbMapper
     public function findById($id)
     {
         $select = $this->getSelect()->where(['id' => $id]);
-        $project = $this->select($select)->current();
-        return $project;
+        $deployment = $this->select($select)->current();
+        return $deployment;
     }
 
     public function insert($entity, $tableName = null, Hydrator $hydrator = null)
     {
         $hydrator = $hydrator ?: $this->getHydrator();
         $result = parent::insert($entity, $tableName, $hydrator);
-        $hydrator->hydrate(array('deployment_id' => $result->getGeneratedValue()), $entity);
+        $hydrator->hydrate(['deployment_id' => $result->getGeneratedValue()], $entity);
         return $result;
     }
 }
