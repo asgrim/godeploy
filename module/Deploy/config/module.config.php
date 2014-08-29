@@ -16,6 +16,11 @@ return array(
             'Deploy\Service\DeployService' => 'Deploy\Service\DeployServiceFactory',
         ],
     ],
+    'view_helpers' => [
+        'invokables' => [
+            'btsFormRow' => 'Deploy\View\Helper\BtsFormRow',
+        ],
+    ],
     'router' => [
         'routes' => [
             'home' => [
