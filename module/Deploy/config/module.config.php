@@ -11,8 +11,10 @@ return array(
     'service_manager' => [
         'factories' => [
             'Deploy\Mapper\Project' => 'Deploy\Mapper\ProjectFactory',
+            'Deploy\Mapper\Deployment' => 'Deploy\Mapper\DeploymentFactory',
             'Deploy\Options\SshOptions' => 'Deploy\Options\SshOptionsFactory',
             'Deploy\Service\ProjectService' => 'Deploy\Service\ProjectServiceFactory',
+            'Deploy\Service\DeploymentService' => 'Deploy\Service\DeploymentServiceFactory',
             'Deploy\Service\DeployService' => 'Deploy\Service\DeployServiceFactory',
         ],
     ],
