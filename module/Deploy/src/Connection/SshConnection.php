@@ -1,10 +1,11 @@
 <?php
 
-namespace Deploy\Service;
+namespace Deploy\Connection;
 
 use Deploy\Entity\Target;
+use Deploy\Options\SshOptions;
 
-class SshConnection
+class SshConnection implements Connectable
 {
     /**
      * @var \Deploy\Entity\Target
@@ -12,13 +13,19 @@ class SshConnection
     protected $target;
 
     /**
+     * @var \Deploy\Options\SshOptions
+     */
+    protected $sshOptions;
+
+    /**
      * @var resource
      */
     protected $handle;
 
-    public function __construct(Target $target)
+    public function __construct(Target $target, SshOptions $sshOptions)
     {
         $this->target = $target;
+        $this->sshOptions = $sshOptions;
     }
 
     public function connect()
@@ -37,7 +44,7 @@ class SshConnection
             throw new \Exception("Failed to connect.");
         }
 
-        if (!ssh2_auth_pubkey_file($this->handle, $this->target->getUsername(), $this->target->getPublicKey(), $this->target->getPrivateKey())) {
+        if (!ssh2_auth_pubkey_file($this->handle, $this->target->getUsername(), $this->sshOptions->getPublicKey(), $this->sshOptions->getPrivateKey())) {
             throw new \Exception("Unable to auth using pubkey");
         }
     }

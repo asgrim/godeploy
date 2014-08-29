@@ -4,10 +4,25 @@ namespace Deploy\Service;
 
 use Deploy\Entity\Project;
 use Deploy\Entity\Target;
+use Deploy\Connection\SshConnection;
+use Deploy\Options\SshOptions;
 
 class DeployService
 {
+    /**
+     * @var string[]
+     */
     protected $output;
+
+    /**
+     * @var \Deploy\Options\SshOptions
+     */
+    protected $sshOptions;
+
+    public function __construct(SshOptions $sshOptions)
+    {
+        $this->sshOptions = $sshOptions;
+    }
 
     protected function outputNewline($count = 1)
     {
@@ -48,7 +63,7 @@ class DeployService
 
     public function deployToTarget(Project $project, Target $target)
     {
-        $ssh = new SshConnection($target);
+        $ssh = new SshConnection($target, $this->sshOptions);
         $ssh->connect();
 
         $tasks = $project->getTasks();

@@ -9,11 +9,10 @@ return array(
         ],
     ],
     'service_manager' => [
-        'invokables' => [
-            'Deploy\Service\DeployService' => 'Deploy\Service\DeployService',
-        ],
         'factories' => [
+            'Deploy\Options\SshOptions' => 'Deploy\Options\SshOptionsFactory',
             'Deploy\Service\ProjectService' => 'Deploy\Service\ProjectServiceFactory',
+            'Deploy\Service\DeployService' => 'Deploy\Service\DeployServiceFactory',
         ],
     ],
     'router' => [
