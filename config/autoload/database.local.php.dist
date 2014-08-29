@@ -1,0 +1,16 @@
+<?php
+
+return [
+    'db' => [
+    	'driver' => 'PdoMysql',
+    	'database' => null,
+        'username' => null,
+        'password' => null,
+        'hostname' => null,
+    ],
+    'service_manager' => [
+        'factories' => [
+            'Zend\Db\Adapter\Adapter' => 'Zend\Db\Adapter\AdapterServiceFactory',
+        ],
+    ],
+];

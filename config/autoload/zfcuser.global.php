@@ -14,15 +14,8 @@ return [
         ],
     ],
     'service_manager' => [
-        'factories' => [
-            'Zend\Db\Adapter\Adapter' => 'Zend\Db\Adapter\AdapterServiceFactory',
-        ],
         'aliases' => [
             'zfcuser_zend_db_adapter' => (isset($settings['zend_db_adapter'])) ? $settings['zend_db_adapter']: 'Zend\Db\Adapter\Adapter',
         ],
-    ],
-    'db' => [
-        'driver'    => 'PdoSqlite',
-        'database'  => __DIR__ . '/../../data/godeploy.sqlite',
     ],
 ];
