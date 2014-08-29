@@ -12,6 +12,7 @@ return [
         'auth_identity_fields' => [
             'username',
         ],
+        'login_redirect_route' => 'home',
     ],
     'service_manager' => [
         'aliases' => [
