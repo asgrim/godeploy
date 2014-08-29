@@ -51,7 +51,7 @@ return array(
             'show-deployment' => [
                 'type' => 'Segment',
                 'options' => [
-                    'route'    => '/show-deployment/:project/:deployment',
+                    'route'    => '/show-deployment/:deployment',
                     'constraints' => [
                         'deployment' => '[0-9]+',
                     ],

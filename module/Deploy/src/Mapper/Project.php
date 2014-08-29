@@ -37,4 +37,17 @@ class Project extends AbstractDbMapper
         $project = $this->select($select)->current();
         return $project;
     }
+
+    /**
+     * Find a Project by it's ID
+     *
+     * @param int $id
+     * @return \Deploy\Entity\Project
+     */
+    public function findById($id)
+    {
+        $select = $this->getSelect()->where(['id' => $id]);
+        $project = $this->select($select)->current();
+        return $project;
+    }
 }

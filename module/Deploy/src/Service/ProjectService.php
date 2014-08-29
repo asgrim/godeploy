@@ -45,11 +45,22 @@ class ProjectService
             $project = $this->projectMapper->findByName($projectName);
 
             if (!$project) {
-                throw new \OutOfBoundsException(sprintf('Could not find a project configured for %s', $projectName));
+                throw new \OutOfBoundsException(sprintf('Could not find a project called %s', $projectName));
             }
             $this->projects[$project->getName()] = $project;
         }
 
         return $this->projects[$projectName];
+    }
+
+    /**
+     * Find a project by it's "slug" or name
+     *
+     * @param string $projectName
+     * @return \Deploy\Entity\Project|null
+     */
+    public function findById($id)
+    {
+        return $this->projectMapper->findById($id);
     }
 }
