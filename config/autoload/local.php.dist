@@ -2,35 +2,9 @@
 
 return [
     'deploy' => [
-        'public-key' => __DIR__ . '/../../data/ssh/id_rsa.pub',
-        'private-key' => __DIR__ . '/../../data/ssh/id_rsa',
-        'projects' => [
-            'godeploy-test-project' => [
-                'git-url' => 'https://github.com/asgrim/godeploy-test-project',
-                'targets' => [
-                    'server-1' => [
-                        'hostname' => 'server-1.godeploy.com',
-                        'username' => 'deployuser',
-                        'directory' => '/var/www/gd-test',
-                    ],
-                    'server-2' => [
-                        'hostname' => 'server-2.godeploy.com',
-                        'username' => 'deployuser',
-                        'directory' => '/var/www/gd-test',
-                    ],
-                    'server-3' => [
-                        'hostname' => 'server-3.godeploy.com',
-                        'username' => 'deployuser',
-                        'directory' => '/var/www/gd-test',
-                    ],
-                ],
-                'tasks' => [
-                    ['command' => 'git pull'],
-                    ['command' => 'composer install --no-dev --optimize-autoloader'],
-                    ['command' => 'supervisorctl restart all', 'not-on' => ['server-3']],
-                    ['command' => './send-notifications.sh', 'only-on' => ['server-1'], 'directory' => '/home/deployuser'],
-                ],
-            ],
+        'ssh-options' => [
+            'public_key' => __DIR__ . '/../../data/ssh/id_rsa.pub',
+            'private_key' => __DIR__ . '/../../data/ssh/id_rsa',
         ],
     ],
 ];

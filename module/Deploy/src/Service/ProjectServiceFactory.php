@@ -9,8 +9,7 @@ class ProjectServiceFactory implements FactoryInterface
 {
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $config = $serviceLocator->get('Config');
-
-        return new ProjectService($config['deploy']['projects']);
+        $projectMapper = $serviceLocator->get('Deploy\Mapper\Project');
+        return new ProjectService($projectMapper);
     }
 }

@@ -2,7 +2,7 @@
 
 namespace Deploy\Service;
 
-use Deploy\Entity\Project;
+use Deploy\Mapper\Project as ProjectMapper;
 
 class ProjectService
 {
@@ -11,22 +11,14 @@ class ProjectService
      */
     protected $projects;
 
-    public function __construct(array $projectConfiguration)
-    {
-        $this->loadFromConfig($projectConfiguration);
-    }
-
     /**
-     * Populate the service with configuration
-     *
-     * @param array $projectConfiguration
+     * @var \Deploy\Mapper\Project
      */
-    protected function loadFromConfig(array $projectConfiguration)
+    protected $projectMapper;
+
+    public function __construct(ProjectMapper $projectMapper)
     {
-        foreach ($projectConfiguration as $projectKey => $config) {
-            $project = Project::createFromConfiguration($projectKey, $config);
-            $this->projects[$projectKey] = $project;
-        }
+        $this->projectMapper = $projectMapper;
     }
 
     /**
@@ -36,6 +28,8 @@ class ProjectService
      */
     public function fetchAll()
     {
+        $this->projects = $this->projectMapper->findAll();
+
         return $this->projects;
     }
 
@@ -48,7 +42,12 @@ class ProjectService
     public function findByName($projectName)
     {
         if (!isset($this->projects[$projectName])) {
-            throw new \OutOfBoundsException(sprintf('Could not find a project configured for %s', $projectName));
+            $project = $this->projectMapper->findByName($projectName);
+
+            if (!$project) {
+                throw new \OutOfBoundsException(sprintf('Could not find a project configured for %s', $projectName));
+            }
+            $this->projects[$project->getName()] = $project;
         }
 
         return $this->projects[$projectName];

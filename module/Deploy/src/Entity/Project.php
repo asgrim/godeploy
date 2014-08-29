@@ -5,9 +5,19 @@ namespace Deploy\Entity;
 class Project
 {
     /**
+     * @var int
+     */
+    protected $id;
+
+    /**
      * @var string
      */
     protected $name;
+
+    /**
+     * @var string
+     */
+    protected $displayName;
 
     /**
      * @var string
@@ -17,35 +27,22 @@ class Project
     /**
      * @var \Deploy\Entity\Target[]
      */
-    protected $targets;
+    protected $targets = [];
 
     /**
      * @var \Deploy\Entity\Task[]
      */
-    protected $tasks;
+    protected $tasks = [];
 
-    /**
-     * Create a new Project entity from configuration array
-     *
-     * @param string $name
-     * @param array $configuration
-     * @return \Deploy\Entity\Project
-     */
-    public static function createFromConfiguration($name, array $configuration)
+    public function getId()
     {
-        $project = new self();
-        $project->name = (string)$name;
-        $project->gitUrl = $configuration['git-url'];
+        return $this->id;
+    }
 
-        foreach ($configuration['targets'] as $targetName => $targetConfig) {
-            $project->targets[$targetName] = Target::createFromConfiguration($targetName, $targetConfig);
-        }
-
-        foreach ($configuration['tasks'] as $taskName => $taskConfig) {
-            $project->tasks[$taskName] = Task::createFromConfiguration($taskName, $taskConfig);
-        }
-
-        return $project;
+    public function setId($id)
+    {
+        $this->id = (int)$id;
+        return $this;
     }
 
     /**
@@ -56,12 +53,37 @@ class Project
         return $this->name;
     }
 
+    public function setName($name)
+    {
+        $this->name = $name;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDisplayName()
+    {
+        return $this->displayName;
+    }
+
+    public function setDisplayName($displayName)
+    {
+        $this->displayName = $displayName;
+        return $this;
+    }
+
     /**
      * @return string
      */
     public function getGitUrl()
     {
         return $this->gitUrl;
+    }
+
+    public function setGitUrl($gitUrl)
+    {
+        $this->gitUrl = $gitUrl;
     }
 
     /**
