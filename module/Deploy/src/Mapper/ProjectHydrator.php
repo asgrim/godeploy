@@ -6,8 +6,6 @@ use Deploy\Entity\Project as ProjectEntity;
 
 class ProjectHydrator extends AbstractHydrator
 {
-	protected $idField = 'project_id';
-
 	/**
 	 * Ensure $object is a DeploymentEntity
 	 *

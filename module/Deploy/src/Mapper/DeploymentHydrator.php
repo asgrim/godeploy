@@ -6,8 +6,6 @@ use Deploy\Entity\Deployment as DeploymentEntity;
 
 class DeploymentHydrator extends AbstractHydrator
 {
-    protected $idField = 'deployment_id';
-
     /**
      * Ensure $object is a DeploymentEntity
      *

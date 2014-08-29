@@ -6,8 +6,6 @@ use Zend\Stdlib\Hydrator\ClassMethods;
 
 abstract class AbstractHydrator extends ClassMethods
 {
-    protected $idField = 'id';
-
     public function __construct()
     {
         parent::__construct(true);
@@ -31,7 +29,7 @@ abstract class AbstractHydrator extends ClassMethods
     {
         $this->guardObjectType($object);
         $data = parent::extract($object);
-        return $this->mapField('id', $this->idField, $data);
+        return $data;
     }
 
     /**
@@ -44,24 +42,6 @@ abstract class AbstractHydrator extends ClassMethods
     public function hydrate(array $data, $object)
     {
         $this->guardObjectType($object);
-        $data = $this->mapField($this->idField, 'id', $data);
         return parent::hydrate($data, $object);
-    }
-
-    /**
-     * Remap an array key
-     *
-     * @param string $keyFrom
-     * @param string $keyTo
-     * @param array $array
-     * @return array
-     */
-    protected function mapField($keyFrom, $keyTo, array $array)
-    {
-        if (isset($array[$keyFrom])) {
-            $array[$keyTo] = $array[$keyFrom];
-        }
-        unset($array[$keyFrom]);
-        return $array;
     }
 }
