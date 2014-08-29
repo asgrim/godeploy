@@ -5,15 +5,13 @@
     <thead>
         <tr>
             <th>Project</th>
-            <th>Git URL</th>
             <th>Deploy</th>
         </tr>
     </thead>
     <tbody>
     <?php foreach ($projects as $project): /* @var $project \Deploy\Entity\Project */ ?>
         <tr>
-            <td><?php echo $project->getName(); ?></td>
-            <td><?php echo $project->getGitUrl(); ?></td>
+            <td><?php echo $project->getDisplayName(); ?></td>
             <td><a href="<?php echo $this->url('create-deployment', ['project' => $project->getName()]); ?>">GoDeploy!</a></td>
         </tr>
     <?php endforeach; ?>
