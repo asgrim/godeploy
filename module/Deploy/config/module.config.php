@@ -16,7 +16,7 @@ return array(
             'Deploy\Options\SshOptions' => 'Deploy\Options\SshOptionsFactory',
             'Deploy\Service\ProjectService' => 'Deploy\Service\ProjectServiceFactory',
             'Deploy\Service\DeploymentService' => 'Deploy\Service\DeploymentServiceFactory',
-            'Deploy\Service\DeployService' => 'Deploy\Service\DeployServiceFactory',
+            'Deploy\Deployer\Deployer' => 'Deploy\Deployer\DeployerFactory',
         ],
     ],
     'view_helpers' => [

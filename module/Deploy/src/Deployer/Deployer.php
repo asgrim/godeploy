@@ -1,13 +1,13 @@
 <?php
 
-namespace Deploy\Service;
+namespace Deploy\Deployer;
 
 use Deploy\Entity\Project;
 use Deploy\Entity\Target;
 use Deploy\Connection\SshConnection;
 use Deploy\Options\SshOptions;
 
-class DeployService
+class Deployer
 {
     /**
      * @var string[]
