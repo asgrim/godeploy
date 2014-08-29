@@ -55,6 +55,5 @@ class AddUserController extends AbstractActionController
             }
             return;
         }
-
     }
 }
