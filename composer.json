@@ -7,6 +7,7 @@
     "require": {
         "php": ">= 5.5",
         "ext-ssh2": "*",
+        "ext-sqlite3": "*",
         "zendframework/zendframework": "2.3.*",
         "zf-commons/zfc-user": "dev-master"
     },
