@@ -42,7 +42,14 @@
             <?php echo $this->content; ?>
             <hr>
             <footer>
-                <p>&copy; <?php echo date('Y') ?> by James Titcumb</p>
+                <ul>
+                    <li>&copy; <?php echo date('Y') ?> by James Titcumb</li>
+                <?php if($this->zfcUserIdentity()): ?>
+                    <li>Logged in as <strong><?php echo $this->zfcUserIdentity()->getDisplayname(); ?></strong></li>
+                    <li><a href="<?php echo $this->url('zfcuser/changepassword'); ?>">Change Password</a></li>
+                    <li><a href="<?php echo $this->url('zfcuser/logout') ?>">Logout</a></li>
+                <?php endif; ?>
+                </ul>
             </footer>
         </div> <!-- /container -->
         <?php echo $this->inlineScript() ?>

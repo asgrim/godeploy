@@ -7,3 +7,16 @@ body {
 	height: 40px;
 	margin-top: -10px;
 }
+
+footer ul {
+	padding: 0;
+	margin: 0;
+}
+footer ul li:first-child {
+	border-left: none;
+}
+footer ul li {
+	display: inline;
+	padding: 0 10px;
+	border-left: 1px solid silver;
+}

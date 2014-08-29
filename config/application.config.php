@@ -1,6 +1,8 @@
 <?php
 
 $modules = [
+    'ZfcBase',
+    'ZfcUser',
     'Deploy',
 ];
 

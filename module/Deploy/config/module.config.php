@@ -5,6 +5,7 @@ return array(
         'factories' => [
             'Deploy\Controller\Index' => 'Deploy\Controller\IndexControllerFactory',
             'Deploy\Controller\CreateDeployment' => 'Deploy\Controller\CreateDeploymentControllerFactory',
+            'Deploy\Controller\AddUser' => 'Deploy\Controller\AddUserControllerFactory',
         ],
     ],
     'service_manager' => [
@@ -36,6 +37,22 @@ return array(
                         '__NAMESPACE__' => 'Deploy\Controller',
                         'controller' => 'CreateDeployment',
                         'action' => 'index',
+                    ],
+                ],
+            ],
+        ],
+    ],
+    'console' => [
+        'router' => [
+            'routes' => [
+                'add-user' => [
+                    'options' => [
+                        'route' => 'add-user',
+                        'defaults' => [
+                            '__NAMESPACE__' => 'Deploy\Controller',
+                            'controller' => 'AddUser',
+                            'action' => 'index',
+                        ],
                     ],
                 ],
             ],

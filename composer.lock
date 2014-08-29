@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "51450b7ad63986f56c3104932563b674",
+    "hash": "cfc7c9283243639f03e4256cf9b4b259",
     "packages": [
         {
             "name": "zendframework/zendframework",
@@ -168,6 +168,136 @@
                 "zf2"
             ],
             "time": "2014-03-05 22:25:44"
+        },
+        {
+            "name": "zf-commons/zfc-base",
+            "version": "v0.1.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ZF-Commons/ZfcBase.git",
+                "reference": "fc68a49b58ba68584a9a4c44a1ca9df12b30d1bf"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ZF-Commons/ZfcBase/zipball/fc68a49b58ba68584a9a4c44a1ca9df12b30d1bf",
+                "reference": "fc68a49b58ba68584a9a4c44a1ca9df12b30d1bf",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.3",
+                "zendframework/zend-db": "~2.1",
+                "zendframework/zend-eventmanager": "~2.1",
+                "zendframework/zend-loader": "~2.1",
+                "zendframework/zend-modulemanager": "~2.1",
+                "zendframework/zend-mvc": "~2.1",
+                "zendframework/zend-servicemanager": "~2.1",
+                "zendframework/zend-stdlib": "~2.1"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "ZfcBase": "src/"
+                },
+                "classmap": [
+                    "./Module.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "authors": [
+                {
+                    "name": "Kyle Spraggs",
+                    "email": "theman@spiffyjr.me",
+                    "homepage": "http://www.spiffyjr.me/"
+                },
+                {
+                    "name": "Evan Coury",
+                    "email": "me@evancoury.com",
+                    "homepage": "http://blog.evan.pro/"
+                }
+            ],
+            "description": "A set of genetic (abstract) classes which are commonly used across multiple modules.",
+            "homepage": "https://github.com/ZF-Commons/ZfcBase",
+            "keywords": [
+                "zf2"
+            ],
+            "time": "2013-05-02 12:33:49"
+        },
+        {
+            "name": "zf-commons/zfc-user",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ZF-Commons/ZfcUser.git",
+                "reference": "7c2187bbdab00d32c9251cd95d70ccb1aa8d6975"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ZF-Commons/ZfcUser/zipball/7c2187bbdab00d32c9251cd95d70ccb1aa8d6975",
+                "reference": "7c2187bbdab00d32c9251cd95d70ccb1aa8d6975",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.3",
+                "zendframework/zend-authentication": "~2.1",
+                "zendframework/zend-crypt": "~2.1",
+                "zendframework/zend-form": "~2.1",
+                "zendframework/zend-http": "~2.1",
+                "zendframework/zend-inputfilter": "~2.1",
+                "zendframework/zend-loader": "~2.1",
+                "zendframework/zend-modulemanager": "~2.1",
+                "zendframework/zend-mvc": "~2.1",
+                "zendframework/zend-servicemanager": "~2.1",
+                "zendframework/zend-session": "~2.1",
+                "zendframework/zend-stdlib": "~2.1",
+                "zendframework/zend-validator": "~2.1",
+                "zendframework/zend-view": "~2.1",
+                "zf-commons/zfc-base": "0.*"
+            },
+            "require-dev": {
+                "phpmd/phpmd": "1.4.*",
+                "phpunit/phpunit": ">=3.7,<4",
+                "squizlabs/php_codesniffer": "1.4.*",
+                "zendframework/zend-captcha": "~2.1"
+            },
+            "suggest": {
+                "zendframework/zend-captcha": "Zend\\Captcha if you want to use the captcha component"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "ZfcUser": "src/"
+                },
+                "classmap": [
+                    "./Module.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Kyle Spraggs",
+                    "email": "theman@spiffyjr.me",
+                    "homepage": "http://www.spiffyjr.me/"
+                },
+                {
+                    "name": "Evan Coury",
+                    "email": "me@evancoury.com",
+                    "homepage": "http://blog.evan.pro/"
+                }
+            ],
+            "description": "A generic user registration and authentication module for ZF2. Supports Zend\\Db and Doctrine2.",
+            "homepage": "https://github.com/ZF-Commons/ZfcUser",
+            "keywords": [
+                "zf2"
+            ],
+            "time": "2014-07-25 10:44:29"
         }
     ],
     "packages-dev": [
@@ -534,16 +664,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "4.2.2",
+            "version": "4.2.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "a33fa68ece9f8c68589bfc2da8d2794e27b820bc"
+                "reference": "3985cd437c1da2934421c99e54ebdf24f0362a7a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/a33fa68ece9f8c68589bfc2da8d2794e27b820bc",
-                "reference": "a33fa68ece9f8c68589bfc2da8d2794e27b820bc",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/3985cd437c1da2934421c99e54ebdf24f0362a7a",
+                "reference": "3985cd437c1da2934421c99e54ebdf24f0362a7a",
                 "shasum": ""
             },
             "require": {
@@ -604,7 +734,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2014-08-18 05:12:30"
+            "time": "2014-08-28 13:38:26"
         },
         {
             "name": "phpunit/phpunit-mock-objects",
@@ -982,7 +1112,9 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "zf-commons/zfc-user": 20
+    },
     "prefer-stable": false,
     "platform": {
         "php": ">= 5.5",
