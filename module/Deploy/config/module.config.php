@@ -95,6 +95,9 @@ return array(
         'template_path_stack' => [
             __DIR__ . '/../view',
         ],
+        'strategies' => [
+            'ViewJsonStrategy',
+        ],
     ],
     'deploy' => [
         'projects' => [
