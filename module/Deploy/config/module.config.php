@@ -14,11 +14,13 @@ return array(
         'factories' => [
             'Deploy\Mapper\Project' => 'Deploy\Mapper\ProjectFactory',
             'Deploy\Mapper\Target' => 'Deploy\Mapper\TargetFactory',
+            'Deploy\Mapper\Task' => 'Deploy\Mapper\TaskFactory',
             'Deploy\Mapper\Deployment' => 'Deploy\Mapper\DeploymentFactory',
             'Deploy\Options\SshOptions' => 'Deploy\Options\SshOptionsFactory',
             'Deploy\Service\ProjectService' => 'Deploy\Service\ProjectServiceFactory',
             'Deploy\Service\DeploymentService' => 'Deploy\Service\DeploymentServiceFactory',
             'Deploy\Service\TargetService' => 'Deploy\Service\TargetServiceFactory',
+            'Deploy\Service\TaskService' => 'Deploy\Service\TaskServiceFactory',
             'Deploy\Deployer\Deployer' => 'Deploy\Deployer\DeployerFactory',
         ],
     ],
