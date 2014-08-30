@@ -8,6 +8,7 @@ use Deploy\Entity\Target;
 use Deploy\Connection\SshConnection;
 use Deploy\Options\SshOptions;
 use Deploy\Service\ProjectService;
+use Deploy\Service\TargetService;
 
 class Deployer
 {
@@ -26,10 +27,16 @@ class Deployer
      */
     protected $projectService;
 
-    public function __construct(SshOptions $sshOptions, ProjectService $projectService)
+    /**
+     * @var \Deploy\Service\TargetService
+     */
+    protected $targetService;
+
+    public function __construct(SshOptions $sshOptions, ProjectService $projectService, TargetService $targetService)
     {
         $this->sshOptions = $sshOptions;
         $this->projectService = $projectService;
+        $this->targetService = $targetService;
     }
 
     protected function outputNewline($count = 1)
@@ -59,7 +66,7 @@ class Deployer
         $this->output("Commence deployment: " . date("Y-m-d H:i:s"));
         $this->outputNewline(2);
 
-        $targets = $project->getTargets();
+        $targets = $this->targetService->findByProjectId($project->getId());
 
         foreach ($targets as $target) {
             $header = "Deploy to target: " . $target->getName();

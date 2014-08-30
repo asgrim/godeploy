@@ -11,7 +11,8 @@ class DeployerFactory implements FactoryInterface
     {
         $sshOptions = $serviceLocator->get('Deploy\Options\SshOptions');
         $projectService = $serviceLocator->get('\Deploy\Service\ProjectService');
+        $targetService = $serviceLocator->get('\Deploy\Service\TargetService');
 
-        return new Deployer($sshOptions, $projectService);
+        return new Deployer($sshOptions, $projectService, $targetService);
     }
 }
