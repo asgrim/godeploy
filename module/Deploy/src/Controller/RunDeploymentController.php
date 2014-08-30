@@ -34,14 +34,11 @@ class RunDeploymentController extends AbstractActionController
 
         $deployment = $this->deploymentService->findById($this->params('deployment'));
 
-        // @todo set status to running, save to DB
         $deployment->setStatus('RUNNING');
         $this->deploymentService->persist($deployment);
 
-        sleep(3);
-        #$this->deployer->deploy($deployment);
+        $output = $this->deployer->deploy($deployment);
 
-        // @todo set status to complete, save to DB
         $deployment->setStatus('COMPLETE');
         $this->deploymentService->persist($deployment);
 
@@ -49,7 +46,7 @@ class RunDeploymentController extends AbstractActionController
 
         return new JsonModel([
             'deployment' => $hydrator->extract($deployment),
-            'textContent' => 'foo text',
+            'textContent' => implode("\n", $output),
         ]);
     }
 }

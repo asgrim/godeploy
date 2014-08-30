@@ -2,10 +2,12 @@
 
 namespace Deploy\Deployer;
 
+use Deploy\Entity\Deployment;
 use Deploy\Entity\Project;
 use Deploy\Entity\Target;
 use Deploy\Connection\SshConnection;
 use Deploy\Options\SshOptions;
+use Deploy\Service\ProjectService;
 
 class Deployer
 {
@@ -19,9 +21,15 @@ class Deployer
      */
     protected $sshOptions;
 
-    public function __construct(SshOptions $sshOptions)
+    /**
+     * @var \Deploy\Service\ProjectService
+     */
+    protected $projectService;
+
+    public function __construct(SshOptions $sshOptions, ProjectService $projectService)
     {
         $this->sshOptions = $sshOptions;
+        $this->projectService = $projectService;
     }
 
     protected function outputNewline($count = 1)
@@ -37,8 +45,15 @@ class Deployer
         $this->output[] = $line;
     }
 
-    public function deploy(Project $project)
+    public function deploy(Deployment $deployment)
     {
+        if ($deployment->getStatus() != 'RUNNING')
+        {
+            throw new \RuntimeException('Deployment not at valid status...');
+        }
+
+        $project = $this->projectService->findById($deployment->getId());
+
         $this->output = [];
 
         $this->output("Commence deployment: " . date("Y-m-d H:i:s"));
@@ -51,7 +66,7 @@ class Deployer
             $this->output($header);
             $this->output(str_repeat("=", strlen($header)));
 
-            $this->deployToTarget($project, $target);
+            $this->deployToTarget($project, $deployment, $target);
 
             $this->outputNewline(2);
         }
@@ -61,7 +76,7 @@ class Deployer
         return $this->output;
     }
 
-    public function deployToTarget(Project $project, Target $target)
+    public function deployToTarget(Project $project, Deployment $deployment, Target $target)
     {
         $ssh = new SshConnection($target, $this->sshOptions);
         $ssh->connect();
