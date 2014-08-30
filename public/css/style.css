@@ -2,7 +2,13 @@ body {
     padding-top: 60px;
     padding-bottom: 40px;
 }
-
+#projects-list td {
+	vertical-align: middle;
+}
+#projects-list td.project-name {
+	width: 60%;
+	font-size: 20px;
+}
 #nav-logo {
 	height: 40px;
 	margin-top: -10px;

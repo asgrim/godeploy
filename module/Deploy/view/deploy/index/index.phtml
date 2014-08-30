@@ -1,18 +1,13 @@
-<h1>Welcome to GoDeploy!</h1>
+<h1>Projects</h1>
 
 <?php if (is_array($projects) && count($projects) > 0): ?>
-<table class="table table-striped table-hover">
-    <thead>
-        <tr>
-            <th>Project</th>
-            <th>Deploy</th>
-        </tr>
-    </thead>
+<table class="table table-striped table-hover table-bordered" id="projects-list">
     <tbody>
     <?php foreach ($projects as $project): /* @var $project \Deploy\Entity\Project */ ?>
         <tr>
-            <td><?php echo $project->getDisplayName(); ?></td>
-            <td><a href="<?php echo $this->url('create-deployment', ['project' => $project->getName()]); ?>">GoDeploy!</a></td>
+            <td class="project-name"><?php echo $project->getDisplayName(); ?></td>
+            <td title="not implemented yet...">View history</td>
+            <td><a href="<?php echo $this->url('create-deployment', ['project' => $project->getName()]); ?>" class="btn btn-success">GoDeploy!</a></td>
         </tr>
     <?php endforeach; ?>
     </tbody>
