@@ -13,10 +13,12 @@ return array(
     'service_manager' => [
         'factories' => [
             'Deploy\Mapper\Project' => 'Deploy\Mapper\ProjectFactory',
+            'Deploy\Mapper\Target' => 'Deploy\Mapper\TargetFactory',
             'Deploy\Mapper\Deployment' => 'Deploy\Mapper\DeploymentFactory',
             'Deploy\Options\SshOptions' => 'Deploy\Options\SshOptionsFactory',
             'Deploy\Service\ProjectService' => 'Deploy\Service\ProjectServiceFactory',
             'Deploy\Service\DeploymentService' => 'Deploy\Service\DeploymentServiceFactory',
+            'Deploy\Service\TargetService' => 'Deploy\Service\TargetServiceFactory',
             'Deploy\Deployer\Deployer' => 'Deploy\Deployer\DeployerFactory',
         ],
     ],
