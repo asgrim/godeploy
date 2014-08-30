@@ -5,19 +5,24 @@ namespace Deploy\Entity;
 class Task
 {
     /**
+     * @var int
+     */
+    protected $id;
+
+    /**
+     * @var int
+     */
+    protected $projectId;
+
+    /**
+     * @var int
+     */
+    protected $order;
+
+    /**
      * @var string
      */
     protected $command;
-
-    /**
-     * @var string[]
-     */
-    protected $onlyOn;
-
-    /**
-     * @var string[]
-     */
-    protected $notOn;
 
     /**
      * @var string
@@ -25,30 +30,85 @@ class Task
     protected $directory;
 
     /**
-     * Create a new Project entity from configuration array
-     *
-     * @param string $name
-     * @param array $configuration
-     * @return \Deploy\Entity\Project
+     * @var string[]
      */
-    public static function createFromConfiguration($name, array $configuration)
-    {
-        $task = new self();
-        $task->name = (string)$name;
-        $task->command = $configuration['command'];
-        $task->onlyOn = isset($configuration['only-on']) ? $configuration['only-on'] : [];
-        $task->notOn = isset($configuration['not-on']) ? $configuration['not-on'] : [];
-        $task->directory = isset($configuration['directory']) ? $configuration['directory'] : null;
-
-        return $task;
-    }
+    protected $onlyOnTargets;
 
     /**
+     * @var string[]
+     */
+    protected $notOnTargets;
+
+    /**
+	 * @return int
+	 */
+	public function getId()
+	{
+		return $this->id;
+	}
+
+	/**
+	 * @param int $id
+     * @return \Deploy\Entity\Task
+	 */
+	public function setId($id)
+	{
+		$this->id = (int)$id;
+		return $this;
+	}
+
+	/**
+	 * @return int
+	 */
+	public function getProjectId()
+	{
+		return $this->projectId;
+	}
+
+	/**
+	 * @param int $projectId
+     * @return \Deploy\Entity\Task
+	 */
+	public function setProjectId($projectId)
+	{
+		$this->projectId = (int)$projectId;
+		return $this;
+	}
+
+	/**
+	 * @return int
+	 */
+	public function getOrder()
+	{
+		return $this->order;
+	}
+
+	/**
+	 * @param int $order
+     * @return \Deploy\Entity\Task
+	 */
+	public function setOrder($order)
+	{
+		$this->order = (int)$order;
+		return $this;
+	}
+
+	/**
      * @return string
      */
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * @param string $name
+     * @return \Deploy\Entity\Task
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+        return $this;
     }
 
     /**
@@ -58,6 +118,69 @@ class Task
     {
         return $this->command;
     }
+
+	/**
+	 * @param string $command
+     * @return \Deploy\Entity\Task
+	 */
+	public function setCommand($command)
+	{
+		$this->command = $command;
+	}
+
+    /**
+     * @return string
+     */
+    public function getDirectory()
+    {
+        return $this->directory;
+    }
+
+	/**
+	 * @param string $directory
+     * @return \Deploy\Entity\Task
+	 */
+	public function setDirectory($directory)
+	{
+		$this->directory = $directory;
+		return $this;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getOnlyOnTargets()
+	{
+		return $this->onlyOnTargets;
+	}
+
+	/**
+	 * @param string $onlyOnTargets
+     * @return \Deploy\Entity\Task
+	 */
+	public function setOnlyOnTargets($onlyOnTargets)
+	{
+		$this->onlyOnTargets = $onlyOnTargets;
+		return $this;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getNotOnTargets()
+	{
+		return $this->notOnTargets;
+	}
+
+	/**
+	 * @param string $notOnTargets
+     * @return \Deploy\Entity\Task
+	 */
+	public function setNotOnTargets($notOnTargets)
+	{
+		$this->notOnTargets = $notOnTargets;
+		return $this;
+	}
 
     public function allowedOnTarget(Target $target)
     {
@@ -72,10 +195,5 @@ class Task
         }
 
         return true;
-    }
-
-    public function getDirectory()
-    {
-        return $this->directory;
     }
 }
