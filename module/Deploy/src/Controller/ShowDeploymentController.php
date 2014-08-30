@@ -26,7 +26,13 @@ class ShowDeploymentController extends AbstractActionController
 
     public function indexAction()
     {
-        $deployment = $this->deploymentService->findById($this->params('deployment'));
+        $deploymentId = (int)$this->params('deployment');
+        $deployment = $this->deploymentService->findById($deploymentId);
+        if (!$deployment)
+        {
+            throw new \InvalidArgumentException('Deployment #' . $deploymentId . ' was not found');
+        }
+
         $project = $this->projectService->findById($deployment->getId());
 
         return [
