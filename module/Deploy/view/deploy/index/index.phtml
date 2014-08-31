@@ -6,7 +6,7 @@
     <?php foreach ($projects as $project): /* @var $project \Deploy\Entity\Project */ ?>
         <tr>
             <td class="project-name"><?php echo $project->getDisplayName(); ?></td>
-            <td title="not implemented yet...">View history</td>
+            <td><a href="<?php echo $this->url('view-history', ['project' => $project->getName()]); ?>">View history</a></td>
             <td><a href="<?php echo $this->url('create-deployment', ['project' => $project->getName()]); ?>" class="btn btn-success">GoDeploy!</a></td>
         </tr>
     <?php endforeach; ?>

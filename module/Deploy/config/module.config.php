@@ -8,6 +8,7 @@ return array(
             'Deploy\Controller\ShowDeployment' => 'Deploy\Controller\ShowDeploymentControllerFactory',
             'Deploy\Controller\RunDeployment' => 'Deploy\Controller\RunDeploymentControllerFactory',
             'Deploy\Controller\AddUser' => 'Deploy\Controller\AddUserControllerFactory',
+            'Deploy\Controller\ViewHistory' => 'Deploy\Controller\ViewHistoryControllerFactory',
         ],
     ],
     'service_manager' => [
@@ -38,6 +39,17 @@ return array(
                     'defaults' => [
                         '__NAMESPACE__' => 'Deploy\Controller',
                         'controller' => 'Index',
+                        'action' => 'index',
+                    ],
+                ],
+            ],
+            'view-history' => [
+                'type' => 'Segment',
+                'options' => [
+                    'route'    => '/view-history/:project',
+                    'defaults' => [
+                        '__NAMESPACE__' => 'Deploy\Controller',
+                        'controller' => 'ViewHistory',
                         'action' => 'index',
                     ],
                 ],
