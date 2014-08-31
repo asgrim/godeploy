@@ -9,6 +9,7 @@ use Deploy\Connection\SshConnection;
 use Deploy\Options\SshOptions;
 use Deploy\Service\ProjectService;
 use Deploy\Service\TargetService;
+use Deploy\Service\TaskService;
 
 class Deployer
 {
@@ -32,11 +33,17 @@ class Deployer
      */
     protected $targetService;
 
-    public function __construct(SshOptions $sshOptions, ProjectService $projectService, TargetService $targetService)
+    /**
+     * @var \Deploy\Service\TaskService
+     */
+    protected $taskService;
+
+    public function __construct(SshOptions $sshOptions, ProjectService $projectService, TargetService $targetService, TaskService $taskService)
     {
         $this->sshOptions = $sshOptions;
         $this->projectService = $projectService;
         $this->targetService = $targetService;
+        $this->taskService = $taskService;
     }
 
     protected function outputNewline($count = 1)
@@ -88,16 +95,20 @@ class Deployer
         $ssh = new SshConnection($target, $this->sshOptions);
         $ssh->connect();
 
-        $tasks = $project->getTasks();
+        $tasks = $this->taskService->findByProjectId($project->getId());
+
         foreach ($tasks as $task) {
+            /* @var $task \Deploy\Entity\Task */
             if (!$task->allowedOnTarget($target)) continue;
 
             $dir = is_null($task->getDirectory()) ? $target->getDirectory() : $task->getDirectory();
 
-            $this->outputNewline();
-            $this->output($dir . "$ {$task->getCommand()}");
+            $command = $task->getPreparedCommand($deployment);
 
-            $result = $ssh->execute($task->getCommand(), $dir);
+            $this->outputNewline();
+            $this->output($dir . "$ {$command}");
+
+            $result = $ssh->execute($command, $dir);
 
             foreach ($result['stderr'] as $line) {
                 $this->output($line);

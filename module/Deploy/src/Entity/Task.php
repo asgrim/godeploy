@@ -32,12 +32,12 @@ class Task
     /**
      * @var string[]
      */
-    protected $onlyOnTargets;
+    protected $onlyOnTargets = [];
 
     /**
      * @var string[]
      */
-    protected $notOnTargets;
+    protected $notOnTargets = [];
 
     /**
 	 * @return int
@@ -128,6 +128,16 @@ class Task
 		$this->command = $command;
 	}
 
+	public function getPreparedCommand(Deployment $deployment)
+	{
+	    $command = $this->getCommand();
+
+	    $revision = $deployment->getRevision();
+	    $command = str_ireplace("[git-update]", "git fetch origin && git checkout `git show --format=format:%H --no-notes -s $revision`", $command);
+
+	    return $command;
+	}
+
     /**
      * @return string
      */
@@ -151,7 +161,7 @@ class Task
 	 */
 	public function getOnlyOnTargets()
 	{
-		return $this->onlyOnTargets;
+		return implode(',', $this->onlyOnTargets);
 	}
 
 	/**
@@ -160,7 +170,11 @@ class Task
 	 */
 	public function setOnlyOnTargets($onlyOnTargets)
 	{
-		$this->onlyOnTargets = $onlyOnTargets;
+	    if (strlen($onlyOnTargets) > 0) {
+		    $this->onlyOnTargets = explode(',', $onlyOnTargets);
+	    } else {
+	        $this->onlyOnTargets = [];
+	    }
 		return $this;
 	}
 
@@ -169,7 +183,7 @@ class Task
 	 */
 	public function getNotOnTargets()
 	{
-		return $this->notOnTargets;
+		return implode(',', $this->notOnTargets);
 	}
 
 	/**
@@ -178,19 +192,21 @@ class Task
 	 */
 	public function setNotOnTargets($notOnTargets)
 	{
-		$this->notOnTargets = $notOnTargets;
+	    if (strlen($notOnTargets) > 0) {
+		    $this->notOnTargets = explode(',', $notOnTargets);
+	    } else {
+	        $this->notOnTargets = [];
+	    }
 		return $this;
 	}
 
     public function allowedOnTarget(Target $target)
     {
-        if (count($this->notOn) > 0 && in_array($target->getName(), $this->notOn))
-        {
+        if (count($this->notOnTargets) > 0 && in_array($target->getName(), $this->notOnTargets)) {
             return false;
         }
 
-        if (count($this->onlyOn) > 0 && !in_array($target->getName(), $this->onlyOn))
-        {
+        if (count($this->onlyOnTargets) > 0 && !in_array($target->getName(), $this->onlyOnTargets)) {
             return false;
         }
 

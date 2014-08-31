@@ -5,7 +5,7 @@
 
 echo $this->form()->openTag($form);
 
-$latestRevisionLink = '<a href="javascript:;" onclick="$(\'#deploy-revision\').val(\'master\');">Use latest on master</a>';
+$latestRevisionLink = '<a href="javascript:;" onclick="$(\'#deploy-revision\').val(\'origin/master\');">Use latest on master</a>';
 
 echo $this->btsFormRow($form->get('revision'), $latestRevisionLink);
 echo $this->btsFormRow($form->get('comment'));
