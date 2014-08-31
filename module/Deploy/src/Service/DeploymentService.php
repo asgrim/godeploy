@@ -33,4 +33,9 @@ class DeploymentService
     {
         return $this->deploymentMapper->findById($id);
     }
+
+    public function findByProjectId($projectId)
+    {
+        return $this->deploymentMapper->findByProject($projectId);
+    }
 }

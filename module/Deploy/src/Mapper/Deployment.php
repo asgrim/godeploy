@@ -22,6 +22,13 @@ class Deployment extends AbstractDbMapper
         return $deployment;
     }
 
+    public function findByProject($projectId, $orderBy = 'date_added DESC')
+    {
+        $select = $this->getSelect()->where(['project_id' => $id])->order('date_added DESC');
+        $deployments = $this->select($select)->current();
+        return $deployments;
+    }
+
     public function insert($entity, $tableName = null, Hydrator $hydrator = null)
     {
         $hydrator = $hydrator ?: $this->getHydrator();
