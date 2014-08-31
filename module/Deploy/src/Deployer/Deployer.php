@@ -66,7 +66,7 @@ class Deployer
             throw new \RuntimeException('Deployment not at valid status...');
         }
 
-        $project = $this->projectService->findById($deployment->getId());
+        $project = $this->projectService->findById($deployment->getProjectId());
 
         $this->output = [];
 
