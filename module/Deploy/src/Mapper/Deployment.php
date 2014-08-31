@@ -33,7 +33,7 @@ class Deployment extends AbstractDbMapper
     {
         $hydrator = $hydrator ?: $this->getHydrator();
         $result = parent::insert($entity, $tableName, $hydrator);
-        $hydrator->hydrate(['deployment_id' => $result->getGeneratedValue()], $entity);
+        $hydrator->hydrate(['id' => $result->getGeneratedValue()], $entity);
         return $result;
     }
 

@@ -33,7 +33,7 @@ class ShowDeploymentController extends AbstractActionController
             throw new \InvalidArgumentException('Deployment #' . $deploymentId . ' was not found');
         }
 
-        $project = $this->projectService->findById($deployment->getId());
+        $project = $this->projectService->findById($deployment->getProjectId());
 
         return [
             'project' => $project,
