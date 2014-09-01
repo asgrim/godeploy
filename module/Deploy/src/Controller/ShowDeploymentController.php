@@ -5,6 +5,7 @@ namespace Deploy\Controller;
 use Zend\Mvc\Controller\AbstractActionController;
 use Deploy\Service\ProjectService;
 use Deploy\Service\DeploymentService;
+use Deploy\Service\DeploymentLogService;
 
 class ShowDeploymentController extends AbstractActionController
 {
@@ -18,10 +19,16 @@ class ShowDeploymentController extends AbstractActionController
      */
     protected $deploymentService;
 
-    public function __construct(ProjectService $projectService, DeploymentService $deploymentService)
+    /**
+     * @var \Deploy\Service\DeploymentLogService
+     */
+    protected $deploymentLogService;
+
+    public function __construct(ProjectService $projectService, DeploymentService $deploymentService, DeploymentLogService $deploymentLogService)
     {
         $this->projectService = $projectService;
         $this->deploymentService = $deploymentService;
+        $this->deploymentLogService = $deploymentLogService;
     }
 
     public function indexAction()
@@ -35,9 +42,12 @@ class ShowDeploymentController extends AbstractActionController
 
         $project = $this->projectService->findById($deployment->getProjectId());
 
+        $log = $this->deploymentLogService->findById($deployment->getId());
+
         return [
             'project' => $project,
             'deployment' => $deployment,
+            'log' => $log,
         ];
     }
 }
