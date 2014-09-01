@@ -106,7 +106,7 @@ class Deployer
     {
         if (!$deployment->hasResolvedRevision())
         {
-            $result = $ssh->execute("git show --format=format:%H --no-notes -s " . $deployment->getRevision(), $directory);
+            $result = $ssh->execute("git fetch origin && git show --format=format:%H --no-notes -s " . $deployment->getRevision(), $directory);
             $deployment->setResolvedRevision($result['stdout'][0]);
             $this->deploymentService->persist($deployment);
         }
