@@ -36,6 +36,11 @@ $(function () {
 		})
 			.done(function (result) {
 				setDeployStatus(result.deployment.status);
+				var revText = result.deployment.revision;
+				if (result.deployment.resolved_revision) {
+					revText += ' (' + result.deployment.resolved_revision + ')';
+				}
+				$('#deploy-rev').html(revText);
 				$('#deploy-result-content').html(result.textContent);
 			})
 			.fail(function () {

@@ -9,7 +9,7 @@
     <dt>Date:</dt>
         <dd><?php echo $deployment->getDateAdded('d/m/Y H:i:s'); ?></dd>
     <dt>Revision:</dt>
-        <dd><?php echo $deployment->getRevision(); ?></dd>
+        <dd id="deploy-rev"><?php echo $deployment->getRevision(); ?><?php echo $deployment->hasResolvedRevision() ? (' (' . $deployment->getResolvedRevision() . ')') : ''; ?></dd>
     <dt>Comment:</dt>
         <dd><?php echo $deployment->getComment(); ?></dd>
     <dt>Status:</dt>

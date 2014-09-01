@@ -132,8 +132,8 @@ class Task
 	{
 	    $command = $this->getCommand();
 
-	    $revision = $deployment->getRevision();
-	    $command = str_ireplace("[git-update]", "git fetch origin && git checkout `git show --format=format:%H --no-notes -s $revision`", $command);
+	    $revision = $deployment->getResolvedRevision();
+	    $command = str_ireplace("[git-update]", "git fetch origin && git checkout $revision", $command);
 
 	    return $command;
 	}

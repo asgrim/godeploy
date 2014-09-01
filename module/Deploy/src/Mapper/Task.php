@@ -14,9 +14,9 @@ class Task extends AbstractDbMapper
      * @param int $id
      * @return \Deploy\Entity\Task[]
      */
-    public function findByProjectId($projectId)
+    public function findByProjectId($projectId, $orderBy = 'order ASC')
     {
-        $select = $this->getSelect()->where(['project_id' => $projectId]);
+        $select = $this->getSelect()->where(['project_id' => $projectId])->order($orderBy);
 
         $tasks = [];
         foreach ($this->select($select) as $task) {

@@ -29,6 +29,7 @@ abstract class AbstractHydrator extends ClassMethods
     {
         $this->guardObjectType($object);
         $data = parent::extract($object);
+        unset($data['has_resolved_revision']);
         return $data;
     }
 

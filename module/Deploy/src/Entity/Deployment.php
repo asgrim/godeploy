@@ -32,6 +32,11 @@ class Deployment
     /**
      * @var string
      */
+    protected $resolvedRevision;
+
+    /**
+     * @var string
+     */
     protected $comment;
 
     /**
@@ -135,6 +140,34 @@ class Deployment
 	public function setRevision($revision)
 	{
 		$this->revision = $revision;
+		return $this;
+	}
+
+	/**
+	 * Have we saved the resolved revision on the deployment?
+	 *
+	 * @return boolean
+	 */
+	public function hasResolvedRevision()
+	{
+	    return isset($this->resolvedRevision) && !empty($this->resolvedRevision);
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getResolvedRevision()
+	{
+		return $this->resolvedRevision;
+	}
+
+	/**
+	 * @param string $resolvedRevision
+	 * @return \Deploy\Entity\Deployment
+	 */
+	public function setResolvedRevision($resolvedRevision)
+	{
+		$this->resolvedRevision = $resolvedRevision;
 		return $this;
 	}
 

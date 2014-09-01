@@ -1,9 +1,10 @@
 
 <h1><?php echo $project->getDisplayName(); ?> : View Deployment History</h1>
 
-<table class="table table-striped table-hover table-bordered" >
+<table class="table table-striped table-hover" >
     <thead>
         <tr>
+            <th>&nbsp;</th>
             <th>Date</th>
             <th>Revision</th>
             <th>Comment</th>
@@ -13,8 +14,11 @@
     <tbody>
     <?php foreach($deployments as $deployment): ?>
         <tr>
+            <td><?php echo $deployment->getId(); ?></td>
             <td><?php echo $deployment->getDateAdded('d/m/Y H:i'); ?></td>
-            <td><?php echo $deployment->getRevision(); ?></td>
+            <td>
+                <code><?php echo $deployment->hasResolvedRevision() ? $deployment->getResolvedRevision() : $deployment->getRevision(); ?></code>
+            </td>
             <td><?php echo $deployment->getComment(); ?></td>
             <td><?php echo $deployment->getStatus(); ?></td>
             <td><a href="<?php echo $this->url('show-deployment', ['deployment' => $deployment->getId()]); ?>">View</a></td>

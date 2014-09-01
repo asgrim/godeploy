@@ -7,6 +7,7 @@ use Deploy\Entity\Project;
 use Deploy\Entity\Target;
 use Deploy\Connection\SshConnection;
 use Deploy\Options\SshOptions;
+use Deploy\Service\DeploymentService;
 use Deploy\Service\ProjectService;
 use Deploy\Service\TargetService;
 use Deploy\Service\TaskService;
@@ -19,9 +20,19 @@ class Deployer
     protected $output;
 
     /**
+     * @var boolean
+     */
+    protected $resolvedRevision;
+
+    /**
      * @var \Deploy\Options\SshOptions
      */
     protected $sshOptions;
+
+    /**
+     * @var \Deploy\Service\DeploymentService
+     */
+    protected $deploymentService;
 
     /**
      * @var \Deploy\Service\ProjectService
@@ -38,9 +49,10 @@ class Deployer
      */
     protected $taskService;
 
-    public function __construct(SshOptions $sshOptions, ProjectService $projectService, TargetService $targetService, TaskService $taskService)
+    public function __construct(SshOptions $sshOptions, DeploymentService $deploymentService, ProjectService $projectService, TargetService $targetService, TaskService $taskService)
     {
         $this->sshOptions = $sshOptions;
+        $this->deploymentService = $deploymentService;
         $this->projectService = $projectService;
         $this->targetService = $targetService;
         $this->taskService = $taskService;
@@ -61,14 +73,14 @@ class Deployer
 
     public function deploy(Deployment $deployment)
     {
+        $this->output = [];
+
         if ($deployment->getStatus() != 'RUNNING')
         {
             throw new \RuntimeException('Deployment not at valid status...');
         }
 
         $project = $this->projectService->findById($deployment->getProjectId());
-
-        $this->output = [];
 
         $this->output("Commence deployment: " . date("Y-m-d H:i:s"));
         $this->outputNewline(2);
@@ -90,6 +102,16 @@ class Deployer
         return $this->output;
     }
 
+    public function resolveRevision(Deployment $deployment, SshConnection $ssh, $directory)
+    {
+        if (!$deployment->hasResolvedRevision())
+        {
+            $result = $ssh->execute("git show --format=format:%H --no-notes -s " . $deployment->getRevision(), $directory);
+            $deployment->setResolvedRevision($result['stdout'][0]);
+            $this->deploymentService->persist($deployment);
+        }
+    }
+
     public function deployToTarget(Project $project, Deployment $deployment, Target $target)
     {
         $ssh = new SshConnection($target, $this->sshOptions);
@@ -102,6 +124,8 @@ class Deployer
             if (!$task->allowedOnTarget($target)) continue;
 
             $dir = is_null($task->getDirectory()) ? $target->getDirectory() : $task->getDirectory();
+
+            $this->resolveRevision($deployment, $ssh, $dir);
 
             $command = $task->getPreparedCommand($deployment);
 
