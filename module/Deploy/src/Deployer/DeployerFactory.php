@@ -11,10 +11,11 @@ class DeployerFactory implements FactoryInterface
     {
         $sshOptions = $serviceLocator->get('Deploy\Options\SshOptions');
         $deploymentService = $serviceLocator->get('\Deploy\Service\DeploymentService');
+        $deploymentLogService = $serviceLocator->get('\Deploy\Service\DeploymentLogService');
         $projectService = $serviceLocator->get('\Deploy\Service\ProjectService');
         $targetService = $serviceLocator->get('\Deploy\Service\TargetService');
         $taskService = $serviceLocator->get('\Deploy\Service\TaskService');
 
-        return new Deployer($sshOptions, $deploymentService, $projectService, $targetService, $taskService);
+        return new Deployer($sshOptions, $deploymentService, $deploymentLogService, $projectService, $targetService, $taskService);
     }
 }

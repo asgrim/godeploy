@@ -8,9 +8,11 @@ use Deploy\Entity\Target;
 use Deploy\Connection\SshConnection;
 use Deploy\Options\SshOptions;
 use Deploy\Service\DeploymentService;
+use Deploy\Service\DeploymentLogService;
 use Deploy\Service\ProjectService;
 use Deploy\Service\TargetService;
 use Deploy\Service\TaskService;
+use Deploy\Entity\DeploymentLog;
 
 class Deployer
 {
@@ -35,6 +37,11 @@ class Deployer
     protected $deploymentService;
 
     /**
+     * @var \Deploy\Service\DeploymentLogService
+     */
+    protected $deploymentLogService;
+
+    /**
      * @var \Deploy\Service\ProjectService
      */
     protected $projectService;
@@ -49,10 +56,11 @@ class Deployer
      */
     protected $taskService;
 
-    public function __construct(SshOptions $sshOptions, DeploymentService $deploymentService, ProjectService $projectService, TargetService $targetService, TaskService $taskService)
+    public function __construct(SshOptions $sshOptions, DeploymentService $deploymentService, DeploymentLogService $deploymentLogService, ProjectService $projectService, TargetService $targetService, TaskService $taskService)
     {
         $this->sshOptions = $sshOptions;
         $this->deploymentService = $deploymentService;
+        $this->deploymentLogService = $deploymentLogService;
         $this->projectService = $projectService;
         $this->targetService = $targetService;
         $this->taskService = $taskService;
@@ -98,6 +106,11 @@ class Deployer
         }
 
         $this->output("Finish deployment: " . date("Y-m-d H:i:s"));
+
+        $deploymentLog = new DeploymentLog();
+        $deploymentLog->setDeploymentId($deployment->getId());
+        $deploymentLog->setLog(implode("\n", $this->output));
+        $this->deploymentLogService->persist($deploymentLog);
 
         return $this->output;
     }
