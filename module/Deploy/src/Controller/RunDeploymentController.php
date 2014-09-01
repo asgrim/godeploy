@@ -6,7 +6,9 @@ use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\JsonModel;
 use Deploy\Deployer\Deployer;
 use Deploy\Service\DeploymentService;
+use Deploy\Service\DeploymentLogService;
 use Deploy\Mapper\DeploymentHydrator;
+use Deploy\Entity\DeploymentLog;
 
 class RunDeploymentController extends AbstractActionController
 {
@@ -20,10 +22,16 @@ class RunDeploymentController extends AbstractActionController
      */
     protected $deploymentService;
 
-    public function __construct(Deployer $deployer, DeploymentService $deploymentService)
+    /**
+     * @var \Deploy\Service\DeploymentLogService
+     */
+    protected $deploymentLogService;
+
+    public function __construct(Deployer $deployer, DeploymentService $deploymentService, DeploymentLogService $deploymentLogService)
     {
         $this->deployer = $deployer;
         $this->deploymentService = $deploymentService;
+        $this->deploymentLogService = $deploymentLogService;
     }
 
     public function indexAction()
@@ -37,10 +45,28 @@ class RunDeploymentController extends AbstractActionController
         $deployment->setStatus('RUNNING');
         $this->deploymentService->persist($deployment);
 
-        $output = $this->deployer->deploy($deployment);
+        try
+        {
+            $output = $this->deployer->deploy($deployment);
 
-        $deployment->setStatus('COMPLETE');
+            $deployment->setStatus('COMPLETE');
+        }
+        catch (\Exception $exception)
+        {
+            $output = $this->deployer->getLastOutput();
+
+            $output[] = '';
+            $output[] = get_class($exception) . ': ' . $exception->getMessage();
+
+            $deployment->setStatus('FAILED');
+        }
+
         $this->deploymentService->persist($deployment);
+
+        $deploymentLog = new DeploymentLog();
+        $deploymentLog->setDeploymentId($deployment->getId());
+        $deploymentLog->setLog(implode("\n", $output));
+        $this->deploymentLogService->persist($deploymentLog);
 
         $hydrator = new DeploymentHydrator();
 
