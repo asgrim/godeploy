@@ -9,7 +9,7 @@ class DeploymentLogHydrator extends AbstractHydrator
     /**
      * Ensure $object is a DeploymentLogEntity
      *
-     * @param  mixed $object
+     * @param  mixed                              $object
      * @throws Exception\InvalidArgumentException
      */
     protected function guardObjectType($object)

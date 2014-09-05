@@ -5,8 +5,6 @@ namespace Deploy\Controller;
 use Zend\Mvc\Controller\AbstractActionController;
 use Deploy\Service\ProjectService;
 use Deploy\Service\DeploymentService;
-use Deploy\Form\Deployment as DeploymentForm;
-use Deploy\Entity\Deployment as DeploymentEntity;
 
 class ViewHistoryController extends AbstractActionController
 {

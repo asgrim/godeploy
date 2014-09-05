@@ -11,8 +11,7 @@ class SshOptionsFactory implements FactoryInterface
     {
         $config = $serviceLocator->get('Config');
 
-        if (!isset($config['deploy']) || !isset($config['deploy']['ssh-options']))
-        {
+        if (!isset($config['deploy']) || !isset($config['deploy']['ssh-options'])) {
             throw new \Exception("Unable to find ssh options in configuration");
         }
 

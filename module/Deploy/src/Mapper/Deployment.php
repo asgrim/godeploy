@@ -12,13 +12,14 @@ class Deployment extends AbstractDbMapper
     /**
      * Find a deployment by it's ID
      *
-     * @param int $id
+     * @param  int                       $id
      * @return \Deploy\Entity\Deployment
      */
     public function findById($id)
     {
         $select = $this->getSelect()->where(['id' => $id]);
         $deployment = $this->select($select)->current();
+
         return $deployment;
     }
 
@@ -28,6 +29,7 @@ class Deployment extends AbstractDbMapper
             ->where(['project_id' => $projectId, 'status != "PREVIEW"'])
             ->order('date_added DESC');
         $deployments = $this->select($select);
+
         return $deployments;
     }
 
@@ -36,6 +38,7 @@ class Deployment extends AbstractDbMapper
         $hydrator = $hydrator ?: $this->getHydrator();
         $result = parent::insert($entity, $tableName, $hydrator);
         $hydrator->hydrate(['id' => $result->getGeneratedValue()], $entity);
+
         return $result;
     }
 

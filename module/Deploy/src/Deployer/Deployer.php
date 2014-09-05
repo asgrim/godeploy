@@ -49,8 +49,13 @@ class Deployer
      */
     protected $taskService;
 
-    public function __construct(SshOptions $sshOptions, DeploymentService $deploymentService, ProjectService $projectService, TargetService $targetService, TaskService $taskService)
-    {
+    public function __construct(
+        SshOptions $sshOptions,
+        DeploymentService $deploymentService,
+        ProjectService $projectService,
+        TargetService $targetService,
+        TaskService $taskService
+    ) {
         $this->sshOptions = $sshOptions;
         $this->deploymentService = $deploymentService;
         $this->projectService = $projectService;
@@ -60,8 +65,7 @@ class Deployer
 
     protected function outputNewline($count = 1)
     {
-        for ($i = 0; $i < $count; $i++)
-        {
+        for ($i = 0; $i < $count; $i++) {
             $this->output('');
         }
     }
@@ -80,8 +84,7 @@ class Deployer
     {
         $this->output = [];
 
-        if ($deployment->getStatus() != 'RUNNING')
-        {
+        if ($deployment->getStatus() != 'RUNNING') {
             throw new \RuntimeException('Deployment not at valid status...');
         }
 
@@ -109,11 +112,10 @@ class Deployer
 
     public function resolveRevision(Deployment $deployment, SshConnection $ssh, $directory)
     {
-        if (!$deployment->hasResolvedRevision())
-        {
-            $result = $ssh->execute("git fetch origin && git show --format=format:%H --no-notes -s " . $deployment->getRevision(), $directory);
-            if (!count($result['stdout']))
-            {
+        if (!$deployment->hasResolvedRevision()) {
+            $command = "git fetch origin && git show --format=format:%H --no-notes -s " . $deployment->getRevision();
+            $result = $ssh->execute($command, $directory);
+            if (!count($result['stdout'])) {
                 foreach ($result['stderr'] as $line) {
                     $this->output($line);
                 }
@@ -134,7 +136,9 @@ class Deployer
 
         foreach ($tasks as $task) {
             /* @var $task \Deploy\Entity\Task */
-            if (!$task->allowedOnTarget($target)) continue;
+            if (!$task->allowedOnTarget($target)) {
+                continue;
+            }
 
             $dir = is_null($task->getDirectory()) ? $target->getDirectory() : $task->getDirectory();
 

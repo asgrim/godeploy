@@ -24,8 +24,11 @@ class ShowDeploymentController extends AbstractActionController
      */
     protected $deploymentLogService;
 
-    public function __construct(ProjectService $projectService, DeploymentService $deploymentService, DeploymentLogService $deploymentLogService)
-    {
+    public function __construct(
+        ProjectService $projectService,
+        DeploymentService $deploymentService,
+        DeploymentLogService $deploymentLogService
+    ) {
         $this->projectService = $projectService;
         $this->deploymentService = $deploymentService;
         $this->deploymentLogService = $deploymentLogService;
@@ -33,10 +36,9 @@ class ShowDeploymentController extends AbstractActionController
 
     public function indexAction()
     {
-        $deploymentId = (int)$this->params('deployment');
+        $deploymentId = (int) $this->params('deployment');
         $deployment = $this->deploymentService->findById($deploymentId);
-        if (!$deployment)
-        {
+        if (!$deployment) {
             throw new \InvalidArgumentException('Deployment #' . $deploymentId . ' was not found');
         }
 

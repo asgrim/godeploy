@@ -41,7 +41,8 @@ class Project
 
     public function setId($id)
     {
-        $this->id = (int)$id;
+        $this->id = (int) $id;
+
         return $this;
     }
 
@@ -56,6 +57,7 @@ class Project
     public function setName($name)
     {
         $this->name = $name;
+
         return $this;
     }
 
@@ -70,6 +72,7 @@ class Project
     public function setDisplayName($displayName)
     {
         $this->displayName = $displayName;
+
         return $this;
     }
 

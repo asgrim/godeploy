@@ -16,39 +16,39 @@ class SshOptions extends AbstractOptions
      */
     protected $privateKey;
 
-	/**
+    /**
 	 * @return string
 	 */
-	public function getPublicKey()
-	{
-		return $this->publicKey;
-	}
+    public function getPublicKey()
+    {
+        return $this->publicKey;
+    }
 
-	/**
+    /**
 	 * @param string $publicKey
 	 * @return \Deploy\Options\SshOptions
 	 */
-	public function setPublicKey($publicKey)
-	{
-		$this->publicKey = $publicKey;
-		return $this;
-	}
+    public function setPublicKey($publicKey)
+    {
+        $this->publicKey = $publicKey;
 
-	/**
+        return $this;
+    }
+
+    /**
 	 * @return string
 	 */
-	public function getPrivateKey()
-	{
-		return $this->privateKey;
-	}
+    public function getPrivateKey()
+    {
+        return $this->privateKey;
+    }
 
-	/**
+    /**
 	 * @param string $privateKey
 	 * @return \Deploy\Options\SshOptions
 	 */
-	public function setPrivateKey($privateKey)
-	{
-		$this->privateKey = $privateKey;
-	}
-
+    public function setPrivateKey($privateKey)
+    {
+        $this->privateKey = $privateKey;
+    }
 }

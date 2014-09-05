@@ -20,8 +20,7 @@ class BtsFormRow extends AbstractHelper
         $o .= $view->formLabel($element) . "\n";
         $o .= $view->formElement($element) . "\n";
 
-        if (!empty($extras) || $hasError)
-        {
+        if (!empty($extras) || $hasError) {
             $o .= "<p class=\"help-block\">" . $extras . "</p>\n";
         }
 

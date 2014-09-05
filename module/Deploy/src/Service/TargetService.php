@@ -19,7 +19,7 @@ class TargetService
     /**
      * Find targets for a project
      *
-     * @param int $projectId
+     * @param  int                     $projectId
      * @return \Deploy\Entity\Target[]
      */
     public function findByProjectId($projectId)

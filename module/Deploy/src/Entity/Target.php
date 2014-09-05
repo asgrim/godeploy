@@ -37,40 +37,42 @@ class Target
     /**
 	 * @return int
 	 */
-	public function getId()
-	{
-		return $this->id;
-	}
+    public function getId()
+    {
+        return $this->id;
+    }
 
-	/**
+    /**
 	 * @param int
 	 * @return \Deploy\Entity\Target
 	 */
-	public function setId($id)
-	{
-		$this->id = (int)$id;
-		return $this;
-	}
+    public function setId($id)
+    {
+        $this->id = (int) $id;
 
-	/**
+        return $this;
+    }
+
+    /**
 	 * @return int
 	 */
-	public function getProjectId()
-	{
-		return $this->projectId;
-	}
+    public function getProjectId()
+    {
+        return $this->projectId;
+    }
 
-	/**
+    /**
 	 * @param int $projectId
 	 * @return \Deploy\Entity\Target
 	 */
-	public function setProjectId($projectId)
-	{
-		$this->projectId = (int)$projectId;
-		return $this;
-	}
+    public function setProjectId($projectId)
+    {
+        $this->projectId = (int) $projectId;
 
-	/**
+        return $this;
+    }
+
+    /**
      * @return string
      */
     public function getName()
@@ -78,15 +80,16 @@ class Target
         return $this->name;
     }
 
-	/**
+    /**
 	 * @param string $name
 	 * @return \Deploy\Entity\Target
 	 */
-	public function setName($name)
-	{
-		$this->name = $name;
-		return $this;
-	}
+    public function setName($name)
+    {
+        $this->name = $name;
+
+        return $this;
+    }
 
     /**
      * @return string
@@ -96,15 +99,16 @@ class Target
         return $this->hostname;
     }
 
-	/**
+    /**
 	 * @param string $hostname
 	 * @return \Deploy\Entity\Target
 	 */
-	public function setHostname($hostname)
-	{
-		$this->hostname = $hostname;
-		return $this;
-	}
+    public function setHostname($hostname)
+    {
+        $this->hostname = $hostname;
+
+        return $this;
+    }
 
     /**
      * @return string
@@ -114,15 +118,16 @@ class Target
         return $this->username;
     }
 
-	/**
+    /**
 	 * @param string $username
 	 * @return \Deploy\Entity\Target
 	 */
-	public function setUsername($username)
-	{
-		$this->username = $username;
-		return $this;
-	}
+    public function setUsername($username)
+    {
+        $this->username = $username;
+
+        return $this;
+    }
 
     /**
      * @return string
@@ -132,13 +137,14 @@ class Target
         return $this->directory;
     }
 
-	/**
+    /**
 	 * @param string $directory
 	 * @return \Deploy\Entity\Target
 	 */
-	public function setDirectory($directory)
-	{
-		$this->directory = $directory;
-		return $this;
-	}
+    public function setDirectory($directory)
+    {
+        $this->directory = $directory;
+
+        return $this;
+    }
 }

@@ -44,7 +44,13 @@ class SshConnection implements Connectable
             throw new \Exception("Failed to connect.");
         }
 
-        if (!ssh2_auth_pubkey_file($this->handle, $this->target->getUsername(), $this->sshOptions->getPublicKey(), $this->sshOptions->getPrivateKey())) {
+        $authResult = ssh2_auth_pubkey_file(
+            $this->handle,
+            $this->target->getUsername(),
+            $this->sshOptions->getPublicKey(),
+            $this->sshOptions->getPrivateKey()
+        );
+        if (!$authResult) {
             throw new \Exception("Unable to auth using pubkey");
         }
     }
@@ -73,15 +79,20 @@ class SshConnection implements Connectable
 
     protected function makeArrayFromStream($text)
     {
-        if (strlen($text) == 0) return [];
+        if (strlen($text) == 0) {
+            return [];
+        }
 
         $original = explode("\n", $text);
         $cleaned = [];
         foreach ($original as $line) {
-            if (strlen($line) == 0) continue;
+            if (strlen($line) == 0) {
+                continue;
+            }
 
             $cleaned[] = $line;
         }
+
         return $cleaned;
     }
 

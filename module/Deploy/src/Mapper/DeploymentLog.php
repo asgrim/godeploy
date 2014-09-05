@@ -12,13 +12,14 @@ class DeploymentLog extends AbstractDbMapper
     /**
      * Find a deployment log by it's ID
      *
-     * @param int $id
+     * @param  int                          $id
      * @return \Deploy\Entity\DeploymentLog
      */
     public function findById($id)
     {
         $select = $this->getSelect()->where(['deployment_id' => $id]);
         $deploymentLog = $this->select($select)->current();
+
         return $deploymentLog;
     }
 
@@ -26,6 +27,7 @@ class DeploymentLog extends AbstractDbMapper
     {
         $hydrator = $hydrator ?: $this->getHydrator();
         $result = parent::insert($entity, $tableName, $hydrator);
+
          return $result;
     }
 

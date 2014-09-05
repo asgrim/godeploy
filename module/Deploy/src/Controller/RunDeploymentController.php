@@ -27,8 +27,11 @@ class RunDeploymentController extends AbstractActionController
      */
     protected $deploymentLogService;
 
-    public function __construct(Deployer $deployer, DeploymentService $deploymentService, DeploymentLogService $deploymentLogService)
-    {
+    public function __construct(
+        Deployer $deployer,
+        DeploymentService $deploymentService,
+        DeploymentLogService $deploymentLogService
+    ) {
         $this->deployer = $deployer;
         $this->deploymentService = $deploymentService;
         $this->deploymentLogService = $deploymentLogService;
@@ -45,14 +48,11 @@ class RunDeploymentController extends AbstractActionController
         $deployment->setStatus('RUNNING');
         $this->deploymentService->persist($deployment);
 
-        try
-        {
+        try {
             $output = $this->deployer->deploy($deployment);
 
             $deployment->setStatus('COMPLETE');
-        }
-        catch (\Exception $exception)
-        {
+        } catch (\Exception $exception) {
             $output = $this->deployer->getLastOutput();
 
             $output[] = '';

@@ -11,7 +11,7 @@ class Target extends AbstractDbMapper
     /**
      * Find a targets for a project ID
      *
-     * @param int $id
+     * @param  int                     $id
      * @return \Deploy\Entity\Target[]
      */
     public function findByProjectId($projectId)

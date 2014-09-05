@@ -19,7 +19,7 @@ class TaskService
     /**
      * Find tasks for a project
      *
-     * @param int $projectId
+     * @param  int                   $projectId
      * @return \Deploy\Entity\Task[]
      */
     public function findByProjectId($projectId)

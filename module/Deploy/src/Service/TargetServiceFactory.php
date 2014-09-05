@@ -10,6 +10,7 @@ class TargetServiceFactory implements FactoryInterface
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         $targetMapper = $serviceLocator->get('Deploy\Mapper\Target');
+
         return new TargetService($targetMapper);
     }
 }

@@ -24,7 +24,7 @@ class Module
         $serviceManager = $application->getServiceManager();
         $authenticationService = $serviceManager->get('zfcuser_auth_service');
 
-        $eventManager->attach(MvcEvent::EVENT_ROUTE, function($e) use ($routeWhitelist, $authenticationService) {
+        $eventManager->attach(MvcEvent::EVENT_ROUTE, function ($e) use ($routeWhitelist, $authenticationService) {
             $match = $e->getRouteMatch();
 
             // No route match, this is a 404

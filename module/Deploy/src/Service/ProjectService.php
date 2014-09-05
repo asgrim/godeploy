@@ -36,7 +36,7 @@ class ProjectService
     /**
      * Find a project by it's "slug" or name
      *
-     * @param string $projectName
+     * @param  string                      $projectName
      * @return \Deploy\Entity\Project|null
      */
     public function findByName($projectName)
@@ -56,7 +56,7 @@ class ProjectService
     /**
      * Find a project by it's "slug" or name
      *
-     * @param string $projectName
+     * @param  string                      $projectName
      * @return \Deploy\Entity\Project|null
      */
     public function findById($id)

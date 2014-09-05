@@ -49,167 +49,174 @@ class Deployment
         $this->dateAdded = new \DateTime();
     }
 
-	/**
+    /**
 	 * @return int
 	 */
-	public function getId()
-	{
-		return $this->id;
-	}
+    public function getId()
+    {
+        return $this->id;
+    }
 
-	/**
+    /**
 	 * @param int $id
 	 * @return \Deploy\Entity\Deployment
 	 */
-	public function setId($id)
-	{
-		$this->id = (int)$id;
-		return $this;
-	}
+    public function setId($id)
+    {
+        $this->id = (int) $id;
 
-	/**
+        return $this;
+    }
+
+    /**
 	 * @return int
 	 */
-	public function getUserId()
-	{
-		return $this->userId;
-	}
+    public function getUserId()
+    {
+        return $this->userId;
+    }
 
-	/**
+    /**
 	 * @param int $userId
 	 * @return \Deploy\Entity\Deployment
 	 */
-	public function setUserId($userId)
-	{
-		$this->userId = (int)$userId;
-		return $this;
-	}
+    public function setUserId($userId)
+    {
+        $this->userId = (int) $userId;
 
-	/**
+        return $this;
+    }
+
+    /**
 	 * @return int
 	 */
-	public function getProjectId()
-	{
-		return $this->projectId;
-	}
+    public function getProjectId()
+    {
+        return $this->projectId;
+    }
 
-	/**
+    /**
 	 * @param int $projectId
 	 * @return \Deploy\Entity\Deployment
 	 */
-	public function setProjectId($projectId)
-	{
-		$this->projectId = (int)$projectId;
-		return $this;
-	}
+    public function setProjectId($projectId)
+    {
+        $this->projectId = (int) $projectId;
 
-	/**
+        return $this;
+    }
+
+    /**
 	 * @return string
 	 */
-	public function getDateAdded($format = 'Y-m-d H:i:s')
-	{
-		return $this->dateAdded->format($format);
-	}
+    public function getDateAdded($format = 'Y-m-d H:i:s')
+    {
+        return $this->dateAdded->format($format);
+    }
 
-	/**
+    /**
 	 * @param string|\DateTime $dateAdded
 	 * @return \Deploy\Entity\Deployment
 	 */
-	public function setDateAdded($dateAdded)
-	{
-	    if ($dateAdded instanceof \DateTime) {
-	        $this->dateAdded = $dateAdded;
-	    } else {
-	        $this->dateAdded = new \DateTime($dateAdded);
-	    }
-		return $this;
-	}
+    public function setDateAdded($dateAdded)
+    {
+        if ($dateAdded instanceof \DateTime) {
+            $this->dateAdded = $dateAdded;
+        } else {
+            $this->dateAdded = new \DateTime($dateAdded);
+        }
 
-	/**
+        return $this;
+    }
+
+    /**
 	 * @return string
 	 */
-	public function getRevision()
-	{
-		return $this->revision;
-	}
+    public function getRevision()
+    {
+        return $this->revision;
+    }
 
-	/**
+    /**
 	 * @param string $revision
 	 * @return \Deploy\Entity\Deployment
 	 */
-	public function setRevision($revision)
-	{
-		$this->revision = $revision;
-		return $this;
-	}
+    public function setRevision($revision)
+    {
+        $this->revision = $revision;
 
-	/**
+        return $this;
+    }
+
+    /**
 	 * Have we saved the resolved revision on the deployment?
 	 *
 	 * @return boolean
 	 */
-	public function hasResolvedRevision()
-	{
-	    return isset($this->resolvedRevision) && !empty($this->resolvedRevision);
-	}
+    public function hasResolvedRevision()
+    {
+        return isset($this->resolvedRevision) && !empty($this->resolvedRevision);
+    }
 
-	/**
+    /**
 	 * @return string
 	 */
-	public function getResolvedRevision()
-	{
-		return $this->resolvedRevision;
-	}
+    public function getResolvedRevision()
+    {
+        return $this->resolvedRevision;
+    }
 
-	/**
+    /**
 	 * @param string $resolvedRevision
 	 * @return \Deploy\Entity\Deployment
 	 */
-	public function setResolvedRevision($resolvedRevision)
-	{
-		$this->resolvedRevision = $resolvedRevision;
-		return $this;
-	}
+    public function setResolvedRevision($resolvedRevision)
+    {
+        $this->resolvedRevision = $resolvedRevision;
 
-	/**
+        return $this;
+    }
+
+    /**
 	 * @return string
 	 */
-	public function getComment()
-	{
-		return $this->comment;
-	}
+    public function getComment()
+    {
+        return $this->comment;
+    }
 
-	/**
+    /**
 	 * @param string $comment
 	 * @return \Deploy\Entity\Deployment
 	 */
-	public function setComment($comment)
-	{
-		$this->comment = $comment;
-		return $this;
-	}
+    public function setComment($comment)
+    {
+        $this->comment = $comment;
 
-	/**
+        return $this;
+    }
+
+    /**
 	 * @return string
 	 */
-	public function getStatus()
-	{
-		return $this->status;
-	}
+    public function getStatus()
+    {
+        return $this->status;
+    }
 
-	/**
+    /**
 	 * @param string $status
 	 * @return \Deploy\Entity\Deployment
 	 */
-	public function setStatus($status)
-	{
-	    $validStatuses = ['PREVIEW', 'RUNNING', 'COMPLETE', 'FAILED'];
-	    if (!in_array($status, $validStatuses)) {
-	        throw new \InvalidArgumentException(sprintf('Status "%s" was not a valid status type'));
-	    }
+    public function setStatus($status)
+    {
+        $validStatuses = ['PREVIEW', 'RUNNING', 'COMPLETE', 'FAILED'];
+        if (!in_array($status, $validStatuses)) {
+            throw new \InvalidArgumentException(sprintf('Status "%s" was not a valid status type'));
+        }
 
-		$this->status = $status;
-		return $this;
-	}
+        $this->status = $status;
 
+        return $this;
+    }
 }

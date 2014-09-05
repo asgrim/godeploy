@@ -39,20 +39,19 @@ class CreateDeploymentController extends AbstractActionController
         $form->bind($deployment);
 
         $request = $this->getRequest();
-        if($this->getRequest()->isPost())
-        {
+        if ($this->getRequest()->isPost()) {
             $form->setData($this->getRequest()->getPost());
 
-            if ($form->isValid())
-            {
+            if ($form->isValid()) {
                 $this->deploymentService->persist($deployment);
 
-                if ($deployment->getId() > 0)
-                {
-                    return $this->redirect()->toRoute('show-deployment', ['project' => $project->getName(), 'deployment' => $deployment->getId()]);
-                }
-                else
-                {
+                if ($deployment->getId() > 0) {
+                    $params = [
+                        'project' => $project->getName(),
+                        'deployment' => $deployment->getId(),
+                    ];
+                    return $this->redirect()->toRoute('show-deployment', $params);
+                } else {
                     throw new \RuntimeException('Tried saving deployment to database, but ID was not found');
                 }
             }

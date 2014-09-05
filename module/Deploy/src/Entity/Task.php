@@ -42,58 +42,61 @@ class Task
     /**
 	 * @return int
 	 */
-	public function getId()
-	{
-		return $this->id;
-	}
+    public function getId()
+    {
+        return $this->id;
+    }
 
-	/**
+    /**
 	 * @param int $id
      * @return \Deploy\Entity\Task
 	 */
-	public function setId($id)
-	{
-		$this->id = (int)$id;
-		return $this;
-	}
+    public function setId($id)
+    {
+        $this->id = (int) $id;
 
-	/**
+        return $this;
+    }
+
+    /**
 	 * @return int
 	 */
-	public function getProjectId()
-	{
-		return $this->projectId;
-	}
+    public function getProjectId()
+    {
+        return $this->projectId;
+    }
 
-	/**
+    /**
 	 * @param int $projectId
      * @return \Deploy\Entity\Task
 	 */
-	public function setProjectId($projectId)
-	{
-		$this->projectId = (int)$projectId;
-		return $this;
-	}
+    public function setProjectId($projectId)
+    {
+        $this->projectId = (int) $projectId;
 
-	/**
+        return $this;
+    }
+
+    /**
 	 * @return int
 	 */
-	public function getOrder()
-	{
-		return $this->order;
-	}
+    public function getOrder()
+    {
+        return $this->order;
+    }
 
-	/**
+    /**
 	 * @param int $order
      * @return \Deploy\Entity\Task
 	 */
-	public function setOrder($order)
-	{
-		$this->order = (int)$order;
-		return $this;
-	}
+    public function setOrder($order)
+    {
+        $this->order = (int) $order;
 
-	/**
+        return $this;
+    }
+
+    /**
      * @return string
      */
     public function getName()
@@ -102,12 +105,13 @@ class Task
     }
 
     /**
-     * @param string $name
+     * @param  string              $name
      * @return \Deploy\Entity\Task
      */
     public function setName($name)
     {
         $this->name = $name;
+
         return $this;
     }
 
@@ -119,24 +123,24 @@ class Task
         return $this->command;
     }
 
-	/**
+    /**
 	 * @param string $command
      * @return \Deploy\Entity\Task
 	 */
-	public function setCommand($command)
-	{
-		$this->command = $command;
-	}
+    public function setCommand($command)
+    {
+        $this->command = $command;
+    }
 
-	public function getPreparedCommand(Deployment $deployment)
-	{
-	    $command = $this->getCommand();
+    public function getPreparedCommand(Deployment $deployment)
+    {
+        $command = $this->getCommand();
 
-	    $revision = $deployment->getResolvedRevision();
-	    $command = str_ireplace("[git-update]", "git fetch origin && git checkout $revision", $command);
+        $revision = $deployment->getResolvedRevision();
+        $command = str_ireplace("[git-update]", "git fetch origin && git checkout $revision", $command);
 
-	    return $command;
-	}
+        return $command;
+    }
 
     /**
      * @return string
@@ -146,59 +150,62 @@ class Task
         return $this->directory;
     }
 
-	/**
+    /**
 	 * @param string $directory
      * @return \Deploy\Entity\Task
 	 */
-	public function setDirectory($directory)
-	{
-		$this->directory = $directory;
-		return $this;
-	}
+    public function setDirectory($directory)
+    {
+        $this->directory = $directory;
 
-	/**
+        return $this;
+    }
+
+    /**
 	 * @return string
 	 */
-	public function getOnlyOnTargets()
-	{
-		return implode(',', $this->onlyOnTargets);
-	}
+    public function getOnlyOnTargets()
+    {
+        return implode(',', $this->onlyOnTargets);
+    }
 
-	/**
+    /**
 	 * @param string $onlyOnTargets
      * @return \Deploy\Entity\Task
 	 */
-	public function setOnlyOnTargets($onlyOnTargets)
-	{
-	    if (strlen($onlyOnTargets) > 0) {
-		    $this->onlyOnTargets = explode(',', $onlyOnTargets);
-	    } else {
-	        $this->onlyOnTargets = [];
-	    }
-		return $this;
-	}
+    public function setOnlyOnTargets($onlyOnTargets)
+    {
+        if (strlen($onlyOnTargets) > 0) {
+            $this->onlyOnTargets = explode(',', $onlyOnTargets);
+        } else {
+            $this->onlyOnTargets = [];
+        }
 
-	/**
+        return $this;
+    }
+
+    /**
 	 * @return string
 	 */
-	public function getNotOnTargets()
-	{
-		return implode(',', $this->notOnTargets);
-	}
+    public function getNotOnTargets()
+    {
+        return implode(',', $this->notOnTargets);
+    }
 
-	/**
+    /**
 	 * @param string $notOnTargets
      * @return \Deploy\Entity\Task
 	 */
-	public function setNotOnTargets($notOnTargets)
-	{
-	    if (strlen($notOnTargets) > 0) {
-		    $this->notOnTargets = explode(',', $notOnTargets);
-	    } else {
-	        $this->notOnTargets = [];
-	    }
-		return $this;
-	}
+    public function setNotOnTargets($notOnTargets)
+    {
+        if (strlen($notOnTargets) > 0) {
+            $this->notOnTargets = explode(',', $notOnTargets);
+        } else {
+            $this->notOnTargets = [];
+        }
+
+        return $this;
+    }
 
     public function allowedOnTarget(Target $target)
     {

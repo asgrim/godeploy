@@ -10,6 +10,7 @@ class TaskServiceFactory implements FactoryInterface
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         $taskMapper = $serviceLocator->get('Deploy\Mapper\Task');
+
         return new TaskService($taskMapper);
     }
 }

@@ -23,8 +23,7 @@ class AddUserController extends AbstractActionController
     {
         $request = $this->getRequest();
 
-        if (!($request instanceof ConsoleRequest))
-        {
+        if (!($request instanceof ConsoleRequest)) {
             throw new \RuntimeException('You can only use this action from a console!');
         }
 
@@ -41,18 +40,16 @@ class AddUserController extends AbstractActionController
             'passwordVerify' => $rawPassword,
         ]);
 
-        if (!$user)
-        {
+        if (!$user) {
             echo "There were some problems:\n";
             $form = $this->userService->getRegisterForm();
-            foreach ($form->getMessages() as $field => $messages)
-            {
+            foreach ($form->getMessages() as $field => $messages) {
                 echo "  {$field}:\n";
-                foreach ($messages as $code => $message)
-                {
+                foreach ($messages as $code => $message) {
                     echo "    {$code}: $message\n";
                 }
             }
+
             return;
         }
     }
