@@ -1,0 +1,18 @@
+
+<h1><?php echo $project->getDisplayName(); ?> : Settings</h1>
+
+<dl class="dl-horizontal">
+    <dt>URL name:</dt>
+        <dd><?php echo $project->getName(); ?></dd>
+    <dt>Full name:</dt>
+        <dd><?php echo $project->getDisplayName(); ?></dd>
+    <dt>Git URL:</dt>
+        <dd><?php echo $project->getGitUrl(); ?></dd>
+</dl>
+
+<h3>Actions</h3>
+
+<button class="btn btn-primary" disabled>Edit Project</button>
+<button class="btn btn-default" disabled>Edit Targets</button>
+<button class="btn btn-default" disabled>Edit Tasks</button>
+<button class="btn btn-default" disabled>Edit Additional Files</button>

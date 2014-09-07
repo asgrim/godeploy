@@ -9,6 +9,7 @@ return array(
             'Deploy\Controller\RunDeployment' => 'Deploy\Controller\RunDeploymentControllerFactory',
             'Deploy\Controller\AddUser' => 'Deploy\Controller\AddUserControllerFactory',
             'Deploy\Controller\ViewHistory' => 'Deploy\Controller\ViewHistoryControllerFactory',
+            'Deploy\Controller\ProjectSettings' => 'Deploy\Controller\ProjectSettingsControllerFactory',
         ],
     ],
     'service_manager' => [
@@ -91,6 +92,17 @@ return array(
                     'defaults' => [
                         '__NAMESPACE__' => 'Deploy\Controller',
                         'controller' => 'RunDeployment',
+                        'action' => 'index',
+                    ],
+                ],
+            ],
+            'project-settings' => [
+                'type' => 'Segment',
+                'options' => [
+                    'route'    => '/settings/:project[/:action]',
+                    'defaults' => [
+                        '__NAMESPACE__' => 'Deploy\Controller',
+                        'controller' => 'ProjectSettings',
                         'action' => 'index',
                     ],
                 ],
