@@ -99,11 +99,16 @@ return array(
             'project-settings' => [
                 'type' => 'Segment',
                 'options' => [
-                    'route'    => '/settings/:project[/:action]',
+                    'route'    => '/settings/:project[/:action[/:objectId]]',
+                    'constraints' => [
+                        'action' => '[a-zA-Z][a-zA-Z0-9_-]+',
+                        'objectId' => '[0-9]+',
+                    ],
                     'defaults' => [
                         '__NAMESPACE__' => 'Deploy\Controller',
                         'controller' => 'ProjectSettings',
                         'action' => 'index',
+                        'objectId' => null,
                     ],
                 ],
             ],

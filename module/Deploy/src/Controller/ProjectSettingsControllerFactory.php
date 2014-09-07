@@ -12,7 +12,8 @@ class ProjectSettingsControllerFactory implements FactoryInterface
         $serviceManager = $serviceLocator->getServiceLocator();
 
         $projectService = $serviceManager->get('\Deploy\Service\ProjectService');
+        $taskService = $serviceManager->get('\Deploy\Service\TaskService');
 
-        return new ProjectSettingsController($projectService);
+        return new ProjectSettingsController($projectService, $taskService);
     }
 }

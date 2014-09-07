@@ -4,6 +4,7 @@ namespace Deploy\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
 use Deploy\Service\ProjectService;
+use Deploy\Service\TaskService;
 
 class ProjectSettingsController extends AbstractActionController
 {
@@ -12,9 +13,15 @@ class ProjectSettingsController extends AbstractActionController
      */
     protected $projectService;
 
-    public function __construct(ProjectService $projectService)
+    /**
+     * @var \Deploy\Service\TaskService
+     */
+    protected $taskService;
+
+    public function __construct(ProjectService $projectService, TaskService $taskService)
     {
         $this->projectService = $projectService;
+        $this->taskService = $taskService;
     }
 
     public function indexAction()
@@ -23,6 +30,18 @@ class ProjectSettingsController extends AbstractActionController
 
         return [
         	'project' => $project,
+        ];
+    }
+
+    public function viewTasksAction()
+    {
+        $project = $this->projectService->findByName($this->params('project'));
+
+        $tasks = $this->taskService->findByProjectId($project->getId());
+
+        return [
+            'project' => $project,
+            'tasks' => $tasks,
         ];
     }
 }

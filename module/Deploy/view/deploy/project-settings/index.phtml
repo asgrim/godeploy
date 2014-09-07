@@ -14,5 +14,5 @@
 
 <button class="btn btn-primary" disabled>Edit Project</button>
 <button class="btn btn-default" disabled>Edit Targets</button>
-<button class="btn btn-default" disabled>Edit Tasks</button>
+<a href="<?php echo $this->url('project-settings', ['project' => $project->getName(), 'action' => 'view-tasks']); ?>" class="btn btn-default">Edit Tasks</a>
 <button class="btn btn-default" disabled>Edit Additional Files</button>

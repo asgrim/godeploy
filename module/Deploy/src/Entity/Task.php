@@ -164,9 +164,9 @@ class Task
     /**
 	 * @return string
 	 */
-    public function getOnlyOnTargets()
+    public function getOnlyOnTargets($separator = ',')
     {
-        return implode(',', $this->onlyOnTargets);
+        return implode($separator, $this->onlyOnTargets);
     }
 
     /**
@@ -187,9 +187,9 @@ class Task
     /**
 	 * @return string
 	 */
-    public function getNotOnTargets()
+    public function getNotOnTargets($separator = ',')
     {
-        return implode(',', $this->notOnTargets);
+        return implode($separator, $this->notOnTargets);
     }
 
     /**

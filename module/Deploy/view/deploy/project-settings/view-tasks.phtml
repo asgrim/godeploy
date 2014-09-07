@@ -1,0 +1,27 @@
+
+<h1><?php echo $project->getDisplayName(); ?> : Tasks</h1>
+
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th>Order</th>
+            <th>Command</th>
+            <th>Directory</th>
+            <th>Only on targets</th>
+            <th>Not on targets</th>
+            <th>&nbsp;</th>
+        </tr>
+    </thead>
+    <tbody>
+    <?php foreach ($tasks as $task): ?>
+        <tr>
+            <td><?php echo $task->getOrder(); ?></td>
+            <td><?php echo $task->getCommand(); ?></td>
+            <td><?php echo $task->getDirectory() ?: '<em>Use default path</em>'; ?></td>
+            <td><?php echo $task->getOnlyOnTargets(', ') ?: '<em>No restrictions</em>'; ?></td>
+            <td><?php echo $task->getNotOnTargets(', ') ?: '<em>No restrictions</em>'; ?></td>
+            <td><a href="<?php echo $this->url('project-settings', ['action' => 'edit-task', 'project' => $project->getName(), 'objectId' => $task->getId()]); ?>" class="btn btn-default btn-xs" disabled>Edit task</a></td>
+        </tr>
+    <?php endforeach; ?>
+    </tbody>
+</table>
