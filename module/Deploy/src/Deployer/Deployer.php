@@ -11,6 +11,7 @@ use Deploy\Service\DeploymentService;
 use Deploy\Service\ProjectService;
 use Deploy\Service\TargetService;
 use Deploy\Service\TaskService;
+use Deploy\Service\AdditionalFileService;
 
 class Deployer
 {
@@ -49,18 +50,25 @@ class Deployer
      */
     protected $taskService;
 
+    /**
+     * @var \Deploy\Service\AdditionalFileService
+     */
+    protected $additionalFileService;
+
     public function __construct(
         SshOptions $sshOptions,
         DeploymentService $deploymentService,
         ProjectService $projectService,
         TargetService $targetService,
-        TaskService $taskService
+        TaskService $taskService,
+        AdditionalFileService $additionalFileService
     ) {
         $this->sshOptions = $sshOptions;
         $this->deploymentService = $deploymentService;
         $this->projectService = $projectService;
         $this->targetService = $targetService;
         $this->taskService = $taskService;
+        $this->additionalFileService = $additionalFileService;
     }
 
     protected function outputNewline($count = 1)
@@ -157,6 +165,26 @@ class Deployer
 
             foreach ($result['stdout'] as $line) {
                 $this->output($line);
+            }
+        }
+
+        $additionalFiles = $this->additionalFileService->findByProjectId($project->getId());
+
+        if (count($additionalFiles) > 0)
+        {
+            $this->outputNewline();
+            $this->output('Deploying additional files...');
+
+            foreach ($additionalFiles as $additionalFile) {
+                /* @var $additionalFile \Deploy\Entity\AdditionalFile */
+                if (!$additionalFile->allowedOnTarget($target)) {
+                    continue;
+                }
+
+                $fullpath = $target->getDirectory() . '/' . $additionalFile->getFilename();
+
+                $this->output($fullpath);
+                $ssh->putFile($fullpath, $additionalFile->getContent());
             }
         }
 
