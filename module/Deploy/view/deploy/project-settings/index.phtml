@@ -1,5 +1,5 @@
 
-<h1><?php echo $project->getDisplayName(); ?> : Settings</h1>
+<h1><?php echo $project->getDisplayName(); ?> : Overview</h1>
 
 <dl class="dl-horizontal">
     <dt>URL name:</dt>
@@ -16,3 +16,4 @@
 <button class="btn btn-default" disabled>Edit Targets</button>
 <a href="<?php echo $this->url('project-settings', ['project' => $project->getName(), 'action' => 'view-tasks']); ?>" class="btn btn-default">Edit Tasks</a>
 <button class="btn btn-default" disabled>Edit Additional Files</button>
+<a href="<?php echo $this->url('view-history', ['project' => $project->getName()]); ?>" class="btn btn-default">View history</a>

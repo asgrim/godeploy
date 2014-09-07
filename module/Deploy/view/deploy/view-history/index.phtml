@@ -1,5 +1,5 @@
 
-<h1><?php echo $project->getDisplayName(); ?> : View Deployment History</h1>
+<h1><a href="<?php echo $this->url('project-settings', ['project' => $project->getName()]); ?>"><?php echo $project->getDisplayName(); ?></a> : View Deployment History</h1>
 
 <table class="table table-striped table-hover" >
     <thead>
