@@ -1,0 +1,23 @@
+
+<h1><a href="<?php echo $this->url('project-settings', ['project' => $project->getName()]); ?>"><?php echo $project->getDisplayName(); ?></a> : Additional Files</h1>
+
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th>Filename</th>
+            <th>Only on targets</th>
+            <th>Not on targets</th>
+            <th>&nbsp;</th>
+        </tr>
+    </thead>
+    <tbody>
+    <?php foreach ($additionalFiles as $additionalFile): ?>
+        <tr>
+            <td><?php echo $additionalFile->getFilename(); ?></td>
+            <td><?php echo $additionalFile->getOnlyOnTargets(', ') ?: '<em>No restrictions</em>'; ?></td>
+            <td><?php echo $additionalFile->getNotOnTargets(', ') ?: '<em>No restrictions</em>'; ?></td>
+            <td><a href="<?php echo $this->url('project-settings', ['action' => 'edit-file', 'project' => $project->getName(), 'objectId' => $additionalFile->getId()]); ?>" class="btn btn-default btn-xs" disabled>Edit additional file</a></td>
+        </tr>
+    <?php endforeach; ?>
+    </tbody>
+</table>

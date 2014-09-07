@@ -6,6 +6,7 @@ use Zend\Mvc\Controller\AbstractActionController;
 use Deploy\Service\ProjectService;
 use Deploy\Service\TaskService;
 use Deploy\Service\TargetService;
+use Deploy\Service\AdditionalFileService;
 
 class ProjectSettingsController extends AbstractActionController
 {
@@ -24,11 +25,21 @@ class ProjectSettingsController extends AbstractActionController
      */
     protected $targetService;
 
-    public function __construct(ProjectService $projectService, TaskService $taskService, TargetService $targetService)
-    {
+    /**
+     * @var \Deploy\Service\AdditionalFileService
+     */
+    protected $additionalFileService;
+
+    public function __construct(
+        ProjectService $projectService,
+        TaskService $taskService,
+        TargetService $targetService,
+        AdditionalFileService $additionalFileService
+    ) {
         $this->projectService = $projectService;
         $this->taskService = $taskService;
         $this->targetService = $targetService;
+        $this->additionalFileService = $additionalFileService;
     }
 
     public function indexAction()
@@ -61,6 +72,18 @@ class ProjectSettingsController extends AbstractActionController
         return [
             'project' => $project,
             'targets' => $targets,
+        ];
+    }
+
+    public function viewFilesAction()
+    {
+        $project = $this->projectService->findByName($this->params('project'));
+
+        $additionalFiles = $this->additionalFileService->findByProjectId($project->getId());
+
+        return [
+            'project' => $project,
+            'additionalFiles' => $additionalFiles,
         ];
     }
 }
