@@ -119,8 +119,7 @@ class SshConnection implements Connectable
 
         $fwriteResult = fwrite($stream, $content);
 
-        if ($fwriteResult === false)
-        {
+        if ($fwriteResult === false) {
             fclose($stream);
             throw new \RuntimeException('Failed to write to SFTP stream for ' . $destinationFile);
         }

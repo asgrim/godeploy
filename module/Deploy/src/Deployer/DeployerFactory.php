@@ -16,6 +16,13 @@ class DeployerFactory implements FactoryInterface
         $taskService = $serviceLocator->get('\Deploy\Service\TaskService');
         $additionalFile = $serviceLocator->get('\Deploy\Service\AdditionalFileService');
 
-        return new Deployer($sshOptions, $deploymentService, $projectService, $targetService, $taskService, $additionalFile);
+        return new Deployer(
+            $sshOptions,
+            $deploymentService,
+            $projectService,
+            $targetService,
+            $taskService,
+            $additionalFile
+        );
     }
 }

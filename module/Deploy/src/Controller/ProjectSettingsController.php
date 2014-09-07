@@ -47,7 +47,7 @@ class ProjectSettingsController extends AbstractActionController
         $project = $this->projectService->findByName($this->params('project'));
 
         return [
-        	'project' => $project,
+            'project' => $project,
         ];
     }
 

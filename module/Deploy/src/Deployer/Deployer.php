@@ -170,8 +170,7 @@ class Deployer
 
         $additionalFiles = $this->additionalFileService->findByProjectId($project->getId());
 
-        if (count($additionalFiles) > 0)
-        {
+        if (count($additionalFiles) > 0) {
             $this->outputNewline();
             $this->output('Deploying additional files...');
 
