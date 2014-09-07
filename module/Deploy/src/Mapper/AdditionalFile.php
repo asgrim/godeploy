@@ -14,9 +14,9 @@ class AdditionalFile extends AbstractDbMapper
      * @param  int                   $id
      * @return \Deploy\Entity\AdditionalFile[]
      */
-    public function findByProjectId($projectId, $orderBy = 'order ASC')
+    public function findByProjectId($projectId)
     {
-        $select = $this->getSelect()->where(['project_id' => $projectId])->order($orderBy);
+        $select = $this->getSelect()->where(['project_id' => $projectId]);
 
         $additionalFiles = [];
         foreach ($this->select($select) as $additionalFile) {
