@@ -22,6 +22,11 @@ class SshConnection implements Connectable
      */
     protected $handle;
 
+    /**
+     * @var resource
+     */
+    protected $sftpHandle;
+
     public function __construct(Target $target, SshOptions $sshOptions)
     {
         $this->target = $target;
@@ -94,6 +99,33 @@ class SshConnection implements Connectable
         }
 
         return $cleaned;
+    }
+
+    public function putFile($destinationFile, $content)
+    {
+        if (substr($destinationFile, 0, 1) != '/') {
+            throw new \InvalidArgumentException('Destination file must be an absolute path');
+        }
+
+        if (!$this->sftpHandle) {
+            $this->sftpHandle = ssh2_sftp($this->handle);
+        }
+
+        $stream = fopen('ssh2.sftp://' . $this->sftpHandle . $destinationFile, 'w');
+
+        if (!$stream) {
+            throw new \RuntimeException('Unable to open SFTP stream for ' . $destinationFile);
+        }
+
+        $fwriteResult = fwrite($stream, $content);
+
+        if ($fwriteResult === false)
+        {
+            fclose($stream);
+            throw new \RuntimeException('Failed to write to SFTP stream for ' . $destinationFile);
+        }
+
+        fclose($stream);
     }
 
     public function eventDisconnect($reason, $message)
