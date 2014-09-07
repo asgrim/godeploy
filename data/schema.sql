@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Aug 31, 2014 at 11:06 PM
+-- Generation Time: Sep 07, 2014 at 08:49 PM
 -- Server version: 5.5.38
 -- PHP Version: 5.5.16-1+deb.sury.org~precise+1
 
@@ -17,6 +17,24 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `additional_files`
+--
+
+CREATE TABLE IF NOT EXISTS `additional_files` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `project_id` int(11) NOT NULL,
+  `last_updated` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE CURRENT_TIMESTAMP,
+  `filename` varchar(512) NOT NULL,
+  `content` longtext NOT NULL,
+  `only_on_targets` varchar(255) NOT NULL,
+  `not_on_targets` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `project_id` (`project_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `deployment`
 --
 
@@ -26,12 +44,25 @@ CREATE TABLE IF NOT EXISTS `deployment` (
   `project_id` int(11) NOT NULL,
   `date_added` datetime NOT NULL,
   `revision` varchar(255) NOT NULL,
+  `resolved_revision` varchar(255) DEFAULT NULL,
   `comment` varchar(255) NOT NULL,
   `status` enum('PREVIEW','RUNNING','COMPLETE','FAILED') NOT NULL DEFAULT 'PREVIEW',
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`,`project_id`),
   KEY `project_id` (`project_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=6 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `deployment_log`
+--
+
+CREATE TABLE IF NOT EXISTS `deployment_log` (
+  `deployment_id` int(11) NOT NULL,
+  `log` longtext NOT NULL,
+  PRIMARY KEY (`deployment_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -46,7 +77,7 @@ CREATE TABLE IF NOT EXISTS `project` (
   `git_url` varchar(255) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -63,7 +94,7 @@ CREATE TABLE IF NOT EXISTS `target` (
   `directory` varchar(255) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `project_id` (`project_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -81,7 +112,7 @@ CREATE TABLE IF NOT EXISTS `task` (
   `not_on_targets` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `project_id` (`project_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -99,18 +130,30 @@ CREATE TABLE IF NOT EXISTS `user` (
   PRIMARY KEY (`user_id`),
   UNIQUE KEY `username` (`username`),
   UNIQUE KEY `email` (`email`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 
 --
 -- Constraints for dumped tables
 --
 
 --
+-- Constraints for table `additional_files`
+--
+ALTER TABLE `additional_files`
+  ADD CONSTRAINT `additional_files_ibfk_1` FOREIGN KEY (`project_id`) REFERENCES `project` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
 -- Constraints for table `deployment`
 --
 ALTER TABLE `deployment`
-  ADD CONSTRAINT `deployment_ibfk_2` FOREIGN KEY (`project_id`) REFERENCES `project` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  ADD CONSTRAINT `deployment_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  ADD CONSTRAINT `deployment_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `deployment_ibfk_2` FOREIGN KEY (`project_id`) REFERENCES `project` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Constraints for table `deployment_log`
+--
+ALTER TABLE `deployment_log`
+  ADD CONSTRAINT `deployment_log_ibfk_1` FOREIGN KEY (`deployment_id`) REFERENCES `deployment` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
 -- Constraints for table `target`
