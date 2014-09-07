@@ -1,0 +1,25 @@
+
+<h1><a href="<?php echo $this->url('project-settings', ['project' => $project->getName()]); ?>"><?php echo $project->getDisplayName(); ?></a> : Targets</h1>
+
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Hostname</th>
+            <th>Username</th>
+            <th>Directory</th>
+            <th>&nbsp;</th>
+        </tr>
+    </thead>
+    <tbody>
+    <?php foreach ($targets as $target): ?>
+        <tr>
+            <td><?php echo $target->getName(); ?></td>
+            <td><?php echo $target->getHostname(); ?></td>
+            <td><?php echo $target->getUsername(); ?></td>
+            <td><?php echo $target->getDirectory(); ?></td>
+            <td><a href="<?php echo $this->url('project-settings', ['action' => 'edit-target', 'project' => $project->getName(), 'objectId' => $target->getId()]); ?>" class="btn btn-default btn-xs" disabled>Edit target</a></td>
+        </tr>
+    <?php endforeach; ?>
+    </tbody>
+</table>

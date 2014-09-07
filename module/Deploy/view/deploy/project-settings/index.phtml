@@ -13,7 +13,7 @@
 <h3>Actions</h3>
 
 <button class="btn btn-primary" disabled>Edit Project</button>
-<button class="btn btn-default" disabled>Edit Targets</button>
+<a href="<?php echo $this->url('project-settings', ['project' => $project->getName(), 'action' => 'view-targets']); ?>" class="btn btn-default">Edit Targets</a>
 <a href="<?php echo $this->url('project-settings', ['project' => $project->getName(), 'action' => 'view-tasks']); ?>" class="btn btn-default">Edit Tasks</a>
 <button class="btn btn-default" disabled>Edit Additional Files</button>
 <a href="<?php echo $this->url('view-history', ['project' => $project->getName()]); ?>" class="btn btn-default">View history</a>
