@@ -26,6 +26,7 @@ return array(
             'Deploy\Service\DeploymentLogService' => 'Deploy\Service\DeploymentLogServiceFactory',
             'Deploy\Service\TargetService' => 'Deploy\Service\TargetServiceFactory',
             'Deploy\Service\TaskService' => 'Deploy\Service\TaskServiceFactory',
+            'Deploy\Service\UserService' => 'Deploy\Service\UserServiceFactory',
             'Deploy\Service\AdditionalFileService' => 'Deploy\Service\AdditionalFileServiceFactory',
             'Deploy\Deployer\Deployer' => 'Deploy\Deployer\DeployerFactory',
         ],

@@ -11,7 +11,9 @@ use Deploy\Service\DeploymentService;
 use Deploy\Service\ProjectService;
 use Deploy\Service\TargetService;
 use Deploy\Service\TaskService;
+use Deploy\Service\UserService;
 use Deploy\Service\AdditionalFileService;
+use ZfcUser\Entity\User;
 
 class Deployer
 {
@@ -51,6 +53,11 @@ class Deployer
     protected $taskService;
 
     /**
+     * @var \Deploy\Service\UserService
+     */
+    protected $userService;
+
+    /**
      * @var \Deploy\Service\AdditionalFileService
      */
     protected $additionalFileService;
@@ -61,6 +68,7 @@ class Deployer
         ProjectService $projectService,
         TargetService $targetService,
         TaskService $taskService,
+        UserService $userService,
         AdditionalFileService $additionalFileService
     ) {
         $this->sshOptions = $sshOptions;
@@ -68,6 +76,7 @@ class Deployer
         $this->projectService = $projectService;
         $this->targetService = $targetService;
         $this->taskService = $taskService;
+        $this->userService = $userService;
         $this->additionalFileService = $additionalFileService;
     }
 
@@ -97,6 +106,7 @@ class Deployer
         }
 
         $project = $this->projectService->findById($deployment->getProjectId());
+        $user = $this->userService->findById($deployment->getUserId());
 
         $this->output("Commence deployment: " . date("Y-m-d H:i:s"));
         $this->outputNewline(2);
@@ -108,7 +118,7 @@ class Deployer
             $this->output($header);
             $this->output(str_repeat("=", strlen($header)));
 
-            $this->deployToTarget($project, $deployment, $target);
+            $this->deployToTarget($project, $deployment, $target, $user);
 
             $this->outputNewline(2);
         }
@@ -135,7 +145,7 @@ class Deployer
         }
     }
 
-    public function deployToTarget(Project $project, Deployment $deployment, Target $target)
+    public function deployToTarget(Project $project, Deployment $deployment, Target $target, User $user)
     {
         $ssh = new SshConnection($target, $this->sshOptions);
         $ssh->connect();
@@ -152,7 +162,7 @@ class Deployer
 
             $this->resolveRevision($deployment, $ssh, $dir);
 
-            $command = $task->getPreparedCommand($deployment);
+            $command = $task->getPreparedCommand($deployment, $user);
 
             $this->outputNewline();
             $this->output($dir . "$ {$command}");
