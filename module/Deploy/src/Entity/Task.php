@@ -137,10 +137,10 @@ class Task
         $command = $this->getCommand();
 
         $revision = $deployment->getResolvedRevision();
-        $command = str_ireplace("[git-update]", "git fetch origin && git checkout $revision", $command);
-        $command = str_ireplace("[revision]", $revision, $command);
-        $command = str_ireplace("[user]", $user->getDisplayName(), $command);
-        $command = str_ireplace("[comment]", $deployment->getComment(), $command);
+        $command = str_ireplace("#git-update#", "git fetch origin && git checkout $revision", $command);
+        $command = str_ireplace("#revision#", $revision, $command);
+        $command = str_ireplace("#user#", $user->getDisplayName(), $command);
+        $command = str_ireplace("#comment#", $deployment->getComment(), $command);
 
         return $command;
     }
