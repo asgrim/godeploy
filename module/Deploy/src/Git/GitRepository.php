@@ -211,7 +211,7 @@ class GitRepository
         $x = strrchr($this->gitUrl, ':');
         $host = substr($this->gitUrl, 0, -strlen($x));
         $host = preg_replace("/[^@0-9a-zA-Z-_.]/", "", $host);
-        $output = $this->shell("\$GIT_SSH -T -o StrictHostKeyChecking=no {$host}");
+        $output = $this->shell("\$GIT_SSH -T -o StrictHostKeyChecking=no {$host}", false);
 
         if($this->getLastErrorNumber() != 0)
         {
