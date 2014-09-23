@@ -5,6 +5,7 @@ return array(
         'factories' => [
             'Deploy\Controller\Index' => 'Deploy\Controller\IndexControllerFactory',
             'Deploy\Controller\CreateDeployment' => 'Deploy\Controller\CreateDeploymentControllerFactory',
+            'Deploy\Controller\LatestRevision' => 'Deploy\Controller\LatestRevisionControllerFactory',
             'Deploy\Controller\ShowDeployment' => 'Deploy\Controller\ShowDeploymentControllerFactory',
             'Deploy\Controller\RunDeployment' => 'Deploy\Controller\RunDeploymentControllerFactory',
             'Deploy\Controller\AddUser' => 'Deploy\Controller\AddUserControllerFactory',
@@ -58,6 +59,17 @@ return array(
                     'defaults' => [
                         '__NAMESPACE__' => 'Deploy\Controller',
                         'controller' => 'ViewHistory',
+                        'action' => 'index',
+                    ],
+                ],
+            ],
+            'get-latest-revision' => [
+                'type' => 'Segment',
+                'options' => [
+                    'route'    => '/get-latest-revision/:project',
+                    'defaults' => [
+                        '__NAMESPACE__' => 'Deploy\Controller',
+                        'controller' => 'LatestRevision',
                         'action' => 'index',
                     ],
                 ],
