@@ -83,6 +83,17 @@ class GitRepository
         }
     }
 
+    public function getLatestCommit()
+    {
+        $output = $this->shell($this->gitCommand . ' log -n1 --format="format:%H"');
+
+        if ($this->getLastErrorNumber() == 0) {
+            return $output[0];
+        } else {
+            throw new \RuntimeException('Failed to get latest commit: ' . implode(' // ', $output));
+        }
+    }
+
     public function resolveRevision($revision)
     {
         $revision = $this->sanitiseReference($revision);
