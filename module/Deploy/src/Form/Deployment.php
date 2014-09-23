@@ -16,6 +16,12 @@ class Deployment extends Form implements InputFilterProviderInterface
         $this->setHydrator(new DeploymentHydrator());
         $this->setAttribute('role', 'form');
 
+        $currentRevision = new Element\Text('previous_revision');
+        $currentRevision->setLabel('Current revision');
+        $currentRevision->setAttribute('class', 'form-control');
+        $currentRevision->setAttribute('disabled', 'disabled');
+        $this->add($currentRevision);
+
         $revision = new Element\Text('revision');
         $revision->setLabel('Revision to deploy');
         $revision->setAttribute('class', 'form-control');

@@ -55,6 +55,7 @@ class CreateDeploymentController extends AbstractActionController
             $form->setData($this->getRequest()->getPost());
 
             if ($form->isValid()) {
+                $deployment->setPreviousRevision($this->gitRepository->getCurrentHead());
                 $this->deploymentService->persist($deployment);
 
                 if ($deployment->getId() > 0) {

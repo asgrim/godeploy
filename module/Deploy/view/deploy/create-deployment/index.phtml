@@ -5,10 +5,12 @@
 
 <?php
 
+$form->prepare();
 echo $this->form()->openTag($form);
 
 $latestRevisionLink = '<a href="javascript:;" id="get-latest-revision" data-project="' . $project->getName() . '">Get latest revision on master</a>';
 
+echo $this->btsFormRow($form->get('previous_revision'));
 echo $this->btsFormRow($form->get('revision'), $latestRevisionLink);
 echo $this->btsFormRow($form->get('comment'), '<div id="commit-list"></div>');
 
