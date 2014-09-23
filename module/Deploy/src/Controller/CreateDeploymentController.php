@@ -7,6 +7,7 @@ use Deploy\Service\ProjectService;
 use Deploy\Service\DeploymentService;
 use Deploy\Form\Deployment as DeploymentForm;
 use Deploy\Entity\Deployment as DeploymentEntity;
+use Deploy\Git\GitRepository;
 
 class CreateDeploymentController extends AbstractActionController
 {
@@ -20,20 +21,31 @@ class CreateDeploymentController extends AbstractActionController
      */
     protected $deploymentService;
 
-    public function __construct(ProjectService $projectService, DeploymentService $deploymentService)
-    {
+    /**
+     * @var \Deploy\Git\GitRepository
+     */
+    protected $gitRepository;
+
+    public function __construct(
+        ProjectService $projectService,
+        DeploymentService $deploymentService,
+        GitRepository $gitRepository
+    ) {
         $this->projectService = $projectService;
         $this->deploymentService = $deploymentService;
+        $this->gitRepository = $gitRepository;
     }
 
     public function indexAction()
     {
         $project = $this->projectService->findByName($this->params('project'));
+        $this->gitRepository->setGitUrl($project->getGitUrl());
 
         $deployment = new DeploymentEntity();
         $deployment->setUserId($this->zfcUserAuthentication()->getIdentity()->getId());
         $deployment->setProjectId($project->getId());
         $deployment->setStatus('PREVIEW');
+        $deployment->setPreviousRevision($this->gitRepository->getCurrentHead());
 
         $form = new DeploymentForm();
         $form->bind($deployment);

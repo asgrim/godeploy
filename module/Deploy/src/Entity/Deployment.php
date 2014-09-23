@@ -27,6 +27,11 @@ class Deployment
     /**
      * @var string
      */
+    protected $previousRevision;
+
+    /**
+     * @var string
+     */
     protected $revision;
 
     /**
@@ -125,6 +130,25 @@ class Deployment
         } else {
             $this->dateAdded = new \DateTime($dateAdded);
         }
+
+        return $this;
+    }
+
+    /**
+	 * @return string
+	 */
+    public function getPreviousRevision()
+    {
+        return $this->previousRevision;
+    }
+
+    /**
+	 * @param string $previousRevision
+	 * @return \Deploy\Entity\Deployment
+	 */
+    public function setPreviousRevision($previousRevision)
+    {
+        $this->previousRevision = $previousRevision;
 
         return $this;
     }

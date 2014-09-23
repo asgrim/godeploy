@@ -13,7 +13,8 @@ class CreateDeploymentControllerFactory implements FactoryInterface
 
         $projectService = $serviceManager->get('\Deploy\Service\ProjectService');
         $deploymentService = $serviceManager->get('\Deploy\Service\DeploymentService');
+        $gitRepository = $serviceManager->get('\Deploy\Git\GitRepository');
 
-        return new CreateDeploymentController($projectService, $deploymentService);
+        return new CreateDeploymentController($projectService, $deploymentService, $gitRepository);
     }
 }

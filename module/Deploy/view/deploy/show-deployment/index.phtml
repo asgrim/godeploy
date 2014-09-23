@@ -8,8 +8,10 @@
         <dd><?php echo '#' . $deployment->getUserId(); ?></dd>
     <dt>Date:</dt>
         <dd><?php echo $deployment->getDateAdded('d/m/Y H:i:s'); ?></dd>
+    <dt>Previous:</dt>
+        <dd><code><?php echo $deployment->getPreviousRevision(); ?></code></dd>
     <dt>Revision:</dt>
-        <dd id="deploy-rev"><?php echo $deployment->getRevision(); ?><?php echo $deployment->hasResolvedRevision() ? (' (' . $deployment->getResolvedRevision() . ')') : ''; ?></dd>
+        <dd><code id="deploy-rev"><?php echo $deployment->hasResolvedRevision() ? $deployment->getResolvedRevision() : $deployment->getRevision(); ?></code></dd>
     <dt>Comment:</dt>
         <dd><?php echo $deployment->getComment(); ?></dd>
     <dt>Status:</dt>
