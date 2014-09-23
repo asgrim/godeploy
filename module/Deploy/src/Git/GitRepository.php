@@ -34,6 +34,8 @@ class GitRepository
 
     protected $gitCommand = '/usr/bin/git';
 
+    protected $gitCommandPrepared = false;
+
     public function __construct(GitOptions $gitOptions, SshOptions $sshOptions, $gitUrl = null)
     {
         $this->gitOptions = $gitOptions;
@@ -53,6 +55,7 @@ class GitRepository
         $this->gitUrl = $gitUrl;
         $this->gitUrlHash = md5($this->gitUrl);
         $this->gitDirectory = $this->gitOptions->getCacheDirectory() . '/' . $this->gitUrlHash . '/';
+        $this->gitCommandPrepared = false;
     }
 
     public function checkout($revision)
@@ -194,6 +197,10 @@ class GitRepository
             return true;
         }
 
+        if ($this->gitCommandPrepared) {
+            return true;
+        }
+
         $scriptFilename = $this->gitOptions->getCacheDirectory() . '/ssh_' . $this->gitUrlHash . '.sh';
 
         if (!file_exists($scriptFilename)) {
@@ -223,11 +230,13 @@ class GitRepository
 
             foreach($output as $line) {
                 if(preg_match($validString, $line) !== false) {
+                    $this->gitCommandPrepared = true;
                     return true;
                 }
             }
 
             if(in_array("ERROR:gitosis.serve.main:Need SSH_ORIGINAL_COMMAND in environment.", $output)) {
+                $this->gitCommandPrepared = true;
                 return true;
             } else if(strpos($output[0], "Could not resolve hostname") !== false
                 || (isset($output[1]) && strpos($output[1], "Could not resolve hostname") !== false)) {
