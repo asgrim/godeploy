@@ -21,6 +21,7 @@ return array(
             'Deploy\Mapper\Deployment' => 'Deploy\Mapper\DeploymentFactory',
             'Deploy\Mapper\DeploymentLog' => 'Deploy\Mapper\DeploymentLogFactory',
             'Deploy\Options\SshOptions' => 'Deploy\Options\SshOptionsFactory',
+            'Deploy\Options\GitOptions' => 'Deploy\Options\GitOptionsFactory',
             'Deploy\Service\ProjectService' => 'Deploy\Service\ProjectServiceFactory',
             'Deploy\Service\DeploymentService' => 'Deploy\Service\DeploymentServiceFactory',
             'Deploy\Service\DeploymentLogService' => 'Deploy\Service\DeploymentLogServiceFactory',

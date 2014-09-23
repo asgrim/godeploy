@@ -6,5 +6,8 @@ return [
             'public_key' => __DIR__ . '/../../data/ssh/id_rsa.pub',
             'private_key' => __DIR__ . '/../../data/ssh/id_rsa',
         ],
+        'git-options' => [
+            'cache_directory' => __DIR__ . '/../../data/gitcache/',
+        ],
     ],
 ];
