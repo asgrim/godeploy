@@ -16,8 +16,8 @@
         <tr>
             <td><?php echo $deployment->getId(); ?></td>
             <td><?php echo $deployment->getDateAdded('d/m/Y H:i'); ?></td>
-            <td>
-                <code><?php echo $deployment->hasResolvedRevision() ? $deployment->getResolvedRevision() : $deployment->getRevision(); ?></code>
+            <td title="<?php echo $deployment->hasResolvedRevision() ? $deployment->getResolvedRevision() : $deployment->getRevision(); ?>">
+                <code><?php echo $deployment->hasResolvedRevision() ? substr($deployment->getResolvedRevision(), 0, 8) : $deployment->getRevision(); ?></code>
             </td>
             <td><?php echo $deployment->getComment(); ?></td>
             <td><?php echo $deployment->getStatus(); ?></td>
