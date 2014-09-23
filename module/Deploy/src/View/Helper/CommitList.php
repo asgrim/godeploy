@@ -37,7 +37,9 @@ class CommitList extends AbstractHelper
         $html .= '</table>';
 
         if ($commitListData->swapped) {
-            $html .= '<p class="text-warning bg-warning" style="padding: 15px;"><strong>Note:</strong> this deployment rolls back these commits</p>';
+            $html .= '<p class="text-warning bg-warning" style="padding: 15px;">';
+            $html .= '  <strong>Note:</strong> this deployment rolls back these commits';
+            $html .= '</p>';
         }
 
         return $html;

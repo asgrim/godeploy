@@ -40,13 +40,10 @@ class UpdateRepositoriesController extends AbstractActionController
 
             echo "Updating " . $project->getName() . ": ";
 
-            try
-            {
+            try {
                 $this->gitRepository->update();
                 echo "OK\n";
-            }
-            catch (\Exception $exception)
-            {
+            } catch (\Exception $exception) {
                 echo "Failed: " . $exception->getMessage() . "\n";
             }
         }

@@ -63,7 +63,10 @@ class ShowDeploymentController extends AbstractActionController
         $user = $this->userService->findById($deployment->getUserId());
 
         $this->gitRepository->setGitUrl($project->getGitUrl());
-        $commitList = $this->gitRepository->getCommitsBetween($deployment->getPreviousRevision(), $deployment->getResolvedRevision());
+        $commitList = $this->gitRepository->getCommitsBetween(
+            $deployment->getPreviousRevision(),
+            $deployment->getResolvedRevision()
+        );
 
         $log = $this->deploymentLogService->findById($deployment->getId());
 

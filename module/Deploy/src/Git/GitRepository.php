@@ -71,7 +71,9 @@ class GitRepository
         if ($this->getLastErrorNumber() == 0) {
             return true;
         } else {
-            throw new \RuntimeException('Failed to check out revision [' . $revision . ']: ' . implode(' // ', $output));
+            throw new \RuntimeException(
+                'Failed to check out revision [' . $revision . ']: ' . implode(' // ', $output)
+            );
         }
     }
 
@@ -114,7 +116,8 @@ class GitRepository
         $niceRef1 = $this->resolveRevision($ref1);
         $niceRef2 = $this->resolveRevision($ref2);
 
-        $output = $this->shell($this->gitCommand . ' merge-base ' . escapeshellarg($niceRef1) . ' ' . escapeshellarg($niceRef2));
+        $cmd = $this->gitCommand . ' merge-base ' . escapeshellarg($niceRef1) . ' ' . escapeshellarg($niceRef2);
+        $output = $this->shell($cmd);
 
         if ($this->getLastErrorNumber() == 0) {
             $firstRef = $output[0];
@@ -125,7 +128,7 @@ class GitRepository
 
             if ($firstRef == $niceRef1) {
                 $retval->swapped = false;
-            } else if ($firstRef == $niceRef2) {
+            } elseif ($firstRef == $niceRef2) {
                 $retval->swapped = true;
 
                 // Swap them round with XOR. Mind blown = true.
@@ -133,10 +136,13 @@ class GitRepository
                 $niceRef2 = $niceRef1 ^ $niceRef2;
                 $niceRef1 = $niceRef1 ^ $niceRef2;
             } else {
-                throw new \RuntimeException("Could not tell whether '{$firstRef}' was '{$niceRef1}' or '{$niceRef2}' in getCommitsBetween");
+                throw new \RuntimeException(
+                    "Could not tell whether '{$firstRef}' was '{$niceRef1}' or '{$niceRef2}' in getCommitsBetween"
+                );
             }
 
-            $output = $this->shell($this->gitCommand . " --no-pager log --pretty=format:'%H,%an,%s' {$niceRef1}..{$niceRef2}");
+            $cmd = $this->gitCommand . " --no-pager log --pretty=format:'%H,%an,%s' {$niceRef1}..{$niceRef2}";
+            $output = $this->shell($cmd);
 
             if ($this->getLastErrorNumber() == 0) {
                 foreach ($output as $line) {
@@ -204,7 +210,10 @@ class GitRepository
     private function performClone()
     {
         $this->prepareGitCommand();
-        $output = $this->shell($this->gitCommand . ' clone ' . escapeshellarg($this->gitUrl) . ' ' . escapeshellarg($this->gitDirectory), false);
+
+        $cmd = $this->gitCommand . ' clone ';
+        $cmd .= escapeshellarg($this->gitUrl) . ' ' . escapeshellarg($this->gitDirectory);
+        $output = $this->shell($cmd, false);
 
         if ($this->getLastErrorNumber() == 0) {
             return true;
@@ -264,8 +273,9 @@ class GitRepository
         $scriptFilename = $this->gitOptions->getCacheDirectory() . '/ssh_' . $this->gitUrlHash . '.sh';
 
         if (!file_exists($scriptFilename)) {
-            $sshCommand = 'ssh -T -o StrictHostKeyChecking=no -i ' . escapeshellarg(realpath($this->sshOptions->getPrivateKey())) . ' -o  UserKnownHostsFile=/dev/null ';
-
+            $sshCommand = 'ssh -T -o StrictHostKeyChecking=no -i ';
+            $sshCommand .= escapeshellarg(realpath($this->sshOptions->getPrivateKey()));
+            $sshCommand .= ' -o  UserKnownHostsFile=/dev/null ';
             // Use a script file
             $scriptContent = "#!/bin/sh\n\n{$sshCommand} $*\n";
             file_put_contents($scriptFilename, $scriptContent);
@@ -280,30 +290,32 @@ class GitRepository
         $host = preg_replace("/[^@0-9a-zA-Z-_.]/", "", $host);
         $output = $this->shell("\$GIT_SSH -T -o StrictHostKeyChecking=no {$host}", false);
 
-        if($this->getLastErrorNumber() != 0)
-        {
+
+        if ($this->getLastErrorNumber() != 0) {
             // First check if we're a Github sort of repo
             // Github returns: Hi [USER]! You've successfully authenticated, but GitHub does not provide shell access.
             // Codebase returns: You've successfully uploaded your public key to Codebase and authenticated.
             // Beanstalk returns: You were successfully authenticated as <user email> in <host>.
             $validString = "#You('ve| were) successfully#";
 
-            foreach($output as $line) {
-                if(preg_match($validString, $line) !== false) {
+            foreach ($output as $line) {
+                if (preg_match($validString, $line) !== false) {
                     $this->gitCommandPrepared = true;
                     return true;
                 }
             }
 
-            if(in_array("ERROR:gitosis.serve.main:Need SSH_ORIGINAL_COMMAND in environment.", $output)) {
+            if (in_array("ERROR:gitosis.serve.main:Need SSH_ORIGINAL_COMMAND in environment.", $output)) {
                 $this->gitCommandPrepared = true;
                 return true;
-            } else if(strpos($output[0], "Could not resolve hostname") !== false
+            } elseif (strpos($output[0], "Could not resolve hostname") !== false
                 || (isset($output[1]) && strpos($output[1], "Could not resolve hostname") !== false)) {
                 throw new \RuntimeException("Could not resolve hostname '{$host}'");
             } else {
                 $final_error = end($this->output);
-                throw new \RuntimeException("Tried setting up SSH authentication but failed. Final error was: {$final_error}", 0, self::GIT_SSH_ERROR_UNKNOWN);
+                throw new \RuntimeException(
+                    "Tried setting up SSH authentication but failed. Final error was: {$final_error}"
+                );
             }
         }
 
@@ -314,7 +326,7 @@ class GitRepository
     {
         if (substr($url, 0, 6) == 'git://') {
             return 'git';
-        } else if (substr($url, 0, 8) == 'https://') {
+        } elseif (substr($url, 0, 8) == 'https://') {
             throw new \InvalidArgumentException('HTTPS URLs are not yet supported');
         } else {
             return 'ssh';

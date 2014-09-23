@@ -31,8 +31,7 @@ class IndexController extends AbstractActionController
         foreach ($projects as $project) {
             $this->gitRepository->setGitUrl($project->getGitUrl());
 
-            try
-            {
+            try {
                 $project->currentCommit = $this->gitRepository->getCurrentHead();
                 $project->latestCommit = $this->gitRepository->getLatestCommit();
 
@@ -41,9 +40,7 @@ class IndexController extends AbstractActionController
                 } else {
                     $project->isStale = true;
                 }
-            }
-            catch (\Exception $exception)
-            {
+            } catch (\Exception $exception) {
                 $project->isStale = false;
                 $project->currentCommit = 'unknown';
                 $project->latestCommit = 'unknown';

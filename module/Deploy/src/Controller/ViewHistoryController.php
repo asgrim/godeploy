@@ -24,8 +24,11 @@ class ViewHistoryController extends AbstractActionController
      */
     protected $userService;
 
-    public function __construct(ProjectService $projectService, DeploymentService $deploymentService, UserService $userService)
-    {
+    public function __construct(
+        ProjectService $projectService,
+        DeploymentService $deploymentService,
+        UserService $userService
+    ) {
         $this->projectService = $projectService;
         $this->deploymentService = $deploymentService;
         $this->userService = $userService;
