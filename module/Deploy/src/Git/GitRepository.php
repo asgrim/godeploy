@@ -85,7 +85,7 @@ class GitRepository
 
     public function getLatestCommit()
     {
-        $output = $this->shell($this->gitCommand . ' log -n1 --format="format:%H"');
+        $output = $this->shell($this->gitCommand . ' log -n1 --format="format:%H" origin/master');
 
         if ($this->getLastErrorNumber() == 0) {
             return $output[0];
