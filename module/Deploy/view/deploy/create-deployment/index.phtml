@@ -1,11 +1,13 @@
 
-<h1>Create Deployment : <?php echo $project->getName(); ?></h1>
+<?php $this->headScript()->appendFile('/js/create-deployment.js'); ?>
+
+<h1>Create Deployment : <?php echo $project->getDisplayName(); ?></h1>
 
 <?php
 
 echo $this->form()->openTag($form);
 
-$latestRevisionLink = '<a href="javascript:;" onclick="$(\'#deploy-revision\').val(\'origin/master\');">Use latest on master</a>';
+$latestRevisionLink = '<a href="javascript:;" id="get-latest-revision" data-project="' . $project->getName() . '">Get latest revision on master</a>';
 
 echo $this->btsFormRow($form->get('revision'), $latestRevisionLink);
 echo $this->btsFormRow($form->get('comment'));

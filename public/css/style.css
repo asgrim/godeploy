@@ -26,3 +26,11 @@ footer ul li {
 	padding: 0 10px;
 	border-left: 1px solid silver;
 }
+
+#get-latest-revision.in-progress {
+	color: #8b0000;
+	text-decoration: none;
+	background-image: url('/image/waiting.gif');
+	background-repeat: no-repeat;
+	padding-left: 20px;
+}
