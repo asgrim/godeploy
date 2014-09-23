@@ -47,7 +47,7 @@ class CreateDeploymentController extends AbstractActionController
         $deployment->setStatus('PREVIEW');
         $deployment->setPreviousRevision($this->gitRepository->getCurrentHead());
 
-        $form = new DeploymentForm();
+        $form = new DeploymentForm($this->gitRepository);
         $form->bind($deployment);
 
         $request = $this->getRequest();

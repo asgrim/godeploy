@@ -6,12 +6,20 @@ use Zend\Form\Form;
 use Zend\InputFilter\InputFilterProviderInterface;
 use Zend\Form\Element;
 use Deploy\Mapper\DeploymentHydrator;
+use Deploy\Git\GitRepository;
 
 class Deployment extends Form implements InputFilterProviderInterface
 {
-    public function __construct()
+    /**
+     * @var \Deploy\Git\GitRepository
+     */
+    protected $gitRepository;
+
+    public function __construct(GitRepository $gitRepository)
     {
         parent::__construct('deployment');
+
+        $this->gitRepository = $gitRepository;
 
         $this->setHydrator(new DeploymentHydrator());
         $this->setAttribute('role', 'form');
@@ -49,6 +57,12 @@ class Deployment extends Form implements InputFilterProviderInterface
                 'filters' => [
                     ['name' => 'StripTags'],
                     ['name' => 'StringTrim'],
+                ],
+                'validators' => [
+                    new \Zend\Validator\Callback(function ($value, $context) {
+                        $resolvedRevision = $this->gitRepository->resolveRevision($value);
+                        return !empty($resolvedRevision);
+                    }),
                 ],
             ],
             'comment' => [
