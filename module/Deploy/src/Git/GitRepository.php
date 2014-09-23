@@ -256,6 +256,10 @@ class GitRepository
     {
         if ($changeDirectory) {
             $originalDirectory = getcwd();
+
+            if (!file_exists($this->gitDirectory)) {
+                throw new \RuntimeException('Git directory does not exist: ' . $this->gitDirectory);
+            }
             chdir($this->gitDirectory);
         }
         $output = $this->gitOptions->getShell()->execute($command);
