@@ -21,6 +21,13 @@ You'll need to create a MySQL database using `data/schema.sql` and override the 
 
 Generate the SSH private/public key to use, and put them in `data/ssh/id_rsa` and `data/ssh/id_rsa.pub` - if you put them elsewhere or use existing SSH keys, make sure to update the path in `config/autoload/local.php` - make sure they are accessible to PHP process.
 
+Create cron job (note must run under www-data user):
+
+```bash
+$ sudo -u www-data crontab -e
+* * * * * /usr/bin/php /home/godeploy-new/public/index.php update-repositories >/dev/null
+```
+
 Upgrade
 -------
 
