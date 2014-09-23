@@ -7,6 +7,7 @@ use Deploy\Service\ProjectService;
 use Deploy\Service\DeploymentService;
 use Deploy\Service\DeploymentLogService;
 use Deploy\Git\GitRepository;
+use Deploy\Service\UserService;
 
 class ShowDeploymentController extends AbstractActionController
 {
@@ -30,16 +31,23 @@ class ShowDeploymentController extends AbstractActionController
      */
     protected $gitRepository;
 
+    /**
+     * @var \Deploy\Service\UserService
+     */
+    protected $userService;
+
     public function __construct(
         ProjectService $projectService,
         DeploymentService $deploymentService,
         DeploymentLogService $deploymentLogService,
-        GitRepository $gitRepository
+        GitRepository $gitRepository,
+        UserService $userService
     ) {
         $this->projectService = $projectService;
         $this->deploymentService = $deploymentService;
         $this->deploymentLogService = $deploymentLogService;
         $this->gitRepository = $gitRepository;
+        $this->userService = $userService;
     }
 
     public function indexAction()
@@ -52,6 +60,8 @@ class ShowDeploymentController extends AbstractActionController
 
         $project = $this->projectService->findById($deployment->getProjectId());
 
+        $user = $this->userService->findById($deployment->getUserId());
+
         $this->gitRepository->setGitUrl($project->getGitUrl());
         $commitList = $this->gitRepository->getCommitsBetween($deployment->getPreviousRevision(), $deployment->getResolvedRevision());
 
@@ -62,6 +72,7 @@ class ShowDeploymentController extends AbstractActionController
             'deployment' => $deployment,
             'log' => $log,
             'commitList' => $commitList,
+            'user' => $user,
         ];
     }
 }
