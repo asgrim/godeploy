@@ -97,6 +97,66 @@ class GitRepository
         }
     }
 
+    public function getCommitsBetween($ref1, $ref2)
+    {
+        if (empty($ref1) && empty($ref2)) {
+            throw new \InvalidArgumentException('You must provide at least one valid reference');
+        }
+
+        if (empty($ref1)) {
+            // Return an empty object as there are no commits to list
+            $retval = new \stdClass();
+            $retval->swapped = false;
+            $retval->commits = [];
+            return $retval;
+        }
+
+        $niceRef1 = $this->resolveRevision($ref1);
+        $niceRef2 = $this->resolveRevision($ref2);
+
+        $output = $this->shell($this->gitCommand . ' merge-base ' . escapeshellarg($niceRef1) . ' ' . escapeshellarg($niceRef2));
+
+        if ($this->getLastErrorNumber() == 0) {
+            $firstRef = $output[0];
+
+            $retval = new \stdClass();
+            $retval->swapped = null;
+            $retval->commits = [];
+
+            if ($firstRef == $niceRef1) {
+                $retval->swapped = false;
+            } else if ($firstRef == $niceRef2) {
+                $retval->swapped = true;
+
+                // Swap them round with XOR. Mind blown = true.
+                $niceRef1 = $niceRef1 ^ $niceRef2;
+                $niceRef2 = $niceRef1 ^ $niceRef2;
+                $niceRef1 = $niceRef1 ^ $niceRef2;
+            } else {
+                throw new \RuntimeException("Could not tell whether '{$firstRef}' was '{$niceRef1}' or '{$niceRef2}' in getCommitsBetween");
+            }
+
+            $output = $this->shell($this->gitCommand . " --no-pager log --pretty=format:'%H,%an,%s' {$niceRef1}..{$niceRef2}");
+
+            if ($this->getLastErrorNumber() == 0) {
+                foreach ($output as $line) {
+                    $rawCommitInfo = explode(",", $line, 3);
+                    $retval->commits[] = [
+                        'HASH' => $rawCommitInfo[0],
+                        'AUTHOR' => $rawCommitInfo[1],
+                        'MESSAGE' => $rawCommitInfo[2],
+                    ];
+                }
+
+                return $retval;
+            } else {
+                throw new \RuntimeException("Could not git log for commits between '{$niceRef1}' and '{$niceRef2}'");
+            }
+        } else {
+            throw new \RuntimeException("Could not determine merge-base for commits '{$niceRef1}' and '{$niceRef2}'");
+        }
+    }
+
     public function resolveRevision($revision)
     {
         $revision = $this->sanitiseReference($revision);
