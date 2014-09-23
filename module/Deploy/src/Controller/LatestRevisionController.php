@@ -34,8 +34,6 @@ class LatestRevisionController extends AbstractActionController
         $project = $this->projectService->findByName($this->params('project'));
         $this->gitRepository->setGitUrl($project->getGitUrl());
 
-        $this->gitRepository->update();
-
         return new JsonModel([
             'latestCommit' => $this->gitRepository->getLatestCommit(),
         ]);
