@@ -9,7 +9,7 @@
             <td class="nowrap">
                 @ <code><?php echo substr($project->currentCommit, 0, 8); ?></code>
             <?php if ($project->isStale): ?>
-                (latest <code><?php echo substr($project->latestCommit, 0, 8); ?></code>)
+                (latest is <code><?php echo substr($project->latestCommit, 0, 8); ?></code>)
             <?php endif; ?>
             </td>
             <td><a href="<?php echo $this->url('project-settings', ['project' => $project->getName()]); ?>">Settings</a></td>
