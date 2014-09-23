@@ -30,6 +30,7 @@ return array(
             'Deploy\Service\UserService' => 'Deploy\Service\UserServiceFactory',
             'Deploy\Service\AdditionalFileService' => 'Deploy\Service\AdditionalFileServiceFactory',
             'Deploy\Deployer\Deployer' => 'Deploy\Deployer\DeployerFactory',
+            'Deploy\Git\GitRepository' => 'Deploy\Git\GitRepositoryFactory',
         ],
     ],
     'view_helpers' => [

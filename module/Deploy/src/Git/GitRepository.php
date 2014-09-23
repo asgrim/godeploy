@@ -34,11 +34,18 @@ class GitRepository
 
     protected $gitCommand = '/usr/bin/git';
 
-    public function __construct(GitOptions $gitOptions, SshOptions $sshOptions, $gitUrl)
+    public function __construct(GitOptions $gitOptions, SshOptions $sshOptions, $gitUrl = null)
     {
         $this->gitOptions = $gitOptions;
         $this->sshOptions = $sshOptions;
 
+        if (!empty($gitUrl)) {
+            $this->setGitUrl($gitUrl);
+        }
+    }
+
+    public function setGitUrl($gitUrl)
+    {
         if (empty($gitUrl)) {
             throw new \InvalidArgumentException('No git URL set');
         }

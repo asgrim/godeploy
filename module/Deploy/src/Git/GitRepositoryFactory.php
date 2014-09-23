@@ -2,16 +2,16 @@
 
 namespace Deploy\Git;
 
+use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
-class GitRepositoryFactory
+class GitRepositoryFactory implements FactoryInterface
 {
-	public static function createRepository(ServiceLocatorInterface $serviceLocator, $gitUrl)
+	public function createService(ServiceLocatorInterface $serviceLocator)
 	{
 		$sshOptions = $serviceLocator->get('Deploy\Options\SshOptions');
 		$gitOptions = $serviceLocator->get('Deploy\Options\GitOptions');
 
-		$repo = new GitRepository($gitOptions, $sshOptions, $gitUrl);
-		return $repo;
+		return new GitRepository($gitOptions, $sshOptions);
 	}
 }
