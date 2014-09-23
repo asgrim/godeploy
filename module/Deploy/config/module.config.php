@@ -9,6 +9,7 @@ return array(
             'Deploy\Controller\ShowDeployment' => 'Deploy\Controller\ShowDeploymentControllerFactory',
             'Deploy\Controller\RunDeployment' => 'Deploy\Controller\RunDeploymentControllerFactory',
             'Deploy\Controller\AddUser' => 'Deploy\Controller\AddUserControllerFactory',
+            'Deploy\Controller\UpdateRepositories' => 'Deploy\Controller\UpdateRepositoriesControllerFactory',
             'Deploy\Controller\ViewHistory' => 'Deploy\Controller\ViewHistoryControllerFactory',
             'Deploy\Controller\ProjectSettings' => 'Deploy\Controller\ProjectSettingsControllerFactory',
         ],
@@ -140,6 +141,16 @@ return array(
                         'defaults' => [
                             '__NAMESPACE__' => 'Deploy\Controller',
                             'controller' => 'AddUser',
+                            'action' => 'index',
+                        ],
+                    ],
+                ],
+                'update-repositories' => [
+                    'options' => [
+                        'route' => 'update-repositories',
+                        'defaults' => [
+                            '__NAMESPACE__' => 'Deploy\Controller',
+                            'controller' => 'UpdateRepositories',
                             'action' => 'index',
                         ],
                     ],

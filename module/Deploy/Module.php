@@ -19,7 +19,6 @@ class Module
 
         $routeWhitelist = [
             'zfcuser/login',
-            'add-user',
         ];
         $serviceManager = $application->getServiceManager();
         $authenticationService = $serviceManager->get('zfcuser_auth_service');
@@ -29,6 +28,11 @@ class Module
 
             // No route match, this is a 404
             if (!$match instanceof RouteMatch) {
+                return;
+            }
+
+            // Route is a Console route
+            if ($e->getRequest() instanceof \Zend\Console\Request) {
                 return;
             }
 
