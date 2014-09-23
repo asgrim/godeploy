@@ -11,7 +11,7 @@ class CommitList extends AbstractHelper
         $html = '<table class="table table-bordered table-condensed" style="width: auto;">';
 
         $html .= '<thead>';
-        $html .= '  <tr>';
+        $html .= '  <tr class="active">';
         $html .= '    <th>Commit</th>';
         $html .= '    <th>Author</th>';
         $html .= '    <th>Message</th>';
@@ -19,11 +19,17 @@ class CommitList extends AbstractHelper
         $html .= '</thead>';
 
         $html .= '<tbody>';
-        foreach ($commitListData->commits as $commit) {
+        if (count($commitListData->commits)) {
+            foreach ($commitListData->commits as $commit) {
+                $html .= '  <tr>';
+                $html .= '    <td>' . substr($commit['HASH'], 0, 8) . '</td>';
+                $html .= '    <td>' . $commit['AUTHOR'] . '</td>';
+                $html .= '    <td>' . $commit['MESSAGE'] . '</td>';
+                $html .= '  </tr>';
+            }
+        } else {
             $html .= '  <tr>';
-            $html .= '    <td>' . substr($commit['HASH'], 0, 8) . '</td>';
-            $html .= '    <td>' . $commit['AUTHOR'] . '</td>';
-            $html .= '    <td>' . $commit['MESSAGE'] . '</td>';
+            $html .= '    <td colspan="3" class="text-center text-warning">No changes</td>';
             $html .= '  </tr>';
         }
         $html .= '</tbody>';
