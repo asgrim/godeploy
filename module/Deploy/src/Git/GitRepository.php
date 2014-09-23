@@ -141,7 +141,7 @@ class GitRepository
     private function performClone()
     {
         $this->prepareGitCommand();
-        $output = $this->shell($this->gitCommand . ' clone ' . escapeshellarg($this->gitUrl) . ' ' . escapeshellarg($this->gitDirectory));
+        $output = $this->shell($this->gitCommand . ' clone ' . escapeshellarg($this->gitUrl) . ' ' . escapeshellarg($this->gitDirectory), false);
 
         if ($this->getLastErrorNumber() == 0) {
             return true;
@@ -252,12 +252,16 @@ class GitRepository
         }
     }
 
-    private function shell($command)
+    private function shell($command, $changeDirectory = true)
     {
-        $originalDirectory = getcwd();
-        chdir($this->gitDirectory);
+        if ($changeDirectory) {
+            $originalDirectory = getcwd();
+            chdir($this->gitDirectory);
+        }
         $output = $this->gitOptions->getShell()->execute($command);
-        chdir($originalDirectory);
+        if ($changeDirectory) {
+            chdir($originalDirectory);
+        }
         return $output;
     }
 
