@@ -6,6 +6,7 @@ use Zend\Mvc\Controller\AbstractActionController;
 use Deploy\Service\ProjectService;
 use Deploy\Service\DeploymentService;
 use Deploy\Service\DeploymentLogService;
+use Deploy\Git\GitRepository;
 
 class ShowDeploymentController extends AbstractActionController
 {
@@ -24,14 +25,21 @@ class ShowDeploymentController extends AbstractActionController
      */
     protected $deploymentLogService;
 
+    /**
+     * @var \Deploy\Git\GitRepository
+     */
+    protected $gitRepository;
+
     public function __construct(
         ProjectService $projectService,
         DeploymentService $deploymentService,
-        DeploymentLogService $deploymentLogService
+        DeploymentLogService $deploymentLogService,
+        GitRepository $gitRepository
     ) {
         $this->projectService = $projectService;
         $this->deploymentService = $deploymentService;
         $this->deploymentLogService = $deploymentLogService;
+        $this->gitRepository = $gitRepository;
     }
 
     public function indexAction()
@@ -44,12 +52,16 @@ class ShowDeploymentController extends AbstractActionController
 
         $project = $this->projectService->findById($deployment->getProjectId());
 
+        $this->gitRepository->setGitUrl($project->getGitUrl());
+        $commitList = $this->gitRepository->getCommitsBetween($deployment->getPreviousRevision(), $deployment->getResolvedRevision());
+
         $log = $this->deploymentLogService->findById($deployment->getId());
 
         return [
             'project' => $project,
             'deployment' => $deployment,
             'log' => $log,
+            'commitList' => $commitList,
         ];
     }
 }

@@ -18,6 +18,9 @@
         <dd id="deploy-status"><?php echo $deployment->getStatus(); ?></dd>
 </dl>
 
+<h3>Commit List</h3>
+<?php echo $this->commitList($commitList); ?>
+
 <h3>Actions</h3>
 <button class="btn btn-success" id="btn-deploy" disabled>Deploy</button>
 

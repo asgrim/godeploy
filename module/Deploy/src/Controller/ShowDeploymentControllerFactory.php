@@ -14,7 +14,8 @@ class ShowDeploymentControllerFactory implements FactoryInterface
         $projectService = $serviceManager->get('\Deploy\Service\ProjectService');
         $deploymentService = $serviceManager->get('\Deploy\Service\DeploymentService');
         $deploymentLogService = $serviceManager->get('\Deploy\Service\DeploymentLogService');
+        $gitRepository = $serviceManager->get('\Deploy\Git\GitRepository');
 
-        return new ShowDeploymentController($projectService, $deploymentService, $deploymentLogService);
+        return new ShowDeploymentController($projectService, $deploymentService, $deploymentLogService, $gitRepository);
     }
 }
