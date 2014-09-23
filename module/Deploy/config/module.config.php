@@ -38,6 +38,7 @@ return array(
     'view_helpers' => [
         'invokables' => [
             'btsFormRow' => 'Deploy\View\Helper\BtsFormRow',
+            'commitList' => 'Deploy\View\Helper\CommitList',
         ],
     ],
     'router' => [

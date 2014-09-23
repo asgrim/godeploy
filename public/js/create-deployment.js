@@ -15,6 +15,7 @@ $(function () {
 		})
 			.done(function (result) {
 				$('#deploy-revision').attr('value', result.latestCommit);
+				$('#commit-list').html(result.commitListHtml);
 				getLatestRevisionLink.html(originalLinkText);
 				getLatestRevisionLink.removeClass('in-progress');
 			})

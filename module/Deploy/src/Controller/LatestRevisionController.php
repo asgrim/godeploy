@@ -36,10 +36,14 @@ class LatestRevisionController extends AbstractActionController
 
         $currentCommit = $this->gitRepository->getCurrentHead();
         $latestCommit = $this->gitRepository->getLatestCommit();
+        $commitList = $this->gitRepository->getCommitsBetween($currentCommit, $latestCommit);
+
+        $commitListHelper = $this->serviceLocator->get('viewhelpermanager')->get('commitList');
+        $commitListHtml = $commitListHelper($commitList);
 
         return new JsonModel([
             'latestCommit' => $latestCommit,
-            'commits' => $this->gitRepository->getCommitsBetween($currentCommit, $latestCommit),
+            'commitListHtml' => $commitListHtml,
         ]);
     }
 }
