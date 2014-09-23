@@ -14,6 +14,7 @@ use Deploy\Service\TaskService;
 use Deploy\Service\UserService;
 use Deploy\Service\AdditionalFileService;
 use ZfcUser\Entity\User;
+use Deploy\Git\GitRepository;
 
 class Deployer
 {
@@ -21,11 +22,6 @@ class Deployer
      * @var string[]
      */
     protected $output;
-
-    /**
-     * @var boolean
-     */
-    protected $resolvedRevision;
 
     /**
      * @var \Deploy\Options\SshOptions
@@ -58,6 +54,11 @@ class Deployer
     protected $userService;
 
     /**
+     * @var \Deploy\Git\GitRepository
+     */
+    protected $gitRepository;
+
+    /**
      * @var \Deploy\Service\AdditionalFileService
      */
     protected $additionalFileService;
@@ -69,6 +70,7 @@ class Deployer
         TargetService $targetService,
         TaskService $taskService,
         UserService $userService,
+        GitRepository $gitRepository,
         AdditionalFileService $additionalFileService
     ) {
         $this->sshOptions = $sshOptions;
@@ -77,6 +79,7 @@ class Deployer
         $this->targetService = $targetService;
         $this->taskService = $taskService;
         $this->userService = $userService;
+        $this->gitRepository = $gitRepository;
         $this->additionalFileService = $additionalFileService;
     }
 
@@ -108,6 +111,11 @@ class Deployer
         $project = $this->projectService->findById($deployment->getProjectId());
         $user = $this->userService->findById($deployment->getUserId());
 
+        $this->gitRepository->setGitUrl($project->getGitUrl());
+        $this->gitRepository->update();
+
+        $this->resolveRevision($deployment);
+
         $this->output("Commence deployment: " . date("Y-m-d H:i:s"));
         $this->outputNewline(2);
 
@@ -125,22 +133,16 @@ class Deployer
 
         $this->output("Finish deployment: " . date("Y-m-d H:i:s"));
 
+        $this->gitRepository->checkout($deployment->getResolvedRevision());
+
         return $this->output;
     }
 
-    public function resolveRevision(Deployment $deployment, SshConnection $ssh, $directory)
+    public function resolveRevision(Deployment $deployment)
     {
         if (!$deployment->hasResolvedRevision()) {
-            $command = "git fetch origin && git show --format=format:%H --no-notes -s " . $deployment->getRevision();
-            $result = $ssh->execute($command, $directory);
-            if (!count($result['stdout'])) {
-                foreach ($result['stderr'] as $line) {
-                    $this->output($line);
-                }
-                throw new \RuntimeException(sprintf('Failed to resolve revision "%s"', $deployment->getRevision()));
-            }
-
-            $deployment->setResolvedRevision($result['stdout'][0]);
+            $revision = $this->gitRepository->resolveRevision($deployment->getRevision());
+            $deployment->setResolvedRevision($revision);
             $this->deploymentService->persist($deployment);
         }
     }
@@ -159,8 +161,6 @@ class Deployer
             }
 
             $dir = is_null($task->getDirectory()) ? $target->getDirectory() : $task->getDirectory();
-
-            $this->resolveRevision($deployment, $ssh, $dir);
 
             $command = $task->getPreparedCommand($deployment, $user);
 

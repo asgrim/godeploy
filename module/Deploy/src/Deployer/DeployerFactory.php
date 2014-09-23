@@ -15,6 +15,7 @@ class DeployerFactory implements FactoryInterface
         $targetService = $serviceLocator->get('\Deploy\Service\TargetService');
         $taskService = $serviceLocator->get('\Deploy\Service\TaskService');
         $userService = $serviceLocator->get('\Deploy\Service\UserService');
+        $gitRepository = $serviceLocator->get('\Deploy\Git\GitRepository');
         $additionalFile = $serviceLocator->get('\Deploy\Service\AdditionalFileService');
 
         return new Deployer(
@@ -24,6 +25,7 @@ class DeployerFactory implements FactoryInterface
             $targetService,
             $taskService,
             $userService,
+            $gitRepository,
             $additionalFile
         );
     }
