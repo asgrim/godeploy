@@ -123,7 +123,7 @@ class GitRepository
     private function performFetch()
     {
         $this->prepareGitCommand();
-        $this->shell($this->gitCommand . ' fetch origin');
+        $output = $this->shell($this->gitCommand . ' fetch origin');
 
         if ($this->getLastErrorNumber() == 0) {
             $this->shell($this->gitCommand . ' fetch --tags origin');
@@ -131,10 +131,10 @@ class GitRepository
             if ($this->getLastErrorNumber() == 0) {
                 return true;
             } else {
-                throw new \RuntimeException('Failed to fetch tags from origin');
+                throw new \RuntimeException('Failed to fetch tags from origin: ' . implode(' // ', $output));
             }
         } else {
-            throw new \RuntimeException('Failed to fetch from origin');
+            throw new \RuntimeException('Failed to fetch from origin: ' . implode(' // ', $output));
         }
     }
 
