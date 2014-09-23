@@ -129,7 +129,7 @@ class GitRepository
         $output = $this->shell($this->gitCommand . ' fetch origin');
 
         if ($this->getLastErrorNumber() == 0) {
-            $this->shell($this->gitCommand . ' fetch --tags origin');
+            $output = $this->shell($this->gitCommand . ' fetch --tags origin');
 
             if ($this->getLastErrorNumber() == 0) {
                 return true;
