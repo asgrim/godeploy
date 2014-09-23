@@ -7,9 +7,9 @@
         <tr class="<?php echo $project->isStale ? 'stale' : ''; ?>">
             <td class="project-name"><?php echo $project->getDisplayName(); ?></td>
             <td class="nowrap">
-                @ <code><?php echo substr($project->currentCommit, 0, 8); ?></code>
+                currently at <code><?php echo substr($project->currentCommit, 0, 8); ?></code>
             <?php if ($project->isStale): ?>
-                (latest is <code><?php echo substr($project->latestCommit, 0, 8); ?></code>)
+                <br />(<?php echo $project->commitsBehind; ?> commit<?php echo $project->commitsBehind == 1 ? '' : 's'; ?> behind <code><?php echo substr($project->latestCommit, 0, 8); ?></code>)
             <?php endif; ?>
             </td>
             <td><a href="<?php echo $this->url('project-settings', ['project' => $project->getName()]); ?>">Settings</a></td>

@@ -40,10 +40,14 @@ class IndexController extends AbstractActionController
                 } else {
                     $project->isStale = true;
                 }
+
+                $commitList = $this->gitRepository->getCommitsBetween($project->currentCommit, $project->latestCommit);
+                $project->commitsBehind = count($commitList->commits);
             } catch (\Exception $exception) {
                 $project->isStale = false;
                 $project->currentCommit = 'unknown';
                 $project->latestCommit = 'unknown';
+                $project->commitsBehind = 0;
             }
         }
 
