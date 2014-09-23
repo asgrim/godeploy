@@ -12,7 +12,8 @@ class IndexControllerFactory implements FactoryInterface
         $serviceManager = $serviceLocator->getServiceLocator();
 
         $projectService = $serviceManager->get('\Deploy\Service\ProjectService');
+        $gitRepository = $serviceManager->get('\Deploy\Git\GitRepository');
 
-        return new IndexController($projectService);
+        return new IndexController($projectService, $gitRepository);
     }
 }

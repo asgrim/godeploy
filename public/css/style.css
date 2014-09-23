@@ -4,9 +4,16 @@ body {
 }
 #projects-list td {
 	vertical-align: middle;
+	white-space: nowrap;
+}
+#projects-list tr.stale td {
+	background-color: #FFFBED;
+}
+#projects-list tr.stale:hover td {
+	background-color: #FFFBC6;
 }
 #projects-list td.project-name {
-	width: 60%;
+	width: 50%;
 	font-size: 20px;
 }
 #nav-logo {

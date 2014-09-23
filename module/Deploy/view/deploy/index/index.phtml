@@ -4,8 +4,14 @@
 <table class="table table-hover" id="projects-list">
     <tbody>
     <?php foreach ($projects as $project): /* @var $project \Deploy\Entity\Project */ ?>
-        <tr>
+        <tr class="<?php echo $project->isStale ? 'stale' : ''; ?>">
             <td class="project-name"><?php echo $project->getDisplayName(); ?></td>
+            <td class="nowrap">
+                @ <code><?php echo substr($project->currentCommit, 0, 8); ?></code>
+            <?php if ($project->isStale): ?>
+                (latest <code><?php echo substr($project->latestCommit, 0, 8); ?></code>)
+            <?php endif; ?>
+            </td>
             <td><a href="<?php echo $this->url('project-settings', ['project' => $project->getName()]); ?>">Settings</a></td>
             <td><a href="<?php echo $this->url('view-history', ['project' => $project->getName()]); ?>">View history</a></td>
             <td><a href="<?php echo $this->url('create-deployment', ['project' => $project->getName()]); ?>" class="btn btn-success">GoDeploy!</a></td>
