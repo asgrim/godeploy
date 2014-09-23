@@ -13,7 +13,8 @@ class ViewHistoryControllerFactory implements FactoryInterface
 
         $projectService = $serviceManager->get('\Deploy\Service\ProjectService');
         $deploymentService = $serviceManager->get('\Deploy\Service\DeploymentService');
+        $userService = $serviceManager->get('\Deploy\Service\UserService');
 
-        return new ViewHistoryController($projectService, $deploymentService);
+        return new ViewHistoryController($projectService, $deploymentService, $userService);
     }
 }

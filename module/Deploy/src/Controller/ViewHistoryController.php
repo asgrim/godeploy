@@ -5,6 +5,7 @@ namespace Deploy\Controller;
 use Zend\Mvc\Controller\AbstractActionController;
 use Deploy\Service\ProjectService;
 use Deploy\Service\DeploymentService;
+use Deploy\Service\UserService;
 
 class ViewHistoryController extends AbstractActionController
 {
@@ -18,10 +19,16 @@ class ViewHistoryController extends AbstractActionController
      */
     protected $deploymentService;
 
-    public function __construct(ProjectService $projectService, DeploymentService $deploymentService)
+    /**
+     * @var \Deploy\Service\UserService
+     */
+    protected $userService;
+
+    public function __construct(ProjectService $projectService, DeploymentService $deploymentService, UserService $userService)
     {
         $this->projectService = $projectService;
         $this->deploymentService = $deploymentService;
+        $this->userService = $userService;
     }
 
     public function indexAction()
@@ -29,10 +36,22 @@ class ViewHistoryController extends AbstractActionController
         $project = $this->projectService->findByName($this->params('project'));
 
         $deployments = $this->deploymentService->findByProjectId($project->getId());
+        $deployments->buffer();
+
+        $users = [];
+
+        foreach ($deployments as $deployment) {
+            $userId = $deployment->getUserId();
+            if (!isset($users[$userId])) {
+                $user = $this->userService->findById($userId);
+                $users[$userId] = $user;
+            }
+        }
 
         return [
             'project' => $project,
             'deployments' => $deployments,
+            'users' => $users,
         ];
     }
 }

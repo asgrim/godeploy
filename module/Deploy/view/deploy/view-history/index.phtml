@@ -6,7 +6,9 @@
         <tr>
             <th>&nbsp;</th>
             <th>Date</th>
-            <th>Revision</th>
+            <th>From</th>
+            <th>To</th>
+            <th>Who</th>
             <th>Comment</th>
             <th>Status</th>
         </tr>
@@ -16,9 +18,13 @@
         <tr>
             <td><?php echo $deployment->getId(); ?></td>
             <td><?php echo $deployment->getDateAdded('d/m/Y H:i'); ?></td>
+            <td title="<?php echo $deployment->getPreviousRevision(); ?>">
+                <code><?php echo substr($deployment->getPreviousRevision(), 0, 8); ?></code>
+            </td>
             <td title="<?php echo $deployment->hasResolvedRevision() ? $deployment->getResolvedRevision() : $deployment->getRevision(); ?>">
                 <code><?php echo $deployment->hasResolvedRevision() ? substr($deployment->getResolvedRevision(), 0, 8) : $deployment->getRevision(); ?></code>
             </td>
+            <td><?php echo $users[$deployment->getUserId()]->getDisplayName(); ?></td>
             <td><?php echo $deployment->getComment(); ?></td>
             <td><?php echo $deployment->getStatus(); ?></td>
             <td><a href="<?php echo $this->url('show-deployment', ['deployment' => $deployment->getId()]); ?>">View</a></td>
