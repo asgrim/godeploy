@@ -21,6 +21,11 @@ class Task extends Form implements InputFilterProviderInterface
         $command->setAttribute('class', 'form-control');
         $this->add($command);
 
+        $directory = new Element\Text('directory');
+        $directory->setLabel('Directory (leave blank for default)');
+        $directory->setAttribute('class', 'form-control');
+        $this->add($directory);
+
         $submit = new Element\Submit('submit');
         $submit->setValue('Save');
         $submit->setAttribute('class', 'btn btn-primary');
@@ -32,6 +37,13 @@ class Task extends Form implements InputFilterProviderInterface
         return [
             'command' => [
                 'required' => true,
+                'filters' => [
+                    ['name' => 'StripTags'],
+                    ['name' => 'StringTrim'],
+                ],
+            ],
+            'directory' => [
+                'required' => false,
                 'filters' => [
                     ['name' => 'StripTags'],
                     ['name' => 'StringTrim'],
