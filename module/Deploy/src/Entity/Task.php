@@ -99,25 +99,6 @@ class Task
     /**
      * @return string
      */
-    public function getName()
-    {
-        return $this->name;
-    }
-
-    /**
-     * @param  string              $name
-     * @return \Deploy\Entity\Task
-     */
-    public function setName($name)
-    {
-        $this->name = $name;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
     public function getCommand()
     {
         return $this->command;

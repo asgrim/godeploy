@@ -12,15 +12,25 @@
             <th>&nbsp;</th>
         </tr>
     </thead>
+    <tfoot>
+        <tr>
+            <th colspan="5">&nbsp;</th>
+            <th><a href="<?php echo $this->url('project-settings', ['action' => 'edit-task', 'project' => $project->getName()]); ?>" class="btn btn-success btn-xs">Add task</a></td>
+        </tr>
+    </tfoot>
     <tbody>
-    <?php foreach ($tasks as $task): ?>
+    <?php
+    end($tasks);
+    $lastTaskIndex = key($tasks);
+    ?>
+    <?php foreach ($tasks as $taskIndex => $task): ?>
         <tr>
             <td><?php echo $task->getOrder(); ?></td>
             <td><?php echo $task->getCommand(); ?></td>
             <td><?php echo $task->getDirectory() ?: '<em>Use default path</em>'; ?></td>
             <td><?php echo $task->getOnlyOnTargets(', ') ?: '<em>No restrictions</em>'; ?></td>
             <td><?php echo $task->getNotOnTargets(', ') ?: '<em>No restrictions</em>'; ?></td>
-            <td><a href="<?php echo $this->url('project-settings', ['action' => 'edit-task', 'project' => $project->getName(), 'objectId' => $task->getId()]); ?>" class="btn btn-default btn-xs" disabled>Edit task</a></td>
+            <td><a href="<?php echo $this->url('project-settings', ['action' => 'edit-task', 'project' => $project->getName(), 'objectId' => $task->getId()]); ?>" class="btn btn-default btn-xs">Edit task</a></td>
         </tr>
     <?php endforeach; ?>
     </tbody>
