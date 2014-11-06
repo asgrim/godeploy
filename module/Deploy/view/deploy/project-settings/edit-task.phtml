@@ -9,5 +9,12 @@
 
 <?php
 $form->prepare();
-echo $this->form()->render($form);
+echo $this->form()->openTag($form);
+
+echo $this->btsFormRow($form->get('command'));
+echo $this->btsFormRow($form->get('directory'));
+
+echo $this->formElement($form->get('submit'));
+
+echo $this->form()->closeTag();
 ?>
