@@ -92,7 +92,8 @@ class ProjectSettingsController extends AbstractActionController
 
             if ($form->isValid()) {
                 $this->taskService->persist($task);
-                return $this->redirect()->toRoute('project-settings', ['project' => $project->getName(), 'action' => 'view-tasks']);
+                $routeOptions = ['project' => $project->getName(), 'action' => 'view-tasks'];
+                return $this->redirect()->toRoute('project-settings', $routeOptions);
             }
         }
 
