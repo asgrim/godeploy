@@ -26,6 +26,13 @@ class TaskService
         }
     }
 
+    public function delete(Task $task)
+    {
+        $this->taskMapper->delete($task);
+
+        // @todo re-order the other tasks...
+    }
+
     /**
      * Find tasks for a project
      *

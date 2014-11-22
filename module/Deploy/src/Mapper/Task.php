@@ -51,4 +51,14 @@ class Task extends AbstractDbMapper
 
         return parent::update($entity, $where, $tableName, $hydrator);
     }
+
+    public function delete($entity)
+    {
+        if (empty($entity->getId()) || $entity->getId() <= 0) {
+            throw new \InvalidArgumentException('The entity did not have a valid ID');
+        }
+        $where = ['id' => $entity->getId()];
+
+        return parent::delete($where);
+    }
 }

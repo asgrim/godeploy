@@ -105,6 +105,25 @@ class ProjectSettingsController extends AbstractActionController
         ];
     }
 
+    public function deleteTaskAction()
+    {
+        $project = $this->projectService->findByName($this->params('project'));
+
+        $taskId = (int)$this->params('objectId');
+        $task = $this->taskService->findById($taskId);
+
+        if ($this->getRequest()->isPost()) {
+            $this->taskService->delete($task);
+            $routeOptions = ['project' => $project->getName(), 'action' => 'view-tasks'];
+            return $this->redirect()->toRoute('project-settings', $routeOptions);
+        }
+
+        return [
+            'project' => $project,
+            'task' => $task,
+        ];
+    }
+
     public function viewTargetsAction()
     {
         $project = $this->projectService->findByName($this->params('project'));
