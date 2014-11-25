@@ -2,6 +2,14 @@ GoDeploy - [www.godeploy.com](http://www.godeploy.com/)
 
 [![Build Status](https://secure.travis-ci.org/asgrim/godeploy.png?branch=master)](https://travis-ci.org/asgrim/godeploy)
 
+Requirements
+------------
+
+* Linux
+* PHP 5.5
+* Composer
+* Bower
+
 Install
 -------
 
