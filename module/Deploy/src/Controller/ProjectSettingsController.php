@@ -7,6 +7,8 @@ use Deploy\Service\ProjectService;
 use Deploy\Service\TaskService;
 use Deploy\Service\TargetService;
 use Deploy\Service\AdditionalFileService;
+use Deploy\Form\Task as TaskForm;
+use Deploy\Entity\Task as TaskEntity;
 
 class ProjectSettingsController extends AbstractActionController
 {
@@ -60,6 +62,65 @@ class ProjectSettingsController extends AbstractActionController
         return [
             'project' => $project,
             'tasks' => $tasks,
+        ];
+    }
+
+    public function editTaskAction()
+    {
+        $project = $this->projectService->findByName($this->params('project'));
+
+        $taskId = (int)$this->params('objectId');
+        if ($taskId > 0) {
+            $task = $this->taskService->findById($taskId);
+            $breadcrumb = "Edit Task #" . $task->getId();
+        } else {
+            $tasks = $this->taskService->findByProjectId($project->getId());
+            $lastTask = end($tasks);
+
+            $task = new TaskEntity();
+            $task->setProjectId($project->getId());
+            $task->setOrder($lastTask->getOrder() + 1);
+            $breadcrumb = "Add Task";
+        }
+
+        $form = new TaskForm();
+        $form->bind($task);
+
+        $request = $this->getRequest();
+        if ($this->getRequest()->isPost()) {
+            $form->setData($this->getRequest()->getPost());
+
+            if ($form->isValid()) {
+                $this->taskService->persist($task);
+                $routeOptions = ['project' => $project->getName(), 'action' => 'view-tasks'];
+                return $this->redirect()->toRoute('project-settings', $routeOptions);
+            }
+        }
+
+        return [
+            'project' => $project,
+            'task' => $task,
+            'form' => $form,
+            'breadcrumb' => $breadcrumb,
+        ];
+    }
+
+    public function deleteTaskAction()
+    {
+        $project = $this->projectService->findByName($this->params('project'));
+
+        $taskId = (int)$this->params('objectId');
+        $task = $this->taskService->findById($taskId);
+
+        if ($this->getRequest()->isPost()) {
+            $this->taskService->delete($task);
+            $routeOptions = ['project' => $project->getName(), 'action' => 'view-tasks'];
+            return $this->redirect()->toRoute('project-settings', $routeOptions);
+        }
+
+        return [
+            'project' => $project,
+            'task' => $task,
         ];
     }
 

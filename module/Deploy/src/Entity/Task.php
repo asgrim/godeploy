@@ -40,17 +40,17 @@ class Task
     protected $notOnTargets = [];
 
     /**
-	 * @return int
-	 */
+     * @return int
+     */
     public function getId()
     {
         return $this->id;
     }
 
     /**
-	 * @param int $id
+     * @param int $id
      * @return \Deploy\Entity\Task
-	 */
+     */
     public function setId($id)
     {
         $this->id = (int) $id;
@@ -59,17 +59,17 @@ class Task
     }
 
     /**
-	 * @return int
-	 */
+     * @return int
+     */
     public function getProjectId()
     {
         return $this->projectId;
     }
 
     /**
-	 * @param int $projectId
+     * @param int $projectId
      * @return \Deploy\Entity\Task
-	 */
+     */
     public function setProjectId($projectId)
     {
         $this->projectId = (int) $projectId;
@@ -78,39 +78,20 @@ class Task
     }
 
     /**
-	 * @return int
-	 */
+     * @return int
+     */
     public function getOrder()
     {
         return $this->order;
     }
 
     /**
-	 * @param int $order
+     * @param int $order
      * @return \Deploy\Entity\Task
-	 */
+     */
     public function setOrder($order)
     {
         $this->order = (int) $order;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getName()
-    {
-        return $this->name;
-    }
-
-    /**
-     * @param  string              $name
-     * @return \Deploy\Entity\Task
-     */
-    public function setName($name)
-    {
-        $this->name = $name;
 
         return $this;
     }
@@ -124,9 +105,9 @@ class Task
     }
 
     /**
-	 * @param string $command
+     * @param string $command
      * @return \Deploy\Entity\Task
-	 */
+     */
     public function setCommand($command)
     {
         $this->command = $command;
@@ -150,13 +131,17 @@ class Task
      */
     public function getDirectory()
     {
+        if (empty($this->directory)) {
+            return null;
+        }
+
         return $this->directory;
     }
 
     /**
-	 * @param string $directory
+     * @param string $directory
      * @return \Deploy\Entity\Task
-	 */
+     */
     public function setDirectory($directory)
     {
         $this->directory = $directory;
@@ -165,17 +150,21 @@ class Task
     }
 
     /**
-	 * @return string
-	 */
+     * @return string
+     */
     public function getOnlyOnTargets($separator = ',')
     {
+        if (!count($this->onlyOnTargets)) {
+            return null;
+        }
+
         return implode($separator, $this->onlyOnTargets);
     }
 
     /**
-	 * @param string $onlyOnTargets
+     * @param string $onlyOnTargets
      * @return \Deploy\Entity\Task
-	 */
+     */
     public function setOnlyOnTargets($onlyOnTargets)
     {
         if (strlen($onlyOnTargets) > 0) {
@@ -188,17 +177,21 @@ class Task
     }
 
     /**
-	 * @return string
-	 */
+     * @return string
+     */
     public function getNotOnTargets($separator = ',')
     {
+        if (!count($this->notOnTargets)) {
+            return null;
+        }
+
         return implode($separator, $this->notOnTargets);
     }
 
     /**
-	 * @param string $notOnTargets
+     * @param string $notOnTargets
      * @return \Deploy\Entity\Task
-	 */
+     */
     public function setNotOnTargets($notOnTargets)
     {
         if (strlen($notOnTargets) > 0) {

@@ -3,6 +3,7 @@
 namespace Deploy\Service;
 
 use Deploy\Mapper\Task as TaskMapper;
+use Deploy\Entity\Task;
 
 class TaskService
 {
@@ -16,6 +17,22 @@ class TaskService
         $this->taskMapper = $taskMapper;
     }
 
+    public function persist(Task $task)
+    {
+        if ($task->getId() > 0) {
+            return $this->taskMapper->update($task);
+        } else {
+            return $this->taskMapper->insert($task);
+        }
+    }
+
+    public function delete(Task $task)
+    {
+        $this->taskMapper->delete($task);
+
+        // @todo re-order the other tasks...
+    }
+
     /**
      * Find tasks for a project
      *
@@ -25,5 +42,15 @@ class TaskService
     public function findByProjectId($projectId)
     {
         return $this->taskMapper->findByProjectId($projectId);
+    }
+
+    /**
+     *
+     * @param int $taskId
+     * @return \Deploy\Entity\Task
+     */
+    public function findById($taskId)
+    {
+        return $this->taskMapper->findById($taskId);
     }
 }

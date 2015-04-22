@@ -1,0 +1,19 @@
+
+<h1>
+    <a href="<?php echo $this->url('project-settings', ['project' => $project->getName()]); ?>"><?php echo $project->getDisplayName(); ?></a>
+    :
+    <a href="<?php echo $this->url('project-settings', ['project' => $project->getName(), 'action' => 'view-tasks']); ?>">Tasks</a>
+    :
+    Delete Task
+</h1>
+
+<h3>Are you sure you wish to delete task #<?php echo $task->getOrder(); ?>?</h3>
+
+<p><code>
+$ <?php echo $task->getCommand();?>
+</code></p>
+
+<form method="post" action="">
+    <input type="submit" value="Yes, delete this task" />
+    <a href="<?php echo $this->url('project-settings', ['project' => $project->getName(), 'action' => 'view-tasks']); ?>">No, go back to the tasks list</a>
+</form>
