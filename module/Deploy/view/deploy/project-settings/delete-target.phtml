@@ -1,0 +1,15 @@
+
+<h1>
+    <a href="<?php echo $this->url('project-settings', ['project' => $project->getName()]); ?>"><?php echo $project->getDisplayName(); ?></a>
+    :
+    <a href="<?php echo $this->url('project-settings', ['project' => $project->getName(), 'action' => 'view-targets']); ?>">Targets</a>
+    :
+    Delete Target
+</h1>
+
+<h3>Are you sure you wish to delete target "<?php echo $target->getName(); ?>"?</h3>
+
+<form method="post" action="">
+    <input type="submit" value="Yes, delete this target" />
+    <a href="<?php echo $this->url('project-settings', ['project' => $project->getName(), 'action' => 'view-targets']); ?>">No, go back to the targets list</a>
+</form>
