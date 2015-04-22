@@ -11,6 +11,12 @@
             <th>&nbsp;</th>
         </tr>
     </thead>
+    <tfoot>
+    <tr>
+        <th colspan="4">&nbsp;</th>
+        <th><a href="<?php echo $this->url('project-settings', ['action' => 'edit-target', 'project' => $project->getName()]); ?>" class="btn btn-success btn-xs">Add target</a></td>
+    </tr>
+    </tfoot>
     <tbody>
     <?php foreach ($targets as $target): ?>
         <tr>
@@ -18,7 +24,10 @@
             <td><?php echo $target->getHostname(); ?></td>
             <td><?php echo $target->getUsername(); ?></td>
             <td><?php echo $target->getDirectory(); ?></td>
-            <td><a href="<?php echo $this->url('project-settings', ['action' => 'edit-target', 'project' => $project->getName(), 'objectId' => $target->getId()]); ?>" class="btn btn-default btn-xs" disabled>Edit target</a></td>
+            <td>
+                <a href="<?php echo $this->url('project-settings', ['action' => 'edit-target', 'project' => $project->getName(), 'objectId' => $target->getId()]); ?>" class="btn btn-default btn-xs">Edit</a>
+                <a href="<?php echo $this->url('project-settings', ['action' => 'delete-target', 'project' => $project->getName(), 'objectId' => $target->getId()]); ?>" class="btn btn-danger btn-xs">Delete</a>
+            </td>
         </tr>
     <?php endforeach; ?>
     </tbody>

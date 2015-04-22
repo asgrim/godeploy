@@ -9,6 +9,8 @@ use Deploy\Service\TargetService;
 use Deploy\Service\AdditionalFileService;
 use Deploy\Form\Task as TaskForm;
 use Deploy\Entity\Task as TaskEntity;
+use Deploy\Form\Target as TargetForm;
+use Deploy\Entity\Target as TargetEntity;
 
 class ProjectSettingsController extends AbstractActionController
 {
@@ -133,6 +135,61 @@ class ProjectSettingsController extends AbstractActionController
         return [
             'project' => $project,
             'targets' => $targets,
+        ];
+    }
+
+    public function editTargetAction()
+    {
+        $project = $this->projectService->findByName($this->params('project'));
+
+        $targetId = (int)$this->params('objectId');
+        if ($targetId > 0) {
+            $target = $this->targetService->findById($targetId);
+            $breadcrumb = "Edit Target #" . $target->getId();
+        } else {
+            $target = new TargetEntity();
+            $target->setProjectId($project->getId());
+            $breadcrumb = "Add Target";
+        }
+
+        $form = new TargetForm();
+        $form->bind($target);
+
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $form->setData($request->getPost());
+
+            if ($form->isValid()) {
+                $this->targetService->persist($target);
+                $routeOptions = ['project' => $project->getName(), 'action' => 'view-targets'];
+                return $this->redirect()->toRoute('project-settings', $routeOptions);
+            }
+        }
+
+        return [
+            'project' => $project,
+            'target' => $target,
+            'form' => $form,
+            'breadcrumb' => $breadcrumb,
+        ];
+    }
+
+    public function deleteTargetAction()
+    {
+        $project = $this->projectService->findByName($this->params('project'));
+
+        $targetId = (int)$this->params('objectId');
+        $target = $this->targetService->findById($targetId);
+
+        if ($this->getRequest()->isPost()) {
+            $this->targetService->delete($target);
+            $routeOptions = ['project' => $project->getName(), 'action' => 'view-targets'];
+            return $this->redirect()->toRoute('project-settings', $routeOptions);
+        }
+
+        return [
+            'project' => $project,
+            'target' => $target,
         ];
     }
 
