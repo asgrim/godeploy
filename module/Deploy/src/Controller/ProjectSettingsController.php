@@ -87,8 +87,8 @@ class ProjectSettingsController extends AbstractActionController
         $form->bind($task);
 
         $request = $this->getRequest();
-        if ($this->getRequest()->isPost()) {
-            $form->setData($this->getRequest()->getPost());
+        if ($request->isPost()) {
+            $form->setData($request->getPost());
 
             if ($form->isValid()) {
                 $this->taskService->persist($task);
