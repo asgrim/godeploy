@@ -9,7 +9,7 @@ use Deploy\Mapper\TaskHydrator;
 
 class Task extends Form implements InputFilterProviderInterface
 {
-    public function __construct()
+    public function __construct($targets)
     {
         parent::__construct('task');
 
@@ -25,6 +25,11 @@ class Task extends Form implements InputFilterProviderInterface
         $directory->setLabel('Directory (leave blank for default)');
         $directory->setAttribute('class', 'form-control');
         $this->add($directory);
+
+        $onlyOnTargets = new Element\MultiCheckbox('onlyOnTargets');
+        $onlyOnTargets->setLabel('Only on targets');
+        $onlyOnTargets->setValueOptions($targets);
+        $this->add($onlyOnTargets);
 
         $submit = new Element\Submit('submit');
         $submit->setValue('Save');

@@ -83,7 +83,14 @@ class ProjectSettingsController extends AbstractActionController
             $breadcrumb = "Add Task";
         }
 
-        $form = new TaskForm();
+        $targets = $this->targetService->findByProjectId($project->getId());
+        $targetsArray = [];
+        foreach ($targets as $target)
+        {
+            $targetsArray[$target->getName()] = $target->getName();
+        }
+
+        $form = new TaskForm($targetsArray);
         $form->bind($task);
 
         $request = $this->getRequest();

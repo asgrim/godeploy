@@ -13,8 +13,15 @@ class BtsFormRow extends AbstractHelper
 
         $hasError = is_array($element->getMessages()) && count($element->getMessages()) > 0;
 
+        $existingAttributes = $element->getLabelAttributes();
+
         $labelClass = 'control-label';
-        $element->setLabelAttributes(['class' => $labelClass]);
+        if (isset($existingAttributes['class'])) {
+            $existingAttributes['class'] .= ' ' . $labelClass;
+        } else {
+            $existingAttributes['class'] = $labelClass;
+        }
+        $element->setLabelAttributes($existingAttributes);
 
         $o = "<div class=\"form-group " . ($hasError ? 'has-error' : '') . "\">\n";
         $o .= $view->formLabel($element) . "\n";
